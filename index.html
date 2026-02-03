@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="description" content="专为3-4年级小学生设计的数学速算训练工具，帮助快速掌握乘法速记、分数小数互换等技巧">
+    <meta property="og:title" content="数学速算训练营">
+    <meta property="og:description" content="让数学计算变得又快又准！">
+    <meta name="theme-color" content="#6C5CE7">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧮</text></svg>">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧮</text></svg>">
+    <title>数学速算训练营</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- 主页面 -->
+    <div id="app">
+        <!-- 用户选择页 -->
+        <div id="user-page" class="page active">
+            <div class="user-select-container">
+                <h1 class="user-select-title">🧒 选择小朋友</h1>
+                <p class="user-select-subtitle">点击头像开始练习</p>
+
+                <div class="user-list" id="user-list">
+                    <!-- 动态填充用户列表 -->
+                </div>
+
+                <div class="add-user-section">
+                    <button class="add-user-btn" id="add-user-btn">
+                        <span class="add-icon">+</span>
+                        <span>添加新用户</span>
+                    </button>
+                </div>
+
+                <!-- 新建用户表单 -->
+                <div class="new-user-form hidden" id="new-user-form">
+                    <input type="text" class="user-name-input" id="user-name-input" placeholder="输入名字" maxlength="10">
+                    <div class="avatar-picker" id="avatar-picker">
+                        <span class="avatar-option selected" data-avatar="👦">👦</span>
+                        <span class="avatar-option" data-avatar="👧">👧</span>
+                        <span class="avatar-option" data-avatar="🧒">🧒</span>
+                        <span class="avatar-option" data-avatar="👶">👶</span>
+                        <span class="avatar-option" data-avatar="🐱">🐱</span>
+                        <span class="avatar-option" data-avatar="🐶">🐶</span>
+                        <span class="avatar-option" data-avatar="🦊">🦊</span>
+                        <span class="avatar-option" data-avatar="🐼">🐼</span>
+                    </div>
+                    <div class="form-buttons">
+                        <button class="form-btn cancel" id="cancel-add-user">取消</button>
+                        <button class="form-btn confirm" id="confirm-add-user">确定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 首页 -->
+        <div id="home-page" class="page">
+            <header class="home-header">
+                <div class="user-badge" id="current-user-badge">
+                    <span class="user-avatar" id="current-avatar">👦</span>
+                    <span class="user-name" id="current-name">小朋友</span>
+                    <span class="switch-hint">点击切换</span>
+                </div>
+                <h1>🧮 数学速算训练营</h1>
+                <p class="subtitle">让计算变得又快又准！</p>
+            </header>
+
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <span class="stat-icon">🔥</span>
+                    <span class="stat-value" id="streak-count">0</span>
+                    <span class="stat-label">最高连胜</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-icon">📝</span>
+                    <span class="stat-value" id="today-count">0</span>
+                    <span class="stat-label">今日练习</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-icon">⭐</span>
+                    <span class="stat-value" id="total-score">0</span>
+                    <span class="stat-label">总分</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-icon">📚</span>
+                    <span class="stat-value" id="wrong-count">0</span>
+                    <span class="stat-label">错题</span>
+                </div>
+            </div>
+
+            <div class="menu-grid">
+                <button class="menu-btn times-btn" data-module="times">
+                    <span class="menu-icon">📊</span>
+                    <span class="menu-title">九九表</span>
+                    <span class="menu-desc">小九九+大九九乘除</span>
+                </button>
+
+                <button class="menu-btn" data-module="multiply">
+                    <span class="menu-icon">🔢</span>
+                    <span class="menu-title">乘法速记</span>
+                    <span class="menu-desc">25×4=100 看到4想25</span>
+                </button>
+
+                <button class="menu-btn" data-module="fraction">
+                    <span class="menu-icon">🔄</span>
+                    <span class="menu-title">分数小数</span>
+                    <span class="menu-desc">1/8=0.125 必背互换</span>
+                </button>
+
+                <button class="menu-btn" data-module="decimal">
+                    <span class="menu-icon">➗</span>
+                    <span class="menu-title">小数规律</span>
+                    <span class="menu-desc">乘除10小数点移动</span>
+                </button>
+
+                <button class="menu-btn" data-module="square">
+                    <span class="menu-icon">✖️</span>
+                    <span class="menu-title">平方数</span>
+                    <span class="menu-desc">11²=121 常用平方</span>
+                </button>
+
+                <button class="menu-btn" data-module="mixed">
+                    <span class="menu-icon">🎯</span>
+                    <span class="menu-title">综合训练</span>
+                    <span class="menu-desc">随机混合所有题型</span>
+                </button>
+
+                <button class="menu-btn" data-module="daily">
+                    <span class="menu-icon">🏆</span>
+                    <span class="menu-title">每日挑战</span>
+                    <span class="menu-desc">限时10题冲刺</span>
+                </button>
+
+                <button class="menu-btn learn-btn" data-module="learn">
+                    <span class="menu-icon">💡</span>
+                    <span class="menu-title">速算秘籍</span>
+                    <span class="menu-desc">先学习再练习</span>
+                </button>
+
+                <button class="menu-btn wrong-book-btn" data-module="wrong">
+                    <span class="menu-icon">📖</span>
+                    <span class="menu-title">错题本</span>
+                    <span class="menu-desc">复习做错的题目</span>
+                </button>
+            </div>
+
+            <footer class="home-footer">
+                <button class="quick-start-btn" id="quick-start">🚀 快速开始</button>
+                <div class="footer-links">
+                    <button class="link-btn" id="achievements-btn">🏅 成就</button>
+                    <button class="link-btn" id="settings-btn">⚙️ 设置</button>
+                </div>
+            </footer>
+        </div>
+
+        <!-- 学习卡片页 -->
+        <div id="learn-page" class="page">
+            <header class="page-header">
+                <button class="back-btn" data-target="home">← 返回</button>
+                <h2>💡 速算秘籍</h2>
+                <div class="header-spacer"></div>
+            </header>
+
+            <div class="learn-tabs">
+                <button class="learn-tab active" data-tab="times">九九表</button>
+                <button class="learn-tab" data-tab="multiply">乘法速记</button>
+                <button class="learn-tab" data-tab="fraction">分数小数</button>
+                <button class="learn-tab" data-tab="decimal">小数规律</button>
+                <button class="learn-tab" data-tab="square">平方数</button>
+            </div>
+
+            <div class="learn-content" id="learn-content">
+                <!-- 动态填充 -->
+            </div>
+        </div>
+
+        <!-- 训练页面 -->
+        <div id="practice-page" class="page">
+            <header class="page-header">
+                <button class="back-btn" data-target="home">← 返回</button>
+                <h2 id="practice-title">训练</h2>
+                <div class="practice-stats">
+                    <span id="correct-count">0</span>/<span id="total-count">0</span>
+                </div>
+            </header>
+
+            <div class="difficulty-selector" id="difficulty-selector">
+                <span>难度：</span>
+                <button class="diff-btn active" data-diff="easy">简单</button>
+                <button class="diff-btn" data-diff="normal">普通</button>
+                <button class="diff-btn" data-diff="hard">困难</button>
+            </div>
+
+            <div class="timer-bar" id="timer-bar">
+                <div class="timer-progress" id="timer-progress"></div>
+            </div>
+
+            <div class="question-area">
+                <div class="question-card" id="question-card">
+                    <div class="question-text" id="question-text">25 × 4 = ?</div>
+                </div>
+
+                <div class="streak-indicator" id="streak-indicator">
+                    <span class="streak-fire">🔥</span>
+                    <span class="streak-num" id="current-streak">0</span>
+                </div>
+            </div>
+
+            <div class="answer-area" id="answer-area">
+                <!-- 选择题模式 -->
+                <div class="choices" id="choices">
+                    <button class="choice-btn">100</button>
+                    <button class="choice-btn">125</button>
+                    <button class="choice-btn">80</button>
+                    <button class="choice-btn">75</button>
+                </div>
+
+                <!-- 填空题模式 -->
+                <div class="input-mode hidden" id="input-mode">
+                    <input type="text" inputmode="decimal" class="answer-input" id="answer-input" placeholder="输入答案">
+                    <button class="submit-btn" id="submit-btn">确定</button>
+                </div>
+            </div>
+
+            <div class="feedback" id="feedback">
+                <div class="feedback-content">
+                    <span class="feedback-icon"></span>
+                    <span class="feedback-text"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 每日挑战页 -->
+        <div id="daily-page" class="page">
+            <header class="page-header">
+                <button class="back-btn" data-target="home">← 返回</button>
+                <h2>🏆 每日挑战</h2>
+                <div class="daily-timer" id="daily-timer">00:00</div>
+            </header>
+
+            <div class="daily-progress">
+                <div class="progress-dots" id="progress-dots">
+                    <!-- 10个点 -->
+                </div>
+            </div>
+
+            <div class="question-area">
+                <div class="question-card" id="daily-question-card">
+                    <div class="question-text" id="daily-question-text">准备好了吗？</div>
+                </div>
+            </div>
+
+            <div class="answer-area">
+                <div class="choices" id="daily-choices">
+                    <button class="start-daily-btn" id="start-daily">开始挑战！</button>
+                </div>
+            </div>
+
+            <div class="feedback" id="daily-feedback">
+                <div class="feedback-content">
+                    <span class="feedback-icon"></span>
+                    <span class="feedback-text"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 结果页 -->
+        <div id="result-page" class="page">
+            <div class="result-content">
+                <div class="result-icon" id="result-icon">🎉</div>
+                <h2 class="result-title" id="result-title">太棒了！</h2>
+                <p class="result-encourage" id="result-encourage">每天进步一点点，积少成多大不同！</p>
+                <div class="result-stats">
+                    <div class="result-stat">
+                        <span class="result-value" id="result-correct">8</span>
+                        <span class="result-label">答对</span>
+                    </div>
+                    <div class="result-stat">
+                        <span class="result-value" id="result-total">10</span>
+                        <span class="result-label">总题数</span>
+                    </div>
+                    <div class="result-stat">
+                        <span class="result-value" id="result-time">45s</span>
+                        <span class="result-label">用时</span>
+                    </div>
+                </div>
+                <div class="result-accuracy">
+                    <div class="accuracy-bar">
+                        <div class="accuracy-fill" id="accuracy-fill"></div>
+                    </div>
+                    <span class="accuracy-text" id="accuracy-text">正确率 80%</span>
+                </div>
+                <div class="result-actions">
+                    <button class="result-btn primary" id="retry-btn">再来一次</button>
+                    <button class="result-btn" id="home-btn">返回首页</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 错题本页 -->
+        <div id="wrong-page" class="page">
+            <header class="page-header">
+                <button class="back-btn" data-target="home">← 返回</button>
+                <h2>📖 错题本</h2>
+                <button class="clear-wrong-btn" id="clear-wrong">清空</button>
+            </header>
+
+            <div class="wrong-list" id="wrong-list">
+                <!-- 动态填充 -->
+            </div>
+
+            <div class="wrong-empty hidden" id="wrong-empty">
+                <span class="empty-icon">✨</span>
+                <p>太棒了！没有错题</p>
+            </div>
+
+            <div class="wrong-actions" id="wrong-actions">
+                <button class="practice-wrong-btn" id="practice-wrong">练习错题</button>
+            </div>
+        </div>
+
+        <!-- 设置页 -->
+        <div id="settings-page" class="page">
+            <header class="page-header">
+                <button class="back-btn" data-target="home">← 返回</button>
+                <h2>⚙️ 设置</h2>
+                <div class="header-spacer"></div>
+            </header>
+
+            <div class="settings-list">
+                <div class="setting-item">
+                    <span class="setting-label">答题模式</span>
+                    <div class="setting-options">
+                        <button class="setting-opt active" data-setting="mode" data-value="choice">选择题</button>
+                        <button class="setting-opt" data-setting="mode" data-value="input">填空题</button>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <span class="setting-label">计时模式</span>
+                    <div class="setting-options">
+                        <button class="setting-opt active" data-setting="timer" data-value="off">关闭</button>
+                        <button class="setting-opt" data-setting="timer" data-value="on">开启</button>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <span class="setting-label">每轮题数</span>
+                    <div class="setting-options">
+                        <button class="setting-opt" data-setting="count" data-value="10">10题</button>
+                        <button class="setting-opt active" data-setting="count" data-value="20">20题</button>
+                        <button class="setting-opt" data-setting="count" data-value="50">50题</button>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <span class="setting-label">深色模式</span>
+                    <div class="setting-options">
+                        <button class="setting-opt active" data-setting="theme" data-value="light">浅色</button>
+                        <button class="setting-opt" data-setting="theme" data-value="dark">深色</button>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <span class="setting-label">音效</span>
+                    <div class="setting-options">
+                        <button class="setting-opt active" data-setting="sound" data-value="on">开启</button>
+                        <button class="setting-opt" data-setting="sound" data-value="off">关闭</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-footer">
+                <button class="reset-btn" id="reset-progress">重置所有进度</button>
+                <p class="version">版本 1.0.0</p>
+            </div>
+        </div>
+
+        <!-- 成就页 -->
+        <div id="achievements-page" class="page">
+            <header class="page-header">
+                <button class="back-btn" data-target="home">← 返回</button>
+                <h2>🏅 成就殿堂</h2>
+                <div class="header-spacer"></div>
+            </header>
+
+            <div class="achievements-grid" id="achievements-grid">
+                <!-- 动态填充 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 成就弹窗 -->
+    <div class="achievement-popup hidden" id="achievement-popup">
+        <div class="achievement-content">
+            <span class="achievement-icon">🏅</span>
+            <h3 class="achievement-title">获得成就！</h3>
+            <p class="achievement-desc" id="achievement-desc">连续答对10题</p>
+        </div>
+    </div>
+
+    <!-- 特效层 -->
+    <div class="effects-layer" id="effects-layer"></div>
+
+    <script src="js/data.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
