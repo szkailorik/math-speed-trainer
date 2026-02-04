@@ -2584,6 +2584,9 @@ const BattleMode = {
         document.getElementById('monster-detail-overlay')?.addEventListener('click', () => {
             this.closeMonsterDetail();
         });
+        document.getElementById('monster-detail-back')?.addEventListener('click', () => {
+            this.closeMonsterDetail();
+        });
     },
 
     // 打开图鉴页面
