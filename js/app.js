@@ -2564,7 +2564,7 @@ const BattleMode = {
         });
 
         // 图鉴返回按钮
-        document.querySelector('#collection-page .back-btn')?.addEventListener('click', () => {
+        document.getElementById('collection-back-btn')?.addEventListener('click', () => {
             showPage('xiaojiujiu-mode');
         });
 
@@ -2581,7 +2581,7 @@ const BattleMode = {
         document.getElementById('monster-detail-close')?.addEventListener('click', () => {
             this.closeMonsterDetail();
         });
-        document.querySelector('.monster-detail-overlay')?.addEventListener('click', () => {
+        document.getElementById('monster-detail-overlay')?.addEventListener('click', () => {
             this.closeMonsterDetail();
         });
     },
@@ -2596,21 +2596,29 @@ const BattleMode = {
     // 更新图鉴计数（用于首页显示）
     updateCollectionCount() {
         const stats = this.getCollectionStats();
+
+        // 首页入口计数
         const countEl = document.getElementById('collection-count');
-        if (countEl) {
-            countEl.textContent = `${stats.collected}/${stats.total}`;
-        }
+        if (countEl) countEl.textContent = `${stats.collected}/${stats.total}`;
+
+        // 图鉴页顶部计数
         const statsEl = document.getElementById('collection-stats');
-        if (statsEl) {
-            statsEl.textContent = `${stats.collected}/${stats.total}`;
-        }
-        const progressFill = document.getElementById('collection-progress-fill');
-        if (progressFill) {
-            progressFill.style.width = `${stats.percentage}%`;
-        }
-        const progressText = document.getElementById('collection-progress-text');
-        if (progressText) {
-            progressText.textContent = `收集进度: ${stats.percentage}%`;
+        if (statsEl) statsEl.textContent = `${stats.collected}/${stats.total}`;
+
+        // 横幅计数
+        const bannerCount = document.getElementById('collection-banner-count');
+        if (bannerCount) bannerCount.textContent = `${stats.collected} / ${stats.total}`;
+
+        // 百分比
+        const percentEl = document.getElementById('collection-percent');
+        if (percentEl) percentEl.textContent = `${stats.percentage}%`;
+
+        // 环形进度条 (周长 = 2 * π * 35 ≈ 220)
+        const ringFill = document.getElementById('collection-ring-fill');
+        if (ringFill) {
+            const circumference = 220;
+            const offset = circumference - (circumference * stats.percentage / 100);
+            ringFill.style.strokeDashoffset = offset;
         }
     },
 
@@ -2712,16 +2720,28 @@ const BattleMode = {
             bug: '虫系', dragon: '龙系', steel: '钢系', fairy: '妖精系', ground: '地面系'
         };
 
+        const typeColors = {
+            ghost: '#705898', psychic: '#f85888', dark: '#705848', poison: '#a040a0',
+            fire: '#f08030', water: '#6890f0', flying: '#a890f0', normal: '#a8a878',
+            ice: '#98d8d8', fighting: '#c03028', rock: '#b8a038', electric: '#f8d030',
+            bug: '#a8b820', dragon: '#7038f8', steel: '#b8b8d0', fairy: '#ee99ac', ground: '#e0c068'
+        };
+
         document.getElementById('detail-emoji').textContent = monster.emoji;
         document.getElementById('detail-name').textContent = monster.name;
         document.getElementById('detail-name-en').textContent = monster.nameEn;
         document.getElementById('detail-type').innerHTML = `<span class="type-badge ${monster.type}">${typeNames[monster.type] || '普通系'}</span>`;
         document.getElementById('detail-hp').textContent = monster.hp;
-        document.getElementById('detail-attack').textContent = `${monster.attack} ${monster.attackName}`;
+        document.getElementById('detail-attack-icon').textContent = monster.attack;
+        document.getElementById('detail-attack-name').textContent = monster.attackName;
         document.getElementById('detail-trait').textContent = monster.trait;
         document.getElementById('detail-trait-en').textContent = monster.traitEn;
         document.getElementById('detail-story').textContent = monster.story;
         document.getElementById('detail-story-en').textContent = monster.storyEn;
+
+        // 设置英雄区域背景色
+        const heroColor = typeColors[monster.type] || '#a8a878';
+        document.getElementById('detail-hero-bg').style.background = `linear-gradient(180deg, ${heroColor}22 0%, transparent 100%)`;
 
         document.getElementById('monster-detail-modal').classList.remove('hidden');
     },

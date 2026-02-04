@@ -33,7 +33,7 @@
     <link rel="apple-touch-startup-image" href="icons/splash.png">
 
     <title>数学速算训练营</title>
-    <link rel="stylesheet" href="css/style.css?v=7.2">
+    <link rel="stylesheet" href="css/style.css?v=8.4">
 </head>
 <body>
     <!-- 主页面 -->
@@ -603,65 +603,44 @@
 
         <!-- 妖怪图鉴页 -->
         <div id="collection-page" class="page">
-            <header class="page-header">
-                <button class="back-btn" data-target="xiaojiujiu-mode">← 返回</button>
+            <header class="collection-header">
+                <button class="back-btn" id="collection-back-btn">← 返回</button>
                 <h1>📖 妖怪图鉴</h1>
                 <div class="collection-stats" id="collection-stats">0/53</div>
             </header>
 
-            <div class="collection-progress">
-                <div class="collection-progress-bar">
-                    <div class="collection-progress-fill" id="collection-progress-fill"></div>
+            <div class="collection-banner">
+                <div class="collection-banner-bg"></div>
+                <div class="collection-banner-content">
+                    <div class="collection-progress-ring">
+                        <svg viewBox="0 0 80 80">
+                            <circle cx="40" cy="40" r="35" class="progress-bg"/>
+                            <circle cx="40" cy="40" r="35" class="progress-fill" id="collection-ring-fill"/>
+                        </svg>
+                        <span class="progress-percent" id="collection-percent">0%</span>
+                    </div>
+                    <div class="collection-banner-info">
+                        <div class="collection-banner-title">收集进度</div>
+                        <div class="collection-banner-count" id="collection-banner-count">0 / 53</div>
+                        <div class="collection-banner-desc">击败妖怪收录图鉴</div>
+                    </div>
                 </div>
-                <span class="collection-progress-text" id="collection-progress-text">收集进度: 0%</span>
             </div>
 
             <div class="collection-filters">
-                <button class="collection-filter-btn active" data-filter="all">全部</button>
-                <button class="collection-filter-btn" data-filter="collected">已收集</button>
-                <button class="collection-filter-btn" data-filter="locked">未解锁</button>
+                <button class="collection-filter-btn active" data-filter="all">
+                    <span class="filter-icon">📋</span> 全部
+                </button>
+                <button class="collection-filter-btn" data-filter="collected">
+                    <span class="filter-icon">✅</span> 已收集
+                </button>
+                <button class="collection-filter-btn" data-filter="locked">
+                    <span class="filter-icon">🔒</span> 未解锁
+                </button>
             </div>
 
             <div class="collection-grid" id="collection-grid">
                 <!-- 动态生成妖怪卡片 -->
-            </div>
-        </div>
-
-        <!-- 妖怪详情弹窗 -->
-        <div class="monster-detail-modal hidden" id="monster-detail-modal">
-            <div class="monster-detail-overlay"></div>
-            <div class="monster-detail-content">
-                <button class="monster-detail-close" id="monster-detail-close">✕</button>
-                <div class="monster-detail-header">
-                    <span class="monster-detail-emoji" id="detail-emoji">👻</span>
-                    <div class="monster-detail-names">
-                        <h2 class="monster-detail-name" id="detail-name">噗噗鬼</h2>
-                        <span class="monster-detail-name-en" id="detail-name-en">Pupu Ghost</span>
-                    </div>
-                </div>
-                <div class="monster-detail-type" id="detail-type">
-                    <span class="type-badge ghost">幽灵系</span>
-                </div>
-                <div class="monster-detail-stats">
-                    <div class="detail-stat">
-                        <span class="detail-stat-label">HP</span>
-                        <span class="detail-stat-value" id="detail-hp">3</span>
-                    </div>
-                    <div class="detail-stat">
-                        <span class="detail-stat-label">攻击</span>
-                        <span class="detail-stat-value" id="detail-attack">👅 舔舔攻击</span>
-                    </div>
-                </div>
-                <div class="monster-detail-trait">
-                    <h3>🌟 特性 / Trait</h3>
-                    <p id="detail-trait">喜欢恶作剧的小幽灵</p>
-                    <p class="en" id="detail-trait-en">A mischievous little ghost who loves pranks</p>
-                </div>
-                <div class="monster-detail-story">
-                    <h3>📜 故事 / Story</h3>
-                    <p id="detail-story">噗噗鬼是数学世界里最可爱的小幽灵...</p>
-                    <p class="en" id="detail-story-en">Pupu Ghost is the cutest little ghost in Math World...</p>
-                </div>
             </div>
         </div>
     </div>
@@ -678,7 +657,49 @@
     <!-- 特效层 -->
     <div class="effects-layer" id="effects-layer"></div>
 
-    <script src="js/data.js?v=8.2"></script>
-    <script src="js/app.js?v=8.2"></script>
+    <!-- 妖怪详情弹窗（全局层级） -->
+    <div class="monster-detail-modal hidden" id="monster-detail-modal">
+        <div class="monster-detail-overlay" id="monster-detail-overlay"></div>
+        <div class="monster-detail-content">
+            <button class="monster-detail-close" id="monster-detail-close">✕</button>
+            <div class="monster-detail-hero" id="detail-hero-bg">
+                <span class="monster-detail-emoji" id="detail-emoji">👻</span>
+            </div>
+            <div class="monster-detail-body">
+                <div class="monster-detail-names">
+                    <h2 class="monster-detail-name" id="detail-name">噗噗鬼</h2>
+                    <span class="monster-detail-name-en" id="detail-name-en">Pupu Ghost</span>
+                </div>
+                <div class="monster-detail-type" id="detail-type">
+                    <span class="type-badge ghost">幽灵系</span>
+                </div>
+                <div class="monster-detail-stats">
+                    <div class="detail-stat">
+                        <span class="detail-stat-icon">❤️</span>
+                        <span class="detail-stat-value" id="detail-hp">3</span>
+                        <span class="detail-stat-label">HP</span>
+                    </div>
+                    <div class="detail-stat">
+                        <span class="detail-stat-icon" id="detail-attack-icon">👅</span>
+                        <span class="detail-stat-value" id="detail-attack-name">舔舔攻击</span>
+                        <span class="detail-stat-label">技能</span>
+                    </div>
+                </div>
+                <div class="monster-detail-section">
+                    <h3>🌟 特性 <span class="section-en">Trait</span></h3>
+                    <p id="detail-trait">喜欢恶作剧的小幽灵</p>
+                    <p class="en" id="detail-trait-en">A mischievous little ghost who loves pranks</p>
+                </div>
+                <div class="monster-detail-section">
+                    <h3>📜 故事 <span class="section-en">Story</span></h3>
+                    <p id="detail-story">噗噗鬼是数学世界里最可爱的小幽灵...</p>
+                    <p class="en" id="detail-story-en">Pupu Ghost is the cutest little ghost in Math World...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/data.js?v=8.4"></script>
+    <script src="js/app.js?v=8.4"></script>
 </body>
 </html>
