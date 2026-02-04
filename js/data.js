@@ -71,58 +71,82 @@ const MathData = {
 
     // ========== 分数小数互换 - 必背表 ==========
     fraction: {
+        // 基础热身题（穿插在难题中，保持手感）
+        warmup: [
+            { q: '1/10 = ?', a: '0.1', wrongChoices: ['0.01', '1', '0.5'], isText: true },
+            { q: '5/10 = ?', a: '0.5', wrongChoices: ['0.05', '5', '0.1'], isText: true },
+            { q: '1/2 = ?', a: '0.5', wrongChoices: ['0.2', '0.25', '2'], isText: true },
+            { q: '1/4 = ?', a: '0.25', wrongChoices: ['0.4', '0.5', '0.14'], isText: true },
+            { q: '0.1 = ?', a: '1/10', wrongChoices: ['1/100', '1/2', '1/5'], isText: true },
+            { q: '0.5 = ?', a: '1/2', wrongChoices: ['1/5', '5/100', '1/10'], isText: true },
+            { q: '3/10 = ?', a: '0.3', wrongChoices: ['0.03', '3', '0.33'], isText: true },
+            { q: '7/10 = ?', a: '0.7', wrongChoices: ['0.07', '7', '0.77'], isText: true },
+        ],
         easy: [
             // 十分之系列（最基础！）
-            { q: '1/10 = ?', a: 0.1, display: '0.1', tip: '十分之几=0.几' },
-            { q: '2/10 = ?', a: 0.2, display: '0.2' },
-            { q: '3/10 = ?', a: 0.3, display: '0.3' },
-            { q: '5/10 = ?', a: 0.5, display: '0.5' },
-            { q: '7/10 = ?', a: 0.7, display: '0.7' },
-            { q: '9/10 = ?', a: 0.9, display: '0.9' },
+            { q: '1/10 = ?', a: '0.1', wrongChoices: ['0.01', '1', '0.5'], isText: true, tip: '十分之几=0.几' },
+            { q: '2/10 = ?', a: '0.2', wrongChoices: ['0.02', '2', '0.12'], isText: true },
+            { q: '3/10 = ?', a: '0.3', wrongChoices: ['0.03', '3', '0.33'], isText: true },
+            { q: '4/10 = ?', a: '0.4', wrongChoices: ['0.04', '4', '0.14'], isText: true },
+            { q: '5/10 = ?', a: '0.5', wrongChoices: ['0.05', '5', '0.15'], isText: true },
+            { q: '6/10 = ?', a: '0.6', wrongChoices: ['0.06', '6', '0.16'], isText: true },
+            { q: '7/10 = ?', a: '0.7', wrongChoices: ['0.07', '7', '0.17'], isText: true },
+            { q: '8/10 = ?', a: '0.8', wrongChoices: ['0.08', '8', '0.18'], isText: true },
+            { q: '9/10 = ?', a: '0.9', wrongChoices: ['0.09', '9', '0.19'], isText: true },
             // 百分之系列
-            { q: '1/100 = ?', a: 0.01, display: '0.01', tip: '百分之几=0.0几' },
-            { q: '5/100 = ?', a: 0.05, display: '0.05' },
-            { q: '10/100 = ?', a: 0.1, display: '0.1' },
-            { q: '25/100 = ?', a: 0.25, display: '0.25' },
+            { q: '1/100 = ?', a: '0.01', wrongChoices: ['0.1', '0.001', '1'], isText: true, tip: '百分之几=0.0几' },
+            { q: '5/100 = ?', a: '0.05', wrongChoices: ['0.5', '0.005', '5'], isText: true },
+            { q: '10/100 = ?', a: '0.1', wrongChoices: ['0.01', '1', '0.5'], isText: true },
+            { q: '25/100 = ?', a: '0.25', wrongChoices: ['2.5', '0.025', '25'], isText: true },
+            { q: '50/100 = ?', a: '0.5', wrongChoices: ['5', '0.05', '0.25'], isText: true },
             // 小数转分数
-            { q: '0.1 = ?', a: '1/10', display: '1/10', isText: true },
-            { q: '0.3 = ?', a: '3/10', display: '3/10', isText: true },
-            { q: '0.01 = ?', a: '1/100', display: '1/100', isText: true },
-            { q: '0.05 = ?', a: '5/100', display: '5/100', isText: true },
+            { q: '0.1 = ?', a: '1/10', wrongChoices: ['1/100', '1/2', '1/5'], isText: true },
+            { q: '0.3 = ?', a: '3/10', wrongChoices: ['1/3', '3/100', '30/10'], isText: true },
+            { q: '0.5 = ?', a: '5/10', wrongChoices: ['1/5', '5/100', '50/10'], isText: true },
+            { q: '0.7 = ?', a: '7/10', wrongChoices: ['1/7', '7/100', '70/10'], isText: true },
+            { q: '0.01 = ?', a: '1/100', wrongChoices: ['1/10', '1/1000', '10/100'], isText: true },
+            { q: '0.05 = ?', a: '5/100', wrongChoices: ['1/5', '5/10', '5/1000'], isText: true },
         ],
         normal: [
             // 二分之、四分之、五分之
-            { q: '1/2 = ?', a: 0.5, display: '0.5' },
-            { q: '1/4 = ?', a: 0.25, display: '0.25' },
-            { q: '2/4 = ?', a: 0.5, display: '0.5', tip: '约分后是1/2' },
-            { q: '3/4 = ?', a: 0.75, display: '0.75' },
-            { q: '1/5 = ?', a: 0.2, display: '0.2' },
-            { q: '2/5 = ?', a: 0.4, display: '0.4' },
-            { q: '3/5 = ?', a: 0.6, display: '0.6' },
-            { q: '4/5 = ?', a: 0.8, display: '0.8' },
+            { q: '1/2 = ?', a: '0.5', wrongChoices: ['0.2', '0.12', '0.25'], isText: true },
+            { q: '1/4 = ?', a: '0.25', wrongChoices: ['0.4', '0.14', '0.5'], isText: true },
+            { q: '2/4 = ?', a: '0.5', wrongChoices: ['0.24', '0.2', '0.75'], isText: true, tip: '约分后是1/2' },
+            { q: '3/4 = ?', a: '0.75', wrongChoices: ['0.34', '0.25', '0.7'], isText: true },
+            { q: '1/5 = ?', a: '0.2', wrongChoices: ['0.5', '0.15', '0.25'], isText: true },
+            { q: '2/5 = ?', a: '0.4', wrongChoices: ['0.25', '0.2', '0.45'], isText: true },
+            { q: '3/5 = ?', a: '0.6', wrongChoices: ['0.35', '0.5', '0.65'], isText: true },
+            { q: '4/5 = ?', a: '0.8', wrongChoices: ['0.45', '0.75', '0.85'], isText: true },
             // 小数转分数
-            { q: '0.5 = ?', a: '1/2', display: '1/2', isText: true },
-            { q: '0.25 = ?', a: '1/4', display: '1/4', isText: true },
-            { q: '0.75 = ?', a: '3/4', display: '3/4', isText: true },
-            { q: '0.2 = ?', a: '1/5', display: '1/5', isText: true },
-            { q: '0.4 = ?', a: '2/5', display: '2/5', isText: true },
+            { q: '0.5 = ?', a: '1/2', wrongChoices: ['1/5', '5/100', '1/4'], isText: true },
+            { q: '0.25 = ?', a: '1/4', wrongChoices: ['1/2', '2/5', '1/5'], isText: true },
+            { q: '0.75 = ?', a: '3/4', wrongChoices: ['7/10', '3/5', '7/8'], isText: true },
+            { q: '0.2 = ?', a: '1/5', wrongChoices: ['1/2', '2/10', '1/4'], isText: true },
+            { q: '0.4 = ?', a: '2/5', wrongChoices: ['1/4', '4/10', '2/4'], isText: true },
+            { q: '0.6 = ?', a: '3/5', wrongChoices: ['6/100', '3/4', '2/3'], isText: true },
+            { q: '0.8 = ?', a: '4/5', wrongChoices: ['8/100', '4/8', '3/4'], isText: true },
+            // 混合练习
+            { q: '1/3 ≈ ?', a: '0.33', wrongChoices: ['0.3', '0.13', '0.333'], isText: true, tip: '约等于0.33' },
+            { q: '2/3 ≈ ?', a: '0.67', wrongChoices: ['0.6', '0.23', '0.66'], isText: true, tip: '约等于0.67' },
         ],
         hard: [
             // 八分之系列（重要！和125有关）
-            { q: '1/8 = ?', a: 0.125, display: '0.125', tip: '125÷1000' },
-            { q: '3/8 = ?', a: 0.375, display: '0.375' },
-            { q: '5/8 = ?', a: 0.625, display: '0.625' },
-            { q: '7/8 = ?', a: 0.875, display: '0.875' },
+            { q: '1/8 = ?', a: '0.125', wrongChoices: ['0.18', '0.25', '0.8'], isText: true, tip: '125÷1000' },
+            { q: '3/8 = ?', a: '0.375', wrongChoices: ['0.38', '0.35', '0.325'], isText: true },
+            { q: '5/8 = ?', a: '0.625', wrongChoices: ['0.58', '0.65', '0.525'], isText: true },
+            { q: '7/8 = ?', a: '0.875', wrongChoices: ['0.78', '0.85', '0.775'], isText: true },
             // 小数转分数
-            { q: '0.125 = ?', a: '1/8', display: '1/8', isText: true },
-            { q: '0.375 = ?', a: '3/8', display: '3/8', isText: true },
-            { q: '0.625 = ?', a: '5/8', display: '5/8', isText: true },
-            { q: '0.875 = ?', a: '7/8', display: '7/8', isText: true },
+            { q: '0.125 = ?', a: '1/8', wrongChoices: ['1/4', '1/5', '1/12'], isText: true },
+            { q: '0.375 = ?', a: '3/8', wrongChoices: ['3/4', '3/5', '3/10'], isText: true },
+            { q: '0.625 = ?', a: '5/8', wrongChoices: ['5/6', '5/10', '6/8'], isText: true },
+            { q: '0.875 = ?', a: '7/8', wrongChoices: ['7/10', '8/9', '7/4'], isText: true },
             // 其他常用
-            { q: '1/20 = ?', a: 0.05, display: '0.05' },
-            { q: '1/25 = ?', a: 0.04, display: '0.04' },
-            { q: '50/100 = ?', a: 0.5, display: '0.5' },
-            { q: '75/100 = ?', a: 0.75, display: '0.75' },
+            { q: '1/20 = ?', a: '0.05', wrongChoices: ['0.2', '0.5', '0.02'], isText: true },
+            { q: '1/25 = ?', a: '0.04', wrongChoices: ['0.25', '0.4', '0.025'], isText: true },
+            { q: '1/50 = ?', a: '0.02', wrongChoices: ['0.5', '0.05', '0.2'], isText: true },
+            { q: '3/20 = ?', a: '0.15', wrongChoices: ['0.32', '0.35', '1.5'], isText: true },
+            { q: '7/20 = ?', a: '0.35', wrongChoices: ['0.72', '0.7', '3.5'], isText: true },
+            { q: '9/20 = ?', a: '0.45', wrongChoices: ['0.92', '0.9', '4.5'], isText: true },
         ]
     },
 
@@ -702,9 +726,9 @@ function generateOptions(correctAnswer, isDecimal = false, isText = false) {
 
     // 根据答案类型生成干扰项
     if (isText) {
-        // 分数形式的干扰项
         const parts = String(correctAnswer).split('/');
         if (parts.length === 2) {
+            // 分数形式的干扰项
             const num = parseInt(parts[0]);
             const den = parseInt(parts[1]);
             const variations = [
@@ -718,6 +742,18 @@ function generateOptions(correctAnswer, isDecimal = false, isText = false) {
                 if (!usedValues.has(v) && options.length < 4) {
                     options.push(v);
                     usedValues.add(v);
+                }
+            }
+        } else if (String(correctAnswer).includes('.')) {
+            // 小数字符串干扰项
+            const val = parseFloat(correctAnswer);
+            const variations = [val * 10, val / 10, val + 0.1, val - 0.1, val + 0.05, val - 0.05].filter(v => v > 0 && v !== val);
+            for (const v of variations) {
+                const formatted = parseFloat(v.toFixed(4));
+                const str = String(formatted);
+                if (!usedValues.has(str) && options.length < 4) {
+                    options.push(str);
+                    usedValues.add(str);
                 }
             }
         }

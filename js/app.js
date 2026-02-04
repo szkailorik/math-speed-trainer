@@ -85,6 +85,9 @@ const App = {
     // 当前难度
     difficulty: 'easy',
 
+    // 分数小数难度
+    fractionDifficulty: 'easy',
+
     // 设置
     settings: {
         mode: 'choice',      // choice | input
@@ -131,6 +134,7 @@ const App = {
     // 战斗模式状态
     battle: {
         active: false,
+        module: 'xiaojiujiu',
         difficulty: 'easy',
         currentStage: 1,
         totalStages: 4,
@@ -890,6 +894,13 @@ function startPractice(module) {
     // 小九九模块显示模式选择页
     if (module === 'xiaojiujiu') {
         showPage('xiaojiujiu-mode');
+        return;
+    }
+
+    // 分数小数模块显示模式选择页
+    if (module === 'fraction') {
+        showPage('fraction-mode');
+        BattleMode.updateFractionCollectionCount();
         return;
     }
 
@@ -2346,7 +2357,17 @@ const BattleMode = {
 
     // ===== 妖怪图鉴收集系统 =====
     // 获取所有妖怪列表
-    getAllMonsters() {
+    // 获取当前模块的所有妖怪
+    getAllMonsters(module) {
+        const m = module || App.battle.module || 'xiaojiujiu';
+        if (m === 'fraction') {
+            return [
+                ...shanhaiFractionEasyMonsters,
+                ...shanhaiFractionNormalMonsters,
+                ...shanhaiFractionHardMonsters,
+                ...shanhaiFractionBossMonsters
+            ];
+        }
         return [
             ...this.easyMonsters,
             ...this.normalMonsters,
@@ -2355,20 +2376,42 @@ const BattleMode = {
         ];
     },
 
+    // 获取模块的怪兽数组
+    getModuleMonsters(module) {
+        if (module === 'fraction') {
+            return {
+                easy: shanhaiFractionEasyMonsters,
+                normal: shanhaiFractionNormalMonsters,
+                hard: shanhaiFractionHardMonsters,
+                boss: shanhaiFractionBossMonsters
+            };
+        }
+        return {
+            easy: this.easyMonsters,
+            normal: this.normalMonsters,
+            hard: this.hardMonsters,
+            boss: this.bossMonsters
+        };
+    },
+
     // 获取收集记录
-    getCollection() {
+    getCollection(module) {
         const currentUser = UserManager.getCurrentUser();
         if (!currentUser) return [];
-        const key = 'monsterCollection_' + currentUser.id;
+        const m = module || App.battle.module || 'xiaojiujiu';
+        const suffix = m === 'xiaojiujiu' ? '' : '_' + m;
+        const key = 'monsterCollection_' + currentUser.id + suffix;
         const data = localStorage.getItem(key);
         return data ? JSON.parse(data) : [];
     },
 
     // 保存收集记录
-    saveCollection(collection) {
+    saveCollection(collection, module) {
         const currentUser = UserManager.getCurrentUser();
         if (!currentUser) return;
-        const key = 'monsterCollection_' + currentUser.id;
+        const m = module || App.battle.module || 'xiaojiujiu';
+        const suffix = m === 'xiaojiujiu' ? '' : '_' + m;
+        const key = 'monsterCollection_' + currentUser.id + suffix;
         localStorage.setItem(key, JSON.stringify(collection));
     },
 
@@ -2378,20 +2421,20 @@ const BattleMode = {
         if (!collection.includes(monsterId)) {
             collection.push(monsterId);
             this.saveCollection(collection);
-            return true; // 新收集
+            return true;
         }
-        return false; // 已经收集过
+        return false;
     },
 
     // 检查妖怪是否已收集
-    isCollected(monsterId) {
-        return this.getCollection().includes(monsterId);
+    isCollected(monsterId, module) {
+        return this.getCollection(module).includes(monsterId);
     },
 
     // 获取收集统计
-    getCollectionStats() {
-        const all = this.getAllMonsters();
-        const collected = this.getCollection();
+    getCollectionStats(module) {
+        const all = this.getAllMonsters(module);
+        const collected = this.getCollection(module);
         return {
             total: all.length,
             collected: collected.length,
@@ -2401,13 +2444,14 @@ const BattleMode = {
 
     // 显示新收集提示
     showNewCollectionToast(monster) {
+        const isShanhai = App.battle.module === 'fraction';
         const toast = document.createElement('div');
         toast.className = 'collection-toast';
         toast.innerHTML = `
             <div class="collection-toast-content">
-                <span class="collection-toast-icon">📖</span>
+                <span class="collection-toast-icon">${isShanhai ? '📜' : '📖'}</span>
                 <span class="collection-toast-text">
-                    <strong>图鉴更新!</strong><br>
+                    <strong>${isShanhai ? '山海经更新!' : '图鉴更新!'}</strong><br>
                     ${monster.emoji} ${monster.name} 已收录
                 </span>
             </div>
@@ -2504,13 +2548,13 @@ const BattleMode = {
         });
 
         // 战斗页返回按钮
-        document.querySelector('#battle-page .back-btn')?.addEventListener('click', () => {
+        document.querySelector('.battle-exit-btn')?.addEventListener('click', () => {
             this.exitBattle();
         });
 
         // 战斗结果页按钮
         document.getElementById('battle-retry-btn')?.addEventListener('click', () => {
-            this.startBattle(App.battle.difficulty);
+            this.startBattle(App.battle.difficulty, App.battle.module);
         });
 
         document.getElementById('battle-home-btn')?.addEventListener('click', () => {
@@ -2519,7 +2563,7 @@ const BattleMode = {
 
         // 战斗失败页按钮
         document.getElementById('battle-retry-fail-btn')?.addEventListener('click', () => {
-            this.startBattle(App.battle.difficulty);
+            this.startBattle(App.battle.difficulty, App.battle.module);
         });
 
         document.getElementById('battle-home-fail-btn')?.addEventListener('click', () => {
@@ -2568,10 +2612,10 @@ const BattleMode = {
             showPage('xiaojiujiu-mode');
         });
 
-        // 图鉴筛选按钮
-        document.querySelectorAll('.collection-filter-btn').forEach(btn => {
+        // 图鉴筛选按钮（小九九妖怪图鉴）
+        document.querySelectorAll('.collection-filter-btn:not(.shanhai-filter)').forEach(btn => {
             btn.addEventListener('click', () => {
-                document.querySelectorAll('.collection-filter-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.collection-filter-btn:not(.shanhai-filter)').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
                 this.renderCollection(btn.dataset.filter);
             });
@@ -2586,6 +2630,61 @@ const BattleMode = {
         });
         document.getElementById('monster-detail-back')?.addEventListener('click', () => {
             this.closeMonsterDetail();
+        });
+
+        // ===== 分数小数模块事件 =====
+        // 分数小数难度选择
+        document.querySelectorAll('.fraction-diff-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.fraction-diff-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                App.fractionDifficulty = btn.dataset.diff;
+            });
+        });
+
+        // 分数小数战斗模式
+        document.getElementById('select-fraction-battle-mode')?.addEventListener('click', () => {
+            const diff = App.fractionDifficulty || 'easy';
+            this.startBattle(diff, 'fraction');
+        });
+
+        // 分数小数经典模式
+        document.getElementById('select-fraction-classic-mode')?.addEventListener('click', () => {
+            App.currentModule = 'fraction';
+            App.difficulty = App.fractionDifficulty || 'easy';
+            const moduleData = MathData.fraction;
+            const diffData = moduleData[App.difficulty] || moduleData.easy;
+            const questions = shuffle([...diffData]).slice(0, Math.min(App.settings.count, diffData.length));
+            App.practice = {
+                questions: questions,
+                currentIndex: 0,
+                correctCount: 0,
+                streak: 0,
+                startTime: Date.now(),
+                timerInterval: null,
+                timePerQuestion: App.difficulty === 'easy' ? 15 : (App.difficulty === 'normal' ? 10 : 7)
+            };
+            showPage('practice');
+            showQuestion();
+        });
+
+        // 打开山海经图鉴
+        document.getElementById('open-fraction-collection')?.addEventListener('click', () => {
+            this.openShanhaiCollection();
+        });
+
+        // 山海经图鉴返回按钮
+        document.getElementById('shanhai-collection-back-btn')?.addEventListener('click', () => {
+            showPage('fraction-mode');
+        });
+
+        // 山海经图鉴筛选按钮
+        document.querySelectorAll('.shanhai-filter').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.shanhai-filter').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                this.renderShanhaiCollection(btn.dataset.filter);
+            });
         });
     },
 
@@ -2634,10 +2733,12 @@ const BattleMode = {
         const collection = this.getCollection();
 
         const typeNames = {
-            ghost: '幽灵', psychic: '超能', dark: '恶', poison: '毒',
+            ghost: '幽灵', psychic: '超能', dark: '暗', poison: '毒',
             fire: '火', water: '水', flying: '飞行', normal: '普通',
             ice: '冰', fighting: '格斗', rock: '岩石', electric: '电',
-            bug: '虫', dragon: '龙', steel: '钢', fairy: '妖精', ground: '地面'
+            bug: '虫', dragon: '龙', steel: '钢', fairy: '妖精', ground: '地面',
+            earth: '土', wind: '风', thunder: '雷', light: '光',
+            beast: '兽', spirit: '灵', ancient: '太古'
         };
 
         let html = '';
@@ -2717,17 +2818,21 @@ const BattleMode = {
     // 显示妖怪详情
     showMonsterDetail(monster) {
         const typeNames = {
-            ghost: '幽灵系', psychic: '超能系', dark: '恶系', poison: '毒系',
+            ghost: '幽灵系', psychic: '超能系', dark: '暗系', poison: '毒系',
             fire: '火系', water: '水系', flying: '飞行系', normal: '普通系',
             ice: '冰系', fighting: '格斗系', rock: '岩石系', electric: '电系',
-            bug: '虫系', dragon: '龙系', steel: '钢系', fairy: '妖精系', ground: '地面系'
+            bug: '虫系', dragon: '龙系', steel: '钢系', fairy: '妖精系', ground: '地面系',
+            earth: '土系', wind: '风系', thunder: '雷系', light: '光系',
+            beast: '兽系', spirit: '灵系', ancient: '太古系'
         };
 
         const typeColors = {
             ghost: '#705898', psychic: '#f85888', dark: '#705848', poison: '#a040a0',
             fire: '#f08030', water: '#6890f0', flying: '#a890f0', normal: '#a8a878',
             ice: '#98d8d8', fighting: '#c03028', rock: '#b8a038', electric: '#f8d030',
-            bug: '#a8b820', dragon: '#7038f8', steel: '#b8b8d0', fairy: '#ee99ac', ground: '#e0c068'
+            bug: '#a8b820', dragon: '#7038f8', steel: '#b8b8d0', fairy: '#ee99ac', ground: '#e0c068',
+            earth: '#c4a54a', wind: '#81c784', thunder: '#fdd835', light: '#fff176',
+            beast: '#8d6e63', spirit: '#ce93d8', ancient: '#78909c'
         };
 
         document.getElementById('detail-emoji').textContent = monster.emoji;
@@ -2752,6 +2857,102 @@ const BattleMode = {
     // 关闭妖怪详情
     closeMonsterDetail() {
         document.getElementById('monster-detail-modal').classList.add('hidden');
+    },
+
+    // ===== 山海经图鉴 =====
+    openShanhaiCollection() {
+        this.renderShanhaiCollection('all');
+        this.updateFractionCollectionCount();
+        showPage('shanhai-collection');
+    },
+
+    updateFractionCollectionCount() {
+        const stats = this.getCollectionStats('fraction');
+
+        const countEl = document.getElementById('fraction-collection-count');
+        if (countEl) countEl.textContent = `${stats.collected}/${stats.total}`;
+
+        const statsEl = document.getElementById('shanhai-collection-stats');
+        if (statsEl) statsEl.textContent = `${stats.collected}/${stats.total}`;
+
+        const bannerCount = document.getElementById('shanhai-banner-count');
+        if (bannerCount) bannerCount.textContent = `${stats.collected} / ${stats.total}`;
+
+        const percentEl = document.getElementById('shanhai-percent');
+        if (percentEl) percentEl.textContent = `${stats.percentage}%`;
+
+        const ringFill = document.getElementById('shanhai-ring-fill');
+        if (ringFill) {
+            const circumference = 220;
+            const offset = circumference - (circumference * stats.percentage / 100);
+            ringFill.style.strokeDashoffset = offset;
+        }
+    },
+
+    renderShanhaiCollection(filter = 'all') {
+        const grid = document.getElementById('shanhai-collection-grid');
+        if (!grid) return;
+
+        const allMonsters = this.getAllMonsters('fraction');
+        const collection = this.getCollection('fraction');
+
+        const typeNames = {
+            fire: '火', water: '水', earth: '土', wind: '风', thunder: '雷',
+            ice: '冰', dark: '暗', light: '光', poison: '毒', beast: '兽',
+            dragon: '龙', spirit: '灵', ancient: '太古'
+        };
+
+        let html = '';
+        let visibleCount = 0;
+
+        allMonsters.forEach(monster => {
+            const isCollected = collection.includes(monster.id);
+            if (filter === 'collected' && !isCollected) return;
+            if (filter === 'locked' && isCollected) return;
+
+            visibleCount++;
+
+            if (isCollected) {
+                html += `
+                    <div class="collection-card collected shanhai-card" data-id="${monster.id}" data-module="fraction">
+                        <span class="collection-card-emoji">${monster.emoji}</span>
+                        <span class="collection-card-name">${monster.name}</span>
+                        <span class="collection-card-type type-${monster.type}">${typeNames[monster.type] || '普通'}</span>
+                    </div>
+                `;
+            } else {
+                html += `
+                    <div class="collection-card locked shanhai-card">
+                        <span class="collection-card-emoji">❓</span>
+                        <span class="collection-card-name">???</span>
+                        <span class="collection-card-type">未解锁</span>
+                    </div>
+                `;
+            }
+        });
+
+        if (visibleCount === 0) {
+            if (filter === 'collected') {
+                html = `<div class="collection-empty"><div class="collection-empty-icon">📜</div><div class="collection-empty-text">还没有收集到山海经妖怪<br>快去挑战分数小数吧!</div></div>`;
+            } else if (filter === 'locked') {
+                html = `<div class="collection-empty"><div class="collection-empty-icon">🎉</div><div class="collection-empty-text">恭喜! 你已经收录了全部山海经妖怪!</div></div>`;
+            }
+        }
+
+        grid.innerHTML = html;
+
+        // 绑定点击事件
+        grid.querySelectorAll('.collection-card.collected').forEach(card => {
+            card.addEventListener('click', () => {
+                const id = card.dataset.id;
+                const monster = allMonsters.find(m => m.id === id);
+                if (monster) {
+                    this.showMonsterDetail(monster);
+                }
+            });
+        });
+
+        this.updateFractionCollectionCount();
     },
 
     // 显示难度选择并开始战斗
@@ -2787,10 +2988,11 @@ const BattleMode = {
     },
 
     // 开始战斗
-    startBattle(difficulty) {
+    startBattle(difficulty, module) {
         const battle = App.battle;
         battle.active = true;
         battle.difficulty = difficulty;
+        battle.module = module || 'xiaojiujiu';
         battle.currentStage = 1;
         battle.monstersDefeated = 0;
         battle.combo = 0;
@@ -2825,7 +3027,8 @@ const BattleMode = {
         battle.totalStages = settings.stages;
 
         // 获取题目（混入简单热身题）
-        const moduleData = MathData.xiaojiujiu;
+        const dataKey = battle.module === 'fraction' ? 'fraction' : 'xiaojiujiu';
+        const moduleData = MathData[dataKey];
         const diffData = moduleData[difficulty] || moduleData.easy;
         const mainQuestions = shuffle([...diffData]);
 
@@ -2869,19 +3072,18 @@ const BattleMode = {
         const battle = App.battle;
         battle.monsterQueue = [];
 
+        const monsters = this.getModuleMonsters(battle.module);
+
         if (difficulty === 'easy') {
-            // 简单模式：随机6个初级怪兽
-            battle.monsterQueue = shuffle([...this.easyMonsters]).slice(0, 6);
+            battle.monsterQueue = shuffle([...monsters.easy]).slice(0, 6);
         } else if (difficulty === 'normal') {
-            // 普通模式：6个初级 + 4个中级
-            const easy = shuffle([...this.easyMonsters]).slice(0, 6);
-            const normal = shuffle([...this.normalMonsters]).slice(0, 4);
+            const easy = shuffle([...monsters.easy]).slice(0, 6);
+            const normal = shuffle([...monsters.normal]).slice(0, 4);
             battle.monsterQueue = [...easy, ...normal];
         } else {
-            // 困难模式：6个初级 + 6个中级 + 3个Boss
-            const easy = shuffle([...this.easyMonsters]).slice(0, 6);
-            const normal = shuffle([...this.normalMonsters]).slice(0, 6);
-            const boss = shuffle([...this.bossMonsters]).slice(0, 3);
+            const easy = shuffle([...monsters.easy]).slice(0, 6);
+            const normal = shuffle([...monsters.normal]).slice(0, 6);
+            const boss = shuffle([...monsters.boss]).slice(0, 3);
             battle.monsterQueue = [...easy, ...normal, ...boss];
         }
     },
@@ -3036,8 +3238,13 @@ const BattleMode = {
         document.getElementById('battle-choices').classList.remove('hidden');
         document.getElementById('battle-input-mode').classList.add('hidden');
 
-        // 生成选项
-        const choices = this.generateChoices(question.a);
+        // 生成选项（分数小数用预设选项，九九表用算法生成）
+        let choices;
+        if (question.wrongChoices) {
+            choices = shuffle([String(question.a), ...question.wrongChoices]);
+        } else {
+            choices = this.generateChoices(question.a);
+        }
         const choicesContainer = document.getElementById('battle-choices');
 
         // 清空并重新创建按钮
@@ -3913,7 +4120,12 @@ const BattleMode = {
 
     // 退出战斗
     exitBattle() {
+        const module = App.battle.module;
         App.battle.active = false;
-        showPage('xiaojiujiu-mode');
+        if (module === 'fraction') {
+            showPage('fraction-mode');
+        } else {
+            showPage('xiaojiujiu-mode');
+        }
     }
 };

@@ -38,7 +38,7 @@
     <link rel="apple-touch-startup-image" href="icons/splash.png">
 
     <title>数学速算训练营</title>
-    <link rel="stylesheet" href="css/style.css?v=8.6">
+    <link rel="stylesheet" href="css/style.css?v=9.0">
 </head>
 <body>
     <!-- 主页面 -->
@@ -474,10 +474,60 @@
             </div>
         </div>
 
+        <!-- 分数小数 模式选择页 -->
+        <div id="fraction-mode-page" class="page">
+            <header class="page-header">
+                <button class="back-btn" data-target="home">← 返回</button>
+                <h2>🔄 分数小数互换</h2>
+                <div class="header-spacer"></div>
+            </header>
+
+            <div class="mode-select-container">
+                <h3 class="mode-select-title">选择训练模式</h3>
+
+                <!-- 难度选择 -->
+                <div class="battle-difficulty-selector">
+                    <span class="diff-label">难度：</span>
+                    <button class="battle-diff-btn fraction-diff-btn active" data-diff="easy">
+                        <span class="diff-icon">😊</span>
+                        <span class="diff-text">简单</span>
+                    </button>
+                    <button class="battle-diff-btn fraction-diff-btn" data-diff="normal">
+                        <span class="diff-icon">😤</span>
+                        <span class="diff-text">普通</span>
+                    </button>
+                    <button class="battle-diff-btn fraction-diff-btn" data-diff="hard">
+                        <span class="diff-icon">😈</span>
+                        <span class="diff-text">困难</span>
+                    </button>
+                </div>
+
+                <button class="mode-card battle-mode" id="select-fraction-battle-mode">
+                    <span class="mode-icon">⚔️</span>
+                    <span class="mode-name">山海经大冒险</span>
+                    <span class="mode-desc">挑战山海经妖怪，征服分数小数！</span>
+                    <span class="mode-tag">推荐</span>
+                </button>
+
+                <button class="mode-card classic-mode" id="select-fraction-classic-mode">
+                    <span class="mode-icon">📝</span>
+                    <span class="mode-name">经典模式</span>
+                    <span class="mode-desc">专注练习，稳步提升</span>
+                </button>
+
+                <button class="mode-card collection-mode" id="open-fraction-collection">
+                    <span class="mode-icon">📜</span>
+                    <span class="mode-name">山海经图鉴</span>
+                    <span class="mode-desc">查看收集的山海经妖怪</span>
+                    <span class="collection-count" id="fraction-collection-count">0/72</span>
+                </button>
+            </div>
+        </div>
+
         <!-- 战斗模式页面 -->
         <div id="battle-page" class="page">
             <header class="battle-header">
-                <button class="back-btn" data-target="xiaojiujiu-mode">← 退出</button>
+                <button class="back-btn battle-exit-btn">← 退出</button>
                 <div class="stage-info">
                     <span class="stage-label">关卡</span>
                     <span class="stage-number" id="battle-stage">1</span>
@@ -648,6 +698,49 @@
                 <!-- 动态生成妖怪卡片 -->
             </div>
         </div>
+
+        <!-- 山海经图鉴页 -->
+        <div id="shanhai-collection-page" class="page">
+            <header class="collection-header shanhai-header">
+                <button class="back-btn" id="shanhai-collection-back-btn">← 返回</button>
+                <h1>📜 山海经图鉴</h1>
+                <div class="collection-stats" id="shanhai-collection-stats">0/72</div>
+            </header>
+
+            <div class="collection-banner shanhai-banner">
+                <div class="collection-banner-bg shanhai-banner-bg"></div>
+                <div class="collection-banner-content">
+                    <div class="collection-progress-ring">
+                        <svg viewBox="0 0 80 80">
+                            <circle cx="40" cy="40" r="35" class="progress-bg"/>
+                            <circle cx="40" cy="40" r="35" class="progress-fill shanhai-ring" id="shanhai-ring-fill"/>
+                        </svg>
+                        <span class="progress-percent" id="shanhai-percent">0%</span>
+                    </div>
+                    <div class="collection-banner-info">
+                        <div class="collection-banner-title">山海经收集进度</div>
+                        <div class="collection-banner-count" id="shanhai-banner-count">0 / 72</div>
+                        <div class="collection-banner-desc">征服分数小数，收录山海经妖怪</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="collection-filters">
+                <button class="collection-filter-btn shanhai-filter active" data-filter="all">
+                    <span class="filter-icon">📋</span> 全部
+                </button>
+                <button class="collection-filter-btn shanhai-filter" data-filter="collected">
+                    <span class="filter-icon">✅</span> 已收集
+                </button>
+                <button class="collection-filter-btn shanhai-filter" data-filter="locked">
+                    <span class="filter-icon">🔒</span> 未解锁
+                </button>
+            </div>
+
+            <div class="collection-grid" id="shanhai-collection-grid">
+                <!-- 动态生成山海经妖怪卡片 -->
+            </div>
+        </div>
     </div>
 
     <!-- 成就弹窗 -->
@@ -705,7 +798,8 @@
         </div>
     </div>
 
-    <script src="js/data.js?v=8.6"></script>
-    <script src="js/app.js?v=8.6"></script>
+    <script src="js/data.js?v=9.0"></script>
+    <script src="js/shanhai-monsters.js?v=9.0"></script>
+    <script src="js/app.js?v=9.0"></script>
 </body>
 </html>

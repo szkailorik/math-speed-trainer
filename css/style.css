@@ -4040,6 +4040,35 @@ body.keyboard-active #battle-page .battle-answer-area {
 .type-badge.ground  { background: #e0c068; color: #333; }
 .type-badge.normal  { background: #a8a878; }
 
+/* 山海经额外属性 */
+.type-badge.earth   { background: #c4a54a; }
+.type-badge.wind    { background: #81c784; color: #1b5e20; }
+.type-badge.thunder { background: #fdd835; color: #333; }
+.type-badge.light   { background: #fff176; color: #333; }
+.type-badge.beast   { background: #8d6e63; }
+.type-badge.spirit  { background: #ce93d8; }
+.type-badge.ancient { background: #78909c; }
+
+.type-earth   { color: #c4a54a; }
+.type-wind    { color: #81c784; }
+.type-thunder { color: #fdd835; }
+.type-light   { color: #e6c200; }
+.type-beast   { color: #8d6e63; }
+.type-spirit  { color: #ce93d8; }
+.type-ancient { color: #78909c; }
+
+/* 山海经图鉴特殊样式 */
+.shanhai-header h1 { font-family: 'KaiTi', 'STKaiti', serif; }
+.shanhai-banner-bg {
+    background: linear-gradient(135deg, #2d1b69 0%, #0d3b66 50%, #1a472a 100%) !important;
+}
+.shanhai-ring {
+    stroke: #ffd700 !important;
+}
+.shanhai-card.collected {
+    border-color: rgba(255, 215, 0, 0.3);
+}
+
 /* 属性数据 */
 .monster-detail-stats {
     display: flex;
