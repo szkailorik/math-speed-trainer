@@ -298,71 +298,142 @@ function showFeedback(isCorrect, feedbackId = 'feedback') {
     }, 1000);
 }
 
-// 创建彩色纸屑特效
+// 创建彩色纸屑特效 - 更华丽版本
 function createConfetti(count = 50) {
-    const colors = ['#6C5CE7', '#34C759', '#FF9500', '#FF3B30', '#5AC8FA', '#AF52DE', '#FFD60A'];
+    const colors = ['#6C5CE7', '#34C759', '#FF9500', '#FF3B30', '#5AC8FA', '#AF52DE', '#FFD60A', '#FF6B6B', '#4ECDC4'];
+    const shapes = ['square', 'circle', 'triangle'];
     const effectsLayer = document.getElementById('effects-layer');
 
     for (let i = 0; i < count; i++) {
         const confetti = document.createElement('div');
         confetti.className = 'confetti';
-        confetti.style.left = Math.random() * 100 + '%';
-        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-        confetti.style.animationDelay = Math.random() * 0.5 + 's';
-        confetti.style.animationDuration = (2 + Math.random() * 2) + 's';
-        confetti.style.width = (6 + Math.random() * 8) + 'px';
-        confetti.style.height = (6 + Math.random() * 8) + 'px';
-        effectsLayer.appendChild(confetti);
 
-        setTimeout(() => confetti.remove(), 4000);
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        const shape = shapes[Math.floor(Math.random() * shapes.length)];
+        const size = 6 + Math.random() * 10;
+
+        confetti.style.left = Math.random() * 100 + '%';
+        confetti.style.backgroundColor = color;
+        confetti.style.color = color;
+        confetti.style.animationDelay = Math.random() * 0.8 + 's';
+        confetti.style.animationDuration = (2.5 + Math.random() * 2) + 's';
+        confetti.style.width = size + 'px';
+        confetti.style.height = size + 'px';
+
+        if (shape === 'circle') {
+            confetti.style.borderRadius = '50%';
+        } else if (shape === 'triangle') {
+            confetti.style.width = '0';
+            confetti.style.height = '0';
+            confetti.style.backgroundColor = 'transparent';
+            confetti.style.borderLeft = size/2 + 'px solid transparent';
+            confetti.style.borderRight = size/2 + 'px solid transparent';
+            confetti.style.borderBottom = size + 'px solid ' + color;
+        }
+
+        effectsLayer.appendChild(confetti);
+        setTimeout(() => confetti.remove(), 5000);
     }
 }
 
-// 创建星星爆炸效果
-function createStarBurst(x, y) {
-    const stars = ['⭐', '✨', '🌟', '💫'];
+// 创建星星爆炸效果 - 更多星星
+function createStarBurst(x, y, count = 8) {
+    const stars = ['⭐', '✨', '🌟', '💫', '⚡', '💥'];
     const effectsLayer = document.getElementById('effects-layer');
 
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < count; i++) {
         const star = document.createElement('div');
         star.className = 'star-burst';
         star.textContent = stars[Math.floor(Math.random() * stars.length)];
+        star.style.fontSize = (1 + Math.random() * 1.5) + 'rem';
 
-        const angle = (i / 6) * Math.PI * 2;
-        const distance = 50 + Math.random() * 30;
-        const endX = x + Math.cos(angle) * distance;
-        const endY = y + Math.sin(angle) * distance;
+        const angle = (i / count) * Math.PI * 2 + Math.random() * 0.5;
+        const distance = 40 + Math.random() * 60;
 
         star.style.left = x + 'px';
         star.style.top = y + 'px';
-        star.style.setProperty('--end-x', endX + 'px');
-        star.style.setProperty('--end-y', endY + 'px');
+        star.style.setProperty('--tx', Math.cos(angle) * distance + 'px');
+        star.style.setProperty('--ty', Math.sin(angle) * distance + 'px');
 
         effectsLayer.appendChild(star);
-        setTimeout(() => star.remove(), 600);
+        setTimeout(() => star.remove(), 800);
     }
 }
 
-// 创建+分数飘浮效果
+// 创建能量波纹效果
+function createEnergyWave(x, y) {
+    const effectsLayer = document.getElementById('effects-layer');
+
+    for (let i = 0; i < 3; i++) {
+        const wave = document.createElement('div');
+        wave.className = 'energy-wave';
+        wave.style.left = (x - 50) + 'px';
+        wave.style.top = (y - 50) + 'px';
+        wave.style.animationDelay = (i * 0.15) + 's';
+        effectsLayer.appendChild(wave);
+        setTimeout(() => wave.remove(), 1000);
+    }
+}
+
+// 创建漂浮爱心（连胜奖励）
+function createFloatingHearts(x, y, count = 5) {
+    const hearts = ['❤️', '💖', '💕', '💗', '💝'];
+    const effectsLayer = document.getElementById('effects-layer');
+
+    for (let i = 0; i < count; i++) {
+        const heart = document.createElement('div');
+        heart.className = 'floating-heart';
+        heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+        heart.style.left = (x - 20 + Math.random() * 40) + 'px';
+        heart.style.top = y + 'px';
+        heart.style.animationDelay = (i * 0.1) + 's';
+        effectsLayer.appendChild(heart);
+        setTimeout(() => heart.remove(), 1200);
+    }
+}
+
+// 创建连击文字效果
+function createComboText(streak) {
+    const texts = {
+        3: '🔥 三连!',
+        5: '⚡ 五连击!',
+        10: '💥 十连斩!',
+        15: '🌟 超神!',
+        20: '👑 无敌!'
+    };
+
+    const text = texts[streak];
+    if (!text) return;
+
+    const combo = document.createElement('div');
+    combo.className = 'combo-text';
+    combo.textContent = text;
+    combo.style.left = '50%';
+    combo.style.top = '30%';
+    combo.style.transform = 'translateX(-50%)';
+
+    document.body.appendChild(combo);
+    setTimeout(() => combo.remove(), 1200);
+}
+
+// 创建+分数飘浮效果 - 更华丽
 function createScorePopup(element, score, isCorrect) {
     const popup = document.createElement('div');
-    popup.style.cssText = `
-        position: absolute;
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: ${isCorrect ? '#34C759' : '#FF3B30'};
-        pointer-events: none;
-        z-index: 1000;
-        animation: score-float 0.8s ease-out forwards;
-    `;
-    popup.textContent = isCorrect ? '+10' : '×';
+    popup.className = 'score-popup ' + (isCorrect ? 'correct' : 'wrong');
+    popup.textContent = isCorrect ? '+' + score : '×';
 
     const rect = element.getBoundingClientRect();
-    popup.style.left = rect.left + rect.width / 2 - 20 + 'px';
+    popup.style.left = (rect.left + rect.width / 2) + 'px';
     popup.style.top = rect.top + 'px';
 
     document.body.appendChild(popup);
-    setTimeout(() => popup.remove(), 800);
+
+    // 答对时添加能量波纹
+    if (isCorrect) {
+        createEnergyWave(rect.left + rect.width / 2, rect.top + rect.height / 2);
+    }
+
+    setTimeout(() => popup.remove(), 1000);
 }
 
 // 显示成就弹窗
@@ -947,24 +1018,68 @@ function handleCorrectAnswer(btnElement) {
     // 检查成就
     checkAchievements(App.practice.streak, App.stats.totalCorrect);
 
-    // 连胜特效
-    if (App.practice.streak === 3) {
+    // 连胜指示器里程碑效果
+    const streakIndicator = document.getElementById('streak-indicator');
+    if (App.practice.streak > 0 && App.practice.streak % 5 === 0) {
+        streakIndicator.classList.add('milestone');
+        setTimeout(() => streakIndicator.classList.remove('milestone'), 2000);
+    }
+
+    // 连胜特效 - 更丰富的庆祝
+    const streak = App.practice.streak;
+
+    if (streak === 3) {
         // 首次达到3连胜
         playSound('streak');
-        createConfetti(20);
-    } else if (App.practice.streak > 0 && App.practice.streak % 5 === 0) {
-        // 每5连胜
+        createConfetti(25);
+        createComboText(3);
+    } else if (streak === 5) {
+        // 5连胜
         playSound('streak');
         createConfetti(40);
-        // 在按钮位置显示星星爆炸
+        createComboText(5);
         if (btnElement) {
             const rect = btnElement.getBoundingClientRect();
-            createStarBurst(rect.left + rect.width / 2, rect.top + rect.height / 2);
+            createStarBurst(rect.left + rect.width / 2, rect.top + rect.height / 2, 10);
         }
-    } else if (App.practice.streak === 10 || App.practice.streak === 20) {
-        // 10连胜和20连胜特别庆祝
+    } else if (streak === 10) {
+        // 10连胜 - 超级庆祝
         playSound('achievement');
-        createConfetti(60);
+        createConfetti(80);
+        createComboText(10);
+        if (btnElement) {
+            const rect = btnElement.getBoundingClientRect();
+            createStarBurst(rect.left + rect.width / 2, rect.top + rect.height / 2, 15);
+            createFloatingHearts(rect.left + rect.width / 2, rect.top, 8);
+        }
+    } else if (streak === 15) {
+        // 15连胜 - 超神
+        playSound('achievement');
+        createConfetti(100);
+        createComboText(15);
+        if (btnElement) {
+            const rect = btnElement.getBoundingClientRect();
+            createStarBurst(rect.left + rect.width / 2, rect.top + rect.height / 2, 20);
+            createFloatingHearts(rect.left + rect.width / 2, rect.top, 12);
+        }
+    } else if (streak === 20) {
+        // 20连胜 - 无敌
+        playSound('complete');
+        createConfetti(150);
+        createComboText(20);
+        if (btnElement) {
+            const rect = btnElement.getBoundingClientRect();
+            createStarBurst(rect.left + rect.width / 2, rect.top + rect.height / 2, 25);
+            createFloatingHearts(rect.left + rect.width / 2, rect.top, 15);
+        }
+    } else if (streak > 0 && streak % 5 === 0) {
+        // 其他5的倍数
+        playSound('streak');
+        createConfetti(50);
+        if (btnElement) {
+            const rect = btnElement.getBoundingClientRect();
+            createStarBurst(rect.left + rect.width / 2, rect.top + rect.height / 2, 12);
+        }
     }
 
     saveProgress();
