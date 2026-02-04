@@ -2429,6 +2429,7 @@ const BattleMode = {
     // 显示战斗题目
     showBattleQuestion() {
         const battle = App.battle;
+        const self = this; // 保存 this 引用
 
         // 循环题目
         if (battle.currentIndex >= battle.questions.length) {
@@ -2437,6 +2438,10 @@ const BattleMode = {
         }
 
         const question = battle.questions[battle.currentIndex];
+        if (!question) {
+            console.error('题目为空');
+            return;
+        }
 
         // 显示题目
         document.getElementById('battle-question-text').textContent = question.q;
@@ -2449,17 +2454,16 @@ const BattleMode = {
         const choices = this.generateChoices(question.a);
         const choicesContainer = document.getElementById('battle-choices');
         choicesContainer.innerHTML = choices.map(c =>
-            `<button class="battle-choice-btn">${c}</button>`
+            `<button class="battle-choice-btn" type="button">${c}</button>`
         ).join('');
 
-        // 绑定点击事件
-        choicesContainer.querySelectorAll('.battle-choice-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                if (!btn.disabled) {
-                    this.checkAnswer(btn.textContent, btn);
-                }
-            });
-        });
+        // 绑定点击事件 - 使用事件委托确保稳定
+        choicesContainer.onclick = function(e) {
+            const btn = e.target.closest('.battle-choice-btn');
+            if (btn && !btn.disabled) {
+                self.checkAnswer(btn.textContent.trim(), btn);
+            }
+        };
     },
 
     // 生成选项
@@ -2824,6 +2828,11 @@ const BattleMode = {
 
         // 播放音效
         playSound('wrong');
+
+        // 怪兽威胁动画
+        const monsterEmoji = document.getElementById('monster-emoji');
+        monsterEmoji.classList.add('threaten');
+        setTimeout(() => monsterEmoji.classList.remove('threaten'), 800);
 
         // 显示反馈
         this.showFeedback(false, '正确答案: ' + correctAnswer);

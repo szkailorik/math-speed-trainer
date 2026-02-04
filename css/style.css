@@ -2698,14 +2698,49 @@ body.keyboard-active #battle-page .battle-answer-area {
 
 .monster-emoji {
     font-size: 5rem;
-    animation: monster-idle 2s ease-in-out infinite;
+    animation: monster-idle 2s ease-in-out infinite, monster-breathe 3s ease-in-out infinite, monster-wiggle 4s ease-in-out infinite;
     filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.4));
     transition: transform 0.1s ease;
 }
 
+/* 上下飘动 */
 @keyframes monster-idle {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-10px); }
+}
+
+/* 呼吸效果 - 轻微放大缩小 */
+@keyframes monster-breathe {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+/* 左右轻微摇晃 - 更有生命感 */
+@keyframes monster-wiggle {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-3deg); }
+    75% { transform: rotate(3deg); }
+}
+
+/* 眨眼效果 - 偶尔闪烁 */
+@keyframes monster-blink {
+    0%, 45%, 55%, 100% { filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.4)) brightness(1); }
+    50% { filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.4)) brightness(0.7); }
+}
+
+/* 威胁抖动 - 怪兽准备攻击时 */
+@keyframes monster-threaten {
+    0%, 100% { transform: translateX(0) scale(1); }
+    10% { transform: translateX(-5px) scale(1.02); }
+    20% { transform: translateX(5px) scale(1.02); }
+    30% { transform: translateX(-5px) scale(1.02); }
+    40% { transform: translateX(5px) scale(1.02); }
+    50% { transform: translateX(0) scale(1.05); }
+}
+
+/* 怪兽威胁状态 - 玩家答错时 */
+.monster-emoji.threaten {
+    animation: monster-threaten 0.8s ease;
 }
 
 .monster-emoji.hit {
