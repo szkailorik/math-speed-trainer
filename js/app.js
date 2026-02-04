@@ -2429,7 +2429,6 @@ const BattleMode = {
     // 显示战斗题目
     showBattleQuestion() {
         const battle = App.battle;
-        const self = this; // 保存 this 引用
 
         // 循环题目
         if (battle.currentIndex >= battle.questions.length) {
@@ -2446,24 +2445,40 @@ const BattleMode = {
         // 显示题目
         document.getElementById('battle-question-text').textContent = question.q;
 
-        // 战斗模式强制使用选择题（iPad上输入法体验不好）
+        // 战斗模式强制使用选择题
         document.getElementById('battle-choices').classList.remove('hidden');
         document.getElementById('battle-input-mode').classList.add('hidden');
 
         // 生成选项
         const choices = this.generateChoices(question.a);
         const choicesContainer = document.getElementById('battle-choices');
-        choicesContainer.innerHTML = choices.map(c =>
-            `<button class="battle-choice-btn" type="button">${c}</button>`
-        ).join('');
 
-        // 绑定点击事件 - 使用事件委托确保稳定
-        choicesContainer.onclick = function(e) {
-            const btn = e.target.closest('.battle-choice-btn');
-            if (btn && !btn.disabled) {
-                self.checkAnswer(btn.textContent.trim(), btn);
-            }
-        };
+        // 清空并重新创建按钮
+        choicesContainer.innerHTML = '';
+
+        choices.forEach(choice => {
+            const btn = document.createElement('button');
+            btn.className = 'battle-choice-btn';
+            btn.type = 'button';
+            btn.textContent = choice;
+
+            // 直接绑定点击事件到每个按钮
+            btn.onclick = () => {
+                if (!btn.disabled) {
+                    BattleMode.checkAnswer(String(choice), btn);
+                }
+            };
+
+            // 同时添加 touchend 事件（移动设备）
+            btn.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                if (!btn.disabled) {
+                    BattleMode.checkAnswer(String(choice), btn);
+                }
+            }, { passive: false });
+
+            choicesContainer.appendChild(btn);
+        });
     },
 
     // 生成选项
