@@ -476,6 +476,16 @@ button:active, .menu-btn:active, .choice-btn:active {
     color: var(--text-light);
 }
 
+.xiaojiujiu-btn {
+    background: linear-gradient(135deg, #FFE0E6, #FFCDD2);
+    border: 2px solid #EF5350 !important;
+}
+
+[data-theme="dark"] .xiaojiujiu-btn {
+    background: linear-gradient(135deg, #4E1A1A, #5D2828);
+    border: 2px solid #EF5350 !important;
+}
+
 .times-btn {
     background: linear-gradient(135deg, #E3F2FD, #BBDEFB);
 }

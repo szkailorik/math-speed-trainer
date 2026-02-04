@@ -687,7 +687,8 @@ function renderLearnContent(tab) {
 
     // 标签名称映射
     const tabNames = {
-        times: '九九表',
+        xiaojiujiu: '小九九速算',
+        times: '大九九表',
         multiply: '乘法速记',
         fraction: '分数小数',
         decimal: '小数规律',
@@ -721,7 +722,7 @@ function startPractice(module) {
         questions = shuffle(App.wrongBook).slice(0, Math.min(App.settings.count, App.wrongBook.length));
     } else if (module === 'mixed') {
         // 综合训练 - 从所有模块随机抽取
-        const allModules = ['times', 'multiply', 'fraction', 'decimal', 'square'];
+        const allModules = ['xiaojiujiu', 'times', 'multiply', 'fraction', 'decimal', 'square'];
         allModules.forEach(m => {
             const moduleData = MathData[m][App.difficulty] || MathData[m].easy;
             questions.push(...moduleData);
@@ -749,7 +750,8 @@ function startPractice(module) {
 
     // 设置标题
     const titles = {
-        times: '📊 九九表',
+        xiaojiujiu: '🔥 小九九速算',
+        times: '📊 大九九表',
         multiply: '🔢 乘法速记',
         fraction: '🔄 分数小数',
         decimal: '➗ 小数规律',
@@ -1441,7 +1443,7 @@ function initEventListeners() {
 
             if (module === 'learn') {
                 showPage('learn');
-                renderLearnContent('times');
+                renderLearnContent('xiaojiujiu');
             } else if (module === 'daily') {
                 App.currentModule = 'daily'; // 设置 currentModule
                 showPage('daily');
