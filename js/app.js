@@ -2038,7 +2038,7 @@ const BattleMode = {
             id: 'fang_monster', name: '牙牙怪', nameEn: 'Fang Monster', emoji: '👹', hp: 4, type: 'dark',
             attack: '🦷', attackName: '獠牙撕咬', quips: ['嘿嘿~', '牙痒痒~', '咬咬!'],
             trait: '其实是素食主义者', traitEn: 'Actually a vegetarian',
-            story: '牙牙怪有着吓人的大獠牙，但其实它只吃蔬菜！那些大牙齿是用来嚼胡萝卜的。它装凶只是想提醒小朋友："要像我咬蔬菜一样，一口一口'咬'掉数学题！"',
+            story: '牙牙怪有着吓人的大獠牙，但其实它只吃蔬菜！那些大牙齿是用来嚼胡萝卜的。它装凶只是想提醒小朋友："要像我咬蔬菜一样，一口一口「咬」掉数学题！"',
             storyEn: 'Fang Monster has scary big fangs, but actually only eats vegetables! Those big teeth are for chewing carrots. It acts fierce to remind kids: "Bite through math problems like I bite vegetables - one bite at a time!"'
         },
         {
