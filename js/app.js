@@ -2630,12 +2630,16 @@ const BattleMode = {
         };
 
         let html = '';
+        let visibleCount = 0;
+
         allMonsters.forEach(monster => {
             const isCollected = collection.includes(monster.id);
 
             // 筛选
             if (filter === 'collected' && !isCollected) return;
             if (filter === 'locked' && isCollected) return;
+
+            visibleCount++;
 
             if (isCollected) {
                 html += `
@@ -2656,6 +2660,25 @@ const BattleMode = {
             }
         });
 
+        // 空状态处理
+        if (visibleCount === 0) {
+            if (filter === 'collected') {
+                html = `
+                    <div class="collection-empty">
+                        <div class="collection-empty-icon">📖</div>
+                        <div class="collection-empty-text">还没有收集到任何妖怪<br>快去战斗收集吧!</div>
+                    </div>
+                `;
+            } else if (filter === 'locked') {
+                html = `
+                    <div class="collection-empty">
+                        <div class="collection-empty-icon">🎉</div>
+                        <div class="collection-empty-text">恭喜! 你已经收集了全部妖怪!</div>
+                    </div>
+                `;
+            }
+        }
+
         grid.innerHTML = html;
 
         // 绑定点击事件
@@ -2665,9 +2688,18 @@ const BattleMode = {
                 const monster = allMonsters.find(m => m.id === id);
                 if (monster) {
                     this.showMonsterDetail(monster);
+                    playSound('click');
                 }
             });
         });
+
+        // 检查是否全收集
+        const collectionPage = document.getElementById('collection-page');
+        if (collection.length >= allMonsters.length) {
+            collectionPage?.classList.add('collection-complete');
+        } else {
+            collectionPage?.classList.remove('collection-complete');
+        }
 
         this.updateCollectionCount();
     },
