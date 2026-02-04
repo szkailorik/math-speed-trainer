@@ -2821,10 +2821,34 @@ const BattleMode = {
         battle.playerMaxHP = settings.playerHP;
         battle.totalStages = settings.stages;
 
-        // 获取题目
+        // 获取题目（混入简单热身题）
         const moduleData = MathData.xiaojiujiu;
         const diffData = moduleData[difficulty] || moduleData.easy;
-        battle.questions = shuffle([...diffData]);
+        const mainQuestions = shuffle([...diffData]);
+
+        // 从warmup中随机抽取约25%的简单题混入
+        if (moduleData.warmup && moduleData.warmup.length > 0) {
+            const warmupPool = shuffle([...moduleData.warmup]);
+            const warmupCount = Math.max(3, Math.floor(mainQuestions.length * 0.25));
+            const selectedWarmup = warmupPool.slice(0, Math.min(warmupCount, warmupPool.length));
+            // 将warmup题均匀插入主题目中
+            const mixed = [];
+            const interval = Math.floor(mainQuestions.length / (selectedWarmup.length + 1));
+            let warmupIdx = 0;
+            for (let i = 0; i < mainQuestions.length; i++) {
+                mixed.push(mainQuestions[i]);
+                if (warmupIdx < selectedWarmup.length && (i + 1) % interval === 0) {
+                    mixed.push(selectedWarmup[warmupIdx++]);
+                }
+            }
+            // 追加剩余warmup题
+            while (warmupIdx < selectedWarmup.length) {
+                mixed.push(selectedWarmup[warmupIdx++]);
+            }
+            battle.questions = mixed;
+        } else {
+            battle.questions = mainQuestions;
+        }
 
         // 显示战斗页面
         showPage('battle');
