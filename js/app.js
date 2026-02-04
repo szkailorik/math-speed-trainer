@@ -820,8 +820,11 @@ function showQuestion() {
         streakIndicator.classList.remove('active');
     }
 
-    // 根据模式显示选项
-    if (App.settings.mode === 'choice') {
+    // 根据模式显示选项（forceInput 强制使用输入模式）
+    const useInputMode = question.forceInput || App.settings.mode === 'input';
+
+    if (!useInputMode) {
+        // 选择题模式
         inputMode.classList.add('hidden');
         choices.classList.remove('hidden');
 
@@ -838,11 +841,13 @@ function showQuestion() {
             btn.addEventListener('click', () => checkAnswer(btn.dataset.answer, btn));
         });
     } else {
+        // 填空题模式（输入答案）
         choices.classList.add('hidden');
         inputMode.classList.remove('hidden');
 
         const input = document.getElementById('answer-input');
         input.value = '';
+        input.placeholder = question.forceInput ? '输入?的值' : '输入答案';
         input.focus();
     }
 
