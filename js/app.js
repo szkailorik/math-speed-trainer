@@ -1124,7 +1124,7 @@ function endPractice() {
 function initDailyChallenge() {
     // 生成10道混合题目
     const allQuestions = [];
-    const modules = ['times', 'multiply', 'fraction', 'decimal', 'square'];
+    const modules = ['xiaojiujiu', 'times', 'multiply', 'fraction', 'decimal', 'square'];
 
     modules.forEach(m => {
         const data = MathData[m].normal || MathData[m].easy;
