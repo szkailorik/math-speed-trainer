@@ -1518,6 +1518,213 @@ button:active, .menu-btn:active, .choice-btn:active {
     }
 }
 
+/* 星星爆炸效果 */
+.star-burst {
+    position: absolute;
+    font-size: 1.5rem;
+    animation: star-burst 0.6s ease-out forwards;
+    pointer-events: none;
+}
+
+@keyframes star-burst {
+    0% {
+        transform: scale(0) rotate(0deg);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.2) rotate(180deg);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(0) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* 答对时的放大闪烁效果 */
+@keyframes correct-pop {
+    0% { transform: scale(1); }
+    30% { transform: scale(1.08); }
+    60% { transform: scale(0.98); }
+    100% { transform: scale(1); }
+}
+
+.question-card.correct {
+    animation: correct-pop 0.4s ease;
+}
+
+/* 答错时的摇晃效果增强 */
+@keyframes wrong-shake {
+    0%, 100% { transform: translateX(0) rotate(0deg); }
+    15% { transform: translateX(-12px) rotate(-2deg); }
+    30% { transform: translateX(10px) rotate(2deg); }
+    45% { transform: translateX(-8px) rotate(-1deg); }
+    60% { transform: translateX(6px) rotate(1deg); }
+    75% { transform: translateX(-4px) rotate(0deg); }
+}
+
+.question-card.wrong {
+    animation: wrong-shake 0.5s ease;
+}
+
+/* 连胜火焰动画 */
+@keyframes flame {
+    0%, 100% { transform: scale(1) rotate(-3deg); }
+    25% { transform: scale(1.1) rotate(3deg); }
+    50% { transform: scale(1.05) rotate(-2deg); }
+    75% { transform: scale(1.15) rotate(2deg); }
+}
+
+.streak-indicator.active .streak-fire {
+    animation: flame 0.3s ease infinite;
+}
+
+/* 连胜数字跳动 */
+@keyframes number-pop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.3); }
+    100% { transform: scale(1); }
+}
+
+.streak-num.pop {
+    animation: number-pop 0.3s ease;
+}
+
+/* 选项按钮hover波纹效果 */
+.choice-btn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(108, 92, 231, 0.1);
+    transform: translate(-50%, -50%);
+    transition: width 0.3s, height 0.3s;
+}
+
+.choice-btn:active::after {
+    width: 200%;
+    height: 200%;
+}
+
+/* 正确选项的闪光效果 */
+@keyframes correct-glow {
+    0% { box-shadow: 0 0 0 0 rgba(52, 199, 89, 0.4); }
+    50% { box-shadow: 0 0 20px 10px rgba(52, 199, 89, 0.2); }
+    100% { box-shadow: 0 0 0 0 rgba(52, 199, 89, 0); }
+}
+
+.choice-btn.correct {
+    animation: correct-glow 0.6s ease;
+}
+
+/* 分数飘浮效果 */
+@keyframes score-float {
+    0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    50% {
+        opacity: 1;
+        transform: translateY(-30px) scale(1.2);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-60px) scale(0.8);
+    }
+}
+
+/* 结果页数字滚动效果 */
+@keyframes count-up {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.result-value {
+    animation: count-up 0.5s ease backwards;
+}
+
+.result-stat:nth-child(1) .result-value { animation-delay: 0.1s; }
+.result-stat:nth-child(2) .result-value { animation-delay: 0.2s; }
+.result-stat:nth-child(3) .result-value { animation-delay: 0.3s; }
+
+/* 结果页正确率条动画 */
+@keyframes fill-bar {
+    from { width: 0; }
+}
+
+.accuracy-fill {
+    animation: fill-bar 1s ease-out 0.5s backwards;
+}
+
+/* 进度点完成动画 */
+@keyframes dot-complete {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.4); }
+    100% { transform: scale(1); }
+}
+
+.progress-dot.correct,
+.progress-dot.wrong {
+    animation: dot-complete 0.3s ease;
+}
+
+/* 菜单按钮入场动画 */
+@keyframes menu-enter {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.menu-btn {
+    animation: menu-enter 0.4s ease backwards;
+}
+
+.menu-btn:nth-child(1) { animation-delay: 0.05s; }
+.menu-btn:nth-child(2) { animation-delay: 0.1s; }
+.menu-btn:nth-child(3) { animation-delay: 0.15s; }
+.menu-btn:nth-child(4) { animation-delay: 0.2s; }
+.menu-btn:nth-child(5) { animation-delay: 0.25s; }
+.menu-btn:nth-child(6) { animation-delay: 0.3s; }
+.menu-btn:nth-child(7) { animation-delay: 0.35s; }
+.menu-btn:nth-child(8) { animation-delay: 0.4s; }
+.menu-btn:nth-child(9) { animation-delay: 0.45s; }
+
+/* 用户卡片入场动画 */
+.user-card {
+    animation: menu-enter 0.4s ease backwards;
+}
+
+.user-card:nth-child(1) { animation-delay: 0.1s; }
+.user-card:nth-child(2) { animation-delay: 0.2s; }
+
+/* 成就弹窗增强 */
+@keyframes achievement-shine {
+    0% { background-position: -200% center; }
+    100% { background-position: 200% center; }
+}
+
+.achievement-popup.show .achievement-icon {
+    animation: bounce 0.6s ease, flame 0.5s ease infinite 0.6s;
+}
+
+/* 倒计时闪烁 */
+@keyframes timer-warning {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.timer-progress.warning {
+    animation: timer-warning 0.5s ease infinite;
+}
+
 /* ===== 响应式 ===== */
 @media (max-width: 480px) {
     .home-header h1 {

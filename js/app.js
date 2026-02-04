@@ -156,33 +156,113 @@ function playSound(type) {
     if (!AudioContext) return;
 
     const ctx = new AudioContext();
-    const oscillator = ctx.createOscillator();
-    const gainNode = ctx.createGain();
-
-    oscillator.connect(gainNode);
-    gainNode.connect(ctx.destination);
 
     if (type === 'correct') {
-        oscillator.frequency.setValueAtTime(523.25, ctx.currentTime); // C5
-        oscillator.frequency.setValueAtTime(659.25, ctx.currentTime + 0.1); // E5
-        gainNode.gain.setValueAtTime(0.3, ctx.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.2);
-        oscillator.start(ctx.currentTime);
-        oscillator.stop(ctx.currentTime + 0.25);
+        // 清脆的正确音效 - 上升的两个音
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(523.25, ctx.currentTime); // C5
+        osc.frequency.setValueAtTime(783.99, ctx.currentTime + 0.1); // G5
+        gain.gain.setValueAtTime(0.3, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.2);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.25);
     } else if (type === 'wrong') {
-        oscillator.frequency.setValueAtTime(200, ctx.currentTime);
-        gainNode.gain.setValueAtTime(0.3, ctx.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.15);
-        oscillator.start(ctx.currentTime);
-        oscillator.stop(ctx.currentTime + 0.2);
+        // 低沉的错误音效
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(200, ctx.currentTime);
+        osc.frequency.setValueAtTime(150, ctx.currentTime + 0.1);
+        gain.gain.setValueAtTime(0.3, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.2);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.25);
+    } else if (type === 'streak') {
+        // 连胜音效 - 快速上升的三个音
+        const notes = [523.25, 659.25, 783.99]; // C5, E5, G5
+        notes.forEach((freq, i) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, ctx.currentTime + i * 0.08);
+            gain.gain.setValueAtTime(0, ctx.currentTime + i * 0.08);
+            gain.gain.linearRampToValueAtTime(0.25, ctx.currentTime + i * 0.08 + 0.02);
+            gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + i * 0.08 + 0.15);
+            osc.start(ctx.currentTime + i * 0.08);
+            osc.stop(ctx.currentTime + i * 0.08 + 0.2);
+        });
     } else if (type === 'achievement') {
-        oscillator.frequency.setValueAtTime(523.25, ctx.currentTime);
-        oscillator.frequency.setValueAtTime(659.25, ctx.currentTime + 0.15);
-        oscillator.frequency.setValueAtTime(783.99, ctx.currentTime + 0.3);
-        gainNode.gain.setValueAtTime(0.3, ctx.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.5);
-        oscillator.start(ctx.currentTime);
-        oscillator.stop(ctx.currentTime + 0.55);
+        // 成就音效 - 胜利的旋律
+        const notes = [523.25, 659.25, 783.99, 1046.5]; // C5, E5, G5, C6
+        notes.forEach((freq, i) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, ctx.currentTime + i * 0.12);
+            gain.gain.setValueAtTime(0, ctx.currentTime + i * 0.12);
+            gain.gain.linearRampToValueAtTime(0.3, ctx.currentTime + i * 0.12 + 0.02);
+            gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + i * 0.12 + 0.3);
+            osc.start(ctx.currentTime + i * 0.12);
+            osc.stop(ctx.currentTime + i * 0.12 + 0.35);
+        });
+    } else if (type === 'complete') {
+        // 完成挑战音效 - 欢快的旋律
+        const melody = [
+            { freq: 523.25, time: 0 },      // C5
+            { freq: 587.33, time: 0.1 },    // D5
+            { freq: 659.25, time: 0.2 },    // E5
+            { freq: 783.99, time: 0.3 },    // G5
+            { freq: 659.25, time: 0.45 },   // E5
+            { freq: 783.99, time: 0.55 },   // G5
+            { freq: 1046.5, time: 0.7 },    // C6
+        ];
+        melody.forEach(note => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(note.freq, ctx.currentTime + note.time);
+            gain.gain.setValueAtTime(0, ctx.currentTime + note.time);
+            gain.gain.linearRampToValueAtTime(0.25, ctx.currentTime + note.time + 0.02);
+            gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + note.time + 0.2);
+            osc.start(ctx.currentTime + note.time);
+            osc.stop(ctx.currentTime + note.time + 0.25);
+        });
+    } else if (type === 'countdown') {
+        // 倒计时提示音
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(880, ctx.currentTime); // A5
+        gain.gain.setValueAtTime(0.2, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.12);
+    } else if (type === 'click') {
+        // 点击音效
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(1200, ctx.currentTime);
+        gain.gain.setValueAtTime(0.1, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.05);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.06);
     }
 }
 
@@ -219,21 +299,70 @@ function showFeedback(isCorrect, feedbackId = 'feedback') {
 }
 
 // 创建彩色纸屑特效
-function createConfetti() {
-    const colors = ['#6C5CE7', '#00B894', '#FDCB6E', '#E17055', '#74B9FF', '#A29BFE'];
+function createConfetti(count = 50) {
+    const colors = ['#6C5CE7', '#34C759', '#FF9500', '#FF3B30', '#5AC8FA', '#AF52DE', '#FFD60A'];
     const effectsLayer = document.getElementById('effects-layer');
 
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < count; i++) {
         const confetti = document.createElement('div');
         confetti.className = 'confetti';
         confetti.style.left = Math.random() * 100 + '%';
         confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
         confetti.style.animationDelay = Math.random() * 0.5 + 's';
         confetti.style.animationDuration = (2 + Math.random() * 2) + 's';
+        confetti.style.width = (6 + Math.random() * 8) + 'px';
+        confetti.style.height = (6 + Math.random() * 8) + 'px';
         effectsLayer.appendChild(confetti);
 
         setTimeout(() => confetti.remove(), 4000);
     }
+}
+
+// 创建星星爆炸效果
+function createStarBurst(x, y) {
+    const stars = ['⭐', '✨', '🌟', '💫'];
+    const effectsLayer = document.getElementById('effects-layer');
+
+    for (let i = 0; i < 6; i++) {
+        const star = document.createElement('div');
+        star.className = 'star-burst';
+        star.textContent = stars[Math.floor(Math.random() * stars.length)];
+
+        const angle = (i / 6) * Math.PI * 2;
+        const distance = 50 + Math.random() * 30;
+        const endX = x + Math.cos(angle) * distance;
+        const endY = y + Math.sin(angle) * distance;
+
+        star.style.left = x + 'px';
+        star.style.top = y + 'px';
+        star.style.setProperty('--end-x', endX + 'px');
+        star.style.setProperty('--end-y', endY + 'px');
+
+        effectsLayer.appendChild(star);
+        setTimeout(() => star.remove(), 600);
+    }
+}
+
+// 创建+分数飘浮效果
+function createScorePopup(element, score, isCorrect) {
+    const popup = document.createElement('div');
+    popup.style.cssText = `
+        position: absolute;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: ${isCorrect ? '#34C759' : '#FF3B30'};
+        pointer-events: none;
+        z-index: 1000;
+        animation: score-float 0.8s ease-out forwards;
+    `;
+    popup.textContent = isCorrect ? '+10' : '×';
+
+    const rect = element.getBoundingClientRect();
+    popup.style.left = rect.left + rect.width / 2 - 20 + 'px';
+    popup.style.top = rect.top + 'px';
+
+    document.body.appendChild(popup);
+    setTimeout(() => popup.remove(), 800);
 }
 
 // 显示成就弹窗
@@ -792,12 +921,40 @@ function handleCorrectAnswer(btnElement) {
     vibrate(50);
     showFeedback(true);
 
+    // 显示+10分数飘浮
+    if (btnElement) {
+        createScorePopup(btnElement, 10, true);
+    }
+
+    // 更新连胜数字动画
+    const streakNum = document.getElementById('current-streak');
+    if (streakNum) {
+        streakNum.classList.remove('pop');
+        void streakNum.offsetWidth; // 强制重排以重新触发动画
+        streakNum.classList.add('pop');
+    }
+
     // 检查成就
     checkAchievements(App.practice.streak, App.stats.totalCorrect);
 
-    // 连胜5的倍数时显示特效
-    if (App.practice.streak > 0 && App.practice.streak % 5 === 0) {
-        createConfetti();
+    // 连胜特效
+    if (App.practice.streak === 3) {
+        // 首次达到3连胜
+        playSound('streak');
+        createConfetti(20);
+    } else if (App.practice.streak > 0 && App.practice.streak % 5 === 0) {
+        // 每5连胜
+        playSound('streak');
+        createConfetti(40);
+        // 在按钮位置显示星星爆炸
+        if (btnElement) {
+            const rect = btnElement.getBoundingClientRect();
+            createStarBurst(rect.left + rect.width / 2, rect.top + rect.height / 2);
+        }
+    } else if (App.practice.streak === 10 || App.practice.streak === 20) {
+        // 10连胜和20连胜特别庆祝
+        playSound('achievement');
+        createConfetti(60);
     }
 
     saveProgress();
@@ -940,8 +1097,15 @@ function endPractice() {
     updateHomeStats();
     showPage('result');
 
-    if (accuracy >= 80) {
-        createConfetti();
+    // 根据成绩播放不同的音效和动画
+    if (accuracy >= 90) {
+        playSound('complete');
+        createConfetti(80);
+    } else if (accuracy >= 70) {
+        playSound('achievement');
+        createConfetti(50);
+    } else if (accuracy >= 50) {
+        createConfetti(30);
     }
 }
 
@@ -1187,8 +1351,16 @@ function endDailyChallenge() {
 
     showPage('result');
 
-    if (correctCount >= 8) {
-        createConfetti();
+    // 根据成绩播放不同的音效和动画
+    if (correctCount === 10) {
+        playSound('complete');
+        createConfetti(100);
+    } else if (correctCount >= 8) {
+        playSound('achievement');
+        createConfetti(60);
+    } else if (correctCount >= 6) {
+        playSound('streak');
+        createConfetti(30);
     }
 }
 
