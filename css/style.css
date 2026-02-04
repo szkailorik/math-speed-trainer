@@ -96,7 +96,7 @@ button:active, .menu-btn:active, .choice-btn:active {
 
 /* ===== 页面切换 ===== */
 .page {
-    display: none;
+    display: none !important;
     padding: 20px;
     padding-bottom: 40px;
     min-height: 100vh;
@@ -104,7 +104,7 @@ button:active, .menu-btn:active, .choice-btn:active {
 }
 
 .page.active {
-    display: block;
+    display: block !important;
 }
 
 @keyframes fadeIn {
@@ -881,9 +881,9 @@ body.keyboard-active {
     overflow: hidden;
 }
 
-body.keyboard-active #practice-page {
+body.keyboard-active #practice-page.active {
     /* 练习页面使用flex布局，自动适应 */
-    display: flex;
+    display: flex !important;
     flex-direction: column;
     height: 100vh;
     height: 100dvh; /* 动态视口高度 */
@@ -988,8 +988,8 @@ body.keyboard-active #battle-page .battle-answer-area {
 }
 
 /* 练习页整体布局优化 */
-#practice-page {
-    display: flex;
+#practice-page.active {
+    display: flex !important;
     flex-direction: column;
     min-height: 100vh;
     min-height: 100dvh;
@@ -1179,15 +1179,11 @@ body.keyboard-active #battle-page .battle-answer-area {
 }
 
 /* ===== 结果页 ===== */
-#result-page {
-    display: none;
-    padding: 40px 20px;
-}
-
 #result-page.active {
-    display: flex;
+    display: flex !important;
     align-items: center;
     justify-content: center;
+    padding: 40px 20px;
 }
 
 .result-content {
@@ -2462,14 +2458,10 @@ body.keyboard-active #battle-page .battle-answer-area {
 }
 
 /* ===== 小九九模式选择页 ===== */
-#xiaojiujiu-mode-page {
-    display: none;
-    padding: 20px;
-}
-
 #xiaojiujiu-mode-page.active {
-    display: flex;
+    display: flex !important;
     flex-direction: column;
+    padding: 20px;
 }
 
 .mode-select-container {
@@ -2614,8 +2606,8 @@ body.keyboard-active #battle-page .battle-answer-area {
 }
 
 /* ===== 战斗页面 ===== */
-#battle-page {
-    display: none;
+#battle-page.active {
+    display: flex !important;
     flex-direction: column;
     min-height: 100vh;
     min-height: 100dvh;
@@ -2623,10 +2615,6 @@ body.keyboard-active #battle-page .battle-answer-area {
     background: linear-gradient(180deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
     position: relative;
     overflow: hidden;
-}
-
-#battle-page.active {
-    display: flex;
 }
 
 .battle-header {
@@ -3083,18 +3071,13 @@ body.keyboard-active #battle-page .battle-answer-area {
 }
 
 /* ===== 战斗结果页 ===== */
-#battle-result-page,
-#battle-fail-page {
-    display: none;
-    padding: 40px 20px;
-    background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
-}
-
 #battle-result-page.active,
 #battle-fail-page.active {
-    display: flex;
+    display: flex !important;
     align-items: center;
     justify-content: center;
+    padding: 40px 20px;
+    background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
 }
 
 .battle-result-content,
