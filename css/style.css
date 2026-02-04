@@ -2426,6 +2426,761 @@ body.keyboard-active .feedback.show {
     }
 }
 
+/* ===== 小九九模式选择页 ===== */
+#xiaojiujiu-mode-page {
+    display: none;
+    padding: 20px;
+}
+
+#xiaojiujiu-mode-page.active {
+    display: flex;
+    flex-direction: column;
+}
+
+.mode-select-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+    max-width: 400px;
+    margin: 0 auto;
+    width: 100%;
+    padding: 20px 0;
+}
+
+.mode-select-title {
+    text-align: center;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 10px;
+}
+
+.mode-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 30px 20px;
+    background: var(--card-bg);
+    border: 3px solid transparent;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.mode-card:active {
+    transform: scale(0.98);
+}
+
+.mode-card.battle-mode {
+    background: linear-gradient(135deg, #FFF5F5 0%, #FFF 100%);
+    border-color: #FF6B6B;
+}
+
+.mode-card.battle-mode:hover {
+    box-shadow: 0 8px 30px rgba(255, 107, 107, 0.3);
+}
+
+.mode-card.classic-mode {
+    background: linear-gradient(135deg, #F0F5FF 0%, #FFF 100%);
+    border-color: var(--primary-light);
+}
+
+.mode-card.classic-mode:hover {
+    box-shadow: 0 8px 30px rgba(108, 92, 231, 0.2);
+}
+
+.mode-icon {
+    font-size: 3rem;
+}
+
+.mode-name {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.mode-desc {
+    font-size: 0.9rem;
+    color: var(--text-light);
+    text-align: center;
+}
+
+.mode-tag {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    padding: 4px 10px;
+    background: #FF6B6B;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: var(--radius-full);
+}
+
+/* ===== 战斗页面 ===== */
+#battle-page {
+    display: none;
+    flex-direction: column;
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding: 0;
+    background: linear-gradient(180deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+#battle-page.active {
+    display: flex;
+}
+
+.battle-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    padding-top: calc(var(--safe-top) + 15px);
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 10;
+}
+
+.battle-header .back-btn {
+    color: white;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    padding: 8px 15px;
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+}
+
+.stage-info {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    color: white;
+}
+
+.stage-label {
+    font-size: 0.85rem;
+    opacity: 0.8;
+}
+
+.stage-number {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #FFD93D;
+}
+
+.stage-total {
+    font-size: 1rem;
+    opacity: 0.8;
+}
+
+.player-hp-area {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.hp-hearts {
+    font-size: 1.3rem;
+    letter-spacing: 2px;
+    filter: drop-shadow(0 0 5px rgba(255, 0, 0, 0.5));
+}
+
+/* 怪兽区域 */
+.monster-area {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    position: relative;
+}
+
+.monster-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #FFD93D;
+    margin-bottom: 15px;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.monster-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.monster-emoji {
+    font-size: 5rem;
+    animation: monster-idle 2s ease-in-out infinite;
+    filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.4));
+    transition: transform 0.1s ease;
+}
+
+@keyframes monster-idle {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.monster-emoji.hit {
+    animation: monster-hit 0.3s ease;
+}
+
+@keyframes monster-hit {
+    0%, 100% { transform: translateX(0); filter: brightness(1); }
+    25% { transform: translateX(-15px); filter: brightness(2); }
+    75% { transform: translateX(15px); filter: brightness(1.5); }
+}
+
+.monster-emoji.attack {
+    animation: monster-attack 0.5s ease;
+}
+
+@keyframes monster-attack {
+    0% { transform: translateY(0) scale(1); }
+    30% { transform: translateY(-20px) scale(1.2); }
+    60% { transform: translateY(30px) scale(1.1); }
+    100% { transform: translateY(0) scale(1); }
+}
+
+.monster-emoji.death {
+    animation: monster-death 1s ease forwards;
+}
+
+@keyframes monster-death {
+    0% { transform: scale(1) rotate(0deg); opacity: 1; }
+    50% { transform: scale(1.3) rotate(180deg); opacity: 0.8; }
+    100% { transform: scale(0) rotate(360deg); opacity: 0; }
+}
+
+.monster-hp-bar {
+    width: 150px;
+    height: 16px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+    position: relative;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.monster-hp-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #FF6B6B, #EE5A5A);
+    border-radius: var(--radius-full);
+    transition: width 0.3s ease;
+    width: 100%;
+}
+
+.monster-hp-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* 伤害数字 */
+.damage-numbers {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+
+.damage-number {
+    position: absolute;
+    font-size: 2rem;
+    font-weight: 800;
+    color: #FFD93D;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5), 0 0 10px rgba(255, 217, 61, 0.5);
+    animation: damage-pop 0.8s ease forwards;
+    white-space: nowrap;
+}
+
+@keyframes damage-pop {
+    0% { transform: translateY(0) scale(0.5); opacity: 1; }
+    50% { transform: translateY(-30px) scale(1.2); opacity: 1; }
+    100% { transform: translateY(-60px) scale(1); opacity: 0; }
+}
+
+/* 武器飞行区域 */
+.weapon-area {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 5;
+}
+
+.weapon {
+    position: absolute;
+    font-size: 2.5rem;
+    animation: weapon-fly 0.4s ease-out forwards;
+    filter: drop-shadow(0 0 10px rgba(255, 200, 0, 0.8));
+}
+
+@keyframes weapon-fly {
+    0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-300px) scale(0.5);
+    }
+}
+
+/* 战斗题目区域 */
+.battle-question-area {
+    flex: 0 0 auto;
+    padding: 15px 20px;
+    position: relative;
+}
+
+.battle-question-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: var(--radius);
+    padding: 25px 20px;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.battle-question-text {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.battle-combo {
+    position: absolute;
+    top: 20px;
+    right: 25px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 8px 15px;
+    background: rgba(255, 107, 107, 0.9);
+    border-radius: var(--radius-full);
+    color: white;
+    font-weight: 600;
+    opacity: 0;
+    transform: scale(0.8);
+    transition: all 0.3s ease;
+}
+
+.battle-combo.show {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.combo-fire {
+    font-size: 1.1rem;
+}
+
+.combo-count {
+    font-size: 1.2rem;
+    font-weight: 800;
+}
+
+.combo-label {
+    font-size: 0.8rem;
+    opacity: 0.9;
+}
+
+/* 战斗答题区域 */
+.battle-answer-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 20px;
+    padding-bottom: calc(var(--safe-bottom) + 20px);
+}
+
+.battle-choices {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.battle-choice-btn {
+    padding: 20px;
+    font-size: 1.4rem;
+    font-weight: 700;
+    background: rgba(255, 255, 255, 0.95);
+    border: 3px solid transparent;
+    border-radius: var(--radius);
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.battle-choice-btn:active {
+    transform: scale(0.95);
+}
+
+.battle-choice-btn:hover {
+    border-color: var(--primary);
+    box-shadow: 0 6px 20px rgba(108, 92, 231, 0.3);
+}
+
+.battle-choice-btn.correct {
+    background: var(--success);
+    color: white;
+    border-color: var(--success);
+    animation: correct-pulse 0.5s ease;
+}
+
+.battle-choice-btn.wrong {
+    background: var(--danger);
+    color: white;
+    border-color: var(--danger);
+    animation: wrong-shake 0.4s ease;
+}
+
+@keyframes correct-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+@keyframes wrong-shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-8px); }
+    75% { transform: translateX(8px); }
+}
+
+/* 战斗输入模式 */
+.battle-input-mode {
+    display: none;
+    flex-direction: row;
+    gap: 12px;
+}
+
+.battle-input-mode:not(.hidden) {
+    display: flex;
+}
+
+.battle-answer-input {
+    flex: 1;
+    padding: 18px 20px;
+    font-size: 1.4rem;
+    font-weight: 600;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.95);
+    border: 3px solid transparent;
+    border-radius: var(--radius);
+    color: var(--text);
+    outline: none;
+}
+
+.battle-answer-input:focus {
+    border-color: var(--primary);
+}
+
+.battle-submit-btn {
+    padding: 18px 30px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #FF6B6B, #EE5A5A);
+    border: none;
+    border-radius: var(--radius);
+    color: white;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+}
+
+.battle-submit-btn:active {
+    transform: scale(0.95);
+}
+
+/* 战斗反馈 */
+.battle-feedback {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.8);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 100;
+    transition: all 0.2s ease;
+}
+
+.battle-feedback.show {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+}
+
+.battle-feedback-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px 30px;
+    background: var(--card-bg);
+    border-radius: var(--radius-full);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.battle-feedback.correct .battle-feedback-content {
+    background: var(--success);
+    color: white;
+}
+
+.battle-feedback.wrong .battle-feedback-content {
+    background: var(--danger);
+    color: white;
+}
+
+/* 屏幕闪红效果 */
+.screen-flash {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 0, 0, 0.3);
+    pointer-events: none;
+    opacity: 0;
+    z-index: 50;
+}
+
+.screen-flash.show {
+    animation: screen-flash 0.3s ease;
+}
+
+@keyframes screen-flash {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 1; }
+}
+
+/* ===== 战斗结果页 ===== */
+#battle-result-page,
+#battle-fail-page {
+    display: none;
+    padding: 40px 20px;
+    background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+}
+
+#battle-result-page.active,
+#battle-fail-page.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.battle-result-content,
+.battle-fail-content {
+    text-align: center;
+    width: 100%;
+    max-width: 400px;
+}
+
+.battle-result-icon,
+.battle-fail-icon {
+    font-size: 5rem;
+    margin-bottom: 20px;
+    animation: bounce 0.6s ease;
+}
+
+.battle-result-title,
+.battle-fail-title {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #FFD93D;
+    margin-bottom: 10px;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.battle-result-subtitle,
+.battle-fail-subtitle {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 30px;
+}
+
+.battle-result-stats,
+.battle-fail-stats {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.battle-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    padding: 15px 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius);
+}
+
+.battle-stat-icon {
+    font-size: 1.5rem;
+}
+
+.battle-stat-value {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: white;
+}
+
+.battle-stat-label {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.battle-result-score {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 30px;
+}
+
+.score-label {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.score-value {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #4ECDC4;
+    text-shadow: 0 0 20px rgba(78, 205, 196, 0.5);
+}
+
+.battle-result-actions,
+.battle-fail-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.battle-result-btn,
+.battle-fail-btn {
+    padding: 18px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.battle-result-btn.primary,
+.battle-fail-btn.primary {
+    background: linear-gradient(135deg, #FF6B6B, #EE5A5A);
+    color: white;
+    box-shadow: 0 4px 20px rgba(255, 107, 107, 0.4);
+}
+
+.battle-result-btn:not(.primary),
+.battle-fail-btn:not(.primary) {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.battle-result-btn:active,
+.battle-fail-btn:active {
+    transform: scale(0.98);
+}
+
+/* 怪兽攻击emoji */
+.monster-attack-emoji {
+    position: absolute;
+    font-size: 2rem;
+    animation: monster-attack-fly 0.5s ease-out forwards;
+    z-index: 60;
+}
+
+@keyframes monster-attack-fly {
+    0% {
+        opacity: 1;
+        transform: translateY(0) scale(1.2);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(200px) scale(0.8);
+    }
+}
+
+/* 关卡过渡 */
+.stage-transition {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.stage-transition.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.stage-transition-text {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #FFD93D;
+    text-shadow: 0 0 20px rgba(255, 217, 61, 0.5);
+    animation: stage-text-pop 0.5s ease;
+}
+
+.stage-transition-monster {
+    font-size: 4rem;
+    margin-top: 20px;
+    animation: stage-monster-appear 0.6s ease;
+}
+
+@keyframes stage-text-pop {
+    0% { transform: scale(0.5); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes stage-monster-appear {
+    0% { transform: translateY(50px) scale(0.5); opacity: 0; }
+    100% { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+/* 血量恢复特效 */
+.hp-recover {
+    animation: hp-recover-glow 0.5s ease;
+}
+
+@keyframes hp-recover-glow {
+    0%, 100% { filter: drop-shadow(0 0 5px rgba(255, 0, 0, 0.5)); }
+    50% { filter: drop-shadow(0 0 15px rgba(0, 255, 0, 0.8)); }
+}
+
 /* ===== 减少动画（辅助功能）===== */
 @media (prefers-reduced-motion: reduce) {
     * {

@@ -33,7 +33,7 @@
     <link rel="apple-touch-startup-image" href="icons/splash.png">
 
     <title>数学速算训练营</title>
-    <link rel="stylesheet" href="css/style.css?v=3.1">
+    <link rel="stylesheet" href="css/style.css?v=4.0">
 </head>
 <body>
     <!-- 主页面 -->
@@ -418,6 +418,164 @@
                 <!-- 动态填充 -->
             </div>
         </div>
+
+        <!-- 小九九模式选择页 -->
+        <div id="xiaojiujiu-mode-page" class="page">
+            <header class="page-header">
+                <button class="back-btn" data-target="home">← 返回</button>
+                <h2>🔥 小九九速算</h2>
+                <div class="header-spacer"></div>
+            </header>
+
+            <div class="mode-select-container">
+                <h3 class="mode-select-title">选择训练模式</h3>
+
+                <button class="mode-card battle-mode" id="select-battle-mode">
+                    <span class="mode-icon">⚔️</span>
+                    <span class="mode-name">怪兽战斗</span>
+                    <span class="mode-desc">消灭怪兽，拯救数学王国！</span>
+                    <span class="mode-tag">推荐</span>
+                </button>
+
+                <button class="mode-card classic-mode" id="select-classic-mode">
+                    <span class="mode-icon">📝</span>
+                    <span class="mode-name">经典模式</span>
+                    <span class="mode-desc">专注练习，稳步提升</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- 战斗模式页面 -->
+        <div id="battle-page" class="page">
+            <header class="battle-header">
+                <button class="back-btn" data-target="xiaojiujiu-mode">← 退出</button>
+                <div class="stage-info">
+                    <span class="stage-label">关卡</span>
+                    <span class="stage-number" id="battle-stage">1</span>
+                    <span class="stage-total">/4</span>
+                </div>
+                <div class="player-hp-area">
+                    <span class="hp-hearts" id="player-hearts">❤️❤️❤️❤️❤️</span>
+                </div>
+            </header>
+
+            <!-- 怪兽区域 -->
+            <div class="monster-area" id="monster-area">
+                <div class="monster-name" id="monster-name">数字史莱姆</div>
+                <div class="monster-container">
+                    <div class="monster-emoji" id="monster-emoji">🟢</div>
+                    <div class="monster-hp-bar">
+                        <div class="monster-hp-fill" id="monster-hp-fill"></div>
+                        <span class="monster-hp-text" id="monster-hp-text">5/5</span>
+                    </div>
+                </div>
+                <div class="damage-numbers" id="damage-numbers"></div>
+            </div>
+
+            <!-- 武器飞行区域 -->
+            <div class="weapon-area" id="weapon-area"></div>
+
+            <!-- 题目区域 -->
+            <div class="battle-question-area">
+                <div class="battle-question-card" id="battle-question-card">
+                    <div class="battle-question-text" id="battle-question-text">6 × 7 = ?</div>
+                </div>
+                <div class="battle-combo" id="battle-combo">
+                    <span class="combo-fire">🔥</span>
+                    <span class="combo-count" id="combo-count">0</span>
+                    <span class="combo-label">连击</span>
+                </div>
+            </div>
+
+            <!-- 答题区域 -->
+            <div class="battle-answer-area" id="battle-answer-area">
+                <div class="battle-choices" id="battle-choices">
+                    <button class="battle-choice-btn">42</button>
+                    <button class="battle-choice-btn">48</button>
+                    <button class="battle-choice-btn">36</button>
+                    <button class="battle-choice-btn">54</button>
+                </div>
+                <div class="battle-input-mode hidden" id="battle-input-mode">
+                    <input type="text" inputmode="decimal" class="battle-answer-input" id="battle-answer-input" placeholder="输入答案">
+                    <button class="battle-submit-btn" id="battle-submit-btn">攻击!</button>
+                </div>
+            </div>
+
+            <!-- 战斗反馈 -->
+            <div class="battle-feedback" id="battle-feedback">
+                <div class="battle-feedback-content">
+                    <span class="battle-feedback-icon"></span>
+                    <span class="battle-feedback-text"></span>
+                </div>
+            </div>
+
+            <!-- 屏幕闪红效果 -->
+            <div class="screen-flash" id="screen-flash"></div>
+        </div>
+
+        <!-- 战斗结果页 -->
+        <div id="battle-result-page" class="page">
+            <div class="battle-result-content">
+                <div class="battle-result-icon" id="battle-result-icon">🎉</div>
+                <h2 class="battle-result-title" id="battle-result-title">胜利！</h2>
+                <p class="battle-result-subtitle" id="battle-result-subtitle">你成功击败了所有怪兽！</p>
+
+                <div class="battle-result-stats">
+                    <div class="battle-stat">
+                        <span class="battle-stat-icon">👹</span>
+                        <span class="battle-stat-value" id="result-monsters">4</span>
+                        <span class="battle-stat-label">击败怪兽</span>
+                    </div>
+                    <div class="battle-stat">
+                        <span class="battle-stat-icon">✅</span>
+                        <span class="battle-stat-value" id="result-answers">18</span>
+                        <span class="battle-stat-label">答对题数</span>
+                    </div>
+                    <div class="battle-stat">
+                        <span class="battle-stat-icon">🔥</span>
+                        <span class="battle-stat-value" id="result-max-combo">5</span>
+                        <span class="battle-stat-label">最高连击</span>
+                    </div>
+                </div>
+
+                <div class="battle-result-score">
+                    <span class="score-label">获得积分</span>
+                    <span class="score-value" id="result-battle-score">+150</span>
+                </div>
+
+                <div class="battle-result-actions">
+                    <button class="battle-result-btn primary" id="battle-retry-btn">再战一次</button>
+                    <button class="battle-result-btn" id="battle-home-btn">返回首页</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 战斗失败页 -->
+        <div id="battle-fail-page" class="page">
+            <div class="battle-fail-content">
+                <div class="battle-fail-icon">💔</div>
+                <h2 class="battle-fail-title">挑战失败</h2>
+                <p class="battle-fail-subtitle" id="battle-fail-subtitle">差一点就成功了！再试一次？</p>
+
+                <div class="battle-fail-stats">
+                    <div class="battle-stat">
+                        <span class="battle-stat-icon">👹</span>
+                        <span class="battle-stat-value" id="fail-monsters">2</span>
+                        <span class="battle-stat-label">击败怪兽</span>
+                    </div>
+                    <div class="battle-stat">
+                        <span class="battle-stat-icon">✅</span>
+                        <span class="battle-stat-value" id="fail-answers">12</span>
+                        <span class="battle-stat-label">答对题数</span>
+                    </div>
+                </div>
+
+                <div class="battle-fail-actions">
+                    <button class="battle-fail-btn primary" id="battle-retry-fail-btn">重新挑战</button>
+                    <button class="battle-fail-btn" id="battle-home-fail-btn">返回首页</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- 成就弹窗 -->
@@ -432,7 +590,7 @@
     <!-- 特效层 -->
     <div class="effects-layer" id="effects-layer"></div>
 
-    <script src="js/data.js?v=3.1"></script>
-    <script src="js/app.js?v=3.1"></script>
+    <script src="js/data.js?v=4.0"></script>
+    <script src="js/app.js?v=4.0"></script>
 </body>
 </html>

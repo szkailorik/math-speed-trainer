@@ -126,6 +126,28 @@ const App = {
         startTime: null,
         timerInterval: null,
         completed: false
+    },
+
+    // 战斗模式状态
+    battle: {
+        active: false,
+        difficulty: 'easy',
+        currentStage: 1,
+        totalStages: 4,
+        playerHP: 5,
+        playerMaxHP: 5,
+        monsterHP: 5,
+        monsterMaxHP: 5,
+        combo: 0,
+        maxCombo: 0,
+        correctCount: 0,
+        totalDamage: 0,
+        noDamageTaken: true,
+        startTime: null,
+        questions: [],
+        currentIndex: 0,
+        monstersDefeated: 0,
+        healCounter: 0  // 连续答对计数，用于恢复血量
     }
 };
 
@@ -780,6 +802,12 @@ function renderLearnContent(tab) {
 
 function startPractice(module) {
     App.currentModule = module;
+
+    // 小九九模块显示模式选择页
+    if (module === 'xiaojiujiu') {
+        showPage('xiaojiujiu-mode');
+        return;
+    }
 
     // 获取题目
     let questions = [];
@@ -1809,13 +1837,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 键盘快捷键支持（1234选择答案）
     document.addEventListener('keydown', (e) => {
-        if (App.currentPage === 'practice' || App.currentPage === 'daily') {
+        if (App.currentPage === 'practice' || App.currentPage === 'daily' || App.currentPage === 'battle') {
             const key = e.key;
             if (['1', '2', '3', '4'].includes(key)) {
-                const choicesContainer = App.currentPage === 'daily'
-                    ? document.getElementById('daily-choices')
-                    : document.getElementById('choices');
-                const buttons = choicesContainer.querySelectorAll('.choice-btn:not(:disabled)');
+                let choicesContainer;
+                if (App.currentPage === 'battle') {
+                    choicesContainer = document.getElementById('battle-choices');
+                } else if (App.currentPage === 'daily') {
+                    choicesContainer = document.getElementById('daily-choices');
+                } else {
+                    choicesContainer = document.getElementById('choices');
+                }
+                const buttons = choicesContainer.querySelectorAll('.battle-choice-btn:not(:disabled), .choice-btn:not(:disabled)');
                 const index = parseInt(key) - 1;
                 if (buttons[index]) {
                     buttons[index].click();
@@ -1823,4 +1856,659 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     });
+
+    // ===== 战斗模式初始化 =====
+    BattleMode.init();
 });
+
+// ===== 战斗模式模块 =====
+const BattleMode = {
+    // 怪兽配置
+    monsters: [
+        { name: '数字史莱姆', emoji: '🟢', hp: 3 },
+        { name: '调皮小鬼', emoji: '👻', hp: 4 },
+        { name: '骷髅数学家', emoji: '💀', hp: 5 },
+        { name: '火焰龙宝宝', emoji: '🐲', hp: 6 }
+    ],
+
+    // 困难模式额外怪兽
+    hardMonsters: [
+        { name: '冰霜巨人', emoji: '🧊', hp: 7 },
+        { name: '九九魔王', emoji: '👹', hp: 8 }
+    ],
+
+    // 武器配置
+    weapons: [
+        { emoji: '🔥', name: '火球', weight: 25 },
+        { emoji: '🧊', name: '冰箭', weight: 20 },
+        { emoji: '⚡', name: '雷电', weight: 20 },
+        { emoji: '⭐', name: '星星', weight: 20 },
+        { emoji: '🌈', name: '彩虹', weight: 10 },
+        { emoji: '💣', name: '炸弹', weight: 5 }
+    ],
+
+    // 初始化
+    init() {
+        // 模式选择按钮
+        document.getElementById('select-battle-mode')?.addEventListener('click', () => {
+            this.showDifficultyAndStart();
+        });
+
+        document.getElementById('select-classic-mode')?.addEventListener('click', () => {
+            this.startClassicMode();
+        });
+
+        // 战斗页返回按钮
+        document.querySelector('#battle-page .back-btn')?.addEventListener('click', () => {
+            this.exitBattle();
+        });
+
+        // 战斗结果页按钮
+        document.getElementById('battle-retry-btn')?.addEventListener('click', () => {
+            this.startBattle(App.battle.difficulty);
+        });
+
+        document.getElementById('battle-home-btn')?.addEventListener('click', () => {
+            showPage('home');
+        });
+
+        // 战斗失败页按钮
+        document.getElementById('battle-retry-fail-btn')?.addEventListener('click', () => {
+            this.startBattle(App.battle.difficulty);
+        });
+
+        document.getElementById('battle-home-fail-btn')?.addEventListener('click', () => {
+            showPage('home');
+        });
+
+        // 战斗提交按钮
+        document.getElementById('battle-submit-btn')?.addEventListener('click', () => {
+            this.submitAnswer();
+        });
+
+        // 战斗输入框回车提交
+        document.getElementById('battle-answer-input')?.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                this.submitAnswer();
+            }
+        });
+    },
+
+    // 显示难度选择并开始战斗
+    showDifficultyAndStart() {
+        // 使用当前难度设置
+        this.startBattle(App.difficulty);
+    },
+
+    // 开始经典模式
+    startClassicMode() {
+        App.currentModule = 'xiaojiujiu';
+
+        // 获取题目
+        const moduleData = MathData.xiaojiujiu;
+        const diffData = moduleData[App.difficulty] || moduleData.easy;
+        const questions = shuffle(diffData).slice(0, Math.min(App.settings.count, diffData.length));
+
+        // 初始化训练状态
+        App.practice = {
+            questions: questions,
+            currentIndex: 0,
+            correctCount: 0,
+            streak: 0,
+            startTime: Date.now(),
+            timerInterval: null,
+            timePerQuestion: App.difficulty === 'easy' ? 15 : (App.difficulty === 'normal' ? 10 : 7)
+        };
+
+        document.getElementById('practice-title').textContent = '🔥 小九九速算';
+        document.getElementById('difficulty-selector').classList.remove('hidden');
+        showPage('practice');
+        showQuestion();
+    },
+
+    // 开始战斗
+    startBattle(difficulty) {
+        const battle = App.battle;
+        battle.active = true;
+        battle.difficulty = difficulty;
+        battle.currentStage = 1;
+        battle.monstersDefeated = 0;
+        battle.combo = 0;
+        battle.maxCombo = 0;
+        battle.correctCount = 0;
+        battle.noDamageTaken = true;
+        battle.healCounter = 0;
+        battle.startTime = Date.now();
+        battle.currentIndex = 0;
+
+        // 根据难度设置
+        const diffSettings = {
+            easy: { playerHP: 5, stages: 4 },
+            normal: { playerHP: 4, stages: 4 },
+            hard: { playerHP: 3, stages: 6 }
+        };
+
+        const settings = diffSettings[difficulty] || diffSettings.easy;
+        battle.playerHP = settings.playerHP;
+        battle.playerMaxHP = settings.playerHP;
+        battle.totalStages = settings.stages;
+
+        // 获取题目
+        const moduleData = MathData.xiaojiujiu;
+        const diffData = moduleData[difficulty] || moduleData.easy;
+        battle.questions = shuffle([...diffData]);
+
+        // 显示战斗页面
+        showPage('battle');
+        App.currentPage = 'battle';
+
+        // 初始化第一关怪兽
+        this.initStage();
+    },
+
+    // 初始化关卡
+    initStage() {
+        const battle = App.battle;
+        const stageIndex = battle.currentStage - 1;
+
+        // 获取怪兽
+        let monster;
+        if (battle.difficulty === 'hard' && stageIndex >= 4) {
+            monster = this.hardMonsters[stageIndex - 4];
+        } else {
+            monster = this.monsters[Math.min(stageIndex, this.monsters.length - 1)];
+        }
+
+        battle.monsterHP = monster.hp;
+        battle.monsterMaxHP = monster.hp;
+
+        // 更新UI
+        this.updateUI();
+
+        // 显示怪兽
+        document.getElementById('monster-name').textContent = monster.name;
+        const monsterEmoji = document.getElementById('monster-emoji');
+        monsterEmoji.textContent = monster.emoji;
+        monsterEmoji.className = 'monster-emoji';
+
+        // 显示关卡过渡动画
+        this.showStageTransition(battle.currentStage, monster);
+
+        // 延迟显示第一题
+        setTimeout(() => {
+            this.showBattleQuestion();
+        }, 1500);
+    },
+
+    // 显示关卡过渡
+    showStageTransition(stage, monster) {
+        // 创建过渡元素
+        let transition = document.querySelector('.stage-transition');
+        if (!transition) {
+            transition = document.createElement('div');
+            transition.className = 'stage-transition';
+            document.getElementById('battle-page').appendChild(transition);
+        }
+
+        transition.innerHTML = `
+            <div class="stage-transition-text">关卡 ${stage}</div>
+            <div class="stage-transition-monster">${monster.emoji}</div>
+            <div class="stage-transition-name">${monster.name}</div>
+        `;
+
+        transition.classList.add('show');
+
+        setTimeout(() => {
+            transition.classList.remove('show');
+        }, 1200);
+    },
+
+    // 更新UI
+    updateUI() {
+        const battle = App.battle;
+
+        // 更新关卡
+        document.getElementById('battle-stage').textContent = battle.currentStage;
+        document.querySelector('.stage-total').textContent = '/' + battle.totalStages;
+
+        // 更新玩家血量
+        let hearts = '';
+        for (let i = 0; i < battle.playerMaxHP; i++) {
+            hearts += i < battle.playerHP ? '❤️' : '🖤';
+        }
+        document.getElementById('player-hearts').textContent = hearts;
+
+        // 更新怪兽血量
+        const hpPercent = (battle.monsterHP / battle.monsterMaxHP) * 100;
+        document.getElementById('monster-hp-fill').style.width = hpPercent + '%';
+        document.getElementById('monster-hp-text').textContent = battle.monsterHP + '/' + battle.monsterMaxHP;
+
+        // 更新连击
+        const comboEl = document.getElementById('battle-combo');
+        if (battle.combo > 0) {
+            comboEl.classList.add('show');
+            document.getElementById('combo-count').textContent = battle.combo;
+        } else {
+            comboEl.classList.remove('show');
+        }
+    },
+
+    // 显示战斗题目
+    showBattleQuestion() {
+        const battle = App.battle;
+
+        // 循环题目
+        if (battle.currentIndex >= battle.questions.length) {
+            battle.questions = shuffle([...battle.questions]);
+            battle.currentIndex = 0;
+        }
+
+        const question = battle.questions[battle.currentIndex];
+
+        // 显示题目
+        document.getElementById('battle-question-text').textContent = question.q;
+
+        // 根据设置或题目属性决定模式
+        const useInputMode = question.forceInput || App.settings.mode === 'input';
+
+        if (useInputMode) {
+            document.getElementById('battle-choices').classList.add('hidden');
+            document.getElementById('battle-input-mode').classList.remove('hidden');
+            const input = document.getElementById('battle-answer-input');
+            input.value = '';
+            setTimeout(() => input.focus(), 100);
+        } else {
+            document.getElementById('battle-choices').classList.remove('hidden');
+            document.getElementById('battle-input-mode').classList.add('hidden');
+
+            // 生成选项
+            const choices = this.generateChoices(question.a);
+            const choicesContainer = document.getElementById('battle-choices');
+            choicesContainer.innerHTML = choices.map(c =>
+                `<button class="battle-choice-btn">${c}</button>`
+            ).join('');
+
+            // 绑定点击事件
+            choicesContainer.querySelectorAll('.battle-choice-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    if (!btn.disabled) {
+                        this.checkAnswer(btn.textContent, btn);
+                    }
+                });
+            });
+        }
+    },
+
+    // 生成选项
+    generateChoices(correctAnswer) {
+        const choices = [correctAnswer];
+        const numAnswer = parseFloat(correctAnswer);
+
+        while (choices.length < 4) {
+            let wrong;
+            const variation = Math.random();
+
+            if (variation < 0.3) {
+                wrong = numAnswer + Math.floor(Math.random() * 10) - 5;
+            } else if (variation < 0.6) {
+                wrong = numAnswer + (Math.random() < 0.5 ? 1 : -1) * Math.floor(Math.random() * 3 + 1);
+            } else {
+                wrong = Math.floor(Math.random() * 81) + 1;
+            }
+
+            if (wrong > 0 && wrong !== numAnswer && !choices.includes(wrong)) {
+                choices.push(wrong);
+            }
+        }
+
+        return shuffle(choices);
+    },
+
+    // 提交输入答案
+    submitAnswer() {
+        const input = document.getElementById('battle-answer-input');
+        const answer = input.value.trim();
+        if (answer) {
+            this.checkAnswer(answer, null);
+        }
+    },
+
+    // 检查答案
+    checkAnswer(answer, btnElement) {
+        const battle = App.battle;
+        const question = battle.questions[battle.currentIndex];
+        const isCorrect = String(answer) === String(question.a);
+
+        // 禁用所有按钮
+        document.querySelectorAll('.battle-choice-btn').forEach(btn => {
+            btn.disabled = true;
+        });
+
+        if (isCorrect) {
+            this.handleCorrectAnswer(btnElement);
+        } else {
+            this.handleWrongAnswer(btnElement, question.a);
+        }
+    },
+
+    // 处理正确答案
+    handleCorrectAnswer(btnElement) {
+        const battle = App.battle;
+
+        battle.combo++;
+        battle.healCounter++;
+        battle.correctCount++;
+        if (battle.combo > battle.maxCombo) {
+            battle.maxCombo = battle.combo;
+        }
+
+        // 按钮反馈
+        if (btnElement) {
+            btnElement.classList.add('correct');
+        }
+
+        // 播放音效
+        playSound('correct');
+
+        // 显示反馈
+        this.showFeedback(true, '正确!');
+
+        // 计算伤害
+        let damage = 1;
+        if (battle.combo >= 5) damage = 2;
+        if (battle.combo >= 3 && battle.combo < 5) damage = battle.difficulty === 'easy' ? 1 : 2;
+
+        // 检查炸弹武器
+        const weapon = this.getRandomWeapon();
+        if (weapon.emoji === '💣') damage += 1;
+
+        // 发射武器
+        this.fireWeapon(weapon);
+
+        // 延迟处理伤害
+        setTimeout(() => {
+            this.dealDamage(damage);
+
+            // 检查血量恢复（连续答对5题）
+            if (battle.healCounter >= 5 && battle.playerHP < battle.playerMaxHP) {
+                battle.playerHP++;
+                battle.healCounter = 0;
+                this.showHealEffect();
+            }
+        }, 400);
+    },
+
+    // 处理错误答案
+    handleWrongAnswer(btnElement, correctAnswer) {
+        const battle = App.battle;
+
+        battle.combo = 0;
+        battle.healCounter = 0;
+        battle.noDamageTaken = false;
+
+        // 按钮反馈
+        if (btnElement) {
+            btnElement.classList.add('wrong');
+        }
+
+        // 播放音效
+        playSound('wrong');
+
+        // 显示反馈
+        this.showFeedback(false, '正确答案: ' + correctAnswer);
+
+        // 添加到错题本
+        const question = battle.questions[battle.currentIndex];
+        addToWrongBook(question);
+
+        // 怪兽攻击
+        setTimeout(() => {
+            this.monsterAttack();
+        }, 500);
+    },
+
+    // 显示反馈
+    showFeedback(isCorrect, text) {
+        const feedback = document.getElementById('battle-feedback');
+        feedback.className = 'battle-feedback ' + (isCorrect ? 'correct' : 'wrong');
+        feedback.querySelector('.battle-feedback-icon').textContent = isCorrect ? '✓' : '✗';
+        feedback.querySelector('.battle-feedback-text').textContent = text;
+        feedback.classList.add('show');
+
+        setTimeout(() => {
+            feedback.classList.remove('show');
+        }, 1000);
+    },
+
+    // 获取随机武器
+    getRandomWeapon() {
+        const battle = App.battle;
+
+        // 10连击必出稀有武器
+        if (battle.combo >= 10) {
+            return Math.random() < 0.5 ? this.weapons[4] : this.weapons[5]; // 彩虹或炸弹
+        }
+
+        // 权重随机
+        const totalWeight = this.weapons.reduce((sum, w) => sum + w.weight, 0);
+        let random = Math.random() * totalWeight;
+
+        for (const weapon of this.weapons) {
+            random -= weapon.weight;
+            if (random <= 0) return weapon;
+        }
+
+        return this.weapons[0];
+    },
+
+    // 发射武器
+    fireWeapon(weapon) {
+        const battle = App.battle;
+        const weaponArea = document.getElementById('weapon-area');
+        const questionArea = document.querySelector('.battle-question-area');
+        const rect = questionArea.getBoundingClientRect();
+
+        // 创建武器元素
+        const weaponEl = document.createElement('div');
+        weaponEl.className = 'weapon';
+        weaponEl.textContent = weapon.emoji;
+
+        // 连击时发射多个武器
+        const count = battle.combo >= 3 ? Math.min(battle.combo - 1, 3) : 1;
+
+        for (let i = 0; i < count; i++) {
+            const w = weaponEl.cloneNode(true);
+            w.style.left = (rect.left + rect.width / 2 - 20 + (i - 1) * 30) + 'px';
+            w.style.bottom = (window.innerHeight - rect.top) + 'px';
+
+            // 连击时放大
+            if (battle.combo >= 5) {
+                w.style.fontSize = '3rem';
+            }
+
+            weaponArea.appendChild(w);
+
+            setTimeout(() => w.remove(), 500);
+        }
+    },
+
+    // 造成伤害
+    dealDamage(damage) {
+        const battle = App.battle;
+        battle.monsterHP -= damage;
+        battle.totalDamage += damage;
+
+        // 怪兽受击动画
+        const monsterEmoji = document.getElementById('monster-emoji');
+        monsterEmoji.classList.remove('hit');
+        void monsterEmoji.offsetWidth; // 触发重绘
+        monsterEmoji.classList.add('hit');
+
+        // 显示伤害数字
+        this.showDamageNumber(damage);
+
+        // 更新UI
+        this.updateUI();
+
+        // 检查怪兽是否死亡
+        if (battle.monsterHP <= 0) {
+            this.monsterDeath();
+        } else {
+            // 下一题
+            battle.currentIndex++;
+            setTimeout(() => this.showBattleQuestion(), 800);
+        }
+    },
+
+    // 显示伤害数字
+    showDamageNumber(damage) {
+        const container = document.getElementById('damage-numbers');
+        const dmgEl = document.createElement('div');
+        dmgEl.className = 'damage-number';
+        dmgEl.textContent = '-' + damage;
+        dmgEl.style.left = (Math.random() * 60 - 30) + 'px';
+        container.appendChild(dmgEl);
+
+        setTimeout(() => dmgEl.remove(), 800);
+    },
+
+    // 怪兽攻击
+    monsterAttack() {
+        const battle = App.battle;
+
+        // 怪兽攻击动画
+        const monsterEmoji = document.getElementById('monster-emoji');
+        monsterEmoji.classList.add('attack');
+
+        // 发射攻击emoji
+        const monsterArea = document.querySelector('.monster-area');
+        const rect = monsterArea.getBoundingClientRect();
+        const attackEmoji = document.createElement('div');
+        attackEmoji.className = 'monster-attack-emoji';
+        attackEmoji.textContent = '💥';
+        attackEmoji.style.left = (rect.left + rect.width / 2 - 20) + 'px';
+        attackEmoji.style.top = (rect.bottom) + 'px';
+        document.getElementById('battle-page').appendChild(attackEmoji);
+
+        setTimeout(() => {
+            attackEmoji.remove();
+            monsterEmoji.classList.remove('attack');
+        }, 500);
+
+        // 屏幕闪红
+        const screenFlash = document.getElementById('screen-flash');
+        screenFlash.classList.add('show');
+        setTimeout(() => screenFlash.classList.remove('show'), 300);
+
+        // 扣血
+        battle.playerHP--;
+        this.updateUI();
+
+        // 检查游戏结束
+        if (battle.playerHP <= 0) {
+            setTimeout(() => this.gameOver(false), 800);
+        } else {
+            // 下一题
+            battle.currentIndex++;
+            setTimeout(() => this.showBattleQuestion(), 1000);
+        }
+    },
+
+    // 怪兽死亡
+    monsterDeath() {
+        const battle = App.battle;
+        battle.monstersDefeated++;
+
+        // 死亡动画
+        const monsterEmoji = document.getElementById('monster-emoji');
+        monsterEmoji.classList.add('death');
+
+        // 播放音效
+        playSound('streak');
+
+        // 爆炸特效
+        createConfetti(30);
+
+        setTimeout(() => {
+            // 检查是否通关
+            if (battle.currentStage >= battle.totalStages) {
+                this.gameOver(true);
+            } else {
+                // 下一关
+                battle.currentStage++;
+                battle.currentIndex++;
+                this.initStage();
+            }
+        }, 1200);
+    },
+
+    // 显示恢复特效
+    showHealEffect() {
+        const heartsEl = document.getElementById('player-hearts');
+        heartsEl.classList.add('hp-recover');
+        setTimeout(() => heartsEl.classList.remove('hp-recover'), 500);
+
+        // 显示恢复提示
+        this.showFeedback(true, '❤️ +1 HP');
+    },
+
+    // 游戏结束
+    gameOver(isVictory) {
+        const battle = App.battle;
+        battle.active = false;
+
+        if (isVictory) {
+            // 计算得分
+            let score = battle.monstersDefeated * 50;
+            if (battle.noDamageTaken) score += 30;
+            if (battle.maxCombo >= 10) score += 50;
+
+            // 更新统计
+            App.stats.totalScore += score;
+            App.stats.totalCorrect += battle.correctCount;
+            if (battle.maxCombo > App.stats.maxStreak) {
+                App.stats.maxStreak = battle.maxCombo;
+            }
+            saveData();
+
+            // 显示胜利页面
+            document.getElementById('result-monsters').textContent = battle.monstersDefeated;
+            document.getElementById('result-answers').textContent = battle.correctCount;
+            document.getElementById('result-max-combo').textContent = battle.maxCombo;
+            document.getElementById('result-battle-score').textContent = '+' + score;
+
+            showPage('battle-result');
+
+            // 庆祝特效
+            setTimeout(() => {
+                createConfetti(100);
+                playSound('complete');
+            }, 300);
+
+            // 检查成就
+            checkAchievements();
+        } else {
+            // 显示失败页面
+            document.getElementById('fail-monsters').textContent = battle.monstersDefeated;
+            document.getElementById('fail-answers').textContent = battle.correctCount;
+
+            // 鼓励文案
+            const encourages = [
+                '差一点就成功了！再试一次？',
+                '别灰心，再来一次！',
+                '你已经很棒了，继续加油！',
+                '失败是成功之母，再战！'
+            ];
+            document.getElementById('battle-fail-subtitle').textContent =
+                encourages[Math.floor(Math.random() * encourages.length)];
+
+            showPage('battle-fail');
+        }
+    },
+
+    // 退出战斗
+    exitBattle() {
+        App.battle.active = false;
+        showPage('xiaojiujiu-mode');
+    }
+};
