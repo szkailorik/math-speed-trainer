@@ -918,8 +918,34 @@ function showQuestion() {
 
         const input = document.getElementById('answer-input');
         input.value = '';
-        input.placeholder = question.forceInput ? '输入?的值' : '输入答案';
-        input.focus();
+        input.placeholder = question.forceInput ? '填写 ? 等于几' : '输入答案';
+
+        // 添加填空题提示标签
+        let hintLabel = questionCard.querySelector('.input-hint');
+        if (question.forceInput) {
+            if (!hintLabel) {
+                hintLabel = document.createElement('div');
+                hintLabel.className = 'input-hint';
+                questionCard.insertBefore(hintLabel, questionCard.firstChild);
+            }
+            hintLabel.textContent = '✏️ 填空题';
+            hintLabel.style.display = 'block';
+        } else if (hintLabel) {
+            hintLabel.style.display = 'none';
+        }
+
+        // 延迟聚焦，让动画完成后再弹出键盘
+        setTimeout(() => {
+            input.focus();
+        }, 400);
+    }
+
+    // 移除选择题模式的提示标签
+    if (!useInputMode) {
+        const hintLabel = questionCard.querySelector('.input-hint');
+        if (hintLabel) {
+            hintLabel.style.display = 'none';
+        }
     }
 
     // 计时器
@@ -1717,9 +1743,63 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.classList.add('ios-standalone');
     }
 
-    // 处理 iOS 软键盘
-    const inputs = document.querySelectorAll('input');
-    inputs.forEach(input => {
+    // 处理 iOS 软键盘 - 增强版
+    const answerInput = document.getElementById('answer-input');
+
+    // 使用 visualViewport API 检测键盘
+    if (window.visualViewport) {
+        let initialHeight = window.visualViewport.height;
+
+        window.visualViewport.addEventListener('resize', () => {
+            const currentHeight = window.visualViewport.height;
+            const heightDiff = initialHeight - currentHeight;
+
+            // 如果高度差超过150px，认为键盘弹出了
+            if (heightDiff > 150) {
+                document.body.classList.add('keyboard-active');
+                // 滚动到输入框
+                if (document.activeElement === answerInput) {
+                    setTimeout(() => {
+                        answerInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }, 100);
+                }
+            } else {
+                document.body.classList.remove('keyboard-active');
+            }
+        });
+    }
+
+    // 输入框焦点处理
+    if (answerInput) {
+        answerInput.addEventListener('focus', () => {
+            document.body.classList.add('keyboard-active');
+            // 延迟滚动，等待键盘完全弹出
+            setTimeout(() => {
+                // 确保输入框可见
+                const questionCard = document.getElementById('question-card');
+                if (questionCard) {
+                    questionCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+                setTimeout(() => {
+                    answerInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 150);
+            }, 300);
+        });
+
+        answerInput.addEventListener('blur', () => {
+            // 延迟移除，避免闪烁
+            setTimeout(() => {
+                if (document.activeElement !== answerInput) {
+                    document.body.classList.remove('keyboard-active');
+                    // 恢复滚动位置
+                    window.scrollTo(0, 0);
+                }
+            }, 100);
+        });
+    }
+
+    // 处理其他输入框
+    document.querySelectorAll('input:not(#answer-input)').forEach(input => {
         input.addEventListener('focus', () => {
             setTimeout(() => {
                 input.scrollIntoView({ behavior: 'smooth', block: 'center' });

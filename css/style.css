@@ -679,9 +679,26 @@ button:active, .menu-btn:active, .choice-btn:active {
     text-align: center;
     min-height: 150px;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+/* 填空题提示标签 */
+.question-card .input-hint {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.75rem;
+    color: var(--primary);
+    background: rgba(108, 92, 231, 0.1);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-weight: 500;
 }
 
 .question-card.correct {
@@ -819,17 +836,20 @@ button:active, .menu-btn:active, .choice-btn:active {
     background: var(--card-bg);
     border: 2px solid var(--border);
     border-radius: var(--radius);
-    font-size: 1.3rem;
-    font-weight: 600;
+    font-size: 1.5rem;
+    font-weight: 700;
     text-align: center;
     color: var(--text);
     transition: var(--transition);
+    /* 防止iOS缩放 */
+    font-size: max(16px, 1.5rem);
 }
 
 .answer-input:focus {
     outline: none;
     border-color: var(--primary);
-    box-shadow: 0 0 0 4px rgba(108, 92, 231, 0.1);
+    box-shadow: 0 0 0 4px rgba(108, 92, 231, 0.2);
+    background: #fff;
 }
 
 .submit-btn {
@@ -842,6 +862,7 @@ button:active, .menu-btn:active, .choice-btn:active {
     color: white;
     cursor: pointer;
     transition: var(--transition);
+    white-space: nowrap;
 }
 
 .submit-btn:hover {
@@ -850,6 +871,167 @@ button:active, .menu-btn:active, .choice-btn:active {
 
 .submit-btn:active {
     transform: scale(0.98);
+}
+
+/* ===== 键盘弹出时的优化布局 ===== */
+body.keyboard-active {
+    /* 键盘激活时固定body */
+    position: fixed;
+    width: 100%;
+    overflow: hidden;
+}
+
+body.keyboard-active #practice-page {
+    /* 练习页面使用flex布局，自动适应 */
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    height: 100dvh; /* 动态视口高度 */
+    overflow: hidden;
+}
+
+body.keyboard-active .page-header {
+    flex-shrink: 0;
+    position: relative;
+    padding: 8px 20px;
+}
+
+body.keyboard-active .difficulty-selector {
+    display: none; /* 键盘弹出时隐藏难度选择 */
+}
+
+body.keyboard-active .timer-bar {
+    margin-bottom: 10px;
+}
+
+body.keyboard-active .question-area {
+    flex-shrink: 0;
+    margin-bottom: 15px;
+}
+
+body.keyboard-active .question-card {
+    padding: 20px 15px;
+    min-height: 100px;
+}
+
+body.keyboard-active .question-text {
+    font-size: 1.6rem;
+}
+
+body.keyboard-active .answer-area {
+    flex-shrink: 0;
+    margin-bottom: 10px;
+}
+
+body.keyboard-active .streak-indicator {
+    top: -8px;
+    right: 5px;
+    padding: 5px 10px;
+    font-size: 0.85rem;
+}
+
+body.keyboard-active .feedback {
+    bottom: auto;
+    top: 50%;
+    transform: translateX(-50%) translateY(-50%);
+}
+
+body.keyboard-active .feedback.show {
+    transform: translateX(-50%) translateY(-50%);
+}
+
+/* 输入框获得焦点时的特殊样式 */
+.answer-input:focus {
+    position: relative;
+    z-index: 100;
+}
+
+/* 确保输入区域在视口内 */
+.input-mode-container {
+    position: relative;
+    padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* 练习页整体布局优化 */
+#practice-page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    min-height: 100dvh;
+}
+
+#practice-page .page-header {
+    flex-shrink: 0;
+}
+
+#practice-page .question-area {
+    flex: 0 0 auto;
+}
+
+#practice-page .answer-area {
+    flex: 0 0 auto;
+}
+
+/* 填空题模式特别优化 */
+.input-mode {
+    flex-direction: row;
+    align-items: stretch;
+}
+
+.input-mode .answer-input {
+    min-width: 0;
+    flex: 1;
+}
+
+.input-mode .submit-btn {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 触摸设备优化 */
+@media (hover: none) and (pointer: coarse) {
+    .answer-input {
+        font-size: 1.4rem;
+        padding: 16px;
+    }
+
+    .submit-btn {
+        padding: 16px 24px;
+        font-size: 1rem;
+    }
+
+    /* 更大的点击区域 */
+    .choice-btn {
+        padding: 20px;
+        min-height: 60px;
+    }
+}
+
+/* 小屏幕+键盘弹出优化 */
+@media (max-height: 600px) {
+    .question-card {
+        padding: 20px 15px;
+        min-height: 80px;
+    }
+
+    .question-text {
+        font-size: 1.4rem;
+    }
+
+    .difficulty-selector {
+        margin-bottom: 10px;
+    }
+
+    .question-area {
+        margin-bottom: 15px;
+    }
+
+    .streak-indicator {
+        padding: 5px 10px;
+        font-size: 0.8rem;
+    }
 }
 
 /* ===== 反馈 ===== */
