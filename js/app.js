@@ -2428,6 +2428,7 @@ const BattleMode = {
 
     // 显示战斗题目
     showBattleQuestion() {
+        console.log('=== showBattleQuestion 被调用 ===');
         const battle = App.battle;
 
         // 循环题目
@@ -2437,6 +2438,7 @@ const BattleMode = {
         }
 
         const question = battle.questions[battle.currentIndex];
+        console.log('当前题目:', question);
         if (!question) {
             console.error('题目为空');
             return;
@@ -2456,6 +2458,7 @@ const BattleMode = {
         // 清空并重新创建按钮
         choicesContainer.innerHTML = '';
 
+        console.log('生成的选项:', choices);
         choices.forEach(choice => {
             const btn = document.createElement('button');
             btn.className = 'battle-choice-btn';
@@ -2463,14 +2466,16 @@ const BattleMode = {
             btn.textContent = choice;
 
             // 直接绑定点击事件到每个按钮
-            btn.onclick = () => {
+            btn.onclick = function() {
+                console.log('按钮被点击! 选项:', choice);
                 if (!btn.disabled) {
                     BattleMode.checkAnswer(String(choice), btn);
                 }
             };
 
             // 同时添加 touchend 事件（移动设备）
-            btn.addEventListener('touchend', (e) => {
+            btn.addEventListener('touchend', function(e) {
+                console.log('touchend 触发! 选项:', choice);
                 e.preventDefault();
                 if (!btn.disabled) {
                     BattleMode.checkAnswer(String(choice), btn);
@@ -2478,7 +2483,9 @@ const BattleMode = {
             }, { passive: false });
 
             choicesContainer.appendChild(btn);
+            console.log('按钮已添加到DOM:', btn);
         });
+        console.log('所有按钮创建完成，容器内容:', choicesContainer.innerHTML);
     },
 
     // 生成选项
@@ -2517,9 +2524,13 @@ const BattleMode = {
 
     // 检查答案
     checkAnswer(answer, btnElement) {
+        console.log('=== checkAnswer 被调用 ===');
+        console.log('用户答案:', answer);
         const battle = App.battle;
         const question = battle.questions[battle.currentIndex];
+        console.log('正确答案:', question?.a);
         const isCorrect = String(answer) === String(question.a);
+        console.log('是否正确:', isCorrect);
 
         // 禁用所有按钮
         document.querySelectorAll('.battle-choice-btn').forEach(btn => {
