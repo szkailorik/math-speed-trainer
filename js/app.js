@@ -2688,7 +2688,6 @@ const BattleMode = {
                 const monster = allMonsters.find(m => m.id === id);
                 if (monster) {
                     this.showMonsterDetail(monster);
-                    playSound('click');
                 }
             });
         });
