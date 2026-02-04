@@ -894,6 +894,7 @@ function startPractice(module) {
     // 小九九模块显示模式选择页
     if (module === 'xiaojiujiu') {
         showPage('xiaojiujiu-mode');
+        BattleMode.updateCollectionCount();
         return;
     }
 
@@ -2957,8 +2958,7 @@ const BattleMode = {
 
     // 显示难度选择并开始战斗
     showDifficultyAndStart() {
-        // 使用当前难度设置
-        this.startBattle(App.difficulty);
+        this.startBattle(App.difficulty, 'xiaojiujiu');
     },
 
     // 开始经典模式
@@ -4124,8 +4124,10 @@ const BattleMode = {
         App.battle.active = false;
         if (module === 'fraction') {
             showPage('fraction-mode');
+            this.updateFractionCollectionCount();
         } else {
             showPage('xiaojiujiu-mode');
+            this.updateCollectionCount();
         }
     }
 };
