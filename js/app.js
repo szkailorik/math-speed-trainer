@@ -2301,6 +2301,8 @@ const BattleMode = {
 
     // 初始化关卡
     initStage() {
+        console.log('=== initStage 被调用 ===');
+        try {
         const battle = App.battle;
         const stageIndex = battle.currentStage - 1;
 
@@ -2335,6 +2337,10 @@ const BattleMode = {
         setTimeout(() => {
             this.showBattleQuestion();
         }, 1500);
+        } catch (e) {
+            console.error('initStage 错误:', e);
+            alert('initStage错误: ' + e.message);
+        }
     },
 
     // 显示怪兽类型
@@ -2429,6 +2435,7 @@ const BattleMode = {
     // 显示战斗题目
     showBattleQuestion() {
         console.log('=== showBattleQuestion 被调用 ===');
+        try {
         const battle = App.battle;
 
         // 循环题目
@@ -2465,9 +2472,13 @@ const BattleMode = {
             btn.type = 'button';
             btn.textContent = choice;
 
+            // 添加标记表示按钮已绑定事件
+            btn.dataset.bound = 'true';
+
             // 直接绑定点击事件到每个按钮
             btn.onclick = function() {
                 console.log('按钮被点击! 选项:', choice);
+                alert('点击了: ' + choice);  // 临时调试用
                 if (!btn.disabled) {
                     BattleMode.checkAnswer(String(choice), btn);
                 }
@@ -2486,6 +2497,10 @@ const BattleMode = {
             console.log('按钮已添加到DOM:', btn);
         });
         console.log('所有按钮创建完成，容器内容:', choicesContainer.innerHTML);
+        } catch (e) {
+            console.error('showBattleQuestion 错误:', e);
+            alert('showBattleQuestion错误: ' + e.message);
+        }
     },
 
     // 生成选项
