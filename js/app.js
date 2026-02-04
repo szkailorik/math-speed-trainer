@@ -2497,9 +2497,21 @@ const BattleMode = {
             console.log('按钮已添加到DOM:', btn);
         });
         console.log('所有按钮创建完成，容器内容:', choicesContainer.innerHTML);
+
+        // 更新调试指示器
+        const debugIndicator = document.getElementById('debug-indicator');
+        if (debugIndicator) {
+            debugIndicator.textContent = '✓ JS按钮已初始化';
+            debugIndicator.style.color = 'green';
+        }
         } catch (e) {
             console.error('showBattleQuestion 错误:', e);
             alert('showBattleQuestion错误: ' + e.message);
+            const debugIndicator = document.getElementById('debug-indicator');
+            if (debugIndicator) {
+                debugIndicator.textContent = '✗ 错误: ' + e.message;
+                debugIndicator.style.color = 'red';
+            }
         }
     },
 

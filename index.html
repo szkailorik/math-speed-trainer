@@ -506,11 +506,12 @@
 
             <!-- 答题区域 -->
             <div class="battle-answer-area" id="battle-answer-area">
+                <div id="debug-indicator" style="color: red; font-size: 12px; text-align: center;">等待初始化...</div>
                 <div class="battle-choices" id="battle-choices">
-                    <button class="battle-choice-btn">42</button>
-                    <button class="battle-choice-btn">48</button>
-                    <button class="battle-choice-btn">36</button>
-                    <button class="battle-choice-btn">54</button>
+                    <button class="battle-choice-btn" onclick="alert('HTML按钮被点击-42')">42</button>
+                    <button class="battle-choice-btn" onclick="alert('HTML按钮被点击-48')">48</button>
+                    <button class="battle-choice-btn" onclick="alert('HTML按钮被点击-36')">36</button>
+                    <button class="battle-choice-btn" onclick="alert('HTML按钮被点击-54')">54</button>
                 </div>
                 <div class="battle-input-mode hidden" id="battle-input-mode">
                     <input type="text" inputmode="decimal" class="battle-answer-input" id="battle-answer-input" placeholder="输入答案">
