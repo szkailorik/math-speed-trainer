@@ -673,6 +673,11 @@ const MathData = {
         { id: 'battle_demon_king', name: '魔王终结者', desc: '击败九九魔王(困难)', icon: '👹', special: 'battle_demon_king' },
         { id: 'battle_10_combo', name: '连击大师', desc: '战斗中达成10连击', icon: '🔥', special: 'battle_10_combo' },
         { id: 'battle_speedrun', name: '速战速决', desc: '3分钟内通关简单难度', icon: '⏱️', special: 'battle_speedrun' },
+        // 道具相关成就
+        { id: 'item_collector', name: '收集达人', desc: '单局收集5个道具', icon: '🎒', special: 'item_collector' },
+        { id: 'item_master', name: '道具大师', desc: '使用3个以上道具通关', icon: '🧙', special: 'item_master' },
+        { id: 'legendary_drop', name: '传奇之运', desc: '获得传说级道具', icon: '🌟', special: 'legendary_drop' },
+        { id: 'revive_hero', name: '复活英雄', desc: '使用复活草死而复生', icon: '🌿', special: 'revive_hero' },
     ]
 };
 

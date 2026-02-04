@@ -147,7 +147,15 @@ const App = {
         questions: [],
         currentIndex: 0,
         monstersDefeated: 0,
-        healCounter: 0  // 连续答对计数，用于恢复血量
+        healCounter: 0,          // 连续答对计数，用于恢复血量
+        currentMonster: null,    // 当前怪兽引用
+        monsterQueue: [],        // 怪兽队列
+        inventory: [],           // 道具背包
+        activeItem: null,        // 激活的道具
+        shield: 0,               // 护盾层数
+        hasRevive: false,        // 是否有复活保护
+        itemsUsed: 0,            // 使用道具次数
+        itemsCollected: 0        // 收集道具次数
     }
 };
 
@@ -1939,34 +1947,173 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ===== 战斗模式模块 =====
 const BattleMode = {
-    // 怪兽配置 - 基于流行游戏角色设计
-    monsters: [
-        { name: '数字史莱姆', emoji: '🟢', hp: 3, quips: ['弹弹~', 'QQ的~', '软软的~'] },
-        { name: '蘑菇小怪', emoji: '🍄', hp: 3, quips: ['毒毒~', '别踩我!', '孢子攻击!'] },
-        { name: '调皮幽灵', emoji: '👻', hp: 4, quips: ['嘘~', '看不见我~', '飘飘~'] },
-        { name: '南瓜灯精', emoji: '🎃', hp: 4, quips: ['嘿嘿~', '万圣节快乐!', '南瓜灯亮了!'] },
-        { name: '章鱼博士', emoji: '🐙', hp: 5, quips: ['墨汁喷射!', '八爪攻击!', '滑溜溜~'] },
-        { name: '火焰小龙', emoji: '🐲', hp: 6, quips: ['喷火!', '烫烫烫!', '龙之怒!'] }
+    // ===== 宝可梦风格怪兽 - 有点恐怖又有点可爱 =====
+    // 参考宝可梦的命名风格和角色设计
+
+    // 初级怪兽（简单模式用）- HP 3-4
+    easyMonsters: [
+        // 幽灵可爱系
+        { name: '噗噗鬼', emoji: '👻', hp: 3, type: 'ghost', attack: '👅', attackName: '舔舔攻击', quips: ['噗噗~', '舔舔你~', '嘻嘻嘻!'] },
+        { name: '眨眨眼', emoji: '👁️', hp: 3, type: 'psychic', attack: '💫', attackName: '瞪眼术', quips: ['看着你~', '眨眨~', '盯——'] },
+        { name: '小黑影', emoji: '🫥', hp: 3, type: 'dark', attack: '🖤', attackName: '影子偷袭', quips: ['嘿嘿~', '找不到我~', '在这里!'] },
+        { name: '咕噜球', emoji: '🔮', hp: 4, type: 'psychic', attack: '✨', attackName: '神秘光线', quips: ['咕噜噜~', '预言中...', '命运呀~'] },
+
+        // 毒系可爱
+        { name: '毒毒菇', emoji: '🍄', hp: 3, type: 'poison', attack: '☁️', attackName: '毒孢子', quips: ['毒毒~', '别吃我!', '孢子喷!'] },
+        { name: '嘶嘶蛇', emoji: '🐍', hp: 4, type: 'poison', attack: '💜', attackName: '毒牙咬', quips: ['嘶嘶~', '咬一口~', '毒毒哒!'] },
+        { name: '臭臭花', emoji: '🌸', hp: 3, type: 'poison', attack: '💨', attackName: '臭气弹', quips: ['臭臭~', '闻闻看~', '香香的?'] },
+
+        // 火系小怪
+        { name: '呼呼焰', emoji: '🔥', hp: 3, type: 'fire', attack: '✨', attackName: '火星溅', quips: ['呼呼~', '烫烫!', '着火啦!'] },
+        { name: '烈烈猴', emoji: '🐒', hp: 4, type: 'fire', attack: '🔥', attackName: '火焰拳', quips: ['吱吱!', '猴拳!', '跳跳烧!'] },
+
+        // 水系小怪
+        { name: '泡泡怪', emoji: '🫧', hp: 3, type: 'water', attack: '💦', attackName: '泡泡攻击', quips: ['泡泡~', '咕噜噜~', '湿湿的!'] },
+        { name: '墨墨鱼', emoji: '🦑', hp: 4, type: 'water', attack: '🖤', attackName: '墨汁喷射', quips: ['喷喷~', '墨墨黑~', '缠住你!'] },
+
+        // 恐怖可爱混合
+        { name: '牙牙怪', emoji: '👹', hp: 4, type: 'dark', attack: '🦷', attackName: '獠牙撕咬', quips: ['嘿嘿~', '牙痒痒~', '咬咬!'] },
+        { name: '骨骨仔', emoji: '💀', hp: 3, type: 'ghost', attack: '🦴', attackName: '骨头飞', quips: ['咔咔~', '骨头响~', '接骨头!'] },
+        { name: '蝙蝙侠', emoji: '🦇', hp: 4, type: 'flying', attack: '🔊', attackName: '超声尖叫', quips: ['吱吱~', '黑夜来~', '听到了吗?'] },
+        { name: '怪怪球', emoji: '👾', hp: 3, type: 'normal', attack: '💫', attackName: '怪异冲撞', quips: ['哔哔~', '外星来的~', '变形!'] },
     ],
 
-    // 困难模式额外怪兽
+    // 中级怪兽（普通模式用）- HP 4-6
+    normalMonsters: [
+        // 幽灵恐怖系
+        { name: '幽幽灯', emoji: '🕯️', hp: 4, type: 'ghost', attack: '🔥', attackName: '鬼火焚烧', quips: ['幽幽~', '灵魂之火~', '别吹灭!'] },
+        { name: '南瓜王', emoji: '🎃', hp: 5, type: 'ghost', attack: '🔮', attackName: '暗影球', quips: ['嘿嘿~', '万圣节到!', '南瓜炸弹!'] },
+        { name: '咒咒娃', emoji: '🪆', hp: 5, type: 'ghost', attack: '📍', attackName: '诅咒针', quips: ['咒咒~', '戳戳你~', '痛不痛?'] },
+        { name: '夜哭鸟', emoji: '🦉', hp: 4, type: 'ghost', attack: '🌙', attackName: '夜啼', quips: ['咕咕~', '夜深了~', '失眠吧!'] },
+
+        // 毒系恐怖
+        { name: '毒液怪', emoji: '🧪', hp: 5, type: 'poison', attack: '💜', attackName: '腐蚀液', quips: ['滋滋~', '溶解你~', '酸酸的!'] },
+        { name: '蜘蛛娘', emoji: '🕷️', hp: 5, type: 'bug', attack: '🕸️', attackName: '蛛网陷阱', quips: ['丝丝~', '网住你~', '逃不掉!'] },
+        { name: '噩梦兽', emoji: '😱', hp: 5, type: 'dark', attack: '💭', attackName: '恐惧波', quips: ['怕怕~', '做噩梦~', '哈哈哈!'] },
+
+        // 冰系恐怖
+        { name: '冰魂灵', emoji: '🥶', hp: 4, type: 'ice', attack: '❄️', attackName: '冰冻吐息', quips: ['冷冷~', '冻僵吧~', '好冰!'] },
+        { name: '雪妖精', emoji: '⛄', hp: 5, type: 'ice', attack: '🌨️', attackName: '暴风雪', quips: ['飘飘~', '雪花飞~', '白茫茫!'] },
+
+        // 格斗恶系
+        { name: '怒怒拳', emoji: '👊', hp: 5, type: 'fighting', attack: '💢', attackName: '愤怒连击', quips: ['嘿哈!', '生气了!', '揍你!'] },
+        { name: '影忍者', emoji: '🥷', hp: 5, type: 'dark', attack: '🗡️', attackName: '暗影斩', quips: ['嘘...', '无声无息~', '背后!'] },
+
+        // 岩石系
+        { name: '石头精', emoji: '🗿', hp: 6, type: 'rock', attack: '💥', attackName: '岩石崩', quips: ['石头脸~', '硬邦邦~', '砸!'] },
+        { name: '钻石兽', emoji: '💎', hp: 5, type: 'rock', attack: '✨', attackName: '钻石风暴', quips: ['闪闪~', '最硬的~', '切割!'] },
+
+        // 电系
+        { name: '雷雷鼠', emoji: '🐭', hp: 4, type: 'electric', attack: '⚡', attackName: '十万伏特', quips: ['嗞嗞~', '来电了~', '麻麻!'] },
+        { name: '电鬼怪', emoji: '👿', hp: 5, type: 'electric', attack: '💛', attackName: '雷电冲击', quips: ['嘿嘿~', '电死你~', '滋滋滋!'] },
+
+        // 超能力
+        { name: '占卜猫', emoji: '🐱', hp: 5, type: 'psychic', attack: '👁️', attackName: '预知未来', quips: ['喵~', '命运已定~', '逃不掉~'] },
+        { name: '念力娃', emoji: '🧠', hp: 5, type: 'psychic', attack: '💫', attackName: '精神冲击', quips: ['嗡嗡~', '读心术~', '我知道!'] },
+
+        // 虫系恐怖
+        { name: '巨螳螂', emoji: '🦗', hp: 5, type: 'bug', attack: '🔪', attackName: '镰刀斩', quips: ['咔嚓~', '切切切~', '锋利!'] },
+        { name: '毒蜂王', emoji: '🐝', hp: 6, type: 'bug', attack: '📍', attackName: '毒针乱射', quips: ['嗡嗡~', '蜂群来袭~', '刺刺刺!'] },
+    ],
+
+    // 高级怪兽（困难模式用）- HP 6-8
     hardMonsters: [
-        { name: '暴风霸王龙', emoji: '🦖', hp: 7, quips: ['吼!!!', '碾压!', '恐龙之王!'] },
-        { name: '机械魔王', emoji: '🤖', hp: 8, quips: ['计算中...', '系统升级!', '无法击败!'] },
-        { name: '外星Boss', emoji: '👽', hp: 9, quips: ['地球人!', '带我走!', '未知力量!'] },
-        { name: '九九终极魔王', emoji: '👹', hp: 10, quips: ['九九归一!', '不可能!', '这不科学!'] }
+        // 龙系恐怖
+        { name: '炎龙兽', emoji: '🐲', hp: 6, type: 'dragon', attack: '🔥', attackName: '龙焰吐息', quips: ['吼!', '烧成灰~', '龙之怒!'] },
+        { name: '海龙王', emoji: '🐉', hp: 7, type: 'dragon', attack: '🌊', attackName: '深渊漩涡', quips: ['哗哗~', '海啸来了~', '淹没你!'] },
+        { name: '骨龙魔', emoji: '🦴', hp: 7, type: 'dragon', attack: '💀', attackName: '亡灵之息', quips: ['咔咔咔~', '死亡降临~', '化为骨~'] },
+
+        // 恶系Boss级
+        { name: '暗夜狼', emoji: '🐺', hp: 7, type: 'dark', attack: '🌙', attackName: '月下猎杀', quips: ['嗷呜~', '月圆之夜~', '撕碎你!'] },
+        { name: '恶魔王', emoji: '😈', hp: 7, type: 'dark', attack: '🔥', attackName: '地狱之火', quips: ['嘿嘿嘿~', '堕落吧~', '灵魂归我!'] },
+        { name: '死神鸟', emoji: '🦅', hp: 6, type: 'dark', attack: '💀', attackName: '死亡俯冲', quips: ['咕咕~', '死神来了~', '带你走!'] },
+
+        // 钢铁机械
+        { name: '钢铁魔', emoji: '🤖', hp: 7, type: 'steel', attack: '🔩', attackName: '金属风暴', quips: ['嘀嘀~', '系统启动~', '消灭目标!'] },
+        { name: '齿轮兽', emoji: '⚙️', hp: 6, type: 'steel', attack: '🔧', attackName: '齿轮绞杀', quips: ['咔嚓~', '旋转粉碎~', '碾碎你!'] },
+
+        // 妖精恐怖
+        { name: '暗精灵', emoji: '🧝', hp: 6, type: 'fairy', attack: '✨', attackName: '黑暗祝福', quips: ['呵呵~', '诅咒你~', '永眠吧!'] },
+        { name: '噩梦马', emoji: '🐴', hp: 7, type: 'fairy', attack: '🌙', attackName: '噩梦踏蹄', quips: ['嘶嘶~', '噩梦开始~', '踏碎你!'] },
+
+        // 地面毒系
+        { name: '沙蝎王', emoji: '🦂', hp: 7, type: 'ground', attack: '💜', attackName: '剧毒尾刺', quips: ['沙沙~', '毒尾一击~', '中毒了!'] },
     ],
 
+    // Boss怪兽（困难模式最终关卡）- HP 8-12 - 恐怖但可爱的终极Boss
+    bossMonsters: [
+        { name: '骨骨霸龙', emoji: '🦖', hp: 8, type: 'dragon', attack: '🦴', attackName: '化石咆哮', quips: ['吼吼吼!', '亿年前的王!', '骨头砸!'] },
+        { name: '炎炎鸟王', emoji: '🐦‍🔥', hp: 9, type: 'fire', attack: '🔥', attackName: '涅槃烈焰', quips: ['燃燃燃!', '不死鸟!', '化为灰烬!'] },
+        { name: '冷冷魔君', emoji: '🥶', hp: 9, type: 'ice', attack: '❄️', attackName: '冰封万里', quips: ['好冷呀~', '冻冻你~', '变冰棍!'] },
+        { name: '雷雷大王', emoji: '⚡', hp: 9, type: 'electric', attack: '💛', attackName: '万雷轰顶', quips: ['劈里啪啦!', '电电电!', '麻痹吧!'] },
+        { name: '外星大眼', emoji: '👽', hp: 10, type: 'psychic', attack: '🛸', attackName: '脑电波', quips: ['嗡嗡~', '读取中~', '交出答案!'] },
+        { name: '九九魔王', emoji: '👹', hp: 12, type: 'dark', attack: '💀', attackName: '九九归一', quips: ['哈哈哈!', '算不出来吧!', '乖乖受死!'] },
+    ],
+
+    // 为了兼容性保留的旧数组（会在运行时动态生成）
+    monsters: [],
+
+    // ===== 道具系统 =====
+    items: [
+        // 攻击道具 - 造成额外伤害
+        { id: 'fire_crystal', name: '火焰水晶', emoji: '🔴', type: 'attack', effect: { damage: 2 }, desc: '下次攻击+2伤害', rarity: 'common' },
+        { id: 'ice_shard', name: '寒冰碎片', emoji: '🔵', type: 'attack', effect: { damage: 2, freeze: true }, desc: '冰冻攻击+2伤害', rarity: 'common' },
+        { id: 'thunder_stone', name: '雷电宝石', emoji: '🟡', type: 'attack', effect: { damage: 3 }, desc: '闪电攻击+3伤害', rarity: 'rare' },
+        { id: 'dragon_fang', name: '龙牙', emoji: '🦷', type: 'attack', effect: { damage: 4 }, desc: '龙之力量+4伤害', rarity: 'epic' },
+        { id: 'ultimate_orb', name: '究极宝珠', emoji: '🔮', type: 'attack', effect: { damage: 5, pierce: true }, desc: '究极攻击+5穿透伤害', rarity: 'legendary' },
+
+        // 治疗道具 - 恢复生命
+        { id: 'potion', name: '红色药水', emoji: '🧪', type: 'heal', effect: { hp: 1 }, desc: '恢复1点HP', rarity: 'common' },
+        { id: 'super_potion', name: '超级药水', emoji: '💊', type: 'heal', effect: { hp: 2 }, desc: '恢复2点HP', rarity: 'rare' },
+        { id: 'max_potion', name: '全满药水', emoji: '💉', type: 'heal', effect: { hpFull: true }, desc: '完全恢复HP', rarity: 'epic' },
+        { id: 'revive', name: '复活草', emoji: '🌿', type: 'heal', effect: { revive: true }, desc: '防止一次死亡', rarity: 'legendary' },
+
+        // 增益道具 - 临时增强
+        { id: 'combo_boost', name: '连击护符', emoji: '📿', type: 'buff', effect: { comboBonus: 2 }, desc: '连击伤害+2', rarity: 'rare' },
+        { id: 'double_strike', name: '双重打击', emoji: '⚔️', type: 'buff', effect: { doubleHit: true }, desc: '下次攻击命中两次', rarity: 'rare' },
+        { id: 'critical_gem', name: '暴击宝石', emoji: '💎', type: 'buff', effect: { critChance: 0.5 }, desc: '50%暴击(双倍伤害)', rarity: 'epic' },
+        { id: 'shield', name: '护盾结界', emoji: '🛡️', type: 'buff', effect: { shield: 1 }, desc: '抵挡1次攻击', rarity: 'rare' },
+        { id: 'golden_apple', name: '黄金苹果', emoji: '🍎', type: 'buff', effect: { maxHpUp: 1 }, desc: '最大HP+1', rarity: 'legendary' },
+
+        // 特殊道具 - 独特效果
+        { id: 'star_piece', name: '星星碎片', emoji: '⭐', type: 'special', effect: { scoreBonus: 50 }, desc: '额外获得50分', rarity: 'common' },
+        { id: 'lucky_coin', name: '幸运金币', emoji: '🪙', type: 'special', effect: { itemDropUp: true }, desc: '提高道具掉落率', rarity: 'rare' },
+        { id: 'time_hourglass', name: '时间沙漏', emoji: '⏳', type: 'special', effect: { skipMonster: true }, desc: '跳过当前怪兽', rarity: 'legendary' },
+    ],
+
+    // 道具掉落配置
+    itemDropConfig: {
+        baseChance: 0.15,  // 基础掉落率15%
+        comboBonus: 0.02,  // 每连击增加2%
+        maxChance: 0.4,    // 最大掉落率40%
+        rarityWeights: {
+            common: 50,
+            rare: 30,
+            epic: 15,
+            legendary: 5
+        }
+    },
+
+    // ===== 特殊武器系统 =====
     // 武器配置 - 更丰富的攻击方式
     weapons: [
-        { emoji: '🔥', name: '火球术', weight: 20, sound: 'fire' },
-        { emoji: '🧊', name: '冰冻箭', weight: 15, sound: 'ice' },
-        { emoji: '⚡', name: '闪电链', weight: 15, sound: 'thunder' },
-        { emoji: '⭐', name: '流星雨', weight: 15, sound: 'star' },
-        { emoji: '🌈', name: '彩虹光', weight: 10, sound: 'rainbow' },
-        { emoji: '💣', name: '超级炸弹', weight: 5, sound: 'bomb' },
-        { emoji: '🌟', name: '圣光术', weight: 10, sound: 'holy' },
-        { emoji: '🌀', name: '龙卷风', weight: 10, sound: 'wind' }
+        { emoji: '🔥', name: '火球术', weight: 20, sound: 'fire', color: '#ff6b35' },
+        { emoji: '🧊', name: '冰冻箭', weight: 15, sound: 'ice', color: '#74b9ff' },
+        { emoji: '⚡', name: '闪电链', weight: 15, sound: 'thunder', color: '#ffeaa7' },
+        { emoji: '⭐', name: '流星雨', weight: 15, sound: 'star', color: '#fdcb6e' },
+        { emoji: '🌈', name: '彩虹光', weight: 10, sound: 'rainbow', color: '#a29bfe' },
+        { emoji: '💣', name: '超级炸弹', weight: 5, sound: 'bomb', color: '#2d3436' },
+        { emoji: '🌟', name: '圣光术', weight: 10, sound: 'holy', color: '#fff9c4' },
+        { emoji: '🌀', name: '龙卷风', weight: 10, sound: 'wind', color: '#81ecec' }
+    ],
+
+    // 道具增强武器
+    specialWeapons: [
+        { emoji: '🐉', name: '神龙怒吼', damage: 5, color: '#e74c3c' },
+        { emoji: '☄️', name: '陨石撞击', damage: 6, color: '#e67e22' },
+        { emoji: '🌋', name: '火山爆发', damage: 7, color: '#c0392b' },
+        { emoji: '🌊', name: '海啸狂澜', damage: 5, color: '#3498db' },
+        { emoji: '💫', name: '星辰坠落', damage: 8, color: '#9b59b6' },
     ],
 
     // 初始化
@@ -2091,11 +2238,22 @@ const BattleMode = {
         battle.startTime = Date.now();
         battle.currentIndex = 0;
 
+        // 初始化道具系统
+        battle.inventory = [];      // 玩家背包
+        battle.activeItem = null;   // 当前激活的道具
+        battle.shield = 0;          // 护盾层数
+        battle.hasRevive = false;   // 复活道具
+        battle.itemsUsed = 0;       // 使用道具次数
+        battle.itemsCollected = 0;  // 收集道具次数
+
+        // 根据难度生成怪兽队列
+        this.generateMonsterQueue(difficulty);
+
         // 根据难度设置
         const diffSettings = {
-            easy: { playerHP: 5, stages: 4 },   // 前4个基础怪兽
-            normal: { playerHP: 4, stages: 6 }, // 全部6个基础怪兽
-            hard: { playerHP: 4, stages: 10 }   // 6基础 + 4困难怪兽
+            easy: { playerHP: 5, stages: 6 },    // 6个简单怪兽
+            normal: { playerHP: 5, stages: 10 }, // 6简单 + 4中级怪兽
+            hard: { playerHP: 4, stages: 15 }    // 6简单 + 6中级 + 3Boss
         };
 
         const settings = diffSettings[difficulty] || diffSettings.easy;
@@ -2112,8 +2270,33 @@ const BattleMode = {
         showPage('battle');
         App.currentPage = 'battle';
 
+        // 更新道具UI
+        this.updateInventoryUI();
+
         // 初始化第一关怪兽
         this.initStage();
+    },
+
+    // 生成怪兽队列
+    generateMonsterQueue(difficulty) {
+        const battle = App.battle;
+        battle.monsterQueue = [];
+
+        if (difficulty === 'easy') {
+            // 简单模式：随机6个初级怪兽
+            battle.monsterQueue = shuffle([...this.easyMonsters]).slice(0, 6);
+        } else if (difficulty === 'normal') {
+            // 普通模式：6个初级 + 4个中级
+            const easy = shuffle([...this.easyMonsters]).slice(0, 6);
+            const normal = shuffle([...this.normalMonsters]).slice(0, 4);
+            battle.monsterQueue = [...easy, ...normal];
+        } else {
+            // 困难模式：6个初级 + 6个中级 + 3个Boss
+            const easy = shuffle([...this.easyMonsters]).slice(0, 6);
+            const normal = shuffle([...this.normalMonsters]).slice(0, 6);
+            const boss = shuffle([...this.bossMonsters]).slice(0, 3);
+            battle.monsterQueue = [...easy, ...normal, ...boss];
+        }
     },
 
     // 初始化关卡
@@ -2121,18 +2304,12 @@ const BattleMode = {
         const battle = App.battle;
         const stageIndex = battle.currentStage - 1;
 
-        // 获取怪兽 - 根据难度和关卡选择
-        let monster;
-        if (battle.difficulty === 'hard') {
-            // 困难模式：先6个基础怪兽，再4个困难怪兽
-            if (stageIndex < this.monsters.length) {
-                monster = this.monsters[stageIndex];
-            } else {
-                monster = this.hardMonsters[stageIndex - this.monsters.length];
-            }
-        } else {
-            // 简单/普通模式：只用基础怪兽
-            monster = this.monsters[Math.min(stageIndex, this.monsters.length - 1)];
+        // 从队列获取怪兽
+        let monster = battle.monsterQueue[stageIndex];
+        if (!monster) {
+            // 如果队列用完，随机选一个
+            const allMonsters = [...this.easyMonsters, ...this.normalMonsters];
+            monster = allMonsters[Math.floor(Math.random() * allMonsters.length)];
         }
 
         battle.monsterHP = monster.hp;
@@ -2148,6 +2325,9 @@ const BattleMode = {
         monsterEmoji.textContent = monster.emoji;
         monsterEmoji.className = 'monster-emoji';
 
+        // 显示怪兽类型标签
+        this.showMonsterType(monster);
+
         // 显示关卡过渡动画
         this.showStageTransition(battle.currentStage, monster);
 
@@ -2157,8 +2337,42 @@ const BattleMode = {
         }, 1500);
     },
 
+    // 显示怪兽类型
+    showMonsterType(monster) {
+        const typeColors = {
+            grass: '#78c850', water: '#6890f0', fire: '#f08030', electric: '#f8d030',
+            ghost: '#705898', ice: '#98d8d8', rock: '#b8a038', flying: '#a890f0',
+            bug: '#a8b820', poison: '#a040a0', fighting: '#c03028', psychic: '#f85888',
+            dragon: '#7038f8', steel: '#b8b8d0', dark: '#705848', fairy: '#ee99ac',
+            ground: '#e0c068', normal: '#a8a878'
+        };
+        const typeNames = {
+            grass: '草', water: '水', fire: '火', electric: '电', ghost: '幽灵',
+            ice: '冰', rock: '岩石', flying: '飞行', bug: '虫', poison: '毒',
+            fighting: '格斗', psychic: '超能', dragon: '龙', steel: '钢', dark: '恶',
+            fairy: '妖精', ground: '地面', normal: '普通'
+        };
+
+        let typeTag = document.getElementById('monster-type-tag');
+        if (!typeTag) {
+            typeTag = document.createElement('div');
+            typeTag.id = 'monster-type-tag';
+            typeTag.className = 'monster-type-tag';
+            document.querySelector('.monster-area')?.appendChild(typeTag);
+        }
+        typeTag.textContent = typeNames[monster.type] || '普通';
+        typeTag.style.background = typeColors[monster.type] || '#a8a878';
+    },
+
     // 显示关卡过渡
     showStageTransition(stage, monster) {
+        const typeNames = {
+            grass: '草系', water: '水系', fire: '火系', electric: '电系', ghost: '幽灵系',
+            ice: '冰系', rock: '岩石系', flying: '飞行系', bug: '虫系', poison: '毒系',
+            fighting: '格斗系', psychic: '超能系', dragon: '龙系', steel: '钢系', dark: '恶系',
+            fairy: '妖精系', ground: '地面系', normal: '普通系'
+        };
+
         // 创建过渡元素
         let transition = document.querySelector('.stage-transition');
         if (!transition) {
@@ -2171,6 +2385,8 @@ const BattleMode = {
             <div class="stage-transition-text">关卡 ${stage}</div>
             <div class="stage-transition-monster">${monster.emoji}</div>
             <div class="stage-transition-name">${monster.name}</div>
+            <div class="stage-transition-type">${typeNames[monster.type] || '普通系'}</div>
+            <div class="stage-transition-attack">${monster.attack || '💥'} ${monster.attackName || '攻击'}</div>
         `;
 
         transition.classList.add('show');
@@ -2343,12 +2559,33 @@ const BattleMode = {
         if (battle.combo >= 5) damage = 2;
         if (battle.combo >= 3 && battle.combo < 5) damage = battle.difficulty === 'easy' ? 1 : 2;
 
+        // 检查激活道具效果
+        if (battle.activeItem) {
+            const item = battle.activeItem;
+            if (item.effect.damage) {
+                damage += item.effect.damage;
+                feedbackText = `${item.emoji} ${item.name}! +${item.effect.damage}伤害`;
+                this.showFeedback(true, feedbackText);
+            }
+            if (item.effect.doubleHit) {
+                damage *= 2;
+                feedbackText = '⚔️ 双重打击!';
+            }
+            if (item.effect.critChance && Math.random() < item.effect.critChance) {
+                damage *= 2;
+                feedbackText = '💥 暴击! x2';
+                createConfetti(15);
+            }
+            battle.activeItem = null;
+            this.updateInventoryUI();
+        }
+
         // 检查炸弹武器
         const weapon = this.getRandomWeapon();
         if (weapon.emoji === '💣') damage += 1;
 
         // 发射武器
-        this.fireWeapon(weapon);
+        this.fireWeapon(weapon, damage);
 
         // 延迟处理伤害
         setTimeout(() => {
@@ -2360,7 +2597,216 @@ const BattleMode = {
                 battle.healCounter = 0;
                 this.showHealEffect();
             }
+
+            // 尝试掉落道具
+            this.tryDropItem();
         }, 400);
+    },
+
+    // 尝试掉落道具
+    tryDropItem() {
+        const battle = App.battle;
+        const config = this.itemDropConfig;
+
+        // 计算掉落率
+        let dropChance = config.baseChance + (battle.combo * config.comboBonus);
+        if (battle.inventory.some(i => i.effect.itemDropUp)) {
+            dropChance += 0.1; // 幸运金币增加10%
+        }
+        dropChance = Math.min(dropChance, config.maxChance);
+
+        if (Math.random() < dropChance) {
+            // 根据稀有度权重选择道具
+            const item = this.getRandomItem();
+            if (item && battle.inventory.length < 6) { // 最多6个道具
+                battle.inventory.push({ ...item });
+                battle.itemsCollected++;
+                this.showItemDrop(item);
+                this.updateInventoryUI();
+
+                // 检查传奇道具成就
+                if (item.rarity === 'legendary') {
+                    const achievements = App.stats.achievements;
+                    if (!achievements.includes('legendary_drop')) {
+                        achievements.push('legendary_drop');
+                        saveProgress();
+                        setTimeout(() => {
+                            const ach = MathData.achievements.find(a => a.id === 'legendary_drop');
+                            if (ach) showAchievement(ach);
+                        }, 2000);
+                    }
+                }
+            }
+        }
+    },
+
+    // 获取随机道具
+    getRandomItem() {
+        const weights = this.itemDropConfig.rarityWeights;
+        const totalWeight = Object.values(weights).reduce((a, b) => a + b, 0);
+        let random = Math.random() * totalWeight;
+
+        let selectedRarity = 'common';
+        for (const [rarity, weight] of Object.entries(weights)) {
+            random -= weight;
+            if (random <= 0) {
+                selectedRarity = rarity;
+                break;
+            }
+        }
+
+        const itemsOfRarity = this.items.filter(i => i.rarity === selectedRarity);
+        return itemsOfRarity[Math.floor(Math.random() * itemsOfRarity.length)];
+    },
+
+    // 显示道具掉落动画
+    showItemDrop(item) {
+        const dropEl = document.createElement('div');
+        dropEl.className = 'item-drop-animation';
+        dropEl.innerHTML = `
+            <div class="item-drop-emoji">${item.emoji}</div>
+            <div class="item-drop-name">${item.name}</div>
+        `;
+        document.getElementById('battle-page').appendChild(dropEl);
+
+        playSound('streak');
+
+        setTimeout(() => dropEl.remove(), 1500);
+    },
+
+    // 更新道具栏UI
+    updateInventoryUI() {
+        const battle = App.battle;
+        let inventoryEl = document.getElementById('battle-inventory');
+
+        if (!inventoryEl) {
+            inventoryEl = document.createElement('div');
+            inventoryEl.id = 'battle-inventory';
+            inventoryEl.className = 'battle-inventory';
+            document.querySelector('.battle-question-area')?.insertBefore(
+                inventoryEl,
+                document.getElementById('battle-question-text')
+            );
+        }
+
+        if (battle.inventory.length === 0) {
+            inventoryEl.innerHTML = '<div class="inventory-empty">答题获得道具</div>';
+        } else {
+            inventoryEl.innerHTML = battle.inventory.map((item, index) => `
+                <button class="inventory-item ${battle.activeItem === item ? 'active' : ''}"
+                        data-index="${index}" title="${item.name}: ${item.desc}">
+                    ${item.emoji}
+                </button>
+            `).join('');
+
+            // 绑定点击事件
+            inventoryEl.querySelectorAll('.inventory-item').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const index = parseInt(btn.dataset.index);
+                    this.useItem(index);
+                });
+            });
+        }
+    },
+
+    // 使用道具
+    useItem(index) {
+        const battle = App.battle;
+        const item = battle.inventory[index];
+        if (!item) return;
+
+        // 治疗道具立即生效
+        if (item.type === 'heal') {
+            if (item.effect.hp && battle.playerHP < battle.playerMaxHP) {
+                battle.playerHP = Math.min(battle.playerMaxHP, battle.playerHP + item.effect.hp);
+                this.showHealEffect();
+                battle.inventory.splice(index, 1);
+                battle.itemsUsed++;
+                this.updateUI();
+                this.updateInventoryUI();
+                playSound('correct');
+            } else if (item.effect.hpFull && battle.playerHP < battle.playerMaxHP) {
+                battle.playerHP = battle.playerMaxHP;
+                this.showHealEffect();
+                battle.inventory.splice(index, 1);
+                battle.itemsUsed++;
+                this.updateUI();
+                this.updateInventoryUI();
+                playSound('achievement');
+            } else if (item.effect.revive && !battle.hasRevive) {
+                battle.hasRevive = true;
+                battle.inventory.splice(index, 1);
+                battle.itemsUsed++;
+                this.showFeedback(true, '🌿 复活保护已激活!');
+                this.updateInventoryUI();
+                playSound('achievement');
+            }
+            return;
+        }
+
+        // 增益道具立即生效
+        if (item.type === 'buff') {
+            if (item.effect.shield) {
+                battle.shield += item.effect.shield;
+                this.showFeedback(true, '🛡️ 护盾激活!');
+                battle.inventory.splice(index, 1);
+                battle.itemsUsed++;
+                this.updateInventoryUI();
+                playSound('correct');
+                return;
+            }
+            if (item.effect.maxHpUp) {
+                battle.playerMaxHP += item.effect.maxHpUp;
+                battle.playerHP += item.effect.maxHpUp;
+                this.showFeedback(true, '💛 最大HP+1!');
+                battle.inventory.splice(index, 1);
+                battle.itemsUsed++;
+                this.updateUI();
+                this.updateInventoryUI();
+                playSound('achievement');
+                return;
+            }
+        }
+
+        // 特殊道具
+        if (item.type === 'special') {
+            if (item.effect.skipMonster) {
+                // 跳过当前怪兽
+                battle.monstersDefeated++;
+                battle.inventory.splice(index, 1);
+                battle.itemsUsed++;
+                this.showFeedback(true, '⏳ 时间跳跃!');
+                this.updateInventoryUI();
+                playSound('achievement');
+                setTimeout(() => {
+                    if (battle.currentStage >= battle.totalStages) {
+                        this.gameOver(true);
+                    } else {
+                        battle.currentStage++;
+                        this.initStage();
+                    }
+                }, 1000);
+                return;
+            }
+            if (item.effect.scoreBonus) {
+                App.stats.totalScore += item.effect.scoreBonus;
+                battle.inventory.splice(index, 1);
+                battle.itemsUsed++;
+                this.showFeedback(true, `⭐ +${item.effect.scoreBonus}分!`);
+                this.updateInventoryUI();
+                playSound('correct');
+                return;
+            }
+        }
+
+        // 攻击道具和其他增益道具设为激活状态（下次攻击时使用）
+        if (item.type === 'attack' || item.type === 'buff') {
+            battle.activeItem = item;
+            battle.inventory.splice(index, 1);
+            this.showFeedback(true, `${item.emoji} ${item.name}准备就绪!`);
+            this.updateInventoryUI();
+            playSound('correct');
+        }
     },
 
     // 处理错误答案
@@ -2437,7 +2883,7 @@ const BattleMode = {
     },
 
     // 发射武器
-    fireWeapon(weapon) {
+    fireWeapon(weapon, damage = 1) {
         const battle = App.battle;
         const weaponArea = document.getElementById('weapon-area');
         const questionArea = document.querySelector('.battle-question-area');
@@ -2450,6 +2896,13 @@ const BattleMode = {
         const weaponEl = document.createElement('div');
         weaponEl.className = 'weapon';
         weaponEl.textContent = weapon.emoji;
+
+        // 根据伤害量决定武器大小和颜色
+        if (damage >= 4) {
+            weaponEl.classList.add('super-weapon');
+        } else if (damage >= 2) {
+            weaponEl.classList.add('strong-weapon');
+        }
 
         // 连击时发射多个武器
         const count = battle.combo >= 3 ? Math.min(battle.combo - 1, 3) : 1;
@@ -2464,10 +2917,33 @@ const BattleMode = {
                 w.style.fontSize = '3rem';
             }
 
+            // 高伤害时额外效果
+            if (damage >= 3) {
+                w.style.filter = 'drop-shadow(0 0 10px gold)';
+            }
+
             weaponArea.appendChild(w);
 
             setTimeout(() => w.remove(), 500);
         }
+
+        // 高伤害时显示特效
+        if (damage >= 4) {
+            this.showSuperAttackEffect(weapon);
+        }
+    },
+
+    // 超级攻击特效
+    showSuperAttackEffect(weapon) {
+        const effectEl = document.createElement('div');
+        effectEl.className = 'super-attack-effect';
+        effectEl.innerHTML = `
+            <div class="super-attack-emoji">${weapon.emoji}</div>
+            <div class="super-attack-name">${weapon.name}!</div>
+        `;
+        document.getElementById('battle-page').appendChild(effectEl);
+
+        setTimeout(() => effectEl.remove(), 1000);
     },
 
     // 怪兽受击台词
@@ -2536,6 +3012,7 @@ const BattleMode = {
     // 怪兽攻击
     monsterAttack() {
         const battle = App.battle;
+        const monster = battle.currentMonster;
 
         // 播放怪兽攻击音效
         playSound('monsterAttack');
@@ -2544,12 +3021,16 @@ const BattleMode = {
         const monsterEmoji = document.getElementById('monster-emoji');
         monsterEmoji.classList.add('attack');
 
-        // 发射攻击emoji
+        // 显示怪兽攻击技能名称
+        this.showAttackName(monster);
+
+        // 发射怪兽专属攻击emoji
         const monsterArea = document.querySelector('.monster-area');
         const rect = monsterArea.getBoundingClientRect();
         const attackEmoji = document.createElement('div');
         attackEmoji.className = 'monster-attack-emoji';
-        attackEmoji.textContent = '💥';
+        // 使用怪兽专属攻击图标
+        attackEmoji.textContent = monster?.attack || '💥';
         attackEmoji.style.left = (rect.left + rect.width / 2 - 20) + 'px';
         attackEmoji.style.top = (rect.bottom) + 'px';
         document.getElementById('battle-page').appendChild(attackEmoji);
@@ -2558,6 +3039,17 @@ const BattleMode = {
             attackEmoji.remove();
             monsterEmoji.classList.remove('attack');
         }, 500);
+
+        // 检查护盾
+        if (battle.shield > 0) {
+            battle.shield--;
+            this.showFeedback(true, '🛡️ 护盾抵挡!');
+            playSound('correct');
+            // 下一题
+            battle.currentIndex++;
+            setTimeout(() => this.showBattleQuestion(), 1000);
+            return;
+        }
 
         // 屏幕闪红
         const screenFlash = document.getElementById('screen-flash');
@@ -2570,12 +3062,48 @@ const BattleMode = {
 
         // 检查游戏结束
         if (battle.playerHP <= 0) {
-            setTimeout(() => this.gameOver(false), 800);
+            // 检查复活道具
+            if (battle.hasRevive) {
+                battle.hasRevive = false;
+                battle.playerHP = 1;
+                this.showFeedback(true, '🌿 复活草救了你!');
+                playSound('achievement');
+                createConfetti(20);
+                this.updateUI();
+                battle.currentIndex++;
+
+                // 检查复活英雄成就
+                const achievements = App.stats.achievements;
+                if (!achievements.includes('revive_hero')) {
+                    achievements.push('revive_hero');
+                    saveProgress();
+                    setTimeout(() => {
+                        const ach = MathData.achievements.find(a => a.id === 'revive_hero');
+                        if (ach) showAchievement(ach);
+                    }, 2000);
+                }
+
+                setTimeout(() => this.showBattleQuestion(), 1500);
+            } else {
+                setTimeout(() => this.gameOver(false), 800);
+            }
         } else {
             // 下一题
             battle.currentIndex++;
             setTimeout(() => this.showBattleQuestion(), 1000);
         }
+    },
+
+    // 显示怪兽攻击技能名称
+    showAttackName(monster) {
+        if (!monster?.attackName) return;
+
+        const attackNameEl = document.createElement('div');
+        attackNameEl.className = 'monster-attack-name';
+        attackNameEl.textContent = monster.attackName;
+        document.getElementById('battle-page').appendChild(attackNameEl);
+
+        setTimeout(() => attackNameEl.remove(), 1200);
     },
 
     // 怪兽死亡
@@ -2738,6 +3266,26 @@ const BattleMode = {
                 const ach = MathData.achievements.find(a => a.id === 'battle_speedrun');
                 if (ach) showAchievement(ach);
             }, 6000);
+        }
+
+        // 收集达人：单局收集5个道具
+        if (battle.itemsCollected >= 5 && !achievements.includes('item_collector')) {
+            achievements.push('item_collector');
+            saveProgress();
+            setTimeout(() => {
+                const ach = MathData.achievements.find(a => a.id === 'item_collector');
+                if (ach) showAchievement(ach);
+            }, 7000);
+        }
+
+        // 道具大师：使用3个以上道具通关
+        if (battle.itemsUsed >= 3 && !achievements.includes('item_master')) {
+            achievements.push('item_master');
+            saveProgress();
+            setTimeout(() => {
+                const ach = MathData.achievements.find(a => a.id === 'item_master');
+                if (ach) showAchievement(ach);
+            }, 8000);
         }
     },
 

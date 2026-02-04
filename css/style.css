@@ -3288,6 +3288,223 @@ body.keyboard-active #battle-page .battle-answer-area {
     50% { filter: drop-shadow(0 0 15px rgba(0, 255, 0, 0.8)); }
 }
 
+/* ===== 道具系统UI ===== */
+
+/* 道具栏 */
+.battle-inventory {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px;
+    margin-bottom: 10px;
+    min-height: 50px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: var(--radius);
+}
+
+.inventory-empty {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+}
+
+.inventory-item {
+    width: 44px;
+    height: 44px;
+    font-size: 1.5rem;
+    background: rgba(255, 255, 255, 0.9);
+    border: 2px solid transparent;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.inventory-item:hover {
+    transform: scale(1.1);
+    border-color: var(--primary);
+    box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3);
+}
+
+.inventory-item:active {
+    transform: scale(0.95);
+}
+
+.inventory-item.active {
+    border-color: #FFD93D;
+    box-shadow: 0 0 15px rgba(255, 217, 61, 0.6);
+    animation: item-glow 1s ease infinite;
+}
+
+@keyframes item-glow {
+    0%, 100% { box-shadow: 0 0 10px rgba(255, 217, 61, 0.4); }
+    50% { box-shadow: 0 0 20px rgba(255, 217, 61, 0.8); }
+}
+
+/* 道具掉落动画 */
+.item-drop-animation {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 150;
+    animation: item-drop-pop 1.5s ease forwards;
+}
+
+.item-drop-emoji {
+    font-size: 4rem;
+    animation: item-drop-bounce 0.6s ease;
+}
+
+.item-drop-name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #FFD93D;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 6px 16px;
+    border-radius: var(--radius-full);
+    margin-top: 10px;
+    text-shadow: 0 0 10px rgba(255, 217, 61, 0.5);
+}
+
+@keyframes item-drop-pop {
+    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.3); }
+    20% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
+    40% { transform: translate(-50%, -50%) scale(1); }
+    80% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    100% { opacity: 0; transform: translate(-50%, -100%) scale(0.8); }
+}
+
+@keyframes item-drop-bounce {
+    0% { transform: translateY(50px) scale(0.5); }
+    50% { transform: translateY(-20px) scale(1.1); }
+    70% { transform: translateY(10px) scale(0.95); }
+    100% { transform: translateY(0) scale(1); }
+}
+
+/* 怪兽类型标签 */
+.monster-type-tag {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: white;
+    padding: 4px 12px;
+    border-radius: var(--radius-full);
+    margin-top: 8px;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* 怪兽攻击技能名称 */
+.monster-attack-name {
+    position: fixed;
+    top: 35%;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #FF6B6B;
+    text-shadow: 0 0 20px rgba(255, 107, 107, 0.8), 2px 2px 4px rgba(0, 0, 0, 0.5);
+    z-index: 100;
+    animation: attack-name-pop 1.2s ease forwards;
+}
+
+@keyframes attack-name-pop {
+    0% { opacity: 0; transform: translateX(-50%) scale(0.5); }
+    20% { opacity: 1; transform: translateX(-50%) scale(1.3); }
+    40% { transform: translateX(-50%) scale(1); }
+    80% { opacity: 1; }
+    100% { opacity: 0; transform: translateX(-50%) translateY(-30px); }
+}
+
+/* 超级攻击特效 */
+.super-attack-effect {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 150;
+    animation: super-attack-flash 1s ease forwards;
+}
+
+.super-attack-emoji {
+    font-size: 5rem;
+    filter: drop-shadow(0 0 30px gold);
+    animation: super-attack-spin 0.5s ease;
+}
+
+.super-attack-name {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #FFD93D;
+    text-shadow: 0 0 20px rgba(255, 217, 61, 0.8);
+    margin-top: 10px;
+}
+
+@keyframes super-attack-flash {
+    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.3); }
+    30% { opacity: 1; transform: translate(-50%, -50%) scale(1.5); }
+    50% { transform: translate(-50%, -50%) scale(1); }
+    80% { opacity: 1; }
+    100% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+}
+
+@keyframes super-attack-spin {
+    0% { transform: rotate(0deg) scale(0.5); }
+    50% { transform: rotate(180deg) scale(1.2); }
+    100% { transform: rotate(360deg) scale(1); }
+}
+
+/* 强化武器效果 */
+.weapon.strong-weapon {
+    font-size: 3rem;
+    filter: drop-shadow(0 0 15px rgba(255, 107, 107, 0.8));
+}
+
+.weapon.super-weapon {
+    font-size: 3.5rem;
+    filter: drop-shadow(0 0 25px gold);
+    animation: weapon-fly-super 0.4s ease-out forwards;
+}
+
+@keyframes weapon-fly-super {
+    0% {
+        opacity: 1;
+        transform: translateY(0) scale(1) rotate(0deg);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-300px) scale(1.5) rotate(360deg);
+    }
+}
+
+/* 关卡过渡 - 类型和攻击信息 */
+.stage-transition-type {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: white;
+    padding: 5px 15px;
+    border-radius: var(--radius-full);
+    margin-top: 10px;
+    background: rgba(255, 255, 255, 0.2);
+    animation: stage-name-appear 0.8s ease;
+}
+
+.stage-transition-attack {
+    font-size: 1rem;
+    color: #FF6B6B;
+    margin-top: 15px;
+    animation: stage-name-appear 0.9s ease;
+}
+
 /* ===== 减少动画（辅助功能）===== */
 @media (prefers-reduced-motion: reduce) {
     * {
