@@ -1405,6 +1405,31 @@ document.addEventListener('DOMContentLoaded', () => {
         lastTouchEnd = now;
     }, false);
 
+    // 防止iOS Safari下拉刷新
+    document.body.addEventListener('touchmove', (e) => {
+        if (e.target.closest('.learn-content, .wrong-list, .settings-list, .achievements-grid')) {
+            return; // 允许这些区域滚动
+        }
+        if (document.body.scrollTop === 0) {
+            // e.preventDefault(); // 顶部时阻止
+        }
+    }, { passive: true });
+
+    // iOS 独立模式检测
+    if (window.navigator.standalone === true) {
+        document.body.classList.add('ios-standalone');
+    }
+
+    // 处理 iOS 软键盘
+    const inputs = document.querySelectorAll('input');
+    inputs.forEach(input => {
+        input.addEventListener('focus', () => {
+            setTimeout(() => {
+                input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 300);
+        });
+    });
+
     // 键盘快捷键支持（1234选择答案）
     document.addEventListener('keydown', (e) => {
         if (App.currentPage === 'practice' || App.currentPage === 'daily') {

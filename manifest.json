@@ -1,17 +1,64 @@
 {
     "name": "数学速算训练营",
     "short_name": "速算训练",
-    "description": "专为3-4年级小学生设计的数学速算训练工具",
+    "description": "专为小学生设计的数学速算训练工具",
     "start_url": "/",
+    "scope": "/",
     "display": "standalone",
+    "display_override": ["standalone", "fullscreen"],
+    "orientation": "any",
     "background_color": "#F8F9FA",
     "theme_color": "#6C5CE7",
-    "orientation": "portrait",
+    "lang": "zh-CN",
+    "categories": ["education", "kids"],
     "icons": [
         {
-            "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧮</text></svg>",
-            "sizes": "any",
-            "type": "image/svg+xml"
+            "src": "icons/icon-72.png",
+            "sizes": "72x72",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "icons/icon-96.png",
+            "sizes": "96x96",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "icons/icon-128.png",
+            "sizes": "128x128",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "icons/icon-144.png",
+            "sizes": "144x144",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "icons/icon-152.png",
+            "sizes": "152x152",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "icons/icon-180.png",
+            "sizes": "180x180",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "icons/icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "icons/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
         }
     ]
 }

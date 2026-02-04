@@ -2,16 +2,36 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+
+    <!-- iOS PWA 配置 -->
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="速算训练">
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <!-- 禁用自动检测 -->
+    <meta name="format-detection" content="telephone=no">
+    <meta name="format-detection" content="date=no">
+    <meta name="format-detection" content="address=no">
+    <meta name="format-detection" content="email=no">
+
+    <!-- SEO -->
     <meta name="description" content="专为3-4年级小学生设计的数学速算训练工具，帮助快速掌握乘法速记、分数小数互换等技巧">
     <meta property="og:title" content="数学速算训练营">
     <meta property="og:description" content="让数学计算变得又快又准！">
     <meta name="theme-color" content="#6C5CE7">
+
+    <!-- PWA Manifest -->
     <link rel="manifest" href="manifest.json">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧮</text></svg>">
-    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧮</text></svg>">
+
+    <!-- 图标 -->
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="icons/icon-180.png">
+
+    <!-- 启动画面（iPad） -->
+    <link rel="apple-touch-startup-image" href="icons/splash.png">
+
     <title>数学速算训练营</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
