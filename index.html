@@ -33,7 +33,7 @@
     <link rel="apple-touch-startup-image" href="icons/splash.png">
 
     <title>数学速算训练营</title>
-    <link rel="stylesheet" href="css/style.css?v=4.0">
+    <link rel="stylesheet" href="css/style.css?v=4.1">
 </head>
 <body>
     <!-- 主页面 -->
@@ -430,6 +430,23 @@
             <div class="mode-select-container">
                 <h3 class="mode-select-title">选择训练模式</h3>
 
+                <!-- 难度选择 -->
+                <div class="battle-difficulty-selector">
+                    <span class="diff-label">难度：</span>
+                    <button class="battle-diff-btn active" data-diff="easy">
+                        <span class="diff-icon">😊</span>
+                        <span class="diff-text">简单</span>
+                    </button>
+                    <button class="battle-diff-btn" data-diff="normal">
+                        <span class="diff-icon">😤</span>
+                        <span class="diff-text">普通</span>
+                    </button>
+                    <button class="battle-diff-btn" data-diff="hard">
+                        <span class="diff-icon">😈</span>
+                        <span class="diff-text">困难</span>
+                    </button>
+                </div>
+
                 <button class="mode-card battle-mode" id="select-battle-mode">
                     <span class="mode-icon">⚔️</span>
                     <span class="mode-name">怪兽战斗</span>
@@ -590,7 +607,7 @@
     <!-- 特效层 -->
     <div class="effects-layer" id="effects-layer"></div>
 
-    <script src="js/data.js?v=4.0"></script>
-    <script src="js/app.js?v=4.0"></script>
+    <script src="js/data.js?v=4.1"></script>
+    <script src="js/app.js?v=4.1"></script>
 </body>
 </html>

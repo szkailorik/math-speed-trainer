@@ -1889,6 +1889,15 @@ const BattleMode = {
 
     // 初始化
     init() {
+        // 难度选择按钮
+        document.querySelectorAll('.battle-diff-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.battle-diff-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                App.difficulty = btn.dataset.diff;
+            });
+        });
+
         // 模式选择按钮
         document.getElementById('select-battle-mode')?.addEventListener('click', () => {
             this.showDifficultyAndStart();
@@ -2538,7 +2547,10 @@ const BattleMode = {
                 playSound('complete');
             }, 300);
 
-            // 检查成就
+            // 检查战斗专属成就
+            this.checkBattleAchievements();
+
+            // 检查通用成就
             checkAchievements();
         } else {
             // 显示失败页面
@@ -2556,6 +2568,71 @@ const BattleMode = {
                 encourages[Math.floor(Math.random() * encourages.length)];
 
             showPage('battle-fail');
+        }
+    },
+
+    // 检查战斗专属成就
+    checkBattleAchievements() {
+        const battle = App.battle;
+        const achievements = App.stats.achievements;
+
+        // 初战告捷：首次完成战斗模式
+        if (!achievements.includes('battle_first_win')) {
+            achievements.push('battle_first_win');
+            saveData();
+            const ach = MathData.achievements.find(a => a.id === 'battle_first_win');
+            if (ach) showAchievement(ach);
+        }
+
+        // 毫发无损：无伤通关
+        if (battle.noDamageTaken && !achievements.includes('battle_no_damage')) {
+            achievements.push('battle_no_damage');
+            saveData();
+            setTimeout(() => {
+                const ach = MathData.achievements.find(a => a.id === 'battle_no_damage');
+                if (ach) showAchievement(ach);
+            }, 2000);
+        }
+
+        // 屠龙勇士：击败火焰龙宝宝（第4关）
+        if (battle.monstersDefeated >= 4 && !achievements.includes('battle_dragon_slayer')) {
+            achievements.push('battle_dragon_slayer');
+            saveData();
+            setTimeout(() => {
+                const ach = MathData.achievements.find(a => a.id === 'battle_dragon_slayer');
+                if (ach) showAchievement(ach);
+            }, 3000);
+        }
+
+        // 魔王终结者：击败九九魔王（困难模式第6关）
+        if (battle.difficulty === 'hard' && battle.monstersDefeated >= 6 && !achievements.includes('battle_demon_king')) {
+            achievements.push('battle_demon_king');
+            saveData();
+            setTimeout(() => {
+                const ach = MathData.achievements.find(a => a.id === 'battle_demon_king');
+                if (ach) showAchievement(ach);
+            }, 4000);
+        }
+
+        // 连击大师：战斗中达成10连击
+        if (battle.maxCombo >= 10 && !achievements.includes('battle_10_combo')) {
+            achievements.push('battle_10_combo');
+            saveData();
+            setTimeout(() => {
+                const ach = MathData.achievements.find(a => a.id === 'battle_10_combo');
+                if (ach) showAchievement(ach);
+            }, 5000);
+        }
+
+        // 速战速决：3分钟内通关简单难度
+        const totalTime = (Date.now() - battle.startTime) / 1000;
+        if (battle.difficulty === 'easy' && totalTime <= 180 && !achievements.includes('battle_speedrun')) {
+            achievements.push('battle_speedrun');
+            saveData();
+            setTimeout(() => {
+                const ach = MathData.achievements.find(a => a.id === 'battle_speedrun');
+                if (ach) showAchievement(ach);
+            }, 6000);
         }
     },
 

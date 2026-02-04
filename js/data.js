@@ -666,6 +666,13 @@ const MathData = {
         { id: 'total_100', name: '百题斩', desc: '累计答对100题', icon: '💯', condition: (_, total) => total >= 100 },
         { id: 'total_500', name: '五百强', desc: '累计答对500题', icon: '🎖️', condition: (_, total) => total >= 500 },
         { id: 'total_1000', name: '千题大师', desc: '累计答对1000题', icon: '🎯', condition: (_, total) => total >= 1000 },
+        // 战斗模式专属成就
+        { id: 'battle_first_win', name: '初战告捷', desc: '首次完成战斗模式', icon: '⚔️', special: 'battle_first_win' },
+        { id: 'battle_no_damage', name: '毫发无损', desc: '无伤通关战斗模式', icon: '🛡️', special: 'battle_no_damage' },
+        { id: 'battle_dragon_slayer', name: '屠龙勇士', desc: '击败火焰龙宝宝', icon: '🐲', special: 'battle_dragon_slayer' },
+        { id: 'battle_demon_king', name: '魔王终结者', desc: '击败九九魔王(困难)', icon: '👹', special: 'battle_demon_king' },
+        { id: 'battle_10_combo', name: '连击大师', desc: '战斗中达成10连击', icon: '🔥', special: 'battle_10_combo' },
+        { id: 'battle_speedrun', name: '速战速决', desc: '3分钟内通关简单难度', icon: '⏱️', special: 'battle_speedrun' },
     ]
 };
 
