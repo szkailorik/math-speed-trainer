@@ -285,6 +285,82 @@ function playSound(type) {
         gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.05);
         osc.start(ctx.currentTime);
         osc.stop(ctx.currentTime + 0.06);
+    } else if (type === 'attack') {
+        // 攻击音效 - 快速"嗖"声
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(800, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(200, ctx.currentTime + 0.15);
+        gain.gain.setValueAtTime(0.15, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.15);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.2);
+    } else if (type === 'hit') {
+        // 命中音效 - 撞击声
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(150, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(50, ctx.currentTime + 0.1);
+        gain.gain.setValueAtTime(0.2, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.15);
+    } else if (type === 'monsterAttack') {
+        // 怪兽攻击音效 - 危险警告
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(300, ctx.currentTime);
+        osc.frequency.setValueAtTime(200, ctx.currentTime + 0.1);
+        osc.frequency.setValueAtTime(150, ctx.currentTime + 0.2);
+        gain.gain.setValueAtTime(0.2, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.35);
+    } else if (type === 'defeat') {
+        // 怪兽死亡音效 - 爆炸消散
+        const osc1 = ctx.createOscillator();
+        const osc2 = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc1.connect(gain);
+        osc2.connect(gain);
+        gain.connect(ctx.destination);
+        osc1.type = 'sawtooth';
+        osc2.type = 'square';
+        osc1.frequency.setValueAtTime(400, ctx.currentTime);
+        osc1.frequency.exponentialRampToValueAtTime(50, ctx.currentTime + 0.3);
+        osc2.frequency.setValueAtTime(200, ctx.currentTime);
+        osc2.frequency.exponentialRampToValueAtTime(25, ctx.currentTime + 0.3);
+        gain.gain.setValueAtTime(0.2, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
+        osc1.start(ctx.currentTime);
+        osc2.start(ctx.currentTime);
+        osc1.stop(ctx.currentTime + 0.45);
+        osc2.stop(ctx.currentTime + 0.45);
+    } else if (type === 'gameOver') {
+        // 游戏失败音效 - 低沉下降
+        const notes = [392, 349.23, 329.63, 261.63]; // G4, F4, E4, C4
+        notes.forEach((freq, i) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, ctx.currentTime + i * 0.2);
+            gain.gain.setValueAtTime(0, ctx.currentTime + i * 0.2);
+            gain.gain.linearRampToValueAtTime(0.25, ctx.currentTime + i * 0.2 + 0.02);
+            gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + i * 0.2 + 0.25);
+            osc.start(ctx.currentTime + i * 0.2);
+            osc.stop(ctx.currentTime + i * 0.2 + 0.3);
+        });
     }
 }
 
@@ -1863,28 +1939,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ===== 战斗模式模块 =====
 const BattleMode = {
-    // 怪兽配置
+    // 怪兽配置 - 基于流行游戏角色设计
     monsters: [
-        { name: '数字史莱姆', emoji: '🟢', hp: 3 },
-        { name: '调皮小鬼', emoji: '👻', hp: 4 },
-        { name: '骷髅数学家', emoji: '💀', hp: 5 },
-        { name: '火焰龙宝宝', emoji: '🐲', hp: 6 }
+        { name: '数字史莱姆', emoji: '🟢', hp: 3, quips: ['弹弹~', 'QQ的~', '软软的~'] },
+        { name: '蘑菇小怪', emoji: '🍄', hp: 3, quips: ['毒毒~', '别踩我!', '孢子攻击!'] },
+        { name: '调皮幽灵', emoji: '👻', hp: 4, quips: ['嘘~', '看不见我~', '飘飘~'] },
+        { name: '南瓜灯精', emoji: '🎃', hp: 4, quips: ['嘿嘿~', '万圣节快乐!', '南瓜灯亮了!'] },
+        { name: '章鱼博士', emoji: '🐙', hp: 5, quips: ['墨汁喷射!', '八爪攻击!', '滑溜溜~'] },
+        { name: '火焰小龙', emoji: '🐲', hp: 6, quips: ['喷火!', '烫烫烫!', '龙之怒!'] }
     ],
 
     // 困难模式额外怪兽
     hardMonsters: [
-        { name: '冰霜巨人', emoji: '🧊', hp: 7 },
-        { name: '九九魔王', emoji: '👹', hp: 8 }
+        { name: '暴风霸王龙', emoji: '🦖', hp: 7, quips: ['吼!!!', '碾压!', '恐龙之王!'] },
+        { name: '机械魔王', emoji: '🤖', hp: 8, quips: ['计算中...', '系统升级!', '无法击败!'] },
+        { name: '外星Boss', emoji: '👽', hp: 9, quips: ['地球人!', '带我走!', '未知力量!'] },
+        { name: '九九终极魔王', emoji: '👹', hp: 10, quips: ['九九归一!', '不可能!', '这不科学!'] }
     ],
 
-    // 武器配置
+    // 武器配置 - 更丰富的攻击方式
     weapons: [
-        { emoji: '🔥', name: '火球', weight: 25 },
-        { emoji: '🧊', name: '冰箭', weight: 20 },
-        { emoji: '⚡', name: '雷电', weight: 20 },
-        { emoji: '⭐', name: '星星', weight: 20 },
-        { emoji: '🌈', name: '彩虹', weight: 10 },
-        { emoji: '💣', name: '炸弹', weight: 5 }
+        { emoji: '🔥', name: '火球术', weight: 20, sound: 'fire' },
+        { emoji: '🧊', name: '冰冻箭', weight: 15, sound: 'ice' },
+        { emoji: '⚡', name: '闪电链', weight: 15, sound: 'thunder' },
+        { emoji: '⭐', name: '流星雨', weight: 15, sound: 'star' },
+        { emoji: '🌈', name: '彩虹光', weight: 10, sound: 'rainbow' },
+        { emoji: '💣', name: '超级炸弹', weight: 5, sound: 'bomb' },
+        { emoji: '🌟', name: '圣光术', weight: 10, sound: 'holy' },
+        { emoji: '🌀', name: '龙卷风', weight: 10, sound: 'wind' }
     ],
 
     // 初始化
@@ -2011,9 +2093,9 @@ const BattleMode = {
 
         // 根据难度设置
         const diffSettings = {
-            easy: { playerHP: 5, stages: 4 },
-            normal: { playerHP: 4, stages: 4 },
-            hard: { playerHP: 3, stages: 6 }
+            easy: { playerHP: 5, stages: 4 },   // 前4个基础怪兽
+            normal: { playerHP: 4, stages: 6 }, // 全部6个基础怪兽
+            hard: { playerHP: 4, stages: 10 }   // 6基础 + 4困难怪兽
         };
 
         const settings = diffSettings[difficulty] || diffSettings.easy;
@@ -2039,16 +2121,23 @@ const BattleMode = {
         const battle = App.battle;
         const stageIndex = battle.currentStage - 1;
 
-        // 获取怪兽
+        // 获取怪兽 - 根据难度和关卡选择
         let monster;
-        if (battle.difficulty === 'hard' && stageIndex >= 4) {
-            monster = this.hardMonsters[stageIndex - 4];
+        if (battle.difficulty === 'hard') {
+            // 困难模式：先6个基础怪兽，再4个困难怪兽
+            if (stageIndex < this.monsters.length) {
+                monster = this.monsters[stageIndex];
+            } else {
+                monster = this.hardMonsters[stageIndex - this.monsters.length];
+            }
         } else {
+            // 简单/普通模式：只用基础怪兽
             monster = this.monsters[Math.min(stageIndex, this.monsters.length - 1)];
         }
 
         battle.monsterHP = monster.hp;
         battle.monsterMaxHP = monster.hp;
+        battle.currentMonster = monster; // 存储当前怪兽引用
 
         // 更新UI
         this.updateUI();
@@ -2136,35 +2225,25 @@ const BattleMode = {
         // 显示题目
         document.getElementById('battle-question-text').textContent = question.q;
 
-        // 根据设置或题目属性决定模式
-        const useInputMode = question.forceInput || App.settings.mode === 'input';
+        // 战斗模式强制使用选择题（iPad上输入法体验不好）
+        document.getElementById('battle-choices').classList.remove('hidden');
+        document.getElementById('battle-input-mode').classList.add('hidden');
 
-        if (useInputMode) {
-            document.getElementById('battle-choices').classList.add('hidden');
-            document.getElementById('battle-input-mode').classList.remove('hidden');
-            const input = document.getElementById('battle-answer-input');
-            input.value = '';
-            setTimeout(() => input.focus(), 100);
-        } else {
-            document.getElementById('battle-choices').classList.remove('hidden');
-            document.getElementById('battle-input-mode').classList.add('hidden');
+        // 生成选项
+        const choices = this.generateChoices(question.a);
+        const choicesContainer = document.getElementById('battle-choices');
+        choicesContainer.innerHTML = choices.map(c =>
+            `<button class="battle-choice-btn">${c}</button>`
+        ).join('');
 
-            // 生成选项
-            const choices = this.generateChoices(question.a);
-            const choicesContainer = document.getElementById('battle-choices');
-            choicesContainer.innerHTML = choices.map(c =>
-                `<button class="battle-choice-btn">${c}</button>`
-            ).join('');
-
-            // 绑定点击事件
-            choicesContainer.querySelectorAll('.battle-choice-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    if (!btn.disabled) {
-                        this.checkAnswer(btn.textContent, btn);
-                    }
-                });
+        // 绑定点击事件
+        choicesContainer.querySelectorAll('.battle-choice-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (!btn.disabled) {
+                    this.checkAnswer(btn.textContent, btn);
+                }
             });
-        }
+        });
     },
 
     // 生成选项
@@ -2364,6 +2443,9 @@ const BattleMode = {
         const questionArea = document.querySelector('.battle-question-area');
         const rect = questionArea.getBoundingClientRect();
 
+        // 播放攻击音效
+        playSound('attack');
+
         // 创建武器元素
         const weaponEl = document.createElement('div');
         weaponEl.className = 'weapon';
@@ -2396,6 +2478,9 @@ const BattleMode = {
         const battle = App.battle;
         battle.monsterHP -= damage;
         battle.totalDamage += damage;
+
+        // 播放命中音效
+        playSound('hit');
 
         // 怪兽受击动画
         const monsterEmoji = document.getElementById('monster-emoji');
@@ -2434,10 +2519,14 @@ const BattleMode = {
 
     // 显示怪兽受击台词
     showMonsterQuip() {
+        const battle = App.battle;
         const container = document.getElementById('damage-numbers');
         const quipEl = document.createElement('div');
         quipEl.className = 'monster-quip';
-        quipEl.textContent = this.monsterQuips[Math.floor(Math.random() * this.monsterQuips.length)];
+
+        // 使用当前怪兽的专属台词
+        const quips = battle.currentMonster?.quips || this.monsterQuips;
+        quipEl.textContent = quips[Math.floor(Math.random() * quips.length)];
         quipEl.style.left = (Math.random() * 40 - 20) + 'px';
         container.appendChild(quipEl);
 
@@ -2447,6 +2536,9 @@ const BattleMode = {
     // 怪兽攻击
     monsterAttack() {
         const battle = App.battle;
+
+        // 播放怪兽攻击音效
+        playSound('monsterAttack');
 
         // 怪兽攻击动画
         const monsterEmoji = document.getElementById('monster-emoji');
@@ -2495,11 +2587,11 @@ const BattleMode = {
         const monsterEmoji = document.getElementById('monster-emoji');
         monsterEmoji.classList.add('death');
 
-        // 播放音效
-        playSound('streak');
+        // 播放击败音效
+        playSound('defeat');
 
         // 爆炸特效
-        createConfetti(30);
+        createConfetti(40);
 
         setTimeout(() => {
             // 检查是否通关
@@ -2576,6 +2668,9 @@ const BattleMode = {
             ];
             document.getElementById('battle-fail-subtitle').textContent =
                 encourages[Math.floor(Math.random() * encourages.length)];
+
+            // 播放失败音效
+            playSound('gameOver');
 
             showPage('battle-fail');
         }
