@@ -940,6 +940,41 @@ body.keyboard-active .feedback.show {
     transform: translateX(-50%) translateY(-50%);
 }
 
+/* 战斗页键盘优化 */
+body.keyboard-active #battle-page .monster-area {
+    padding: 10px;
+}
+
+body.keyboard-active #battle-page .monster-emoji {
+    font-size: 3rem;
+}
+
+body.keyboard-active #battle-page .monster-name {
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+}
+
+body.keyboard-active #battle-page .monster-hp-bar {
+    width: 120px;
+    height: 12px;
+}
+
+body.keyboard-active #battle-page .battle-question-area {
+    padding: 10px 15px;
+}
+
+body.keyboard-active #battle-page .battle-question-card {
+    padding: 15px;
+}
+
+body.keyboard-active #battle-page .battle-question-text {
+    font-size: 1.5rem;
+}
+
+body.keyboard-active #battle-page .battle-answer-area {
+    padding: 10px 15px;
+}
+
 /* 输入框获得焦点时的特殊样式 */
 .answer-input:focus {
     position: relative;
@@ -2714,6 +2749,27 @@ body.keyboard-active .feedback.show {
     100% { transform: translateY(-60px) scale(1); opacity: 0; }
 }
 
+/* 怪兽受击台词 */
+.monster-quip {
+    position: absolute;
+    font-size: 1rem;
+    font-weight: 600;
+    color: white;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 5px 12px;
+    border-radius: 12px;
+    white-space: nowrap;
+    animation: quip-pop 1s ease forwards;
+    top: -40px;
+}
+
+@keyframes quip-pop {
+    0% { transform: translateY(0) scale(0.8); opacity: 0; }
+    20% { transform: translateY(-10px) scale(1); opacity: 1; }
+    80% { transform: translateY(-20px) scale(1); opacity: 1; }
+    100% { transform: translateY(-30px) scale(0.9); opacity: 0; }
+}
+
 /* 武器飞行区域 */
 .weapon-area {
     position: absolute;
@@ -3159,6 +3215,18 @@ body.keyboard-active .feedback.show {
     font-size: 4rem;
     margin-top: 20px;
     animation: stage-monster-appear 0.6s ease;
+}
+
+.stage-transition-name {
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin-top: 10px;
+    animation: stage-name-appear 0.7s ease;
+}
+
+@keyframes stage-name-appear {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes stage-text-pop {

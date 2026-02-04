@@ -1932,6 +1932,25 @@ const BattleMode = {
                 this.submitAnswer();
             }
         });
+
+        // 战斗输入框键盘处理
+        const battleInput = document.getElementById('battle-answer-input');
+        if (battleInput) {
+            battleInput.addEventListener('focus', () => {
+                document.body.classList.add('keyboard-active');
+                setTimeout(() => {
+                    battleInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 300);
+            });
+
+            battleInput.addEventListener('blur', () => {
+                setTimeout(() => {
+                    if (document.activeElement !== battleInput) {
+                        document.body.classList.remove('keyboard-active');
+                    }
+                }, 100);
+            });
+        }
     },
 
     // 显示难度选择并开始战斗
@@ -2210,8 +2229,26 @@ const BattleMode = {
         // 播放音效
         playSound('correct');
 
+        // 连击里程碑反馈
+        let feedbackText = '正确!';
+        if (battle.combo === 3) {
+            feedbackText = '🔥 三连击!';
+            playSound('streak');
+        } else if (battle.combo === 5) {
+            feedbackText = '🔥🔥 五连击!';
+            playSound('streak');
+        } else if (battle.combo === 10) {
+            feedbackText = '🔥🔥🔥 十连击!!';
+            playSound('streak');
+            createConfetti(20);
+        } else if (battle.combo === 15) {
+            feedbackText = '💥 超神连击!!!';
+            playSound('streak');
+            createConfetti(30);
+        }
+
         // 显示反馈
-        this.showFeedback(true, '正确!');
+        this.showFeedback(true, feedbackText);
 
         // 计算伤害
         let damage = 1;
@@ -2332,6 +2369,9 @@ const BattleMode = {
         }
     },
 
+    // 怪兽受击台词
+    monsterQuips: ['哎呦!', '好痛!', '呜呜...', '住手!', '不要!', '救命!'],
+
     // 造成伤害
     dealDamage(damage) {
         const battle = App.battle;
@@ -2344,8 +2384,9 @@ const BattleMode = {
         void monsterEmoji.offsetWidth; // 触发重绘
         monsterEmoji.classList.add('hit');
 
-        // 显示伤害数字
+        // 显示伤害数字和怪兽台词
         this.showDamageNumber(damage);
+        this.showMonsterQuip();
 
         // 更新UI
         this.updateUI();
@@ -2370,6 +2411,18 @@ const BattleMode = {
         container.appendChild(dmgEl);
 
         setTimeout(() => dmgEl.remove(), 800);
+    },
+
+    // 显示怪兽受击台词
+    showMonsterQuip() {
+        const container = document.getElementById('damage-numbers');
+        const quipEl = document.createElement('div');
+        quipEl.className = 'monster-quip';
+        quipEl.textContent = this.monsterQuips[Math.floor(Math.random() * this.monsterQuips.length)];
+        quipEl.style.left = (Math.random() * 40 - 20) + 'px';
+        container.appendChild(quipEl);
+
+        setTimeout(() => quipEl.remove(), 1000);
     },
 
     // 怪兽攻击
