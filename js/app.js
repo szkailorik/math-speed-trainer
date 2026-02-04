@@ -731,7 +731,10 @@ function startPractice(module) {
     } else {
         // 单模块训练
         const moduleData = MathData[module];
-        if (!moduleData) return;
+        if (!moduleData) {
+            alert('错误：找不到模块 ' + module + '\n请刷新页面重试');
+            return;
+        }
 
         const diffData = moduleData[App.difficulty] || moduleData.easy;
         questions = shuffle(diffData).slice(0, Math.min(App.settings.count, diffData.length));
