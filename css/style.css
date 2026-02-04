@@ -3547,3 +3547,420 @@ body.keyboard-active #battle-page .battle-answer-area {
         animation-duration: 0.01ms !important;
     }
 }
+
+/* ===== 妖怪图鉴页面 ===== */
+#collection-page.active {
+    display: flex !important;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+#collection-page .page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 20px;
+    background: var(--card-bg);
+    border-bottom: 1px solid var(--border);
+}
+
+#collection-page .page-header h1 {
+    font-size: 1.2rem;
+    margin: 0;
+}
+
+.collection-stats {
+    background: var(--primary-light);
+    color: white;
+    padding: 5px 12px;
+    border-radius: var(--radius-full);
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+/* 收集进度条 */
+.collection-progress {
+    padding: 15px 20px;
+    background: var(--card-bg);
+}
+
+.collection-progress-bar {
+    height: 8px;
+    background: var(--border);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+}
+
+.collection-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), var(--success));
+    border-radius: var(--radius-full);
+    transition: width 0.5s ease;
+}
+
+.collection-progress-text {
+    display: block;
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--text-light);
+    margin-top: 8px;
+}
+
+/* 筛选按钮 */
+.collection-filters {
+    display: flex;
+    gap: 10px;
+    padding: 15px 20px;
+    background: var(--bg);
+}
+
+.collection-filter-btn {
+    flex: 1;
+    padding: 10px;
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--card-bg);
+    color: var(--text);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.collection-filter-btn.active {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: white;
+}
+
+/* 图鉴网格 */
+.collection-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    padding: 15px 20px;
+    padding-bottom: calc(var(--safe-bottom) + 30px);
+    overflow-y: auto;
+}
+
+/* 妖怪卡片 */
+.collection-card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    padding: 15px 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 2px solid transparent;
+    box-shadow: var(--shadow);
+}
+
+.collection-card.collected {
+    border-color: var(--primary-light);
+}
+
+.collection-card.collected:hover,
+.collection-card.collected:active {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--primary);
+}
+
+.collection-card.locked {
+    background: var(--border);
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.collection-card-emoji {
+    display: block;
+    font-size: 2.5rem;
+    margin-bottom: 8px;
+}
+
+.collection-card.locked .collection-card-emoji {
+    filter: grayscale(1);
+}
+
+.collection-card-name {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 5px;
+}
+
+.collection-card-type {
+    display: inline-block;
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    border-radius: var(--radius-full);
+    background: var(--border);
+    color: var(--text-light);
+}
+
+/* 属性颜色 */
+.collection-card-type.type-ghost { background: #705898; color: white; }
+.collection-card-type.type-psychic { background: #f85888; color: white; }
+.collection-card-type.type-dark { background: #705848; color: white; }
+.collection-card-type.type-poison { background: #a040a0; color: white; }
+.collection-card-type.type-fire { background: #f08030; color: white; }
+.collection-card-type.type-water { background: #6890f0; color: white; }
+.collection-card-type.type-flying { background: #a890f0; color: white; }
+.collection-card-type.type-ice { background: #98d8d8; color: #333; }
+.collection-card-type.type-fighting { background: #c03028; color: white; }
+.collection-card-type.type-rock { background: #b8a038; color: white; }
+.collection-card-type.type-electric { background: #f8d030; color: #333; }
+.collection-card-type.type-bug { background: #a8b820; color: white; }
+.collection-card-type.type-dragon { background: #7038f8; color: white; }
+.collection-card-type.type-steel { background: #b8b8d0; color: #333; }
+.collection-card-type.type-fairy { background: #ee99ac; color: white; }
+.collection-card-type.type-ground { background: #e0c068; color: #333; }
+.collection-card-type.type-normal { background: #a8a878; color: white; }
+
+/* 妖怪详情弹窗 */
+.monster-detail-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.monster-detail-modal.hidden {
+    display: none;
+}
+
+.monster-detail-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(5px);
+}
+
+.monster-detail-content {
+    position: relative;
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    padding: 25px;
+    max-width: 400px;
+    width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+    box-shadow: var(--shadow-lg);
+    animation: modal-appear 0.3s ease;
+}
+
+@keyframes modal-appear {
+    from { opacity: 0; transform: scale(0.9) translateY(20px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.monster-detail-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: var(--border);
+    border-radius: 50%;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-light);
+    transition: all 0.2s ease;
+}
+
+.monster-detail-close:hover {
+    background: var(--danger);
+    color: white;
+}
+
+.monster-detail-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.monster-detail-emoji {
+    font-size: 4rem;
+}
+
+.monster-detail-names {
+    flex: 1;
+}
+
+.monster-detail-name {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin: 0 0 5px 0;
+}
+
+.monster-detail-name-en {
+    font-size: 0.9rem;
+    color: var(--text-light);
+    font-style: italic;
+}
+
+.monster-detail-type {
+    margin-bottom: 15px;
+}
+
+.type-badge {
+    display: inline-block;
+    padding: 5px 15px;
+    border-radius: var(--radius-full);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: white;
+}
+
+.type-badge.ghost { background: #705898; }
+.type-badge.psychic { background: #f85888; }
+.type-badge.dark { background: #705848; }
+.type-badge.poison { background: #a040a0; }
+.type-badge.fire { background: #f08030; }
+.type-badge.water { background: #6890f0; }
+.type-badge.flying { background: #a890f0; }
+.type-badge.ice { background: #98d8d8; color: #333; }
+.type-badge.fighting { background: #c03028; }
+.type-badge.rock { background: #b8a038; }
+.type-badge.electric { background: #f8d030; color: #333; }
+.type-badge.bug { background: #a8b820; }
+.type-badge.dragon { background: #7038f8; }
+.type-badge.steel { background: #b8b8d0; color: #333; }
+.type-badge.fairy { background: #ee99ac; }
+.type-badge.ground { background: #e0c068; color: #333; }
+.type-badge.normal { background: #a8a878; }
+
+.monster-detail-stats {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: var(--bg);
+    border-radius: var(--radius-sm);
+}
+
+.detail-stat {
+    flex: 1;
+    text-align: center;
+}
+
+.detail-stat-label {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--text-light);
+    margin-bottom: 5px;
+}
+
+.detail-stat-value {
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.monster-detail-trait,
+.monster-detail-story {
+    margin-bottom: 20px;
+}
+
+.monster-detail-trait h3,
+.monster-detail-story h3 {
+    font-size: 0.9rem;
+    color: var(--primary);
+    margin-bottom: 10px;
+}
+
+.monster-detail-trait p,
+.monster-detail-story p {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin-bottom: 8px;
+}
+
+.monster-detail-trait p.en,
+.monster-detail-story p.en {
+    color: var(--text-light);
+    font-style: italic;
+    font-size: 0.85rem;
+}
+
+/* 新收集提示 */
+.collection-toast {
+    position: fixed;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    z-index: 3000;
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.collection-toast.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+}
+
+.collection-toast-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px 25px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: var(--radius-full);
+    color: white;
+    box-shadow: 0 10px 40px rgba(102, 126, 234, 0.4);
+}
+
+.collection-toast-icon {
+    font-size: 1.5rem;
+}
+
+.collection-toast-text {
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.collection-toast-text strong {
+    display: block;
+    font-size: 1rem;
+}
+
+/* 图鉴入口卡片 */
+.mode-card.collection-mode {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    position: relative;
+}
+
+.mode-card.collection-mode .mode-icon {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.mode-card.collection-mode .mode-desc {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.collection-count {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(255, 255, 255, 0.25);
+    padding: 4px 10px;
+    border-radius: var(--radius-full);
+    font-size: 0.75rem;
+    font-weight: 700;
+}
