@@ -2305,7 +2305,17 @@ const BattleMode = {
 
         // 添加到错题本
         const question = battle.questions[battle.currentIndex];
-        addToWrongBook(question);
+        const wrongItem = {
+            q: question.q,
+            a: question.a,
+            yourAnswer: null,
+            timestamp: Date.now()
+        };
+        const exists = App.wrongBook.some(item => item.q === wrongItem.q);
+        if (!exists) {
+            App.wrongBook.push(wrongItem);
+            saveProgress();
+        }
 
         // 怪兽攻击
         setTimeout(() => {
@@ -2531,7 +2541,7 @@ const BattleMode = {
             if (battle.maxCombo > App.stats.maxStreak) {
                 App.stats.maxStreak = battle.maxCombo;
             }
-            saveData();
+            saveProgress();
 
             // 显示胜利页面
             document.getElementById('result-monsters').textContent = battle.monstersDefeated;
@@ -2551,7 +2561,7 @@ const BattleMode = {
             this.checkBattleAchievements();
 
             // 检查通用成就
-            checkAchievements();
+            checkAchievements(battle.maxCombo, App.stats.totalCorrect);
         } else {
             // 显示失败页面
             document.getElementById('fail-monsters').textContent = battle.monstersDefeated;
@@ -2579,7 +2589,7 @@ const BattleMode = {
         // 初战告捷：首次完成战斗模式
         if (!achievements.includes('battle_first_win')) {
             achievements.push('battle_first_win');
-            saveData();
+            saveProgress();
             const ach = MathData.achievements.find(a => a.id === 'battle_first_win');
             if (ach) showAchievement(ach);
         }
@@ -2587,7 +2597,7 @@ const BattleMode = {
         // 毫发无损：无伤通关
         if (battle.noDamageTaken && !achievements.includes('battle_no_damage')) {
             achievements.push('battle_no_damage');
-            saveData();
+            saveProgress();
             setTimeout(() => {
                 const ach = MathData.achievements.find(a => a.id === 'battle_no_damage');
                 if (ach) showAchievement(ach);
@@ -2597,7 +2607,7 @@ const BattleMode = {
         // 屠龙勇士：击败火焰龙宝宝（第4关）
         if (battle.monstersDefeated >= 4 && !achievements.includes('battle_dragon_slayer')) {
             achievements.push('battle_dragon_slayer');
-            saveData();
+            saveProgress();
             setTimeout(() => {
                 const ach = MathData.achievements.find(a => a.id === 'battle_dragon_slayer');
                 if (ach) showAchievement(ach);
@@ -2607,7 +2617,7 @@ const BattleMode = {
         // 魔王终结者：击败九九魔王（困难模式第6关）
         if (battle.difficulty === 'hard' && battle.monstersDefeated >= 6 && !achievements.includes('battle_demon_king')) {
             achievements.push('battle_demon_king');
-            saveData();
+            saveProgress();
             setTimeout(() => {
                 const ach = MathData.achievements.find(a => a.id === 'battle_demon_king');
                 if (ach) showAchievement(ach);
@@ -2617,7 +2627,7 @@ const BattleMode = {
         // 连击大师：战斗中达成10连击
         if (battle.maxCombo >= 10 && !achievements.includes('battle_10_combo')) {
             achievements.push('battle_10_combo');
-            saveData();
+            saveProgress();
             setTimeout(() => {
                 const ach = MathData.achievements.find(a => a.id === 'battle_10_combo');
                 if (ach) showAchievement(ach);
@@ -2628,7 +2638,7 @@ const BattleMode = {
         const totalTime = (Date.now() - battle.startTime) / 1000;
         if (battle.difficulty === 'easy' && totalTime <= 180 && !achievements.includes('battle_speedrun')) {
             achievements.push('battle_speedrun');
-            saveData();
+            saveProgress();
             setTimeout(() => {
                 const ach = MathData.achievements.find(a => a.id === 'battle_speedrun');
                 if (ach) showAchievement(ach);
