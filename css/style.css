@@ -4049,13 +4049,13 @@ body.keyboard-active #battle-page .battle-answer-area {
 .type-badge.spirit  { background: #ce93d8; }
 .type-badge.ancient { background: #78909c; }
 
-.type-earth   { color: #c4a54a; }
-.type-wind    { color: #81c784; }
-.type-thunder { color: #fdd835; }
-.type-light   { color: #e6c200; }
-.type-beast   { color: #8d6e63; }
-.type-spirit  { color: #ce93d8; }
-.type-ancient { color: #78909c; }
+.type-earth   { background: #c4a54a; color: white; }
+.type-wind    { background: #81c784; color: #1b5e20; }
+.type-thunder { background: #fdd835; color: #333; }
+.type-light   { background: #fff176; color: #333; }
+.type-beast   { background: #8d6e63; color: white; }
+.type-spirit  { background: #ce93d8; color: white; }
+.type-ancient { background: #78909c; color: white; }
 
 /* 山海经图鉴特殊样式 */
 .shanhai-header h1 { font-family: 'KaiTi', 'STKaiti', serif; }
@@ -4067,6 +4067,18 @@ body.keyboard-active #battle-page .battle-answer-area {
 }
 .shanhai-card.collected {
     border-color: rgba(255, 215, 0, 0.3);
+}
+
+/* 西游记图鉴特殊样式 */
+.xiyouji-header h1 { font-family: 'KaiTi', 'STKaiti', serif; }
+.xiyouji-banner-bg {
+    background: linear-gradient(135deg, #b71c1c 0%, #e65100 50%, #ff8f00 100%) !important;
+}
+.xiyouji-ring {
+    stroke: #ff6f00 !important;
+}
+.xiyouji-card.collected {
+    border-color: rgba(255, 111, 0, 0.3);
 }
 
 /* 属性数据 */

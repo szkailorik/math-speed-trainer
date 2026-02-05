@@ -38,7 +38,7 @@
     <link rel="apple-touch-startup-image" href="icons/splash.png">
 
     <title>数学速算训练营</title>
-    <link rel="stylesheet" href="css/style.css?v=9.1">
+    <link rel="stylesheet" href="css/style.css?v=10.0">
 </head>
 <body>
     <!-- 主页面 -->
@@ -524,6 +524,99 @@
             </div>
         </div>
 
+        <!-- 小数规律 模式选择页 -->
+        <div id="decimal-mode-page" class="page">
+            <header class="page-header">
+                <button class="back-btn" data-target="home">← 返回</button>
+                <h2>➗ 小数规律</h2>
+                <div class="header-spacer"></div>
+            </header>
+
+            <div class="mode-select-container">
+                <h3 class="mode-select-title">选择训练模式</h3>
+
+                <!-- 难度选择 -->
+                <div class="battle-difficulty-selector">
+                    <span class="diff-label">难度：</span>
+                    <button class="battle-diff-btn decimal-diff-btn active" data-diff="easy">
+                        <span class="diff-icon">😊</span>
+                        <span class="diff-text">简单</span>
+                    </button>
+                    <button class="battle-diff-btn decimal-diff-btn" data-diff="normal">
+                        <span class="diff-icon">😤</span>
+                        <span class="diff-text">普通</span>
+                    </button>
+                    <button class="battle-diff-btn decimal-diff-btn" data-diff="hard">
+                        <span class="diff-icon">😈</span>
+                        <span class="diff-text">困难</span>
+                    </button>
+                </div>
+
+                <button class="mode-card battle-mode" id="select-decimal-battle-mode">
+                    <span class="mode-icon">⚔️</span>
+                    <span class="mode-name">西游记大冒险</span>
+                    <span class="mode-desc">挑战西游记妖怪，征服小数规律！</span>
+                    <span class="mode-tag">推荐</span>
+                </button>
+
+                <button class="mode-card classic-mode" id="select-decimal-classic-mode">
+                    <span class="mode-icon">📝</span>
+                    <span class="mode-name">经典模式</span>
+                    <span class="mode-desc">专注练习，稳步提升</span>
+                </button>
+
+                <button class="mode-card collection-mode" id="open-decimal-collection">
+                    <span class="mode-icon">📖</span>
+                    <span class="mode-name">西游记图鉴</span>
+                    <span class="mode-desc">查看收集的西游记妖怪</span>
+                    <span class="collection-count" id="decimal-collection-count">0/36</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- 西游记图鉴页 -->
+        <div id="xiyouji-collection-page" class="page">
+            <header class="collection-header xiyouji-header">
+                <button class="back-btn" id="xiyouji-collection-back-btn">← 返回</button>
+                <h1>📖 西游记图鉴</h1>
+                <div class="collection-stats" id="xiyouji-collection-stats">0/36</div>
+            </header>
+
+            <div class="collection-banner xiyouji-banner">
+                <div class="collection-banner-bg xiyouji-banner-bg"></div>
+                <div class="collection-banner-content">
+                    <div class="collection-progress-ring">
+                        <svg viewBox="0 0 80 80">
+                            <circle cx="40" cy="40" r="35" class="progress-bg"/>
+                            <circle cx="40" cy="40" r="35" class="progress-fill xiyouji-ring" id="xiyouji-ring-fill"/>
+                        </svg>
+                        <span class="progress-percent" id="xiyouji-percent">0%</span>
+                    </div>
+                    <div class="collection-banner-info">
+                        <div class="collection-banner-title">西游记收集进度</div>
+                        <div class="collection-banner-count" id="xiyouji-banner-count">0 / 36</div>
+                        <div class="collection-banner-desc">征服小数规律，收录西游记妖怪</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="collection-filters">
+                <button class="collection-filter-btn xiyouji-filter active" data-filter="all">
+                    <span class="filter-icon">📋</span> 全部
+                </button>
+                <button class="collection-filter-btn xiyouji-filter" data-filter="collected">
+                    <span class="filter-icon">✅</span> 已收集
+                </button>
+                <button class="collection-filter-btn xiyouji-filter" data-filter="locked">
+                    <span class="filter-icon">🔒</span> 未解锁
+                </button>
+            </div>
+
+            <div class="collection-grid" id="xiyouji-collection-grid">
+                <!-- 动态生成西游记妖怪卡片 -->
+            </div>
+        </div>
+
         <!-- 战斗模式页面 -->
         <div id="battle-page" class="page">
             <header class="battle-header">
@@ -798,8 +891,9 @@
         </div>
     </div>
 
-    <script src="js/data.js?v=9.1"></script>
-    <script src="js/shanhai-monsters.js?v=9.1"></script>
-    <script src="js/app.js?v=9.1"></script>
+    <script src="js/data.js?v=10.0"></script>
+    <script src="js/shanhai-monsters.js?v=10.0"></script>
+    <script src="js/xiyouji-monsters.js?v=10.0"></script>
+    <script src="js/app.js?v=10.0"></script>
 </body>
 </html>

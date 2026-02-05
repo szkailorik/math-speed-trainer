@@ -88,6 +88,9 @@ const App = {
     // 分数小数难度
     fractionDifficulty: 'easy',
 
+    // 小数规律难度
+    decimalDifficulty: 'easy',
+
     // 设置
     settings: {
         mode: 'choice',      // choice | input
@@ -902,6 +905,13 @@ function startPractice(module) {
     if (module === 'fraction') {
         showPage('fraction-mode');
         BattleMode.updateFractionCollectionCount();
+        return;
+    }
+
+    // 小数规律模块显示模式选择页
+    if (module === 'decimal') {
+        showPage('decimal-mode');
+        BattleMode.updateDecimalCollectionCount();
         return;
     }
 
@@ -2369,6 +2379,14 @@ const BattleMode = {
                 ...shanhaiFractionBossMonsters
             ];
         }
+        if (m === 'decimal') {
+            return [
+                ...xiyoujiEasyMonsters,
+                ...xiyoujiNormalMonsters,
+                ...xiyoujiHardMonsters,
+                ...xiyoujiBossMonsters
+            ];
+        }
         return [
             ...this.easyMonsters,
             ...this.normalMonsters,
@@ -2385,6 +2403,14 @@ const BattleMode = {
                 normal: shanhaiFractionNormalMonsters,
                 hard: shanhaiFractionHardMonsters,
                 boss: shanhaiFractionBossMonsters
+            };
+        }
+        if (module === 'decimal') {
+            return {
+                easy: xiyoujiEasyMonsters,
+                normal: xiyoujiNormalMonsters,
+                hard: xiyoujiHardMonsters,
+                boss: xiyoujiBossMonsters
             };
         }
         return {
@@ -2445,14 +2471,16 @@ const BattleMode = {
 
     // 显示新收集提示
     showNewCollectionToast(monster) {
-        const isShanhai = App.battle.module === 'fraction';
+        const mod = App.battle.module;
+        const toastIcon = mod === 'fraction' ? '📜' : (mod === 'decimal' ? '📖' : '📖');
+        const toastTitle = mod === 'fraction' ? '山海经更新!' : (mod === 'decimal' ? '西游记更新!' : '图鉴更新!');
         const toast = document.createElement('div');
         toast.className = 'collection-toast';
         toast.innerHTML = `
             <div class="collection-toast-content">
-                <span class="collection-toast-icon">${isShanhai ? '📜' : '📖'}</span>
+                <span class="collection-toast-icon">${toastIcon}</span>
                 <span class="collection-toast-text">
-                    <strong>${isShanhai ? '山海经更新!' : '图鉴更新!'}</strong><br>
+                    <strong>${toastTitle}</strong><br>
                     ${monster.emoji} ${monster.name} 已收录
                 </span>
             </div>
@@ -2685,6 +2713,63 @@ const BattleMode = {
                 document.querySelectorAll('.shanhai-filter').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
                 this.renderShanhaiCollection(btn.dataset.filter);
+            });
+        });
+
+        // ===== 小数规律模块事件 =====
+        // 小数规律难度选择
+        document.querySelectorAll('.decimal-diff-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.decimal-diff-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                App.decimalDifficulty = btn.dataset.diff;
+            });
+        });
+
+        // 小数规律战斗模式
+        document.getElementById('select-decimal-battle-mode')?.addEventListener('click', () => {
+            const diff = App.decimalDifficulty || 'easy';
+            this.startBattle(diff, 'decimal');
+        });
+
+        // 小数规律经典模式
+        document.getElementById('select-decimal-classic-mode')?.addEventListener('click', () => {
+            App.currentModule = 'decimal';
+            App.difficulty = App.decimalDifficulty || 'easy';
+            const moduleData = MathData.decimal;
+            const diffData = moduleData[App.difficulty] || moduleData.easy;
+            const questions = shuffle([...diffData]).slice(0, Math.min(App.settings.count, diffData.length));
+            App.practice = {
+                questions: questions,
+                currentIndex: 0,
+                correctCount: 0,
+                streak: 0,
+                startTime: Date.now(),
+                timerInterval: null,
+                timePerQuestion: App.difficulty === 'easy' ? 15 : (App.difficulty === 'normal' ? 10 : 7)
+            };
+            document.getElementById('practice-title').textContent = '➗ 小数规律';
+            document.getElementById('difficulty-selector').classList.remove('hidden');
+            showPage('practice');
+            showQuestion();
+        });
+
+        // 打开西游记图鉴
+        document.getElementById('open-decimal-collection')?.addEventListener('click', () => {
+            this.openXiyoujiCollection();
+        });
+
+        // 西游记图鉴返回按钮
+        document.getElementById('xiyouji-collection-back-btn')?.addEventListener('click', () => {
+            showPage('decimal-mode');
+        });
+
+        // 西游记图鉴筛选按钮
+        document.querySelectorAll('.xiyouji-filter').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.xiyouji-filter').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                this.renderXiyoujiCollection(btn.dataset.filter);
             });
         });
     },
@@ -2956,6 +3041,103 @@ const BattleMode = {
         this.updateFractionCollectionCount();
     },
 
+    // ===== 西游记图鉴（小数规律模块）=====
+    openXiyoujiCollection() {
+        this.renderXiyoujiCollection('all');
+        this.updateDecimalCollectionCount();
+        showPage('xiyouji-collection');
+    },
+
+    updateDecimalCollectionCount() {
+        const stats = this.getCollectionStats('decimal');
+
+        const countEl = document.getElementById('decimal-collection-count');
+        if (countEl) countEl.textContent = `${stats.collected}/${stats.total}`;
+
+        const statsEl = document.getElementById('xiyouji-collection-stats');
+        if (statsEl) statsEl.textContent = `${stats.collected}/${stats.total}`;
+
+        const bannerCount = document.getElementById('xiyouji-banner-count');
+        if (bannerCount) bannerCount.textContent = `${stats.collected} / ${stats.total}`;
+
+        const percentEl = document.getElementById('xiyouji-percent');
+        if (percentEl) percentEl.textContent = `${stats.percentage}%`;
+
+        const ringFill = document.getElementById('xiyouji-ring-fill');
+        if (ringFill) {
+            const circumference = 220;
+            const offset = circumference - (circumference * stats.percentage / 100);
+            ringFill.style.strokeDashoffset = offset;
+        }
+    },
+
+    renderXiyoujiCollection(filter = 'all') {
+        const grid = document.getElementById('xiyouji-collection-grid');
+        if (!grid) return;
+
+        const allMonsters = this.getAllMonsters('decimal');
+        const collection = this.getCollection('decimal');
+
+        const typeNames = {
+            fire: '火', water: '水', earth: '土', wind: '风', thunder: '雷',
+            ice: '冰', dark: '暗', light: '光', poison: '毒', beast: '兽',
+            dragon: '龙', spirit: '灵', ancient: '太古', ghost: '幽灵',
+            psychic: '超能', fighting: '格斗'
+        };
+
+        let html = '';
+        let visibleCount = 0;
+
+        allMonsters.forEach(monster => {
+            const isCollected = collection.includes(monster.id);
+            if (filter === 'collected' && !isCollected) return;
+            if (filter === 'locked' && isCollected) return;
+
+            visibleCount++;
+
+            if (isCollected) {
+                html += `
+                    <div class="collection-card collected xiyouji-card" data-id="${monster.id}" data-module="decimal">
+                        <span class="collection-card-emoji">${monster.emoji}</span>
+                        <span class="collection-card-name">${monster.name}</span>
+                        <span class="collection-card-type type-${monster.type}">${typeNames[monster.type] || '普通'}</span>
+                    </div>
+                `;
+            } else {
+                html += `
+                    <div class="collection-card locked xiyouji-card">
+                        <span class="collection-card-emoji">❓</span>
+                        <span class="collection-card-name">???</span>
+                        <span class="collection-card-type">未解锁</span>
+                    </div>
+                `;
+            }
+        });
+
+        if (visibleCount === 0) {
+            if (filter === 'collected') {
+                html = `<div class="collection-empty"><div class="collection-empty-icon">📖</div><div class="collection-empty-text">还没有收集到西游记妖怪<br>快去挑战小数规律吧!</div></div>`;
+            } else if (filter === 'locked') {
+                html = `<div class="collection-empty"><div class="collection-empty-icon">🎉</div><div class="collection-empty-text">恭喜! 你已经收录了全部西游记妖怪!</div></div>`;
+            }
+        }
+
+        grid.innerHTML = html;
+
+        // 绑定点击事件
+        grid.querySelectorAll('.collection-card.collected').forEach(card => {
+            card.addEventListener('click', () => {
+                const id = card.dataset.id;
+                const monster = allMonsters.find(m => m.id === id);
+                if (monster) {
+                    this.showMonsterDetail(monster);
+                }
+            });
+        });
+
+        this.updateDecimalCollectionCount();
+    },
+
     // 显示难度选择并开始战斗
     showDifficultyAndStart() {
         this.startBattle(App.difficulty, 'xiaojiujiu');
@@ -3027,7 +3209,8 @@ const BattleMode = {
         battle.totalStages = settings.stages;
 
         // 获取题目（混入简单热身题）
-        const dataKey = battle.module === 'fraction' ? 'fraction' : 'xiaojiujiu';
+        const dataKeyMap = { fraction: 'fraction', decimal: 'decimal' };
+        const dataKey = dataKeyMap[battle.module] || 'xiaojiujiu';
         const moduleData = MathData[dataKey];
         const diffData = moduleData[difficulty] || moduleData.easy;
         const mainQuestions = shuffle([...diffData]);
@@ -3096,8 +3279,9 @@ const BattleMode = {
         // 从队列获取怪兽
         let monster = battle.monsterQueue[stageIndex];
         if (!monster) {
-            // 如果队列用完，随机选一个
-            const allMonsters = [...this.easyMonsters, ...this.normalMonsters];
+            // 如果队列用完，从当前模块随机选一个
+            const moduleMonsters = this.getModuleMonsters(battle.module);
+            const allMonsters = [...moduleMonsters.easy, ...moduleMonsters.normal];
             monster = allMonsters[Math.floor(Math.random() * allMonsters.length)];
         }
 
@@ -3133,13 +3317,17 @@ const BattleMode = {
             ghost: '#705898', ice: '#98d8d8', rock: '#b8a038', flying: '#a890f0',
             bug: '#a8b820', poison: '#a040a0', fighting: '#c03028', psychic: '#f85888',
             dragon: '#7038f8', steel: '#b8b8d0', dark: '#705848', fairy: '#ee99ac',
-            ground: '#e0c068', normal: '#a8a878'
+            ground: '#e0c068', normal: '#a8a878',
+            earth: '#c4a54a', wind: '#81c784', thunder: '#fdd835', light: '#fff176',
+            beast: '#8d6e63', spirit: '#ce93d8', ancient: '#78909c'
         };
         const typeNames = {
             grass: '草', water: '水', fire: '火', electric: '电', ghost: '幽灵',
             ice: '冰', rock: '岩石', flying: '飞行', bug: '虫', poison: '毒',
             fighting: '格斗', psychic: '超能', dragon: '龙', steel: '钢', dark: '恶',
-            fairy: '妖精', ground: '地面', normal: '普通'
+            fairy: '妖精', ground: '地面', normal: '普通',
+            earth: '土', wind: '风', thunder: '雷', light: '光',
+            beast: '兽', spirit: '灵', ancient: '太古'
         };
 
         let typeTag = document.getElementById('monster-type-tag');
@@ -3159,7 +3347,9 @@ const BattleMode = {
             grass: '草系', water: '水系', fire: '火系', electric: '电系', ghost: '幽灵系',
             ice: '冰系', rock: '岩石系', flying: '飞行系', bug: '虫系', poison: '毒系',
             fighting: '格斗系', psychic: '超能系', dragon: '龙系', steel: '钢系', dark: '恶系',
-            fairy: '妖精系', ground: '地面系', normal: '普通系'
+            fairy: '妖精系', ground: '地面系', normal: '普通系',
+            earth: '土系', wind: '风系', thunder: '雷系', light: '光系',
+            beast: '兽系', spirit: '灵系', ancient: '太古系'
         };
 
         // 创建过渡元素
@@ -4125,6 +4315,9 @@ const BattleMode = {
         if (module === 'fraction') {
             showPage('fraction-mode');
             this.updateFractionCollectionCount();
+        } else if (module === 'decimal') {
+            showPage('decimal-mode');
+            this.updateDecimalCollectionCount();
         } else {
             showPage('xiaojiujiu-mode');
             this.updateCollectionCount();
