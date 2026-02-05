@@ -1700,7 +1700,7 @@ function renderWrongBook() {
         <div class="wrong-item" data-index="${index}">
             <div class="wrong-info">
                 <span class="wrong-question">${item.q}</span>
-                ${item.monsterEmoji ? `<div class="wrong-battle-log">⚔️ 被 ${item.monsterEmoji} <b>${item.monsterName || '怪兽'}</b> 击败</div>` : ''}
+                ${item.monsterEmoji ? `<div class="wrong-battle-log">💥 被 ${item.monsterEmoji} <b>${item.monsterName || '怪兽'}</b> 击伤</div>` : ''}
                 <div class="wrong-answer">
                     <span class="wrong-your">${item.yourAnswer || '超时'}</span>
                     <span class="wrong-correct">${item.a}</span>
