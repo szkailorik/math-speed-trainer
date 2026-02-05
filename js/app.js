@@ -3260,14 +3260,16 @@ const BattleMode = {
         if (difficulty === 'easy') {
             battle.monsterQueue = shuffle([...monsters.easy]).slice(0, 6);
         } else if (difficulty === 'normal') {
-            const easy = shuffle([...monsters.easy]).slice(0, 6);
+            const easy = shuffle([...monsters.easy]).slice(0, 4);
             const normal = shuffle([...monsters.normal]).slice(0, 4);
-            battle.monsterQueue = [...easy, ...normal];
+            const hard = shuffle([...monsters.hard]).slice(0, 2);
+            battle.monsterQueue = [...easy, ...normal, ...hard];
         } else {
-            const easy = shuffle([...monsters.easy]).slice(0, 6);
-            const normal = shuffle([...monsters.normal]).slice(0, 6);
+            const easy = shuffle([...monsters.easy]).slice(0, 4);
+            const normal = shuffle([...monsters.normal]).slice(0, 4);
+            const hard = shuffle([...monsters.hard]).slice(0, 4);
             const boss = shuffle([...monsters.boss]).slice(0, 3);
-            battle.monsterQueue = [...easy, ...normal, ...boss];
+            battle.monsterQueue = [...easy, ...normal, ...hard, ...boss];
         }
     },
 
