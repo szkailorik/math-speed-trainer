@@ -663,7 +663,7 @@ function loadProgress() {
 function resetProgress() {
     const currentUser = UserManager.getCurrentUser();
     const userName = currentUser ? currentUser.name : '当前用户';
-    if (confirm(`确定要重置 ${userName} 的所有进度吗？这将清除所有统计数据和错题本。`)) {
+    if (confirm(`确定要重置 ${userName} 的所有进度吗？这将清除所有统计数据和魔法残页。`)) {
         App.stats = {
             totalScore: 0,
             maxStreak: 0,
@@ -845,9 +845,6 @@ function updateHomeStats() {
 // ===== 设置 =====
 
 function applySettings() {
-    // 主题
-    document.documentElement.setAttribute('data-theme', App.settings.theme);
-
     // 更新设置页面的选中状态
     document.querySelectorAll('.setting-opt').forEach(btn => {
         const setting = btn.dataset.setting;
@@ -955,7 +952,7 @@ function startPractice(module) {
     if (module === 'wrong') {
         // 错题练习
         if (App.wrongBook.length === 0) {
-            alert('错题本是空的，太棒了！');
+            alert('魔法残页是空的，太棒了！');
             return;
         }
         questions = shuffle(App.wrongBook).slice(0, Math.min(App.settings.count, App.wrongBook.length));
@@ -999,7 +996,7 @@ function startPractice(module) {
         decimal: '➗ 小数规律',
         unit: '📐 单位换算',
         mixed: '🗼 试炼之塔',
-        wrong: '📖 错题练习'
+        wrong: '📖 魔法残页修复'
     };
     document.getElementById('practice-title').textContent = titles[module] || '训练';
 
@@ -1707,7 +1704,7 @@ function renderWrongBook() {
                 <span class="wrong-question">${item.q}</span>
                 ${item.monsterEmoji ? `<div class="wrong-battle-log">💥 被 ${item.monsterEmoji} <b>${item.monsterName || '怪兽'}</b> 击伤</div>` : ''}
                 <div class="wrong-answer">
-                    <span class="wrong-your">${item.yourAnswer || '超时'}</span>
+                    ${item.yourAnswer ? `<span class="wrong-your">${item.yourAnswer}</span>` : `<span class="wrong-timeout">⏱️ 超时</span>`}
                     <span class="wrong-correct">${item.a}</span>
                 </div>
             </div>
@@ -1719,7 +1716,7 @@ function renderWrongBook() {
 function clearWrongBook() {
     if (App.wrongBook.length === 0) return;
 
-    if (confirm('确定要清空错题本吗？')) {
+    if (confirm('确定要清空魔法残页吗？')) {
         App.wrongBook = [];
         saveProgress();
         renderWrongBook();

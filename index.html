@@ -38,7 +38,7 @@
     <link rel="apple-touch-startup-image" href="icons/splash.png">
 
     <title>数学魔法学院</title>
-    <link rel="stylesheet" href="css/style.css?v=13.0">
+    <link rel="stylesheet" href="css/style.css?v=13.1">
 </head>
 <body>
     <!-- 主页面 -->
@@ -212,8 +212,8 @@
 
                     <button class="menu-btn wrong-book-btn" data-module="wrong">
                         <span class="menu-icon">📖</span>
-                        <span class="menu-title">错题本</span>
-                        <span class="menu-desc">复习做错的题目</span>
+                        <span class="menu-title">魔法残页</span>
+                        <span class="menu-desc">修复答错的魔咒</span>
                     </button>
 
                     <button class="menu-btn" data-module="achievements" id="achievements-btn">
@@ -378,7 +378,7 @@
         <div id="wrong-page" class="page">
             <header class="page-header">
                 <button class="back-btn" data-target="home">← 返回</button>
-                <h2>📖 错题本</h2>
+                <h2>📖 魔法残页</h2>
                 <button class="clear-wrong-btn" id="clear-wrong">清空</button>
             </header>
 
@@ -388,11 +388,11 @@
 
             <div class="wrong-empty hidden" id="wrong-empty">
                 <span class="empty-icon">✨</span>
-                <p>太棒了！没有错题</p>
+                <p>太棒了！没有残页</p>
             </div>
 
             <div class="wrong-actions" id="wrong-actions">
-                <button class="practice-wrong-btn" id="practice-wrong">练习错题</button>
+                <button class="practice-wrong-btn" id="practice-wrong">修复魔咒</button>
             </div>
         </div>
 
@@ -431,14 +431,6 @@
                 </div>
 
                 <div class="setting-item">
-                    <span class="setting-label">🌙 暗夜模式</span>
-                    <div class="setting-options">
-                        <button class="setting-opt active" data-setting="theme" data-value="light">浅色</button>
-                        <button class="setting-opt" data-setting="theme" data-value="dark">深色</button>
-                    </div>
-                </div>
-
-                <div class="setting-item">
                     <span class="setting-label">🔊 音效魔法</span>
                     <div class="setting-options">
                         <button class="setting-opt active" data-setting="sound" data-value="on">开启</button>
@@ -449,7 +441,7 @@
 
             <div class="settings-footer">
                 <button class="reset-btn" id="reset-progress">重置所有进度</button>
-                <p class="version">版本 13.0</p>
+                <p class="version">版本 13.1</p>
             </div>
         </div>
 
@@ -1210,12 +1202,12 @@
         </div>
     </div>
 
-    <script src="js/data.js?v=13.0"></script>
-    <script src="js/shanhai-monsters.js?v=13.0"></script>
-    <script src="js/xiyouji-monsters.js?v=13.0"></script>
-    <script src="js/fengshen-monsters.js?v=13.0"></script>
-    <script src="js/liaozhai-monsters.js?v=13.0"></script>
-    <script src="js/hp-monsters.js?v=13.0"></script>
-    <script src="js/app.js?v=13.0"></script>
+    <script src="js/data.js?v=13.1"></script>
+    <script src="js/shanhai-monsters.js?v=13.1"></script>
+    <script src="js/xiyouji-monsters.js?v=13.1"></script>
+    <script src="js/fengshen-monsters.js?v=13.1"></script>
+    <script src="js/liaozhai-monsters.js?v=13.1"></script>
+    <script src="js/hp-monsters.js?v=13.1"></script>
+    <script src="js/app.js?v=13.1"></script>
 </body>
 </html>
