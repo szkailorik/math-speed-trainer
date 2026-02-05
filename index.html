@@ -38,7 +38,7 @@
     <link rel="apple-touch-startup-image" href="icons/splash.png">
 
     <title>数学速算训练营</title>
-    <link rel="stylesheet" href="css/style.css?v=11.1">
+    <link rel="stylesheet" href="css/style.css?v=12.0">
 </head>
 <body>
     <!-- 主页面 -->
@@ -710,6 +710,192 @@
             </div>
         </div>
 
+        <!-- 乘法速记 模式选择页 -->
+        <div id="multiply-mode-page" class="page">
+            <header class="page-header">
+                <button class="back-btn" data-target="home">← 返回</button>
+                <h2>🔢 乘法速记</h2>
+                <div class="header-spacer"></div>
+            </header>
+
+            <div class="mode-select-container">
+                <h3 class="mode-select-title">选择训练模式</h3>
+
+                <!-- 难度选择 -->
+                <div class="battle-difficulty-selector">
+                    <span class="diff-label">难度：</span>
+                    <button class="battle-diff-btn multiply-diff-btn active" data-diff="easy">
+                        <span class="diff-icon">😊</span>
+                        <span class="diff-text">简单</span>
+                    </button>
+                    <button class="battle-diff-btn multiply-diff-btn" data-diff="normal">
+                        <span class="diff-icon">😤</span>
+                        <span class="diff-text">普通</span>
+                    </button>
+                    <button class="battle-diff-btn multiply-diff-btn" data-diff="hard">
+                        <span class="diff-icon">😈</span>
+                        <span class="diff-text">困难</span>
+                    </button>
+                </div>
+
+                <button class="mode-card battle-mode" id="select-multiply-battle-mode">
+                    <span class="mode-icon">⚔️</span>
+                    <span class="mode-name">聊斋大作战</span>
+                    <span class="mode-desc">挑战聊斋志异妖怪，征服乘法速记！</span>
+                    <span class="mode-tag">推荐</span>
+                </button>
+
+                <button class="mode-card classic-mode" id="select-multiply-classic-mode">
+                    <span class="mode-icon">📝</span>
+                    <span class="mode-name">经典模式</span>
+                    <span class="mode-desc">专注练习，稳步提升</span>
+                </button>
+
+                <button class="mode-card collection-mode" id="open-multiply-collection">
+                    <span class="mode-icon">👻</span>
+                    <span class="mode-name">聊斋志异图鉴</span>
+                    <span class="mode-desc">查看收集的聊斋志异鬼怪</span>
+                    <span class="collection-count" id="multiply-collection-count">0/44</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- 聊斋志异图鉴页 -->
+        <div id="liaozhai-collection-page" class="page">
+            <header class="collection-header liaozhai-header">
+                <button class="back-btn" id="liaozhai-collection-back-btn">← 返回</button>
+                <h1>👻 聊斋志异图鉴</h1>
+                <div class="collection-stats" id="liaozhai-collection-stats">0/44</div>
+            </header>
+
+            <div class="collection-banner liaozhai-banner">
+                <div class="collection-banner-bg liaozhai-banner-bg"></div>
+                <div class="collection-banner-content">
+                    <div class="collection-progress-ring">
+                        <svg viewBox="0 0 80 80">
+                            <circle cx="40" cy="40" r="35" class="progress-bg"/>
+                            <circle cx="40" cy="40" r="35" class="progress-fill liaozhai-ring" id="liaozhai-ring-fill"/>
+                        </svg>
+                        <span class="progress-percent" id="liaozhai-percent">0%</span>
+                    </div>
+                    <div class="collection-banner-info">
+                        <div class="collection-banner-title">聊斋志异收集进度</div>
+                        <div class="collection-banner-count" id="liaozhai-banner-count">0 / 44</div>
+                        <div class="collection-banner-desc">征服乘法速记，收录聊斋鬼怪</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="collection-filters">
+                <button class="collection-filter-btn liaozhai-filter active" data-filter="all">
+                    <span class="filter-icon">📋</span> 全部
+                </button>
+                <button class="collection-filter-btn liaozhai-filter" data-filter="collected">
+                    <span class="filter-icon">✅</span> 已收集
+                </button>
+                <button class="collection-filter-btn liaozhai-filter" data-filter="locked">
+                    <span class="filter-icon">🔒</span> 未解锁
+                </button>
+            </div>
+
+            <div class="collection-grid" id="liaozhai-collection-grid">
+                <!-- 动态生成聊斋志异鬼怪卡片 -->
+            </div>
+        </div>
+
+        <!-- 大九九表 模式选择页 -->
+        <div id="times-mode-page" class="page">
+            <header class="page-header">
+                <button class="back-btn" data-target="home">← 返回</button>
+                <h2>📊 大九九表</h2>
+                <div class="header-spacer"></div>
+            </header>
+
+            <div class="mode-select-container">
+                <h3 class="mode-select-title">选择训练模式</h3>
+
+                <!-- 难度选择 -->
+                <div class="battle-difficulty-selector">
+                    <span class="diff-label">难度：</span>
+                    <button class="battle-diff-btn times-diff-btn active" data-diff="easy">
+                        <span class="diff-icon">😊</span>
+                        <span class="diff-text">简单</span>
+                    </button>
+                    <button class="battle-diff-btn times-diff-btn" data-diff="normal">
+                        <span class="diff-icon">😤</span>
+                        <span class="diff-text">普通</span>
+                    </button>
+                    <button class="battle-diff-btn times-diff-btn" data-diff="hard">
+                        <span class="diff-icon">😈</span>
+                        <span class="diff-text">困难</span>
+                    </button>
+                </div>
+
+                <button class="mode-card battle-mode" id="select-times-battle-mode">
+                    <span class="mode-icon">⚔️</span>
+                    <span class="mode-name">霍格沃茨大冒险</span>
+                    <span class="mode-desc">挑战哈利波特魔法生物，征服大九九表！</span>
+                    <span class="mode-tag">推荐</span>
+                </button>
+
+                <button class="mode-card classic-mode" id="select-times-classic-mode">
+                    <span class="mode-icon">📝</span>
+                    <span class="mode-name">经典模式</span>
+                    <span class="mode-desc">专注练习，稳步提升</span>
+                </button>
+
+                <button class="mode-card collection-mode" id="open-times-collection">
+                    <span class="mode-icon">🧙</span>
+                    <span class="mode-name">魔法生物图鉴</span>
+                    <span class="mode-desc">查看收集的哈利波特魔法生物</span>
+                    <span class="collection-count" id="times-collection-count">0/72</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- 哈利波特魔法生物图鉴页 -->
+        <div id="hp-collection-page" class="page">
+            <header class="collection-header hp-header">
+                <button class="back-btn" id="hp-collection-back-btn">← 返回</button>
+                <h1>🧙 魔法生物图鉴</h1>
+                <div class="collection-stats" id="hp-collection-stats">0/72</div>
+            </header>
+
+            <div class="collection-banner hp-banner">
+                <div class="collection-banner-bg hp-banner-bg"></div>
+                <div class="collection-banner-content">
+                    <div class="collection-progress-ring">
+                        <svg viewBox="0 0 80 80">
+                            <circle cx="40" cy="40" r="35" class="progress-bg"/>
+                            <circle cx="40" cy="40" r="35" class="progress-fill hp-ring" id="hp-ring-fill"/>
+                        </svg>
+                        <span class="progress-percent" id="hp-percent">0%</span>
+                    </div>
+                    <div class="collection-banner-info">
+                        <div class="collection-banner-title">魔法生物收集进度</div>
+                        <div class="collection-banner-count" id="hp-banner-count">0 / 72</div>
+                        <div class="collection-banner-desc">征服大九九表，收录魔法生物</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="collection-filters">
+                <button class="collection-filter-btn hp-filter active" data-filter="all">
+                    <span class="filter-icon">📋</span> 全部
+                </button>
+                <button class="collection-filter-btn hp-filter" data-filter="collected">
+                    <span class="filter-icon">✅</span> 已收集
+                </button>
+                <button class="collection-filter-btn hp-filter" data-filter="locked">
+                    <span class="filter-icon">🔒</span> 未解锁
+                </button>
+            </div>
+
+            <div class="collection-grid" id="hp-collection-grid">
+                <!-- 动态生成哈利波特魔法生物卡片 -->
+            </div>
+        </div>
+
         <!-- 战斗模式页面 -->
         <div id="battle-page" class="page">
             <header class="battle-header">
@@ -984,10 +1170,12 @@
         </div>
     </div>
 
-    <script src="js/data.js?v=11.1"></script>
-    <script src="js/shanhai-monsters.js?v=11.1"></script>
-    <script src="js/xiyouji-monsters.js?v=11.1"></script>
-    <script src="js/fengshen-monsters.js?v=11.1"></script>
-    <script src="js/app.js?v=11.1"></script>
+    <script src="js/data.js?v=12.0"></script>
+    <script src="js/shanhai-monsters.js?v=12.0"></script>
+    <script src="js/xiyouji-monsters.js?v=12.0"></script>
+    <script src="js/fengshen-monsters.js?v=12.0"></script>
+    <script src="js/liaozhai-monsters.js?v=12.0"></script>
+    <script src="js/hp-monsters.js?v=12.0"></script>
+    <script src="js/app.js?v=12.0"></script>
 </body>
 </html>

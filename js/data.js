@@ -12,6 +12,17 @@ const MathData = {
     // ========== 乘法速记 - 核心必背 ==========
     // 四大天王：25×4=100, 25×8=200, 125×4=500, 125×8=1000
     multiply: {
+        // 热身题：最基础的25×4和50×2
+        warmup: [
+            { q: '25 × 4', a: 100, tip: '看到4想25' },
+            { q: '4 × 25', a: 100 },
+            { q: '50 × 2', a: 100 },
+            { q: '2 × 50', a: 100 },
+            { q: '25 × 2', a: 50 },
+            { q: '100 ÷ 4', a: 25 },
+            { q: '100 ÷ 25', a: 4 },
+            { q: '200 ÷ 8', a: 25 },
+        ],
         easy: [
             // 25系列 - 最核心
             { q: '25 × 4', a: 100, tip: '看到4想25' },
@@ -28,6 +39,13 @@ const MathData = {
             { q: '100 ÷ 25', a: 4 },
             { q: '200 ÷ 8', a: 25 },
             { q: '200 ÷ 25', a: 8 },
+            // 填空题
+            { q: '25 × ? = 100', a: 4, forceInput: true },
+            { q: '? × 25 = 200', a: 8, forceInput: true },
+            { q: '50 × ? = 200', a: 4, forceInput: true },
+            { q: '? × 4 = 100', a: 25, forceInput: true },
+            { q: '? × 2 = 100', a: 50, forceInput: true },
+            { q: '100 ÷ ? = 25', a: 4, forceInput: true },
         ],
         normal: [
             // 25进阶
@@ -49,6 +67,13 @@ const MathData = {
             { q: '500 ÷ 125', a: 4 },
             { q: '300 ÷ 25', a: 12 },
             { q: '400 ÷ 25', a: 16 },
+            // 填空题
+            { q: '25 × ? = 300', a: 12, forceInput: true },
+            { q: '25 × ? = 400', a: 16, forceInput: true },
+            { q: '125 × ? = 1000', a: 8, forceInput: true },
+            { q: '125 × ? = 500', a: 4, forceInput: true },
+            { q: '? × 25 = 500', a: 20, forceInput: true },
+            { q: '1000 ÷ ? = 125', a: 8, forceInput: true },
         ],
         hard: [
             // 25和125的综合
@@ -66,6 +91,13 @@ const MathData = {
             // 75系列
             { q: '75 × 4', a: 300, tip: '25×3×4' },
             { q: '75 × 8', a: 600 },
+            // 填空题
+            { q: '25 × ? = 600', a: 24, forceInput: true },
+            { q: '25 × ? = 800', a: 32, forceInput: true },
+            { q: '125 × ? = 2000', a: 16, forceInput: true },
+            { q: '125 × ? = 3000', a: 24, forceInput: true },
+            { q: '75 × ? = 300', a: 4, forceInput: true },
+            { q: '75 × ? = 600', a: 8, forceInput: true },
         ]
     },
 
@@ -531,6 +563,17 @@ const MathData = {
 
     // ========== 大九九表（11-19 × 11-19）==========
     times: {
+        // 热身题：最基础的11系列
+        warmup: [
+            { q: '11 × 11', a: 121 },
+            { q: '11 × 12', a: 132 },
+            { q: '12 × 11', a: 132 },
+            { q: '11 × 15', a: 165 },
+            { q: '121 ÷ 11', a: 11 },
+            { q: '132 ÷ 12', a: 11 },
+            { q: '132 ÷ 11', a: 12 },
+            { q: '165 ÷ 15', a: 11 },
+        ],
         easy: [
             // 11的乘法（最简单的大九九）
             { q: '11 × 11', a: 121 },
@@ -551,6 +594,13 @@ const MathData = {
             { q: '154 ÷ 11', a: 14 },
             { q: '165 ÷ 11', a: 15 },
             { q: '165 ÷ 15', a: 11 },
+            // 填空题
+            { q: '11 × ? = 121', a: 11, forceInput: true },
+            { q: '11 × ? = 132', a: 12, forceInput: true },
+            { q: '11 × ? = 143', a: 13, forceInput: true },
+            { q: '? × 11 = 154', a: 14, forceInput: true },
+            { q: '? × 11 = 165', a: 15, forceInput: true },
+            { q: '? × 15 = 165', a: 11, forceInput: true },
         ],
         normal: [
             // 大九九：11-15的乘法
@@ -575,6 +625,13 @@ const MathData = {
             { q: '169 ÷ 13', a: 13 },
             { q: '180 ÷ 12', a: 15 },
             { q: '180 ÷ 15', a: 12 },
+            // 填空题
+            { q: '12 × ? = 144', a: 12, forceInput: true },
+            { q: '12 × ? = 156', a: 13, forceInput: true },
+            { q: '13 × ? = 195', a: 15, forceInput: true },
+            { q: '? × 14 = 196', a: 14, forceInput: true },
+            { q: '? × 15 = 225', a: 15, forceInput: true },
+            { q: '15 × ? = 180', a: 12, forceInput: true },
         ],
         hard: [
             // 大九九：16-19的乘法
@@ -600,6 +657,13 @@ const MathData = {
             { q: '324 ÷ 18', a: 18 },
             { q: '361 ÷ 19', a: 19 },
             { q: '240 ÷ 15', a: 16 },
+            // 填空题
+            { q: '16 × ? = 256', a: 16, forceInput: true },
+            { q: '17 × ? = 289', a: 17, forceInput: true },
+            { q: '18 × ? = 324', a: 18, forceInput: true },
+            { q: '19 × ? = 361', a: 19, forceInput: true },
+            { q: '? × 16 = 304', a: 19, forceInput: true },
+            { q: '? × 18 = 342', a: 19, forceInput: true },
         ]
     },
 

@@ -4048,6 +4048,9 @@ body.keyboard-active #battle-page .battle-answer-area {
 .type-badge.beast   { background: #8d6e63; }
 .type-badge.spirit  { background: #ce93d8; }
 .type-badge.ancient { background: #78909c; }
+.type-badge.demon   { background: #e53935; }
+.type-badge.creature{ background: #43a047; }
+.type-badge.wizard  { background: #5c6bc0; }
 
 .type-earth   { background: #c4a54a; color: white; }
 .type-wind    { background: #81c784; color: #1b5e20; }
@@ -4056,6 +4059,9 @@ body.keyboard-active #battle-page .battle-answer-area {
 .type-beast   { background: #8d6e63; color: white; }
 .type-spirit  { background: #ce93d8; color: white; }
 .type-ancient { background: #78909c; color: white; }
+.type-demon   { background: #e53935; color: white; }
+.type-creature{ background: #43a047; color: white; }
+.type-wizard  { background: #5c6bc0; color: white; }
 
 /* 山海经图鉴特殊样式 */
 .shanhai-header h1 { font-family: 'KaiTi', 'STKaiti', serif; }
@@ -4091,6 +4097,37 @@ body.keyboard-active #battle-page .battle-answer-area {
 }
 .fengshen-card.collected {
     border-color: rgba(206, 147, 216, 0.3);
+}
+
+/* 聊斋志异图鉴特殊样式 */
+.liaozhai-header h1 { font-family: 'KaiTi', 'STKaiti', serif; }
+.liaozhai-banner-bg {
+    background: linear-gradient(135deg, #1b5e20 0%, #004d40 50%, #263238 100%) !important;
+}
+.liaozhai-ring {
+    stroke: #a5d6a7 !important;
+}
+.liaozhai-card.collected {
+    border-color: rgba(165, 214, 167, 0.3);
+}
+
+/* 哈利波特魔法生物图鉴特殊样式 */
+.hp-header h1 { font-family: 'KaiTi', 'STKaiti', serif; }
+.hp-banner-bg {
+    background: linear-gradient(135deg, #1a237e 0%, #4a148c 50%, #bf360c 100%) !important;
+}
+.hp-ring {
+    stroke: #ffd54f !important;
+}
+.hp-card.collected {
+    border-color: rgba(255, 213, 79, 0.3);
+}
+
+/* 错题本怪兽标记 */
+.wrong-monster {
+    font-size: 1.2em;
+    margin-right: 6px;
+    vertical-align: middle;
 }
 
 /* 属性数据 */
