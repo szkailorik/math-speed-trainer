@@ -1699,7 +1699,7 @@ function renderWrongBook() {
     list.innerHTML = App.wrongBook.map((item, index) => `
         <div class="wrong-item" data-index="${index}">
             <div class="wrong-info">
-                <span class="wrong-question">${item.monsterEmoji ? `<span class="wrong-monster" title="被${item.monsterName || '怪兽'}打败">${item.monsterEmoji}</span>` : ''}${item.q}</span>
+                <span class="wrong-question">${item.monsterEmoji ? `<span class="wrong-monster">${item.monsterEmoji}<span class="wrong-monster-name">${item.monsterName || '怪兽'}</span></span>` : ''}${item.q}</span>
                 <div class="wrong-answer">
                     <span class="wrong-your">${item.yourAnswer || '超时'}</span>
                     <span class="wrong-correct">${item.a}</span>

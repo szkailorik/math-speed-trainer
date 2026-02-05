@@ -4125,9 +4125,17 @@ body.keyboard-active #battle-page .battle-answer-area {
 
 /* 错题本怪兽标记 */
 .wrong-monster {
-    font-size: 1.2em;
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
     margin-right: 6px;
     vertical-align: middle;
+    font-size: 1.2em;
+}
+.wrong-monster-name {
+    font-size: 0.65em;
+    color: #e57373;
+    font-weight: 500;
 }
 
 /* 属性数据 */
