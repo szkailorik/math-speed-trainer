@@ -4081,6 +4081,18 @@ body.keyboard-active #battle-page .battle-answer-area {
     border-color: rgba(255, 111, 0, 0.3);
 }
 
+/* 封神演义图鉴特殊样式 */
+.fengshen-header h1 { font-family: 'KaiTi', 'STKaiti', serif; }
+.fengshen-banner-bg {
+    background: linear-gradient(135deg, #1a237e 0%, #4a148c 50%, #880e4f 100%) !important;
+}
+.fengshen-ring {
+    stroke: #ce93d8 !important;
+}
+.fengshen-card.collected {
+    border-color: rgba(206, 147, 216, 0.3);
+}
+
 /* 属性数据 */
 .monster-detail-stats {
     display: flex;

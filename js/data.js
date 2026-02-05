@@ -226,6 +226,78 @@ const MathData = {
         ]
     },
 
+    // ========== 单位换算 ==========
+    unit: {
+        // 热身题（8题）
+        warmup: [
+            { q: '1千米 = ?米', a: '1000', wrongChoices: ['100', '10000', '10'], isText: true },
+            { q: '1米 = ?厘米', a: '100', wrongChoices: ['10', '1000', '50'], isText: true },
+            { q: '1千克 = ?克', a: '1000', wrongChoices: ['100', '10000', '10'], isText: true },
+            { q: '1吨 = ?千克', a: '1000', wrongChoices: ['100', '10000', '500'], isText: true },
+            { q: '1升 = ?毫升', a: '1000', wrongChoices: ['100', '10000', '10'], isText: true },
+            { q: '1元 = ?角', a: '10', wrongChoices: ['100', '1', '2'], isText: true },
+            { q: '1小时 = ?分钟', a: '60', wrongChoices: ['100', '30', '120'], isText: true },
+            { q: '1分钟 = ?秒', a: '60', wrongChoices: ['100', '30', '120'], isText: true },
+        ],
+        // 简单题（16题）
+        easy: [
+            { q: '3米 = ?厘米', a: '300', wrongChoices: ['30', '3000', '150'], isText: true },
+            { q: '5米 = ?分米', a: '50', wrongChoices: ['500', '5', '15'], isText: true },
+            { q: '2千米 = ?米', a: '2000', wrongChoices: ['200', '20000', '1200'], isText: true },
+            { q: '100厘米 = ?米', a: '1', wrongChoices: ['10', '0.1', '100'], isText: true },
+            { q: '4000米 = ?千米', a: '4', wrongChoices: ['40', '400', '0.4'], isText: true },
+            { q: '2千克 = ?克', a: '2000', wrongChoices: ['200', '20000', '20'], isText: true },
+            { q: '5吨 = ?千克', a: '5000', wrongChoices: ['500', '50000', '50'], isText: true },
+            { q: '2000克 = ?千克', a: '2', wrongChoices: ['20', '200', '0.2'], isText: true },
+            { q: '3000千克 = ?吨', a: '3', wrongChoices: ['30', '300', '0.3'], isText: true },
+            { q: '3升 = ?毫升', a: '3000', wrongChoices: ['300', '30000', '30'], isText: true },
+            { q: '5000毫升 = ?升', a: '5', wrongChoices: ['50', '500', '0.5'], isText: true },
+            { q: '5元 = ?角', a: '50', wrongChoices: ['5', '500', '15'], isText: true },
+            { q: '30角 = ?元', a: '3', wrongChoices: ['30', '0.3', '300'], isText: true },
+            { q: '1元 = ?分', a: '100', wrongChoices: ['10', '1000', '50'], isText: true },
+            { q: '2小时 = ?分钟', a: '120', wrongChoices: ['200', '60', '180'], isText: true },
+            { q: '180秒 = ?分钟', a: '3', wrongChoices: ['18', '30', '1.8'], isText: true },
+        ],
+        // 普通题（16题）
+        normal: [
+            { q: '2.5千米 = ?米', a: '2500', wrongChoices: ['250', '25000', '1500'], isText: true },
+            { q: '1500米 = ?千米', a: '1.5', wrongChoices: ['15', '0.15', '150'], isText: true },
+            { q: '3米5分米 = ?分米', a: '35', wrongChoices: ['305', '3.5', '53'], isText: true },
+            { q: '80毫米 = ?厘米', a: '8', wrongChoices: ['80', '0.8', '800'], isText: true },
+            { q: '1500克 = ?千克?克', a: '1千克500克', wrongChoices: ['15千克0克', '1千克50克', '1千克5克'], isText: true },
+            { q: '2.5千克 = ?克', a: '2500', wrongChoices: ['250', '25000', '2050'], isText: true },
+            { q: '3吨500千克 = ?千克', a: '3500', wrongChoices: ['350', '3050', '35000'], isText: true },
+            { q: '2升500毫升 = ?毫升', a: '2500', wrongChoices: ['250', '2050', '25000'], isText: true },
+            { q: '1500毫升 = ?升?毫升', a: '1升500毫升', wrongChoices: ['15升0毫升', '1升50毫升', '1升5毫升'], isText: true },
+            { q: '3.5元 = ?角', a: '35', wrongChoices: ['3.5', '350', '30.5'], isText: true },
+            { q: '3元5角 = ?元', a: '3.5', wrongChoices: ['35', '3.05', '30.5'], isText: true },
+            { q: '56角 = ?元?角', a: '5元6角', wrongChoices: ['56元0角', '5元60角', '0元56角'], isText: true },
+            { q: '2小时30分钟 = ?分钟', a: '150', wrongChoices: ['230', '90', '130'], isText: true },
+            { q: '90分钟 = ?小时?分钟', a: '1小时30分钟', wrongChoices: ['9小时0分钟', '1小时9分钟', '0小时90分钟'], isText: true },
+            { q: '1.5分钟 = ?秒', a: '90', wrongChoices: ['150', '15', '75'], isText: true },
+            { q: '300秒 = ?分钟', a: '5', wrongChoices: ['3', '30', '6'], isText: true },
+        ],
+        // 困难题（16题）
+        hard: [
+            { q: '0.45千米 = ?米', a: '450', wrongChoices: ['45', '4500', '4.5'], isText: true },
+            { q: '3千米50米 = ?千米', a: '3.05', wrongChoices: ['3.5', '3.005', '30.5'], isText: true },
+            { q: '2350米 = ?千米?米', a: '2千米350米', wrongChoices: ['23千米50米', '2千米35米', '2千米305米'], isText: true },
+            { q: '1.08米 = ?厘米', a: '108', wrongChoices: ['1080', '10.8', '18'], isText: true },
+            { q: '2吨50千克 = ?千克', a: '2050', wrongChoices: ['250', '2500', '20500'], isText: true },
+            { q: '7650克 = ?千克?克', a: '7千克650克', wrongChoices: ['76千克50克', '7千克65克', '765千克0克'], isText: true },
+            { q: '0.3吨 = ?千克', a: '300', wrongChoices: ['30', '3000', '3'], isText: true },
+            { q: '1050千克 = ?吨?千克', a: '1吨50千克', wrongChoices: ['10吨50千克', '1吨500千克', '1吨5千克'], isText: true },
+            { q: '3.25升 = ?毫升', a: '3250', wrongChoices: ['325', '32500', '3025'], isText: true },
+            { q: '2080毫升 = ?升?毫升', a: '2升80毫升', wrongChoices: ['20升80毫升', '2升800毫升', '2升8毫升'], isText: true },
+            { q: '15.05元 = ?元?角?分', a: '15元0角5分', wrongChoices: ['15元5角0分', '1元5角5分', '15元50角'], isText: true },
+            { q: '208分 = ?元?角?分', a: '2元0角8分', wrongChoices: ['20元8角', '2元8角0分', '2元80分'], isText: true },
+            { q: '1.25小时 = ?分钟', a: '75', wrongChoices: ['125', '65', '80'], isText: true },
+            { q: '1小时 = ?秒', a: '3600', wrongChoices: ['360', '600', '36000'], isText: true },
+            { q: '200分钟 = ?小时?分钟', a: '3小时20分钟', wrongChoices: ['2小时0分钟', '3小时2分钟', '2小时40分钟'], isText: true },
+            { q: '5400秒 = ?小时?分钟', a: '1小时30分钟', wrongChoices: ['54分钟0秒', '1小时54分钟', '9小时0分钟'], isText: true },
+        ]
+    },
+
     // ========== 小九九速算专项（1-9 × 1-9）==========
     // 专门针对小九九表的高效训练
     xiaojiujiu: {
@@ -694,6 +766,32 @@ const MathData = {
             {
                 title: '🎯 技巧4：9的乘法规律',
                 items: ['任何数×9，积的各位数相加=9', '7×9=63（6+3=9）', '十位比原数小1，个位凑9', '8×9：十位7，个位2→72']
+            }
+        ],
+        unit: [
+            {
+                title: '📏 长度单位换算',
+                items: ['1千米=1000米', '1米=10分米', '1分米=10厘米', '1厘米=10毫米', '1米=100厘米']
+            },
+            {
+                title: '⚖️ 质量单位换算',
+                items: ['1吨=1000千克', '1千克=1000克']
+            },
+            {
+                title: '🫗 容积单位换算',
+                items: ['1升=1000毫升']
+            },
+            {
+                title: '💰 人民币单位换算',
+                items: ['1元=10角', '1角=10分', '1元=100分', '3.5元=35角=350分']
+            },
+            {
+                title: '⏰ 时间单位换算',
+                items: ['1小时=60分钟', '1分钟=60秒', '1小时=3600秒']
+            },
+            {
+                title: '💡 换算口诀',
+                items: ['大变小乘进率', '小变大除进率', '千米和米差1000', '吨和千克差1000', '时间进率是60不是100！']
             }
         ],
         square: [

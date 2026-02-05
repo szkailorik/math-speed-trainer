@@ -91,6 +91,9 @@ const App = {
     // 小数规律难度
     decimalDifficulty: 'easy',
 
+    // 单位换算难度
+    unitDifficulty: 'easy',
+
     // 设置
     settings: {
         mode: 'choice',      // choice | input
@@ -915,6 +918,13 @@ function startPractice(module) {
         return;
     }
 
+    // 单位换算模块显示模式选择页
+    if (module === 'unit') {
+        showPage('unit-mode');
+        BattleMode.updateUnitCollectionCount();
+        return;
+    }
+
     // 获取题目
     let questions = [];
 
@@ -927,7 +937,7 @@ function startPractice(module) {
         questions = shuffle(App.wrongBook).slice(0, Math.min(App.settings.count, App.wrongBook.length));
     } else if (module === 'mixed') {
         // 综合训练 - 从所有模块随机抽取
-        const allModules = ['xiaojiujiu', 'times', 'multiply', 'fraction', 'decimal', 'square'];
+        const allModules = ['xiaojiujiu', 'times', 'multiply', 'fraction', 'decimal', 'square', 'unit'];
         allModules.forEach(m => {
             const moduleData = MathData[m][App.difficulty] || MathData[m].easy;
             questions.push(...moduleData);
@@ -2387,6 +2397,14 @@ const BattleMode = {
                 ...xiyoujiBossMonsters
             ];
         }
+        if (m === 'unit') {
+            return [
+                ...fengshenEasyMonsters,
+                ...fengshenNormalMonsters,
+                ...fengshenHardMonsters,
+                ...fengshenBossMonsters
+            ];
+        }
         return [
             ...this.easyMonsters,
             ...this.normalMonsters,
@@ -2411,6 +2429,14 @@ const BattleMode = {
                 normal: xiyoujiNormalMonsters,
                 hard: xiyoujiHardMonsters,
                 boss: xiyoujiBossMonsters
+            };
+        }
+        if (module === 'unit') {
+            return {
+                easy: fengshenEasyMonsters,
+                normal: fengshenNormalMonsters,
+                hard: fengshenHardMonsters,
+                boss: fengshenBossMonsters
             };
         }
         return {
@@ -2472,8 +2498,8 @@ const BattleMode = {
     // 显示新收集提示
     showNewCollectionToast(monster) {
         const mod = App.battle.module;
-        const toastIcon = mod === 'fraction' ? '📜' : (mod === 'decimal' ? '📖' : '📖');
-        const toastTitle = mod === 'fraction' ? '山海经更新!' : (mod === 'decimal' ? '西游记更新!' : '图鉴更新!');
+        const toastIcon = mod === 'fraction' ? '📜' : (mod === 'decimal' ? '📖' : (mod === 'unit' ? '📜' : '📖'));
+        const toastTitle = mod === 'fraction' ? '山海经更新!' : (mod === 'decimal' ? '西游记更新!' : (mod === 'unit' ? '封神演义更新!' : '图鉴更新!'));
         const toast = document.createElement('div');
         toast.className = 'collection-toast';
         toast.innerHTML = `
@@ -2770,6 +2796,41 @@ const BattleMode = {
                 document.querySelectorAll('.xiyouji-filter').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
                 this.renderXiyoujiCollection(btn.dataset.filter);
+            });
+        });
+
+        // ===== 单位换算模块事件 =====
+        // 单位换算难度选择
+        document.querySelectorAll('.unit-diff-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.unit-diff-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                App.unitDifficulty = btn.dataset.diff;
+            });
+        });
+
+        // 单位换算战斗模式
+        document.getElementById('select-unit-battle-mode')?.addEventListener('click', () => {
+            const diff = App.unitDifficulty || 'easy';
+            this.startBattle(diff, 'unit');
+        });
+
+        // 打开封神演义图鉴
+        document.getElementById('open-unit-collection')?.addEventListener('click', () => {
+            this.openFengshenCollection();
+        });
+
+        // 封神演义图鉴返回按钮
+        document.getElementById('fengshen-collection-back-btn')?.addEventListener('click', () => {
+            showPage('unit-mode');
+        });
+
+        // 封神演义图鉴筛选按钮
+        document.querySelectorAll('.fengshen-filter').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.fengshen-filter').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                this.renderFengshenCollection(btn.dataset.filter);
             });
         });
     },
@@ -3138,6 +3199,103 @@ const BattleMode = {
         this.updateDecimalCollectionCount();
     },
 
+    // ===== 封神演义图鉴（单位换算模块）=====
+    openFengshenCollection() {
+        this.renderFengshenCollection('all');
+        this.updateUnitCollectionCount();
+        showPage('fengshen-collection');
+    },
+
+    updateUnitCollectionCount() {
+        const stats = this.getCollectionStats('unit');
+
+        const countEl = document.getElementById('unit-collection-count');
+        if (countEl) countEl.textContent = `${stats.collected}/${stats.total}`;
+
+        const statsEl = document.getElementById('fengshen-collection-stats');
+        if (statsEl) statsEl.textContent = `${stats.collected}/${stats.total}`;
+
+        const bannerCount = document.getElementById('fengshen-banner-count');
+        if (bannerCount) bannerCount.textContent = `${stats.collected} / ${stats.total}`;
+
+        const percentEl = document.getElementById('fengshen-percent');
+        if (percentEl) percentEl.textContent = `${stats.percentage}%`;
+
+        const ringFill = document.getElementById('fengshen-ring-fill');
+        if (ringFill) {
+            const circumference = 220;
+            const offset = circumference - (circumference * stats.percentage / 100);
+            ringFill.style.strokeDashoffset = offset;
+        }
+    },
+
+    renderFengshenCollection(filter = 'all') {
+        const grid = document.getElementById('fengshen-collection-grid');
+        if (!grid) return;
+
+        const allMonsters = this.getAllMonsters('unit');
+        const collection = this.getCollection('unit');
+
+        const typeNames = {
+            fire: '火', water: '水', earth: '土', wind: '风', thunder: '雷',
+            ice: '冰', dark: '暗', light: '光', poison: '毒', beast: '兽',
+            dragon: '龙', spirit: '灵', ancient: '太古', ghost: '幽灵',
+            psychic: '超能', fighting: '格斗'
+        };
+
+        let html = '';
+        let visibleCount = 0;
+
+        allMonsters.forEach(monster => {
+            const isCollected = collection.includes(monster.id);
+            if (filter === 'collected' && !isCollected) return;
+            if (filter === 'locked' && isCollected) return;
+
+            visibleCount++;
+
+            if (isCollected) {
+                html += `
+                    <div class="collection-card collected fengshen-card" data-id="${monster.id}" data-module="unit">
+                        <span class="collection-card-emoji">${monster.emoji}</span>
+                        <span class="collection-card-name">${monster.name}</span>
+                        <span class="collection-card-type type-${monster.type}">${typeNames[monster.type] || '普通'}</span>
+                    </div>
+                `;
+            } else {
+                html += `
+                    <div class="collection-card locked fengshen-card">
+                        <span class="collection-card-emoji">❓</span>
+                        <span class="collection-card-name">???</span>
+                        <span class="collection-card-type">未解锁</span>
+                    </div>
+                `;
+            }
+        });
+
+        if (visibleCount === 0) {
+            if (filter === 'collected') {
+                html = `<div class="collection-empty"><div class="collection-empty-icon">📜</div><div class="collection-empty-text">还没有收集到封神演义妖怪<br>快去挑战单位换算吧!</div></div>`;
+            } else if (filter === 'locked') {
+                html = `<div class="collection-empty"><div class="collection-empty-icon">🎉</div><div class="collection-empty-text">恭喜! 你已经收录了全部封神演义妖怪!</div></div>`;
+            }
+        }
+
+        grid.innerHTML = html;
+
+        // 绑定点击事件
+        grid.querySelectorAll('.collection-card.collected').forEach(card => {
+            card.addEventListener('click', () => {
+                const id = card.dataset.id;
+                const monster = allMonsters.find(m => m.id === id);
+                if (monster) {
+                    this.showMonsterDetail(monster);
+                }
+            });
+        });
+
+        this.updateUnitCollectionCount();
+    },
+
     // 显示难度选择并开始战斗
     showDifficultyAndStart() {
         this.startBattle(App.difficulty, 'xiaojiujiu');
@@ -3209,7 +3367,7 @@ const BattleMode = {
         battle.totalStages = settings.stages;
 
         // 获取题目（混入简单热身题）
-        const dataKeyMap = { fraction: 'fraction', decimal: 'decimal' };
+        const dataKeyMap = { fraction: 'fraction', decimal: 'decimal', unit: 'unit' };
         const dataKey = dataKeyMap[battle.module] || 'xiaojiujiu';
         const moduleData = MathData[dataKey];
         const diffData = moduleData[difficulty] || moduleData.easy;
@@ -4320,6 +4478,9 @@ const BattleMode = {
         } else if (module === 'decimal') {
             showPage('decimal-mode');
             this.updateDecimalCollectionCount();
+        } else if (module === 'unit') {
+            showPage('unit-mode');
+            this.updateUnitCollectionCount();
         } else {
             showPage('xiaojiujiu-mode');
             this.updateCollectionCount();

@@ -38,7 +38,7 @@
     <link rel="apple-touch-startup-image" href="icons/splash.png">
 
     <title>数学速算训练营</title>
-    <link rel="stylesheet" href="css/style.css?v=10.1">
+    <link rel="stylesheet" href="css/style.css?v=11.0">
 </head>
 <body>
     <!-- 主页面 -->
@@ -145,6 +145,12 @@
                     <span class="menu-icon">➗</span>
                     <span class="menu-title">小数规律</span>
                     <span class="menu-desc">乘除10小数点移动</span>
+                </button>
+
+                <button class="menu-btn" data-module="unit">
+                    <span class="menu-icon">📐</span>
+                    <span class="menu-title">单位换算</span>
+                    <span class="menu-desc">千米米克千克元角分</span>
                 </button>
 
                 <button class="menu-btn" data-module="square">
@@ -617,6 +623,93 @@
             </div>
         </div>
 
+        <!-- 单位换算 模式选择页 -->
+        <div id="unit-mode-page" class="page">
+            <header class="page-header">
+                <button class="back-btn" data-target="home">← 返回</button>
+                <h2>📐 单位换算</h2>
+                <div class="header-spacer"></div>
+            </header>
+
+            <div class="mode-select-container">
+                <h3 class="mode-select-title">选择训练模式</h3>
+
+                <!-- 难度选择 -->
+                <div class="battle-difficulty-selector">
+                    <span class="diff-label">难度：</span>
+                    <button class="battle-diff-btn unit-diff-btn active" data-diff="easy">
+                        <span class="diff-icon">😊</span>
+                        <span class="diff-text">简单</span>
+                    </button>
+                    <button class="battle-diff-btn unit-diff-btn" data-diff="normal">
+                        <span class="diff-icon">😤</span>
+                        <span class="diff-text">普通</span>
+                    </button>
+                    <button class="battle-diff-btn unit-diff-btn" data-diff="hard">
+                        <span class="diff-icon">😈</span>
+                        <span class="diff-text">困难</span>
+                    </button>
+                </div>
+
+                <button class="mode-card battle-mode" id="select-unit-battle-mode">
+                    <span class="mode-icon">⚔️</span>
+                    <span class="mode-name">封神演义大冒险</span>
+                    <span class="mode-desc">挑战封神演义妖怪，征服单位换算！</span>
+                    <span class="mode-tag">推荐</span>
+                </button>
+
+                <button class="mode-card collection-mode" id="open-unit-collection">
+                    <span class="mode-icon">📜</span>
+                    <span class="mode-name">封神演义图鉴</span>
+                    <span class="mode-desc">查看收集的封神演义妖怪</span>
+                    <span class="collection-count" id="unit-collection-count">0/72</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- 封神演义图鉴页 -->
+        <div id="fengshen-collection-page" class="page">
+            <header class="collection-header fengshen-header">
+                <button class="back-btn" id="fengshen-collection-back-btn">← 返回</button>
+                <h1>📜 封神演义图鉴</h1>
+                <div class="collection-stats" id="fengshen-collection-stats">0/72</div>
+            </header>
+
+            <div class="collection-banner fengshen-banner">
+                <div class="collection-banner-bg fengshen-banner-bg"></div>
+                <div class="collection-banner-content">
+                    <div class="collection-progress-ring">
+                        <svg viewBox="0 0 80 80">
+                            <circle cx="40" cy="40" r="35" class="progress-bg"/>
+                            <circle cx="40" cy="40" r="35" class="progress-fill fengshen-ring" id="fengshen-ring-fill"/>
+                        </svg>
+                        <span class="progress-percent" id="fengshen-percent">0%</span>
+                    </div>
+                    <div class="collection-banner-info">
+                        <div class="collection-banner-title">封神演义收集进度</div>
+                        <div class="collection-banner-count" id="fengshen-banner-count">0 / 72</div>
+                        <div class="collection-banner-desc">征服单位换算，收录封神演义妖怪</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="collection-filters">
+                <button class="collection-filter-btn fengshen-filter active" data-filter="all">
+                    <span class="filter-icon">📋</span> 全部
+                </button>
+                <button class="collection-filter-btn fengshen-filter" data-filter="collected">
+                    <span class="filter-icon">✅</span> 已收集
+                </button>
+                <button class="collection-filter-btn fengshen-filter" data-filter="locked">
+                    <span class="filter-icon">🔒</span> 未解锁
+                </button>
+            </div>
+
+            <div class="collection-grid" id="fengshen-collection-grid">
+                <!-- 动态生成封神演义妖怪卡片 -->
+            </div>
+        </div>
+
         <!-- 战斗模式页面 -->
         <div id="battle-page" class="page">
             <header class="battle-header">
@@ -891,9 +984,10 @@
         </div>
     </div>
 
-    <script src="js/data.js?v=10.1"></script>
-    <script src="js/shanhai-monsters.js?v=10.1"></script>
-    <script src="js/xiyouji-monsters.js?v=10.1"></script>
-    <script src="js/app.js?v=10.1"></script>
+    <script src="js/data.js?v=11.0"></script>
+    <script src="js/shanhai-monsters.js?v=11.0"></script>
+    <script src="js/xiyouji-monsters.js?v=11.0"></script>
+    <script src="js/fengshen-monsters.js?v=11.0"></script>
+    <script src="js/app.js?v=11.0"></script>
 </body>
 </html>
