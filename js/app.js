@@ -4039,7 +4039,7 @@ const BattleMode = {
         if (isCorrect) {
             this.handleCorrectAnswer(btnElement);
         } else {
-            this.handleWrongAnswer(btnElement, question.a);
+            this.handleWrongAnswer(btnElement, question.a, answer);
         }
     },
 
@@ -4342,7 +4342,7 @@ const BattleMode = {
     },
 
     // 处理错误答案
-    handleWrongAnswer(btnElement, correctAnswer) {
+    handleWrongAnswer(btnElement, correctAnswer, userAnswer) {
         const battle = App.battle;
 
         battle.combo = 0;
@@ -4370,7 +4370,7 @@ const BattleMode = {
         const wrongItem = {
             q: question.q,
             a: question.a,
-            yourAnswer: null,
+            yourAnswer: userAnswer || null,
             timestamp: Date.now(),
             monsterEmoji: battle.currentMonster ? battle.currentMonster.emoji : null,
             monsterName: battle.currentMonster ? battle.currentMonster.name : null
