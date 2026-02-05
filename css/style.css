@@ -4123,19 +4123,15 @@ body.keyboard-active #battle-page .battle-answer-area {
     border-color: rgba(255, 213, 79, 0.3);
 }
 
-/* 错题本怪兽标记 */
-.wrong-monster {
-    display: inline-flex;
-    align-items: center;
-    gap: 2px;
-    margin-right: 6px;
-    vertical-align: middle;
-    font-size: 1.2em;
-}
-.wrong-monster-name {
-    font-size: 0.65em;
+/* 错题本战斗记录 */
+.wrong-battle-log {
+    font-size: 0.75em;
     color: #e57373;
-    font-weight: 500;
+    margin-top: 2px;
+    font-style: italic;
+}
+.wrong-battle-log b {
+    font-style: normal;
 }
 
 /* 属性数据 */
