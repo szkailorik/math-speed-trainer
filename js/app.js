@@ -12,8 +12,8 @@ const UserManager = {
         }
         // 默认创建 Lorik 和 Kai 两个用户
         const defaultUsers = [
-            { id: 'lorik', name: 'Lorik', avatar: '👦', createdAt: Date.now() },
-            { id: 'kai', name: 'Kai', avatar: '🧒', createdAt: Date.now() }
+            { id: 'lorik', name: 'Lorik', avatar: '⚔️', createdAt: Date.now() },
+            { id: 'kai', name: 'Kai', avatar: '🧙', createdAt: Date.now() }
         ];
         this.saveUsers(defaultUsers);
         return defaultUsers;
@@ -762,7 +762,7 @@ function hideAddUserForm() {
     document.getElementById('user-name-input').value = '';
     // 重置头像选择
     document.querySelectorAll('.avatar-option').forEach(opt => opt.classList.remove('selected'));
-    document.querySelector('.avatar-option[data-avatar="👦"]').classList.add('selected');
+    document.querySelector('.avatar-option[data-avatar="⚔️"]').classList.add('selected');
 }
 
 function createNewUser() {
@@ -776,7 +776,7 @@ function createNewUser() {
     }
 
     const selectedAvatar = document.querySelector('.avatar-option.selected');
-    const avatar = selectedAvatar ? selectedAvatar.dataset.avatar : '👦';
+    const avatar = selectedAvatar ? selectedAvatar.dataset.avatar : '⚔️';
 
     const newUser = UserManager.addUser(name, avatar);
     hideAddUserForm();
@@ -836,6 +836,10 @@ function updateHomeStats() {
     document.getElementById('today-count').textContent = App.stats.todayCount;
     document.getElementById('total-score').textContent = App.stats.totalScore;
     document.getElementById('wrong-count').textContent = App.wrongBook.length;
+
+    // 更新冒险状态栏
+    const advText = document.getElementById('adventure-text');
+    if (advText) advText.textContent = `今日已练习 ${App.stats.todayCount} 题`;
 }
 
 // ===== 设置 =====
@@ -881,11 +885,11 @@ function renderLearnContent(tab) {
     // 标签名称映射
     const tabNames = {
         xiaojiujiu: '小九九速算',
-        times: '大九九表',
+        times: '大九九+平方',
         multiply: '乘法速记',
         fraction: '分数小数',
         decimal: '小数规律',
-        square: '平方数'
+        unit: '单位换算'
     };
 
     // 添加开始练习按钮
@@ -957,7 +961,7 @@ function startPractice(module) {
         questions = shuffle(App.wrongBook).slice(0, Math.min(App.settings.count, App.wrongBook.length));
     } else if (module === 'mixed') {
         // 综合训练 - 从所有模块随机抽取
-        const allModules = ['xiaojiujiu', 'times', 'multiply', 'fraction', 'decimal', 'square', 'unit'];
+        const allModules = ['xiaojiujiu', 'times', 'multiply', 'fraction', 'decimal', 'unit'];
         allModules.forEach(m => {
             const moduleData = MathData[m][App.difficulty] || MathData[m].easy;
             questions.push(...moduleData);
@@ -993,8 +997,8 @@ function startPractice(module) {
         multiply: '🔢 乘法速记',
         fraction: '🔄 分数小数',
         decimal: '➗ 小数规律',
-        square: '✖️ 平方数',
-        mixed: '🎯 综合训练',
+        unit: '📐 单位换算',
+        mixed: '🗼 试炼之塔',
         wrong: '📖 错题练习'
     };
     document.getElementById('practice-title').textContent = titles[module] || '训练';
@@ -1427,13 +1431,14 @@ function endPractice() {
 // ===== 每日挑战 =====
 
 function initDailyChallenge() {
-    // 生成10道混合题目
+    // 生成10道混合题目 - 均衡采样，每模块最多3题
     const allQuestions = [];
-    const modules = ['xiaojiujiu', 'times', 'multiply', 'fraction', 'decimal', 'square'];
+    const modules = ['xiaojiujiu', 'times', 'multiply', 'fraction', 'decimal', 'unit'];
 
     modules.forEach(m => {
         const data = MathData[m].normal || MathData[m].easy;
-        allQuestions.push(...data);
+        const picked = shuffle([...data]).slice(0, 3);
+        allQuestions.push(...picked);
     });
 
     App.daily = {
@@ -1455,7 +1460,7 @@ function initDailyChallenge() {
     document.getElementById('daily-question-text').textContent = '准备好了吗？';
     document.getElementById('daily-timer').textContent = '00:00';
     document.getElementById('daily-choices').innerHTML =
-        '<button class="start-daily-btn" id="start-daily">开始挑战！</button>';
+        '<button class="start-daily-btn" id="start-daily">出发闯关！</button>';
 
     // 绑定开始按钮
     document.getElementById('start-daily').addEventListener('click', startDailyChallenge);
@@ -1648,11 +1653,11 @@ function endDailyChallenge() {
 
     if (correctCount === 10) {
         resultIcon.textContent = '👑';
-        resultTitle.textContent = '完美通关！';
+        resultTitle.textContent = '副本完成！';
         resultEncourage.textContent = encouragements.perfect[Math.floor(Math.random() * 3)];
     } else if (correctCount >= 8) {
         resultIcon.textContent = '🎉';
-        resultTitle.textContent = '挑战成功！';
+        resultTitle.textContent = '副本完成！';
         resultEncourage.textContent = encouragements.excellent[Math.floor(Math.random() * 3)];
     } else if (correctCount >= 6) {
         resultIcon.textContent = '💪';
@@ -1733,7 +1738,15 @@ function deleteWrongItem(index) {
 // 渲染成就页面
 function renderAchievements() {
     const grid = document.getElementById('achievements-grid');
+    const summaryEl = document.getElementById('achievements-summary');
     const unlockedAchievements = App.stats.achievements || [];
+
+    // 渲染摘要
+    const unlocked = unlockedAchievements.length;
+    const total = MathData.achievements.length;
+    if (summaryEl) {
+        summaryEl.innerHTML = `<span class="summary-count">${unlocked}/${total}</span><span class="summary-label">成就已解锁</span>`;
+    }
 
     grid.innerHTML = MathData.achievements.map(achievement => {
         const isUnlocked = unlockedAchievements.includes(achievement.id);
@@ -1765,6 +1778,9 @@ function initEventListeners() {
             } else if (module === 'wrong') {
                 showPage('wrong');
                 renderWrongBook();
+            } else if (module === 'achievements') {
+                renderAchievements();
+                showPage('achievements');
             } else {
                 startPractice(module);
             }
@@ -1787,17 +1803,11 @@ function initEventListeners() {
         });
     });
 
-    // 快速开始按钮
-    document.getElementById('quick-start').addEventListener('click', () => {
-        const modules = ['multiply', 'fraction', 'decimal', 'square', 'mixed'];
+    // 冒险开始按钮
+    document.getElementById('adventure-go').addEventListener('click', () => {
+        const modules = ['xiaojiujiu', 'times', 'multiply', 'fraction', 'decimal', 'unit'];
         const randomModule = modules[Math.floor(Math.random() * modules.length)];
         startPractice(randomModule);
-    });
-
-    // 成就按钮
-    document.getElementById('achievements-btn').addEventListener('click', () => {
-        renderAchievements();
-        showPage('achievements');
     });
 
     // 设置按钮
@@ -4655,6 +4665,8 @@ const BattleMode = {
             const isNew = this.addToCollection(battle.currentMonster.id);
             if (isNew) {
                 setTimeout(() => this.showNewCollectionToast(battle.currentMonster), 800);
+                // 检查收集里程碑成就
+                this.checkCollectionAchievements();
             }
         }
 
@@ -4833,6 +4845,38 @@ const BattleMode = {
                 const ach = MathData.achievements.find(a => a.id === 'item_master');
                 if (ach) showAchievement(ach);
             }, 8000);
+        }
+    },
+
+    // 检查收集里程碑成就
+    checkCollectionAchievements() {
+        const modules = ['xiaojiujiu', 'fraction', 'decimal', 'unit', 'multiply', 'times'];
+        const totalCollected = modules.reduce((sum, m) => sum + this.getCollection(m).length, 0);
+        const achievements = App.stats.achievements;
+
+        const milestones = [
+            { count: 10, id: 'collect_10' },
+            { count: 50, id: 'collect_50' },
+            { count: 100, id: 'collect_100' },
+            { count: 200, id: 'collect_200' }
+        ];
+
+        milestones.forEach(ms => {
+            if (totalCollected >= ms.count && !achievements.includes(ms.id)) {
+                achievements.push(ms.id);
+                saveProgress();
+                const ach = MathData.achievements.find(a => a.id === ms.id);
+                if (ach) setTimeout(() => showAchievement(ach), 1500);
+            }
+        });
+
+        // 收集全部
+        const totalAll = modules.reduce((sum, m) => sum + this.getAllMonsters(m).length, 0);
+        if (totalCollected >= totalAll && totalAll > 0 && !achievements.includes('collect_all')) {
+            achievements.push('collect_all');
+            saveProgress();
+            const ach = MathData.achievements.find(a => a.id === 'collect_all');
+            if (ach) setTimeout(() => showAchievement(ach), 2000);
         }
     },
 

@@ -12,7 +12,7 @@
     <!-- iOS PWA 配置 -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="速算训练">
+    <meta name="apple-mobile-web-app-title" content="数学魔法学院">
     <meta name="mobile-web-app-capable" content="yes">
 
     <!-- 禁用自动检测 -->
@@ -23,7 +23,7 @@
 
     <!-- SEO -->
     <meta name="description" content="专为3-4年级小学生设计的数学速算训练工具，帮助快速掌握乘法速记、分数小数互换等技巧">
-    <meta property="og:title" content="数学速算训练营">
+    <meta property="og:title" content="数学魔法学院">
     <meta property="og:description" content="让数学计算变得又快又准！">
     <meta name="theme-color" content="#6C5CE7">
 
@@ -37,8 +37,8 @@
     <!-- 启动画面（iPad） -->
     <link rel="apple-touch-startup-image" href="icons/splash.png">
 
-    <title>数学速算训练营</title>
-    <link rel="stylesheet" href="css/style.css?v=12.0">
+    <title>数学魔法学院</title>
+    <link rel="stylesheet" href="css/style.css?v=13.0">
 </head>
 <body>
     <!-- 主页面 -->
@@ -64,14 +64,30 @@
                 <div class="new-user-form hidden" id="new-user-form">
                     <input type="text" class="user-name-input" id="user-name-input" placeholder="输入名字" maxlength="10">
                     <div class="avatar-picker" id="avatar-picker">
-                        <span class="avatar-option selected" data-avatar="👦">👦</span>
-                        <span class="avatar-option" data-avatar="👧">👧</span>
-                        <span class="avatar-option" data-avatar="🧒">🧒</span>
-                        <span class="avatar-option" data-avatar="👶">👶</span>
-                        <span class="avatar-option" data-avatar="🐱">🐱</span>
-                        <span class="avatar-option" data-avatar="🐶">🐶</span>
-                        <span class="avatar-option" data-avatar="🦊">🦊</span>
-                        <span class="avatar-option" data-avatar="🐼">🐼</span>
+                        <div class="avatar-option selected" data-avatar="⚔️">
+                            <span class="avatar-emoji">⚔️</span><span class="avatar-role">剑士</span>
+                        </div>
+                        <div class="avatar-option" data-avatar="🧙">
+                            <span class="avatar-emoji">🧙</span><span class="avatar-role">魔法师</span>
+                        </div>
+                        <div class="avatar-option" data-avatar="🏹">
+                            <span class="avatar-emoji">🏹</span><span class="avatar-role">弓箭手</span>
+                        </div>
+                        <div class="avatar-option" data-avatar="🛡️">
+                            <span class="avatar-emoji">🛡️</span><span class="avatar-role">守护者</span>
+                        </div>
+                        <div class="avatar-option" data-avatar="🐉">
+                            <span class="avatar-emoji">🐉</span><span class="avatar-role">驯龙师</span>
+                        </div>
+                        <div class="avatar-option" data-avatar="🦊">
+                            <span class="avatar-emoji">🦊</span><span class="avatar-role">灵狐</span>
+                        </div>
+                        <div class="avatar-option" data-avatar="🌟">
+                            <span class="avatar-emoji">🌟</span><span class="avatar-role">星术士</span>
+                        </div>
+                        <div class="avatar-option" data-avatar="🔮">
+                            <span class="avatar-emoji">🔮</span><span class="avatar-role">预言家</span>
+                        </div>
                     </div>
                     <div class="form-buttons">
                         <button class="form-btn cancel" id="cancel-add-user">取消</button>
@@ -85,12 +101,12 @@
         <div id="home-page" class="page">
             <header class="home-header">
                 <div class="user-badge" id="current-user-badge">
-                    <span class="user-avatar" id="current-avatar">👦</span>
+                    <span class="user-avatar" id="current-avatar">⚔️</span>
                     <span class="user-name" id="current-name">小朋友</span>
                     <span class="switch-hint">点击切换</span>
                 </div>
-                <h1>🧮 数学速算训练营</h1>
-                <p class="subtitle">让计算变得又快又准！</p>
+                <h1>🔮 数学魔法学院</h1>
+                <p class="subtitle">魔法学徒，今天要挑战哪个副本？</p>
             </header>
 
             <div class="stats-bar">
@@ -116,80 +132,100 @@
                 </div>
             </div>
 
-            <div class="menu-grid">
-                <button class="menu-btn xiaojiujiu-btn" data-module="xiaojiujiu">
-                    <span class="menu-icon">🔥</span>
-                    <span class="menu-title">小九九速算</span>
-                    <span class="menu-desc">专攻6×7、7×8等难点</span>
-                </button>
+            <div class="adventure-status" id="adventure-status">
+                <div class="adventure-status-info">
+                    <span class="adventure-status-icon">⚔️</span>
+                    <span class="adventure-status-text" id="adventure-text">今日已练习 0 题</span>
+                </div>
+                <button class="adventure-go-btn" id="adventure-go">开始冒险 →</button>
+            </div>
 
-                <button class="menu-btn times-btn" data-module="times">
-                    <span class="menu-icon">📊</span>
-                    <span class="menu-title">大九九表</span>
-                    <span class="menu-desc">11-19的乘除法</span>
-                </button>
+            <!-- 冒险副本 -->
+            <div class="menu-section">
+                <div class="menu-section-title">⚔️ 冒险副本</div>
+                <div class="menu-grid">
+                    <button class="menu-btn xiaojiujiu-btn" data-module="xiaojiujiu">
+                        <span class="menu-icon">🔥</span>
+                        <span class="menu-title">小九九速算</span>
+                        <span class="menu-desc">专攻6×7、7×8等难点</span>
+                    </button>
 
-                <button class="menu-btn" data-module="multiply">
-                    <span class="menu-icon">🔢</span>
-                    <span class="menu-title">乘法速记</span>
-                    <span class="menu-desc">25×4=100 看到4想25</span>
-                </button>
+                    <button class="menu-btn times-btn" data-module="times">
+                        <span class="menu-icon">📊</span>
+                        <span class="menu-title">大九九表</span>
+                        <span class="menu-desc">11-19乘法 + 平方数</span>
+                    </button>
 
-                <button class="menu-btn" data-module="fraction">
-                    <span class="menu-icon">🔄</span>
-                    <span class="menu-title">分数小数</span>
-                    <span class="menu-desc">1/8=0.125 必背互换</span>
-                </button>
+                    <button class="menu-btn" data-module="multiply">
+                        <span class="menu-icon">🔢</span>
+                        <span class="menu-title">乘法速记</span>
+                        <span class="menu-desc">25×4=100 看到4想25</span>
+                    </button>
 
-                <button class="menu-btn" data-module="decimal">
-                    <span class="menu-icon">➗</span>
-                    <span class="menu-title">小数规律</span>
-                    <span class="menu-desc">乘除10小数点移动</span>
-                </button>
+                    <button class="menu-btn" data-module="fraction">
+                        <span class="menu-icon">🔄</span>
+                        <span class="menu-title">分数小数</span>
+                        <span class="menu-desc">1/8=0.125 必背互换</span>
+                    </button>
 
-                <button class="menu-btn" data-module="unit">
-                    <span class="menu-icon">📐</span>
-                    <span class="menu-title">单位换算</span>
-                    <span class="menu-desc">长度·质量·面积·容积·时间·人民币</span>
-                </button>
+                    <button class="menu-btn" data-module="decimal">
+                        <span class="menu-icon">➗</span>
+                        <span class="menu-title">小数规律</span>
+                        <span class="menu-desc">乘除10小数点移动</span>
+                    </button>
 
-                <button class="menu-btn" data-module="square">
-                    <span class="menu-icon">✖️</span>
-                    <span class="menu-title">平方数</span>
-                    <span class="menu-desc">11²=121 常用平方</span>
-                </button>
+                    <button class="menu-btn" data-module="unit">
+                        <span class="menu-icon">📐</span>
+                        <span class="menu-title">单位换算</span>
+                        <span class="menu-desc">长度·质量·面积·容积·时间·人民币</span>
+                    </button>
+                </div>
+            </div>
 
-                <button class="menu-btn" data-module="mixed">
-                    <span class="menu-icon">🎯</span>
-                    <span class="menu-title">综合训练</span>
-                    <span class="menu-desc">随机混合所有题型</span>
-                </button>
+            <!-- 试炼场 -->
+            <div class="menu-section">
+                <div class="menu-section-title">🏟️ 试炼场</div>
+                <div class="menu-grid">
+                    <button class="menu-btn daily-dungeon-btn" data-module="daily" id="daily-dungeon-btn">
+                        <span class="menu-icon">🗡️</span>
+                        <span class="menu-title">每日副本</span>
+                        <span class="menu-desc">每日10题限时闯关</span>
+                    </button>
 
-                <button class="menu-btn" data-module="daily">
-                    <span class="menu-icon">🏆</span>
-                    <span class="menu-title">每日挑战</span>
-                    <span class="menu-desc">限时10题冲刺</span>
-                </button>
+                    <button class="menu-btn trial-tower-btn" data-module="mixed" id="trial-tower-btn">
+                        <span class="menu-icon">🗼</span>
+                        <span class="menu-title">试炼之塔</span>
+                        <span class="menu-desc">全题型混合挑战</span>
+                    </button>
+                </div>
+            </div>
 
-                <button class="menu-btn learn-btn" data-module="learn">
-                    <span class="menu-icon">💡</span>
-                    <span class="menu-title">速算秘籍</span>
-                    <span class="menu-desc">先学习再练习</span>
-                </button>
+            <!-- 冒险工具 -->
+            <div class="menu-section">
+                <div class="menu-section-title">🛠️ 冒险工具</div>
+                <div class="tools-grid">
+                    <button class="menu-btn learn-btn" data-module="learn">
+                        <span class="menu-icon">📜</span>
+                        <span class="menu-title">秘术卷轴</span>
+                        <span class="menu-desc">速算技巧与魔法秘笈</span>
+                    </button>
 
-                <button class="menu-btn wrong-book-btn" data-module="wrong">
-                    <span class="menu-icon">📖</span>
-                    <span class="menu-title">错题本</span>
-                    <span class="menu-desc">复习做错的题目</span>
-                </button>
+                    <button class="menu-btn wrong-book-btn" data-module="wrong">
+                        <span class="menu-icon">📖</span>
+                        <span class="menu-title">错题本</span>
+                        <span class="menu-desc">复习做错的题目</span>
+                    </button>
+
+                    <button class="menu-btn" data-module="achievements" id="achievements-btn">
+                        <span class="menu-icon">🏅</span>
+                        <span class="menu-title">成就殿堂</span>
+                        <span class="menu-desc">查看成就与收集</span>
+                    </button>
+                </div>
             </div>
 
             <footer class="home-footer">
-                <button class="quick-start-btn" id="quick-start">🚀 快速开始</button>
-                <div class="footer-links">
-                    <button class="link-btn" id="achievements-btn">🏅 成就</button>
-                    <button class="link-btn" id="settings-btn">⚙️ 设置</button>
-                </div>
+                <button class="link-btn" id="settings-btn">🔮 设置</button>
             </footer>
         </div>
 
@@ -197,17 +233,17 @@
         <div id="learn-page" class="page">
             <header class="page-header">
                 <button class="back-btn" data-target="home">← 返回</button>
-                <h2>💡 速算秘籍</h2>
+                <h2>📜 秘术卷轴</h2>
                 <div class="header-spacer"></div>
             </header>
 
             <div class="learn-tabs">
                 <button class="learn-tab active" data-tab="xiaojiujiu">小九九</button>
-                <button class="learn-tab" data-tab="times">大九九</button>
+                <button class="learn-tab" data-tab="times">大九九+平方</button>
                 <button class="learn-tab" data-tab="multiply">乘法速记</button>
                 <button class="learn-tab" data-tab="fraction">分数小数</button>
                 <button class="learn-tab" data-tab="decimal">小数规律</button>
-                <button class="learn-tab" data-tab="square">平方数</button>
+                <button class="learn-tab" data-tab="unit">单位换算</button>
             </div>
 
             <div class="learn-content" id="learn-content">
@@ -275,7 +311,7 @@
         <div id="daily-page" class="page">
             <header class="page-header">
                 <button class="back-btn" data-target="home">← 返回</button>
-                <h2>🏆 每日挑战</h2>
+                <h2>🗡️ 每日副本</h2>
                 <div class="daily-timer" id="daily-timer">00:00</div>
             </header>
 
@@ -293,7 +329,7 @@
 
             <div class="answer-area">
                 <div class="choices" id="daily-choices">
-                    <button class="start-daily-btn" id="start-daily">开始挑战！</button>
+                    <button class="start-daily-btn" id="start-daily">出发闯关！</button>
                 </div>
             </div>
 
@@ -364,13 +400,13 @@
         <div id="settings-page" class="page">
             <header class="page-header">
                 <button class="back-btn" data-target="home">← 返回</button>
-                <h2>⚙️ 设置</h2>
+                <h2>🔮 魔法设置</h2>
                 <div class="header-spacer"></div>
             </header>
 
             <div class="settings-list">
                 <div class="setting-item">
-                    <span class="setting-label">答题模式</span>
+                    <span class="setting-label">⚔️ 战斗方式</span>
                     <div class="setting-options">
                         <button class="setting-opt active" data-setting="mode" data-value="choice">选择题</button>
                         <button class="setting-opt" data-setting="mode" data-value="input">填空题</button>
@@ -378,7 +414,7 @@
                 </div>
 
                 <div class="setting-item">
-                    <span class="setting-label">计时模式</span>
+                    <span class="setting-label">⏱️ 时间魔法</span>
                     <div class="setting-options">
                         <button class="setting-opt active" data-setting="timer" data-value="off">关闭</button>
                         <button class="setting-opt" data-setting="timer" data-value="on">开启</button>
@@ -386,7 +422,7 @@
                 </div>
 
                 <div class="setting-item">
-                    <span class="setting-label">每轮题数</span>
+                    <span class="setting-label">📊 每轮题数</span>
                     <div class="setting-options">
                         <button class="setting-opt" data-setting="count" data-value="10">10题</button>
                         <button class="setting-opt active" data-setting="count" data-value="20">20题</button>
@@ -395,7 +431,7 @@
                 </div>
 
                 <div class="setting-item">
-                    <span class="setting-label">深色模式</span>
+                    <span class="setting-label">🌙 暗夜模式</span>
                     <div class="setting-options">
                         <button class="setting-opt active" data-setting="theme" data-value="light">浅色</button>
                         <button class="setting-opt" data-setting="theme" data-value="dark">深色</button>
@@ -403,7 +439,7 @@
                 </div>
 
                 <div class="setting-item">
-                    <span class="setting-label">音效</span>
+                    <span class="setting-label">🔊 音效魔法</span>
                     <div class="setting-options">
                         <button class="setting-opt active" data-setting="sound" data-value="on">开启</button>
                         <button class="setting-opt" data-setting="sound" data-value="off">关闭</button>
@@ -413,7 +449,7 @@
 
             <div class="settings-footer">
                 <button class="reset-btn" id="reset-progress">重置所有进度</button>
-                <p class="version">版本 1.0.0</p>
+                <p class="version">版本 13.0</p>
             </div>
         </div>
 
@@ -424,6 +460,10 @@
                 <h2>🏅 成就殿堂</h2>
                 <div class="header-spacer"></div>
             </header>
+
+            <div class="achievements-summary" id="achievements-summary">
+                <!-- dynamically filled: X/24 成就已解锁 -->
+            </div>
 
             <div class="achievements-grid" id="achievements-grid">
                 <!-- 动态填充 -->
@@ -807,7 +847,7 @@
         <div id="times-mode-page" class="page">
             <header class="page-header">
                 <button class="back-btn" data-target="home">← 返回</button>
-                <h2>📊 大九九表</h2>
+                <h2>📊 大九九表 + 平方数</h2>
                 <div class="header-spacer"></div>
             </header>
 
@@ -1170,12 +1210,12 @@
         </div>
     </div>
 
-    <script src="js/data.js?v=12.0"></script>
-    <script src="js/shanhai-monsters.js?v=12.0"></script>
-    <script src="js/xiyouji-monsters.js?v=12.0"></script>
-    <script src="js/fengshen-monsters.js?v=12.0"></script>
-    <script src="js/liaozhai-monsters.js?v=12.0"></script>
-    <script src="js/hp-monsters.js?v=12.0"></script>
-    <script src="js/app.js?v=12.0"></script>
+    <script src="js/data.js?v=13.0"></script>
+    <script src="js/shanhai-monsters.js?v=13.0"></script>
+    <script src="js/xiyouji-monsters.js?v=13.0"></script>
+    <script src="js/fengshen-monsters.js?v=13.0"></script>
+    <script src="js/liaozhai-monsters.js?v=13.0"></script>
+    <script src="js/hp-monsters.js?v=13.0"></script>
+    <script src="js/app.js?v=13.0"></script>
 </body>
 </html>

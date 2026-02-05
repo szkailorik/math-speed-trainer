@@ -364,7 +364,38 @@ button:active, .menu-btn:active, .choice-btn:active {
     margin-left: 5px;
 }
 
-/* ===== 首页 ===== */
+/* ===== 首页 - 魔法学院暗黑奇幻风 ===== */
+#home-page {
+    background: linear-gradient(180deg, #0D0221 0%, #150535 30%, #1A0A3E 60%, #0F0326 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+/* 魔法星空背景 */
+#home-page::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image:
+        radial-gradient(1px 1px at 10% 20%, rgba(255,215,0,0.4) 0%, transparent 100%),
+        radial-gradient(1px 1px at 30% 60%, rgba(162,155,254,0.3) 0%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 50% 15%, rgba(255,215,0,0.5) 0%, transparent 100%),
+        radial-gradient(1px 1px at 70% 40%, rgba(162,155,254,0.3) 0%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 85% 70%, rgba(255,215,0,0.4) 0%, transparent 100%),
+        radial-gradient(1px 1px at 20% 80%, rgba(108,92,231,0.3) 0%, transparent 100%),
+        radial-gradient(1px 1px at 60% 90%, rgba(255,215,0,0.3) 0%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 90% 10%, rgba(162,155,254,0.5) 0%, transparent 100%),
+        radial-gradient(1px 1px at 40% 35%, rgba(255,215,0,0.3) 0%, transparent 100%),
+        radial-gradient(1px 1px at 75% 85%, rgba(108,92,231,0.3) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+#home-page > * {
+    position: relative;
+    z-index: 1;
+}
+
 .home-header {
     text-align: center;
     padding: 30px 0 20px;
@@ -373,28 +404,48 @@ button:active, .menu-btn:active, .choice-btn:active {
 .home-header h1 {
     font-size: 2rem;
     font-weight: 700;
-    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    background: linear-gradient(135deg, #FFD700, #FFA500, #FFD700);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     margin-bottom: 8px;
+    text-shadow: none;
+    filter: drop-shadow(0 2px 8px rgba(255, 215, 0, 0.3));
 }
 
 .subtitle {
-    color: var(--text-light);
+    color: #B8A9E8;
     font-size: 1rem;
 }
 
-/* 统计栏 */
+/* 首页用户徽章 - 暗黑风 */
+#home-page .user-badge {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 215, 0, 0.2);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+}
+
+#home-page .user-badge .user-name {
+    color: #E8E0FF;
+}
+
+#home-page .user-badge .switch-hint {
+    color: #8B7EC8;
+}
+
+/* 统计栏 - 暗黑风 */
 .stats-bar {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 10px;
     padding: 15px;
-    background: var(--card-bg);
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 215, 0, 0.1);
     border-radius: var(--radius);
-    box-shadow: var(--shadow);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     margin-bottom: 25px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
 .stat-item {
@@ -411,12 +462,12 @@ button:active, .menu-btn:active, .choice-btn:active {
 .stat-value {
     font-size: 1.3rem;
     font-weight: 700;
-    color: var(--primary);
+    color: #FFD700;
 }
 
 .stat-label {
     font-size: 0.65rem;
-    color: var(--text-light);
+    color: #9B8EC4;
     white-space: nowrap;
 }
 
@@ -424,8 +475,8 @@ button:active, .menu-btn:active, .choice-btn:active {
 .menu-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-    margin-bottom: 25px;
+    gap: 12px;
+    margin-bottom: 0;
 }
 
 .menu-btn {
@@ -433,30 +484,26 @@ button:active, .menu-btn:active, .choice-btn:active {
     flex-direction: column;
     align-items: center;
     padding: 18px 12px;
-    background: var(--card-bg);
-    border: none;
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: var(--radius);
-    box-shadow: var(--shadow);
     cursor: pointer;
     transition: var(--transition);
     text-align: center;
-    /* iOS 风格：微妙的内阴影 */
-    box-shadow:
-        0 1px 3px rgba(0, 0, 0, 0.08),
-        0 4px 12px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
 }
 
 .menu-btn:hover {
     transform: translateY(-1px);
-    box-shadow:
-        0 2px 8px rgba(0, 0, 0, 0.1),
-        0 8px 24px rgba(0, 0, 0, 0.08);
+    background: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3);
 }
 
 .menu-btn:active {
     transform: scale(0.98);
-    box-shadow:
-        0 1px 2px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .menu-icon {
@@ -467,77 +514,51 @@ button:active, .menu-btn:active, .choice-btn:active {
 .menu-title {
     font-size: 1.1rem;
     font-weight: 600;
-    color: var(--text);
+    color: #E8E0FF;
     margin-bottom: 5px;
 }
 
 .menu-desc {
     font-size: 0.75rem;
-    color: var(--text-light);
+    color: #9B8EC4;
 }
 
+/* 副本按钮 - 各有特色的暗色渐变 */
 .xiaojiujiu-btn {
-    background: linear-gradient(135deg, #FFE0E6, #FFCDD2);
-    border: 2px solid #EF5350 !important;
-}
-
-[data-theme="dark"] .xiaojiujiu-btn {
-    background: linear-gradient(135deg, #4E1A1A, #5D2828);
-    border: 2px solid #EF5350 !important;
+    background: linear-gradient(135deg, rgba(183,28,28,0.3), rgba(211,47,47,0.15)) !important;
+    border: 1px solid rgba(239,83,80,0.4) !important;
 }
 
 .times-btn {
-    background: linear-gradient(135deg, #E3F2FD, #BBDEFB);
+    background: linear-gradient(135deg, rgba(21,101,192,0.3), rgba(66,165,245,0.15)) !important;
+    border: 1px solid rgba(66,165,245,0.4) !important;
 }
 
-[data-theme="dark"] .times-btn {
-    background: linear-gradient(135deg, #1A237E, #283593);
-}
-
+/* 工具按钮保留辨识度 */
 .wrong-book-btn {
-    background: linear-gradient(135deg, #FFF5E6, #FFE8CC);
-}
-
-[data-theme="dark"] .wrong-book-btn {
-    background: linear-gradient(135deg, #3D2E1F, #4A3728);
+    background: linear-gradient(135deg, rgba(255,152,0,0.25), rgba(255,183,77,0.1)) !important;
+    border: 1px solid rgba(255,152,0,0.3) !important;
 }
 
 .learn-btn {
-    background: linear-gradient(135deg, #E8F5E9, #C8E6C9);
-}
-
-[data-theme="dark"] .learn-btn {
-    background: linear-gradient(135deg, #1E3D1F, #2E4D2F);
+    background: linear-gradient(135deg, rgba(76,175,80,0.25), rgba(129,199,132,0.1)) !important;
+    border: 1px solid rgba(76,175,80,0.3) !important;
 }
 
 /* 页脚 */
 .home-footer {
     text-align: center;
+    padding: 10px 0 20px;
 }
 
-.quick-start-btn {
-    width: 100%;
-    padding: 18px;
-    margin-bottom: 15px;
-    background: linear-gradient(135deg, var(--primary), var(--primary-light));
-    border: none;
-    border-radius: var(--radius);
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: white;
-    cursor: pointer;
-    transition: var(--transition);
+#home-page .home-footer .link-btn {
+    border-color: rgba(255, 255, 255, 0.15);
+    color: #9B8EC4;
 }
 
-.quick-start-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lg);
-}
-
-.footer-links {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
+#home-page .home-footer .link-btn:hover {
+    border-color: #FFD700;
+    color: #FFD700;
 }
 
 .link-btn {
@@ -2286,24 +2307,44 @@ body.keyboard-active #battle-page .battle-answer-area {
         font-size: 2rem;
     }
 
-    .quick-start-btn {
-        padding: 15px;
-        font-size: 1rem;
-    }
-
-    .footer-links {
-        gap: 10px;
-    }
-
     .link-btn {
         padding: 8px 15px;
         font-size: 0.8rem;
+    }
+
+    .tools-grid {
+        gap: 8px;
+    }
+
+    .tools-grid .menu-btn {
+        padding: 12px 6px;
+    }
+
+    .tools-grid .menu-icon {
+        font-size: 1.6rem;
+    }
+
+    .tools-grid .menu-title {
+        font-size: 0.8rem;
+    }
+
+    .tools-grid .menu-desc {
+        font-size: 0.6rem;
+    }
+
+    .adventure-status {
+        padding: 12px 14px;
+    }
+
+    .adventure-go-btn {
+        padding: 8px 16px;
+        font-size: 0.85rem;
     }
 }
 
 @media (min-width: 768px) {
     .menu-grid {
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(3, 1fr);
     }
 
     .choices {
@@ -4296,4 +4337,220 @@ body.keyboard-active #battle-page .battle-answer-area {
     border-radius: var(--radius-full);
     font-size: 0.75rem;
     font-weight: 700;
+}
+
+/* ===== v13.0 冒险世界样式 ===== */
+
+/* 菜单分区 */
+.menu-section {
+    margin-bottom: 20px;
+}
+
+.menu-section-title {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #8B7EC8;
+    margin-bottom: 10px;
+    padding-left: 4px;
+    letter-spacing: 2px;
+}
+
+/* 工具栏3列布局 */
+.tools-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 25px;
+}
+
+.tools-grid .menu-btn {
+    padding: 14px 8px;
+}
+
+.tools-grid .menu-icon {
+    font-size: 2rem;
+    margin-bottom: 6px;
+}
+
+.tools-grid .menu-title {
+    font-size: 0.9rem;
+}
+
+.tools-grid .menu-desc {
+    font-size: 0.65rem;
+}
+
+/* 每日副本按钮 */
+.daily-dungeon-btn {
+    background: linear-gradient(135deg, #2D1B69, #4A2D8C) !important;
+    border: 2px solid #FFD700 !important;
+    color: white;
+}
+
+.daily-dungeon-btn .menu-title,
+.daily-dungeon-btn .menu-desc {
+    color: white !important;
+}
+
+.daily-dungeon-btn .menu-desc {
+    opacity: 0.85;
+}
+
+[data-theme="dark"] .daily-dungeon-btn {
+    background: linear-gradient(135deg, #1A0E3E, #2D1B69) !important;
+    border: 2px solid #FFD700 !important;
+}
+
+/* 试炼之塔按钮 */
+.trial-tower-btn {
+    background: linear-gradient(135deg, #1B4332, #2D6A4F) !important;
+    border: 2px solid #52B788 !important;
+    color: white;
+}
+
+.trial-tower-btn .menu-title,
+.trial-tower-btn .menu-desc {
+    color: white !important;
+}
+
+.trial-tower-btn .menu-desc {
+    opacity: 0.85;
+}
+
+[data-theme="dark"] .trial-tower-btn {
+    background: linear-gradient(135deg, #0D2818, #1B4332) !important;
+    border: 2px solid #52B788 !important;
+}
+
+/* 冒险状态栏 */
+.adventure-status {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, rgba(108,92,231,0.3), rgba(162,155,254,0.15));
+    border: 1px solid rgba(255, 215, 0, 0.2);
+    border-radius: var(--radius);
+    color: white;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.adventure-status-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.adventure-status-icon {
+    font-size: 1.3rem;
+}
+
+.adventure-status-text {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.adventure-go-btn {
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    border: none;
+    border-radius: var(--radius-full);
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #2D1B69;
+    cursor: pointer;
+    transition: var(--transition);
+    white-space: nowrap;
+}
+
+.adventure-go-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
+}
+
+.adventure-go-btn:active {
+    transform: scale(0.97);
+}
+
+[data-theme="dark"] .adventure-status {
+    background: linear-gradient(135deg, #2D1B69, #4A2D8C);
+    box-shadow: 0 4px 15px rgba(45, 27, 105, 0.5);
+}
+
+/* 头像选择器升级 */
+.avatar-picker {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.avatar-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 10px 8px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: var(--transition);
+    border: 2px solid transparent;
+    min-width: 60px;
+}
+
+.avatar-option:hover {
+    background: var(--bg);
+}
+
+.avatar-option.selected {
+    border-color: var(--primary);
+    background: rgba(108, 92, 231, 0.1);
+}
+
+.avatar-emoji {
+    font-size: 2rem;
+}
+
+.avatar-role {
+    font-size: 0.65rem;
+    color: var(--text-light);
+    font-weight: 500;
+}
+
+.avatar-option.selected .avatar-role {
+    color: var(--primary);
+}
+
+/* 成就摘要 */
+.achievements-summary {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, #6C5CE7, #A29BFE);
+    border-radius: var(--radius);
+    color: white;
+    box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3);
+}
+
+.summary-count {
+    font-size: 2rem;
+    font-weight: 800;
+}
+
+.summary-label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    opacity: 0.9;
+}
+
+[data-theme="dark"] .achievements-summary {
+    background: linear-gradient(135deg, #3D2E8C, #6C5CE7);
+    box-shadow: 0 4px 15px rgba(61, 46, 140, 0.5);
 }
