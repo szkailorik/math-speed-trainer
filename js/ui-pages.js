@@ -304,7 +304,7 @@ function initEventListeners() {
             } else if (module === 'achievements') {
                 renderAchievements();
                 showPage('achievements');
-            } else {
+            } else if (module) {
                 startPractice(module);
             }
         });
