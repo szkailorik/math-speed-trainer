@@ -377,6 +377,7 @@ BattleMode.startBattle = function(difficulty, module) {
     battle.combo = 0;
     battle.maxCombo = 0;
     battle.correctCount = 0;
+    battle.totalDamage = 0;
     battle.noDamageTaken = true;
     battle.healCounter = 0;
     battle.startTime = Date.now();
@@ -1256,8 +1257,10 @@ BattleMode.monsterAttack = function() {
     this.heroHitAnimation(() => {});
 
     const screenFlash = document.getElementById('screen-flash');
-    screenFlash.classList.add('show');
-    setTimeout(() => screenFlash.classList.remove('show'), 300);
+    if (screenFlash) {
+        screenFlash.classList.add('show');
+        setTimeout(() => screenFlash.classList.remove('show'), 300);
+    }
 
     // v15.0: Enraged monsters deal extra damage
     const hpLoss = 1 + enrageDamage;
