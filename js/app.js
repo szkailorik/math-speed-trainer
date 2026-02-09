@@ -122,4 +122,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initialize battle mode
     BattleMode.init();
+
+    // v15.0: Card collection entry
+    document.getElementById('open-card-collection')?.addEventListener('click', () => {
+        BattleMode.openCardCollection();
+    });
+
+    // v15.0: Card collection page events
+    document.getElementById('card-collection-back')?.addEventListener('click', () => {
+        showPage('home');
+        updateHomeStats();
+    });
+
+    document.querySelectorAll('.card-filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.card-filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            BattleMode.renderCardGrid(btn.dataset.filter);
+        });
+    });
 });

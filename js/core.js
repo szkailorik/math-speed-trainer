@@ -160,7 +160,19 @@ const App = {
         shield: 0,
         hasRevive: false,
         itemsUsed: 0,
-        itemsCollected: 0
+        itemsCollected: 0,
+        // v15.0: behavior + card system fields
+        turnCount: 0,
+        monsterEnraged: false,
+        monsterDefending: false,
+        escapePending: false,
+        summonActive: false,
+        dodged: false,
+        cardDropCount: 0,
+        noDamageOnCurrentMonster: true,
+        escapesPrevented: 0,
+        survivedSelfDestruct: 0,
+        bossWithSummonCleared: 0
     }
 };
 

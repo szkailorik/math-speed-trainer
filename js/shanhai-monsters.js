@@ -340,6 +340,45 @@ const shanhaiFractionEasyMonsters = [
         traitEn: 'A small sparrow that shoots ice crystals',
         story: '玄冰雀生活在北极的冰原上，它的羽毛是深蓝色的，每一根都像小冰棍。它最喜欢在暴风雪中飞来飞去，因为那是它的游乐场。',
         storyEn: 'Dark Ice Sparrow lives on Arctic ice fields. Its deep blue feathers each look like tiny popsicles. It loves flying around in blizzards because that\'s its playground.'
+    },
+    {
+        id: 'feng_ling_cao',
+        name: '风铃草',
+        nameEn: 'Wind Chime Grass',
+        emoji: '🌾',
+        hp: 3,
+        type: 'wind',
+        attack: '🌬️',
+        attackName: '风铃之歌',
+        quips: ['叮铃铃~', '听我的歌声~', '风来了!'],
+        behaviors: ['dodge', 'escape'],
+        escapeQuips: ['随风而去~', '飘走啦~'],
+        enterQuips: ['风铃草迎风起舞!', '叮铃叮铃~'],
+        deathQuips: ['风停了...', '铃声...消失了...'],
+        trait: '随风起舞的草灵',
+        traitEn: 'A grass spirit that dances in the wind',
+        story: '风铃草生长在昆仑山的风口，每当微风吹过就会发出美妙的铃声。它用风的力量把分数题吹到远方。',
+        storyEn: 'Wind Chime Grass grows at the windy passes of Kunlun Mountain. It makes beautiful chime sounds with every breeze and uses wind to scatter fraction problems far away.'
+    },
+    {
+        id: 'yun_tu',
+        name: '云兔',
+        nameEn: 'Cloud Rabbit',
+        emoji: '🐇',
+        hp: 4,
+        type: 'light',
+        attack: '☁️',
+        attackName: '云团弹射',
+        quips: ['蹦蹦~', '我在云上!', '抓不到我~'],
+        behaviors: ['dodge', 'fear'],
+        dodgeQuips: ['云上躲避~', '蹦!闪开了!'],
+        fearQuips: ['好厉害...', '太快了...'],
+        enterQuips: ['云兔从天而降!', '蹦蹦跳跳~'],
+        deathQuips: ['云散了...', '蹦不动了...'],
+        trait: '住在云朵里的神奇兔子',
+        traitEn: 'A magical rabbit living in the clouds',
+        story: '云兔住在山海经描述的不周山顶的云层里。它能在云朵间跳来跳去，用云做成软绵绵的数学题让小朋友练习。',
+        storyEn: 'Cloud Rabbit lives in the clouds atop Mount Buzhou. It hops between clouds, making fluffy math problems for kids to practice.'
     }
 ];
 
@@ -719,6 +758,45 @@ const shanhaiFractionNormalMonsters = [
         traitEn: 'A divine serpent that rides mists to fly',
         story: '螣蛇是一种没有翅膀却能飞的神蛇，它靠着云雾就能在天上自由翱翔。它是玄武大帝的部下，经常帮忙传递北方的消息。它飞行的姿态优雅极了。',
         storyEn: 'Teng She is a divine serpent that flies without wings, soaring freely on clouds and mist. It serves the Black Tortoise Emperor, often delivering messages from the north. Its flight is incredibly graceful.'
+    },
+    {
+        id: 'qing_niao_jr',
+        name: '小青鸟',
+        nameEn: 'Little Qingniao',
+        emoji: '🦜',
+        hp: 5,
+        type: 'wind',
+        attack: '🪶',
+        attackName: '羽刃飞舞',
+        quips: ['啾啾~', '看我的翅膀!', '飞起来!'],
+        behaviors: ['taunt', 'dodge'],
+        tauntQuips: ['飞不到这里吧~', '太慢了!啾!'],
+        enterQuips: ['小青鸟翩翩飞来!', '啾啾~我来了!'],
+        deathQuips: ['翅膀...折了...', '飞不动了...'],
+        trait: '西王母的信使小鸟',
+        traitEn: 'A messenger bird of the Queen Mother of the West',
+        story: '小青鸟是西王母的信使。它的翅膀是翡翠色的，飞行速度极快，经常帮助传递分数题的答案。',
+        storyEn: 'Little Qingniao is the messenger of the Queen Mother. With jade-green wings and incredible speed, it often helps deliver fraction answers.'
+    },
+    {
+        id: 'shi_shi',
+        name: '石狮子',
+        nameEn: 'Stone Lion',
+        emoji: '🦁',
+        hp: 6,
+        type: 'rock',
+        attack: '🪨',
+        attackName: '石头粉碎',
+        quips: ['吼!', '坚不可摧!', '石拳!'],
+        behaviors: ['defend', 'enrage'],
+        defendQuips: ['石头防御!', '打不动的!'],
+        enrageQuips: ['吼!!石狮发怒!', '碎!'],
+        enterQuips: ['石狮子苏醒了!', '千年石像动了!'],
+        deathQuips: ['碎了...', '千年守护...结束了...'],
+        trait: '千年石像苏醒的守护者',
+        traitEn: 'A thousand-year stone guardian awakened',
+        story: '石狮子原本是守护山海经入口的石像，修炼千年后获得了生命。它用坚硬的身体挡住分数题，只有答对才能通过。',
+        storyEn: 'Stone Lion was originally a stone statue guarding Shanhaijing\'s entrance, gaining life after a thousand years of cultivation. It blocks fraction problems with its hard body - answer correctly to pass.'
     }
 ];
 
@@ -963,6 +1041,26 @@ const shanhaiFractionHardMonsters = [
         traitEn: 'The ancient war god with a bronze head and iron forehead',
         story: '蚩尤是上古九黎族的首领，有铜做的头和铁做的额头，刀枪不入。他有八十一个兄弟，个个勇猛无比。他和黄帝在涿鹿之野打了一场惊天动地的大战。虽然最终战败，但他的勇武让人敬佩。',
         storyEn: 'Chi You was leader of the ancient Jiuli tribe with a bronze head and iron forehead, impervious to weapons. He had 81 equally mighty brothers. He fought the Yellow Emperor in the legendary Battle of Zhuolu. Though defeated, his valor earned eternal respect.'
+    },
+    {
+        id: 'xuan_gui_shen',
+        name: '玄龟',
+        nameEn: 'Xuan Gui',
+        emoji: '🐢',
+        hp: 7,
+        type: 'water',
+        attack: '💧',
+        attackName: '龟波冲击',
+        quips: ['慢...慢来...', '急什么~', '老龟有的是时间'],
+        behaviors: ['defend', 'heal'],
+        healQuips: ['龟息养生~', '回复了~'],
+        defendQuips: ['龟壳坚如铁!', '防!'],
+        enterQuips: ['玄龟缓缓爬来...', '千年老龟驾到'],
+        deathQuips: ['龟甲...裂了...', '千年修行...'],
+        trait: '背负山河的古老神龟',
+        traitEn: 'An ancient divine turtle carrying mountains and rivers',
+        story: '玄龟是山海经中记载的神龟，它的龟壳上刻满了分数公式。据说它的龟壳是用不老石制成，坚不可摧。',
+        storyEn: 'Xuan Gui is a divine turtle from Shanhaijing, its shell carved with fraction formulas. Legend says its shell is made of ageless stone, completely indestructible.'
     }
 ];
 
@@ -1102,5 +1200,26 @@ const shanhaiFractionBossMonsters = [
         traitEn: 'An ancient war god who fights on headless',
         story: '刑天是一位勇猛的战神，他和天帝争斗时被砍掉了头。但他没有倒下，而是用胸口的两个乳头当眼睛，用肚脐当嘴巴，继续挥舞着斧头和盾牌战斗。他的精神告诉我们：永不放弃！',
         storyEn: 'Xing Tian was a mighty war god who lost his head fighting the Emperor of Heaven. But he didn\'t fall - he used his nipples as eyes and navel as a mouth, continuing to fight with axe and shield. His spirit teaches us: never give up!'
+    },
+    {
+        id: 'shan_hai_shou',
+        name: '山海兽',
+        nameEn: 'Shanhai Beast',
+        emoji: '🐉',
+        hp: 10,
+        type: 'ancient',
+        attack: '⚡',
+        attackName: '山海之怒',
+        quips: ['天地之力!', '山海为我怒!', '不可能输!'],
+        behaviors: ['defend', 'summon', 'enrage'],
+        defendQuips: ['山的力量!不可摧!', '海的守护!'],
+        summonQuips: ['山海妖兽，听我号令!', '万兽朝拜!'],
+        enrageQuips: ['山崩!!地裂!!', '愤怒的山海!!'],
+        enterQuips: ['山海兽从远古苏醒!', '天地为之震动!'],
+        deathQuips: ['山...海...归于平静...', '远古之力...消散了...'],
+        trait: '统治山海的远古神兽',
+        traitEn: 'An ancient divine beast ruling mountains and seas',
+        story: '山海兽是山海经中最强大的存在，据说它的一声怒吼能让山崩地裂。只有集齐所有分数知识才能挑战它！',
+        storyEn: 'Shanhai Beast is the most powerful being in Shanhaijing. Its roar can shatter mountains. Only those who master all fraction knowledge can challenge it!'
     }
 ];

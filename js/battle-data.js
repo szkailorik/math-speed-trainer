@@ -118,6 +118,29 @@ const BattleMode = {
             story: '怪怪球是从外星来地球学习"地球数学"的小外星人。在它的星球上，1+1=3！所以它来地球重新学习数学。现在它已经是九九乘法表的专家了，经常发信息回母星分享学习心得。',
             storyEn: 'Weird Ball is an alien who came to Earth to learn "Earth Math." On its planet, 1+1=3! So it came to relearn math. Now it\'s an expert at times tables and often sends messages home sharing what it learned.'
         },
+        // v15.0 新增怪兽
+        {
+            id: 'moji_cat', name: '墨迹猫', emoji: '🐱', hp: 3, type: 'psychic',
+            attack: '🐾', attackName: '墨爪印', quips: ['喵~', '我来涂鸦~', '墨墨哒!'],
+            behaviors: ['dodge', 'taunt'],
+            tauntQuips: ['喵哈哈~你好笨!', '这都算不对?', '猫猫看不起你~'],
+            enterQuips: ['喵~墨迹猫参上!', '准备被我涂黑吧!'],
+            deathQuips: ['喵...被擦掉了...', '我的墨水...'],
+            trait: '用墨水作画的淘气猫', traitEn: 'A naughty cat that paints with ink',
+            story: '墨迹猫全身黑乎乎的，走到哪里都会留下墨水脚印。它最喜欢在数学作业上涂鸦，把算式变成有趣的图画。',
+            storyEn: 'Ink Cat is all black and leaves inky pawprints everywhere. It loves doodling on math homework, turning equations into fun drawings.'
+        },
+        {
+            id: 'bubble_frog', name: '泡泡蛙', emoji: '🐸', hp: 4, type: 'water',
+            attack: '🫧', attackName: '泡泡弹', quips: ['呱呱~', '泡泡攻击!', '吹泡泡~'],
+            behaviors: ['dodge', 'escape'],
+            escapeQuips: ['呱!溜了溜了~', '水里见!'],
+            enterQuips: ['呱呱~泡泡蛙来啦!', '吹泡泡咯!'],
+            deathQuips: ['泡泡...破了...', '呱呜...'],
+            trait: '爱吹泡泡的小青蛙', traitEn: 'A little frog that loves blowing bubbles',
+            story: '泡泡蛙住在九九潭里，它能吹出装着数字的泡泡。如果你能算对泡泡里的算式，泡泡就会变成彩虹色！',
+            storyEn: 'Bubble Frog lives in Times Pond, blowing bubbles filled with numbers. If you solve the equation in a bubble, it turns rainbow-colored!'
+        },
     ],
 
     // 中级怪兽（普通模式用）- HP 4-6
@@ -263,6 +286,29 @@ const BattleMode = {
             story: '毒蜂王统领着一万只工蜂，每只工蜂都负责记住一个算式。需要答案时，蜜蜂们就会排列成正确的数字形状！它们酿的"知识蜜"喝一口就能记住一整页公式。',
             storyEn: 'Bee Queen commands 10,000 worker bees, each memorizing one equation. When an answer is needed, bees arrange into the correct number shape! Their "knowledge honey" helps you memorize a whole page of formulas with one sip.'
         },
+        // v15.0 新增怪兽
+        {
+            id: 'clock_spirit', name: '时钟精灵', emoji: '⏰', hp: 5, type: 'psychic',
+            attack: '⏳', attackName: '时间暂停', quips: ['滴答滴答~', '时间到!', '赶快赶快!'],
+            behaviors: ['taunt', 'enrage'],
+            tauntQuips: ['太慢了!时间不等人!', '滴答滴答~倒计时!'],
+            enterQuips: ['叮当!时钟精灵报时!', '几点了?战斗时间到!'],
+            deathQuips: ['时间...停止了...', '滴...答...'],
+            trait: '掌控时间的精灵', traitEn: 'A spirit that controls time',
+            story: '时钟精灵住在魔法学校的大钟楼里。它喜欢用倒计时催促小朋友做算术，但其实它只是太兴奋了想看答案。',
+            storyEn: 'Clock Spirit lives in the magic school\'s clock tower. It loves using countdowns to rush kids doing arithmetic, but it\'s really just excited to see the answers.'
+        },
+        {
+            id: 'puzzle_cube', name: '魔方怪', emoji: '🧊', hp: 5, type: 'steel',
+            attack: '🔲', attackName: '方块碾压', quips: ['转转转~', '你能解开我吗?', '六面都是陷阱!'],
+            behaviors: ['defend', 'taunt'],
+            defendQuips: ['铁壁防御!', '打不破的!'],
+            enterQuips: ['魔方怪旋转登场!', '来解一解我吧!'],
+            deathQuips: ['散架了...', '零件掉了...'],
+            trait: '不断旋转变形的方块', traitEn: 'A constantly rotating and transforming cube',
+            story: '魔方怪是由九九乘法表凝聚而成的立方体妖怪。它身上每一面都刻着不同的算式，只有全部答对才能让它停止旋转。',
+            storyEn: 'Puzzle Cube is a cubic monster formed from the times table. Each face is carved with different equations - answer them all to stop its spinning.'
+        },
     ],
 
     // 高级怪兽（困难模式用）- HP 6-8
@@ -349,6 +395,30 @@ const BattleMode = {
             story: '沙蝎王统治着沙漠中的数学金字塔。金字塔的每一层都藏着数学谜题，从底层的加减法到顶层的乘除法。它的毒刺不会伤人，只会让被刺中的人暂时只能思考数学题！',
             storyEn: 'Scorpion King rules the math pyramid in the desert. Each level holds math puzzles, from addition at the bottom to division at the top. Its stinger doesn\'t hurt - it just makes you temporarily think only about math!'
         },
+        // v15.0 新增怪兽
+        {
+            id: 'storm_dragon_jr', name: '小暴龙', emoji: '🐲', hp: 7, type: 'dragon',
+            attack: '🌪️', attackName: '龙卷风暴', quips: ['吼!!', '烧！', '龙之怒!'],
+            behaviors: ['enrage', 'defend'],
+            enterQuips: ['小暴龙降临!', '颤抖吧!'],
+            deathQuips: ['吼...下次一定...', '龙不会认输!'],
+            enrageQuips: ['暴怒!!加攻!', '不要惹龙!'],
+            trait: '脾气火爆的小龙', traitEn: 'A small dragon with a fiery temper',
+            story: '小暴龙是龙族中年纪最小的一只。虽然个子不大，但脾气特别大！它觉得数学题就像龙的宝藏一样需要守护。',
+            storyEn: 'Storm Dragon Jr. is the youngest of the dragon clan. Though small, it has a huge temper! It thinks math problems are dragon treasure that must be guarded.'
+        },
+        {
+            id: 'crystal_spider', name: '水晶蜘蛛', emoji: '🕷️', hp: 7, type: 'ice',
+            attack: '🕸️', attackName: '冰丝缠绕', quips: ['嘶嘶~', '被我网住了!', '冰冰凉~'],
+            behaviors: ['dodge', 'fear'],
+            dodgeQuips: ['嘿嘿~闪开了!', '蛛丝太快了~'],
+            fearQuips: ['好...好可怕的连击...', '不要再答了!'],
+            enterQuips: ['水晶蜘蛛结网中...', '我的丝线比钢铁还硬!'],
+            deathQuips: ['丝线...断了...', '我的水晶网...'],
+            trait: '用冰晶丝结网的蜘蛛', traitEn: 'A spider that weaves webs of crystal ice',
+            story: '水晶蜘蛛的丝线是用纯净的冰晶制成的，阳光下闪闪发光。它编织的蛛网上写满了数学公式，像一幅美丽的艺术品。',
+            storyEn: 'Crystal Spider\'s silk is made of pure ice crystal, sparkling in sunlight. Its web is covered with math formulas, like a beautiful work of art.'
+        },
     ],
 
     // Boss怪兽（困难模式最终关卡）- HP 8-12 - 恐怖但可爱的终极Boss
@@ -394,6 +464,20 @@ const BattleMode = {
             trait: '九九乘法表的终极守护者', traitEn: 'Ultimate guardian of the times tables',
             story: '九九魔王是数学世界最强的Boss，但它其实是个老好人！它故意装得很凶，是为了激励小朋友努力学习打败它。每次被击败它都很开心，因为这意味着又有一个孩子掌握了乘法表。它的愿望是被全世界的小朋友都打败！',
             storyEn: 'Times Table King is Math World\'s strongest boss, but it\'s actually a nice guy! It acts fierce to motivate kids to study hard and defeat it. It\'s happy when beaten because it means another child mastered times tables. Its wish is to be defeated by every child in the world!'
+        },
+        // v15.0 新增Boss
+        {
+            id: 'math_king', name: '算术之王', emoji: '👑', hp: 10, type: 'dragon',
+            attack: '⚔️', attackName: '王者审判', quips: ['跪下!', '无人能敌!', '数学之王降临!'],
+            behaviors: ['defend', 'summon', 'enrage'],
+            defendQuips: ['王者不可侵犯!', '铜墙铁壁!'],
+            summonQuips: ['小的们，上!', '卫兵来了!'],
+            enrageQuips: ['放肆!!', '算术之王的怒火!'],
+            enterQuips: ['算术之王驾到!', '万兽臣服!'],
+            deathQuips: ['不可能...王者怎么会输...', '记住这个名字...算术之王!'],
+            trait: '统治九九王国的霸主', traitEn: 'The overlord ruling the Kingdom of Times Tables',
+            story: '算术之王是九九乘法表的最终守护者。它头戴金冠，手持算式权杖，统治着整个数学王国。只有最勇敢、最聪明的小勇者才能挑战它！',
+            storyEn: 'Math King is the ultimate guardian of the times table. Wearing a golden crown and wielding an equation scepter, it rules the entire Math Kingdom. Only the bravest and smartest heroes can challenge it!'
         },
     ],
 

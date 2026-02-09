@@ -993,6 +993,23 @@ const MathData = {
         { id: 'collect_100', name: '百妖全书', desc: '收集100只妖怪', icon: '📚', special: 'collect_100' },
         { id: 'collect_200', name: '传说收藏家', desc: '收集200只妖怪', icon: '🏛️', special: 'collect_200' },
         { id: 'collect_all', name: '万妖之主', desc: '收集全部妖怪', icon: '👑', special: 'collect_all' },
+        // v15.0: 卡牌系统成就
+        { id: 'card_first', name: '初次掉落', desc: '获得第一张卡牌', icon: '🃏', special: 'card_first' },
+        { id: 'card_10', name: '小小收藏家', desc: '收集10张卡牌', icon: '📇', special: 'card_10' },
+        { id: 'card_50', name: '卡牌猎人', desc: '收集50张卡牌', icon: '🗃️', special: 'card_50' },
+        { id: 'card_100', name: '百卡齐聚', desc: '收集100张卡牌', icon: '📦', special: 'card_100' },
+        { id: 'card_all', name: '全卡大师', desc: '收集全部143张卡牌', icon: '🏆', special: 'card_all' },
+        { id: 'card_sr', name: '紫光闪耀', desc: '获得一张SR卡牌', icon: '💜', special: 'card_sr' },
+        { id: 'card_ssr', name: '金光万丈', desc: '获得一张SSR卡牌', icon: '💛', special: 'card_ssr' },
+        { id: 'card_ur', name: '传说降临', desc: '获得一张UR卡牌', icon: '🌈', special: 'card_ur' },
+        // v15.0: 怪物行为成就
+        { id: 'dodge_master', name: '看破闪避', desc: '阻止怪物闪避3次', icon: '👁️', special: 'dodge_master' },
+        { id: 'survive_destruct', name: '绝处逢生', desc: '在怪物自爆中存活', icon: '💥', special: 'survive_destruct' },
+        { id: 'no_escape', name: '无路可逃', desc: '阻止怪物逃跑3次', icon: '🚫', special: 'no_escape' },
+        { id: 'boss_summon_clear', name: '清场大师', desc: '击败使用召唤的Boss', icon: '🗡️', special: 'boss_summon_clear' },
+        { id: 'enrage_kill', name: '怒而斩之', desc: '击败愤怒状态的怪物', icon: '😤', special: 'enrage_kill' },
+        { id: 'perfect_stage', name: '完美关卡', desc: '无伤击败一只怪物', icon: '✨', special: 'perfect_stage' },
+        { id: 'behavior_all', name: '见多识广', desc: '见证所有9种怪物行为', icon: '📔', special: 'behavior_all' },
     ]
 };
 

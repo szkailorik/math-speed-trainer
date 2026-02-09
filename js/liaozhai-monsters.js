@@ -192,6 +192,42 @@ const liaozhaiEasyMonsters = [
         traitEn: 'Beautiful',
         story: '香玉精是一朵白牡丹花变成的小精灵，浑身散发着花香，人见人爱。',
         storyEn: 'Fragrant Jade Spirit is a little sprite born from a white peony, spreading sweet fragrance everywhere.'
+    },
+    {
+        id: 'zhi_nv_hua',
+        name: '纸女花',
+        nameEn: 'Paper Flower Girl',
+        emoji: '🌸',
+        hp: 3,
+        type: 'ghost',
+        attack: 1,
+        attackName: '纸花飘舞',
+        quips: ['飘飘~', '花瓣雨~'],
+        behaviors: ['dodge', 'fear'],
+        enterQuips: ['纸女花飘来了~'],
+        deathQuips: ['纸碎了...'],
+        trait: '飘逸',
+        traitEn: 'Ethereal',
+        story: '纸女花是被灵气浸染的纸扎花变成的小精灵，薄薄的身体在风中翩翩起舞。她最怕下雨，因为一淋湿就会软掉。',
+        storyEn: 'Paper Flower Girl is a sprite born from a paper flower infused with spiritual energy, dancing in the wind with her paper-thin body. She fears rain most — getting wet makes her go all floppy.'
+    },
+    {
+        id: 'deng_long_gui',
+        name: '灯笼鬼',
+        nameEn: 'Lantern Ghost',
+        emoji: '🏮',
+        hp: 4,
+        type: 'fire',
+        attack: 1,
+        attackName: '鬼火照',
+        quips: ['嘻嘻~', '亮了!'],
+        behaviors: ['taunt', 'dodge'],
+        enterQuips: ['灯笼鬼提灯来了!'],
+        deathQuips: ['灯灭了...'],
+        trait: '照明',
+        traitEn: 'Illuminating',
+        story: '灯笼鬼是一盏被遗弃在古庙里的红灯笼成精的，每天晚上都提着自己到处晃悠给路人照明。它其实心地善良，就是长得有点吓人。',
+        storyEn: 'Lantern Ghost is a red lantern abandoned in an old temple that gained sentience. Every night it wanders around lighting the way for travelers. It\'s actually kind-hearted, just a bit scary-looking.'
     }
 ];
 
@@ -406,6 +442,42 @@ const liaozhaiNormalMonsters = [
         traitEn: 'Cunning',
         story: '蛇精是条修炼多年的大蛇变的，虽然看起来吓人，但其实特别怕冷。',
         storyEn: 'Snake Spirit is a great serpent who practiced for years — looks scary but is actually terrified of the cold.'
+    },
+    {
+        id: 'shu_yao',
+        name: '书妖',
+        nameEn: 'Book Demon',
+        emoji: '📚',
+        hp: 5,
+        type: 'psychic',
+        attack: 1,
+        attackName: '知识风暴',
+        quips: ['读书!', '知识就是力量!'],
+        behaviors: ['defend', 'taunt'],
+        enterQuips: ['书妖翻开了!'],
+        deathQuips: ['合上了...'],
+        trait: '博学',
+        traitEn: 'Scholarly',
+        story: '书妖是书房里堆积如山的古书化成的精怪，满肚子都是知识，说起话来文绉绉的。它最爱考人背诗词，答对了就放你走，答错了就用书砸你。',
+        storyEn: 'Book Demon was born from towering piles of ancient books in a study, full of knowledge and speaking in classical prose. It loves quizzing people on poetry — get it right and you pass, get it wrong and it pelts you with books.'
+    },
+    {
+        id: 'jiu_wei_ling',
+        name: '九尾铃',
+        nameEn: 'Nine-Tail Bell',
+        emoji: '🔔',
+        hp: 5,
+        type: 'fairy',
+        attack: 1,
+        attackName: '铃音惑心',
+        quips: ['叮当~', '迷失吧~'],
+        behaviors: ['dodge', 'heal'],
+        enterQuips: ['九尾铃响了!'],
+        deathQuips: ['铃声停了...'],
+        trait: '迷幻',
+        traitEn: 'Mesmerizing',
+        story: '九尾铃是一串被狐仙佩戴过的铃铛成精的，每条尾巴尖上都挂着一个小铃铛。它的铃声特别好听，听了会让人迷迷糊糊，忘掉烦恼，也忘掉回家的路。',
+        storyEn: 'Nine-Tail Bell is a string of bells once worn by a fox immortal that gained sentience. Each tail tip has a tiny bell. Its chimes are enchanting — they make listeners forget their worries, but also forget the way home.'
     }
 ];
 
@@ -590,6 +662,24 @@ const liaozhaiHardMonsters = [
         traitEn: 'Motherly',
         story: '鬼母是个很慈祥的老鬼婆，最喜欢照顾小鬼们，给他们做好吃的鬼点心。',
         storyEn: 'Ghost Mother is a kindly old ghost granny who loves caring for little ghosts and making them spooky snacks.'
+    },
+    {
+        id: 'tie_gui',
+        name: '铁鬼',
+        nameEn: 'Iron Ghost',
+        emoji: '🤖',
+        hp: 7,
+        type: 'steel',
+        attack: 2,
+        attackName: '铁拳制裁',
+        quips: ['铿锵!', '钢铁之心!'],
+        behaviors: ['defend', 'enrage'],
+        enterQuips: ['铁鬼震步而来!'],
+        deathQuips: ['锈蚀了...'],
+        trait: '坚硬',
+        traitEn: 'Ironclad',
+        story: '铁鬼是一副被冤魂附身的古代铁甲变成的，走起路来铿锵作响。它的身体坚硬无比，普通武器打上去只会发出叮当声。虽然力大无穷，但它最怕生锈，下雨天都不敢出门。',
+        storyEn: 'Iron Ghost is an ancient suit of iron armor possessed by a wronged spirit, clanking with every step. Its body is incredibly hard — ordinary weapons just bounce off with a clang. Despite its great strength, it fears rusting and refuses to go out on rainy days.'
     }
 ];
 
@@ -684,6 +774,24 @@ const liaozhaiBossMonsters = [
         traitEn: 'Formidable',
         story: '钟馗是鬼王，长得很凶但心地善良，专门抓坏鬼保护好人，是小朋友的守护神。',
         storyEn: 'Zhong Kui is the Ghost King — looks fierce but has a good heart, catching bad ghosts and protecting good people.'
+    },
+    {
+        id: 'yan_luo_wang',
+        name: '阎罗判官',
+        nameEn: 'Yama Judge',
+        emoji: '👹',
+        hp: 10,
+        type: 'demon',
+        attack: 3,
+        attackName: '生死簿判',
+        quips: ['判!', '生死由我!'],
+        behaviors: ['defend', 'summon', 'selfDestruct'],
+        enterQuips: ['阎罗判官升堂!', '地府之门已开!'],
+        deathQuips: ['判决...无效...', '地府...'],
+        trait: '威严',
+        traitEn: 'Imposing',
+        story: '阎罗判官是地府中执掌生死簿的大判官，一笔一划决定凡人的命运。他看起来凶神恶煞，但其实是个公正无私的好官。他最头疼的事是——每次有人阳寿未尽就跑来地府参观，他还得亲自把人送回去。',
+        storyEn: 'Yama Judge is the great judge of the underworld who wields the Book of Life and Death, deciding mortals\' fates with every stroke. He looks terrifying but is actually fair and just. His biggest headache: people whose time hasn\'t come yet keep showing up for tours of the underworld, and he has to personally escort them back.'
     }
 ];
 

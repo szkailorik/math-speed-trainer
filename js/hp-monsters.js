@@ -313,6 +313,42 @@ const hpEasyMonsters = [
         traitEn: 'Tricky',
         story: '格林迪洛是住在水底的绿色小水鬼，最爱用长长的手指抓住游泳的人！',
         storyEn: 'Grindylows are green water demons who love grabbing swimmers with their long fingers!'
+    },
+    {
+        id: 'pixie',
+        name: '小仙灵',
+        nameEn: 'Pixie',
+        emoji: '🧚',
+        hp: 3,
+        type: 'fairy',
+        attack: 1,
+        attackName: '仙尘撒',
+        quips: ['嘻嘻~', '仙尘!'],
+        behaviors: ['dodge', 'escape'],
+        enterQuips: ['小仙灵飞来了!'],
+        deathQuips: ['仙尘...散了...'],
+        trait: '灵动',
+        traitEn: 'Nimble',
+        story: '小仙灵是霍格沃茨花园里的小精灵，比康沃尔郡小矮妖温柔多了。它喜欢在月光下撒仙尘，让花朵在夜晚也能绽放。',
+        storyEn: 'The Pixie is a garden sprite at Hogwarts, much gentler than Cornish Pixies. It loves sprinkling fairy dust under moonlight, making flowers bloom even at night.'
+    },
+    {
+        id: 'niffler_jr',
+        name: '小嗅嗅',
+        nameEn: 'Baby Niffler',
+        emoji: '🦔',
+        hp: 4,
+        type: 'ground',
+        attack: 1,
+        attackName: '金币投掷',
+        quips: ['闪亮!', '我的宝贝!'],
+        behaviors: ['taunt', 'escape'],
+        enterQuips: ['小嗅嗅出现了!'],
+        deathQuips: ['我的金币...'],
+        trait: '贪玩',
+        traitEn: 'Playful',
+        story: '小嗅嗅是嗅嗅的宝宝，比爸爸还贪财！它的小口袋里塞满了从各处偷来的闪亮东西，走起路来叮当作响，像一个移动的首饰盒。',
+        storyEn: 'Baby Niffler is a Niffler\'s baby, even more treasure-obsessed than its parent! Its tiny pouch is stuffed with stolen shiny things, jingling with every step like a walking jewelry box.'
     }
 ];
 
@@ -677,6 +713,42 @@ const hpNormalMonsters = [
         traitEn: 'Cowardly',
         story: '牙牙是海格的大猎犬，看起来很凶但其实胆子比兔子还小，最爱舔人！',
         storyEn: 'Fang is Hagrid\'s huge boarhound who looks fierce but is actually a big coward who loves licking people!'
+    },
+    {
+        id: 'boggart_jr',
+        name: '小博格特',
+        nameEn: 'Baby Boggart',
+        emoji: '🎭',
+        hp: 5,
+        type: 'ghost',
+        attack: 1,
+        attackName: '恐惧幻象',
+        quips: ['怕了吧?', '变!'],
+        behaviors: ['dodge', 'taunt'],
+        enterQuips: ['柜子打开了...'],
+        deathQuips: ['变不了了...'],
+        trait: '变形',
+        traitEn: 'Shape-shifting',
+        story: '小博格特是一只还没学会怎么好好吓人的博格特宝宝。它会变成你最怕的东西，但因为太小了，变出来的东西也是迷你版的，反而有点可爱。',
+        storyEn: 'Baby Boggart is a young Boggart that hasn\'t learned to scare properly yet. It transforms into your worst fear, but since it\'s so small, everything comes out in miniature — actually kind of cute.'
+    },
+    {
+        id: 'mandrake',
+        name: '曼德拉草',
+        nameEn: 'Mandrake',
+        emoji: '🌱',
+        hp: 5,
+        type: 'grass',
+        attack: 1,
+        attackName: '尖叫攻击',
+        quips: ['啊啊啊!', '拔出来了!'],
+        behaviors: ['taunt', 'fear'],
+        enterQuips: ['曼德拉草被拔出来了!'],
+        deathQuips: ['安静了...'],
+        trait: '吵闹',
+        traitEn: 'Screaming',
+        story: '曼德拉草是一种长得像婴儿的植物，被拔出来的时候会发出震天的尖叫。草药学课上，每个学生都要戴着耳罩才敢碰它！',
+        storyEn: 'The Mandrake is a plant that looks like a baby and screams ear-splittingly when uprooted. In Herbology class, every student needs earmuffs before daring to touch one!'
     }
 ];
 
@@ -951,6 +1023,24 @@ const hpHardMonsters = [
         traitEn: 'Extremely Dangerous',
         story: '暝度是世界上最危险的魔法生物之一，像巨型豹子，呼出的气能传播瘟疫！',
         storyEn: 'The Nundu is one of the most dangerous magical beasts - a giant leopard whose breath spreads disease!'
+    },
+    {
+        id: 'thestral',
+        name: '夜骐',
+        nameEn: 'Thestral',
+        emoji: '🐴',
+        hp: 7,
+        type: 'dark',
+        attack: 2,
+        attackName: '暗影冲锋',
+        quips: ['...', '看不见我...'],
+        behaviors: ['dodge', 'fear'],
+        enterQuips: ['夜骐从暗影中现身...'],
+        deathQuips: ['融入黑暗...'],
+        trait: '神秘',
+        traitEn: 'Mysterious',
+        story: '夜骐是一种只有见过死亡的人才能看到的骨瘦嶙峋的飞马。虽然看起来很吓人，但其实它们非常温柔聪明，是很好的坐骑。',
+        storyEn: 'Thestrals are skeletal winged horses visible only to those who have witnessed death. Though they look frightening, they\'re actually very gentle and intelligent — excellent mounts.'
     }
 ];
 
@@ -1105,6 +1195,24 @@ const hpBossMonsters = [
         traitEn: 'Uncontrollable',
         story: '默默然是被压抑的魔力形成的可怕黑暗力量，一旦爆发能毁灭整条街！',
         storyEn: 'An Obscurus is suppressed magic turned into a terrifying dark force that can destroy entire streets!'
+    },
+    {
+        id: 'basilisk_jr',
+        name: '小蛇怪',
+        nameEn: 'Baby Basilisk',
+        emoji: '🐍',
+        hp: 10,
+        type: 'poison',
+        attack: 3,
+        attackName: '石化凝视',
+        quips: ['嘶嘶...', '别看我的眼睛!'],
+        behaviors: ['defend', 'summon', 'selfDestruct'],
+        enterQuips: ['密室的大门打开了...', '小蛇怪苏醒了!'],
+        deathQuips: ['嘶...倒下了...', '密室关闭了...'],
+        trait: '致命',
+        traitEn: 'Lethal',
+        story: '小蛇怪是密室中蛇怪巴西利斯克的幼崽，虽然还小但已经拥有恐怖的石化凝视能力。不过因为还是宝宝，它的石化只能持续几秒钟，而且它自己经常不小心照到镜子把自己石化。',
+        storyEn: 'Baby Basilisk is a young offspring of the Chamber\'s Basilisk. Though still small, it already has the terrifying petrifying gaze. But since it\'s still a baby, its petrification only lasts a few seconds, and it often accidentally catches its own reflection and petrifies itself.'
     }
 ];
 

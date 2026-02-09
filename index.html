@@ -38,7 +38,7 @@
     <link rel="apple-touch-startup-image" href="icons/splash.png">
 
     <title>数学魔法学院</title>
-    <link rel="stylesheet" href="css/style.css?v=13.1">
+    <link rel="stylesheet" href="css/style.css?v=14.0">
 </head>
 <body>
     <!-- 主页面 -->
@@ -220,6 +220,12 @@
                         <span class="menu-icon">🏅</span>
                         <span class="menu-title">成就殿堂</span>
                         <span class="menu-desc">查看成就与收集</span>
+                    </button>
+
+                    <button class="menu-btn card-collection-btn" id="open-card-collection">
+                        <span class="menu-icon">🃏</span>
+                        <span class="menu-title">卡牌图鉴</span>
+                        <span class="menu-desc">收集战斗掉落卡牌</span>
                     </button>
                 </div>
             </div>
@@ -937,22 +943,29 @@
                     <span class="stage-number" id="battle-stage">1</span>
                     <span class="stage-total">/4</span>
                 </div>
-                <div class="player-hp-area">
+                <div class="battle-header-right">
+                    <span class="card-counter" id="battle-card-count">🃏 0</span>
                     <span class="hp-hearts" id="player-hearts">❤️❤️❤️❤️❤️</span>
                 </div>
             </header>
 
-            <!-- 怪兽区域 -->
-            <div class="monster-area" id="monster-area">
-                <div class="monster-name" id="monster-name">噗噗鬼</div>
-                <div class="monster-container">
-                    <div class="monster-emoji" id="monster-emoji">👻</div>
+            <!-- 第三人称对战舞台 -->
+            <div class="battle-arena">
+                <div class="arena-ground"></div>
+                <div class="hero-side">
+                    <div class="hero-emoji hero-idle">🧙</div>
+                    <div class="hero-name">勇者</div>
+                </div>
+                <div class="attack-zone"></div>
+                <div class="enemy-side">
+                    <div class="monster-emoji enemy-idle" id="monster-emoji">👻</div>
+                    <div class="monster-name" id="monster-name">噗噗鬼</div>
                     <div class="monster-hp-bar">
                         <div class="monster-hp-fill" id="monster-hp-fill"></div>
                         <span class="monster-hp-text" id="monster-hp-text">5/5</span>
                     </div>
+                    <div class="damage-numbers" id="damage-numbers"></div>
                 </div>
-                <div class="damage-numbers" id="damage-numbers"></div>
             </div>
 
             <!-- 武器飞行区域 -->
@@ -1202,20 +1215,53 @@
         </div>
     </div>
 
-    <script src="js/data.js?v=14.0"></script>
-    <script src="js/shanhai-monsters.js?v=14.0"></script>
-    <script src="js/xiyouji-monsters.js?v=14.0"></script>
-    <script src="js/fengshen-monsters.js?v=14.0"></script>
-    <script src="js/liaozhai-monsters.js?v=14.0"></script>
-    <script src="js/hp-monsters.js?v=14.0"></script>
-    <script src="js/core.js?v=14.0"></script>
-    <script src="js/effects.js?v=14.0"></script>
-    <script src="js/practice.js?v=14.0"></script>
-    <script src="js/daily.js?v=14.0"></script>
-    <script src="js/ui-pages.js?v=14.0"></script>
-    <script src="js/battle-data.js?v=14.0"></script>
-    <script src="js/battle-collection.js?v=14.0"></script>
-    <script src="js/battle-combat.js?v=14.0"></script>
-    <script src="js/app.js?v=14.0"></script>
+    <!-- 卡牌图鉴页 -->
+    <div id="card-collection-page" class="page">
+        <header class="page-header">
+            <button class="back-btn" id="card-collection-back">← 返回</button>
+            <h2>🃏 卡牌图鉴</h2>
+        </header>
+        <div class="card-collection-content">
+            <div class="card-collection-header">
+                <div class="card-progress">
+                    <span>收集进度: </span>
+                    <span id="card-collection-progress">0/124</span>
+                </div>
+                <div class="card-progress-bar">
+                    <div class="card-progress-fill" id="card-progress-fill"></div>
+                </div>
+            </div>
+            <div class="card-filter-tabs">
+                <button class="card-filter-btn active" data-filter="all">全部</button>
+                <button class="card-filter-btn" data-filter="N">N</button>
+                <button class="card-filter-btn" data-filter="R">R</button>
+                <button class="card-filter-btn" data-filter="SR">SR</button>
+                <button class="card-filter-btn" data-filter="SSR">SSR</button>
+                <button class="card-filter-btn" data-filter="UR">UR</button>
+            </div>
+            <div class="card-grid" id="card-grid"></div>
+        </div>
+        <div id="card-detail-modal"></div>
+    </div>
+
+    <script src="js/data.js?v=15.0"></script>
+    <script src="js/shanhai-monsters.js?v=15.0"></script>
+    <script src="js/xiyouji-monsters.js?v=15.0"></script>
+    <script src="js/fengshen-monsters.js?v=15.0"></script>
+    <script src="js/liaozhai-monsters.js?v=15.0"></script>
+    <script src="js/hp-monsters.js?v=15.0"></script>
+    <script src="js/core.js?v=15.0"></script>
+    <script src="js/effects.js?v=15.0"></script>
+    <script src="js/practice.js?v=15.0"></script>
+    <script src="js/daily.js?v=15.0"></script>
+    <script src="js/ui-pages.js?v=15.0"></script>
+    <script src="js/battle-data.js?v=15.0"></script>
+    <script src="js/card-data.js?v=15.0"></script>
+    <script src="js/battle-arena.js?v=15.0"></script>
+    <script src="js/monster-behavior.js?v=15.0"></script>
+    <script src="js/card-system.js?v=15.0"></script>
+    <script src="js/battle-collection.js?v=15.0"></script>
+    <script src="js/battle-combat.js?v=15.0"></script>
+    <script src="js/app.js?v=15.0"></script>
 </body>
 </html>

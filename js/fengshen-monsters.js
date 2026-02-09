@@ -310,6 +310,42 @@ const fengshenEasyMonsters = [
         traitEn: 'A big-eared monster who can hear sounds a thousand miles away',
         story: '高觉是棋盘山的柳精，有顺风耳的本领，千里之外的悄悄话都听得清清楚楚。他和高明是好搭档，一个看一个听。不过他最怕的就是打雷——太吵了，耳朵受不了！',
         storyEn: 'Gao Jue is a willow tree spirit with super hearing that catches whispers from a thousand miles away. He and Gao Ming make a perfect team. But his biggest fear is thunder — too loud for his sensitive ears!'
+    },
+    {
+        id: 'feng_huo_chong',
+        name: '风火虫',
+        nameEn: 'Wind-Fire Bug',
+        emoji: '🐛',
+        hp: 3,
+        type: 'fire',
+        attack: 1,
+        attackName: '风火齐发',
+        quips: ['嗡嗡~', '烫!'],
+        behaviors: ['dodge', 'escape'],
+        enterQuips: ['风火虫飞来了!'],
+        deathQuips: ['嗡...'],
+        trait: '浑身带着风火之力的小虫子',
+        traitEn: 'A tiny bug infused with the power of wind and fire',
+        story: '风火虫是封神大战中散落的风火之力化成的小虫子。它们成群结队地飞来飞去，身上闪着橘红色的光。虽然一只风火虫没什么威胁，但它们特别调皮，最爱在别人打坐修炼的时候在旁边嗡嗡叫，烦得仙人们直跺脚。',
+        storyEn: 'Wind-Fire Bugs were born from scattered wind-fire energy during the Fengshen War. They fly in swarms, glowing orange-red. One bug is harmless, but they love buzzing around meditating immortals, annoying them so much they stomp their feet!'
+    },
+    {
+        id: 'ling_qi_zhu',
+        name: '灵气珠',
+        nameEn: 'Spirit Qi Orb',
+        emoji: '🔵',
+        hp: 4,
+        type: 'spirit',
+        attack: 1,
+        attackName: '灵气冲击',
+        quips: ['灵~', '闪闪~'],
+        behaviors: ['heal', 'dodge'],
+        enterQuips: ['灵气珠飘来了!'],
+        deathQuips: ['灵气散了...'],
+        trait: '凝聚天地灵气的神秘小珠子',
+        traitEn: 'A mysterious orb condensed from heaven and earth\'s spiritual energy',
+        story: '灵气珠是天地间灵气自然凝聚而成的小珠子，圆滚滚的，发着淡蓝色的柔光。它没有固定的主人，喜欢到处飘来飘去。修仙者都想抓住它来辅助修炼，但它滑溜溜的，一碰就飘走了。它最喜欢在月圆之夜出来晒月光。',
+        storyEn: 'The Spirit Qi Orb is a small sphere naturally formed from spiritual energy, round and glowing soft blue. It has no owner and loves drifting around. Cultivators want to catch it for training, but it\'s slippery and floats away on contact. It loves basking in moonlight on full moon nights.'
     }
 ];
 
@@ -674,6 +710,42 @@ const fengshenNormalMonsters = [
         traitEn: 'A proud peacock with Five-Colored Divine Light',
         story: '孔宣是一只修炼成精的孔雀，他的五色神光能刷走一切法宝和法术。他特别臭美，每天都要花好几个小时整理羽毛。他最怕下雨，因为会把羽毛淋湿弄得不漂亮。',
         storyEn: 'Kong Xuan is a peacock spirit whose Five-Colored Divine Light can sweep away any magic. He\'s super vain and spends hours grooming his feathers. He hates rain because it messes up his plumage!'
+    },
+    {
+        id: 'lei_zhen_er',
+        name: '雷震儿',
+        nameEn: 'Little Thunder',
+        emoji: '⚡',
+        hp: 5,
+        type: 'thunder',
+        attack: 1,
+        attackName: '惊雷击',
+        quips: ['轰!', '雷来了!'],
+        behaviors: ['enrage', 'taunt'],
+        enterQuips: ['雷震儿驾到!'],
+        deathQuips: ['雷停了...'],
+        trait: '雷震子的小徒弟，打雷声音特别大',
+        traitEn: 'Leizhenzi\'s little apprentice with an incredibly loud thunderclap',
+        story: '雷震儿是雷震子收的小徒弟，继承了师父打雷的本领，但功力还不到家。每次打雷都"咔嚓"一声震天响，但实际杀伤力并不大。他最苦恼的是——每次打雷都会把自己也震得晕头转向，耳朵嗡嗡响半天。',
+        storyEn: 'Little Thunder is Leizhenzi\'s young apprentice who inherited the thunder skill but hasn\'t mastered it yet. His thunderclaps are ear-shatteringly loud but don\'t do much damage. His biggest problem: he always makes himself dizzy from his own thunder, leaving his ears ringing for hours.'
+    },
+    {
+        id: 'tu_xing_bing',
+        name: '土行兵',
+        nameEn: 'Earth Tunnel Soldier',
+        emoji: '🪖',
+        hp: 5,
+        type: 'earth',
+        attack: 1,
+        attackName: '地遁突袭',
+        quips: ['钻!', '看不见我~'],
+        behaviors: ['dodge', 'defend'],
+        enterQuips: ['土行兵从地下冒出!'],
+        deathQuips: ['塌了...'],
+        trait: '跟土行孙学了地遁术的小兵',
+        traitEn: 'A little soldier who learned earth-tunneling from Tu Xingsun',
+        story: '土行兵是土行孙带出来的小兵，学会了基本的地遁术。他最爱从地底下突然冒出来吓人一跳，然后又"嗖"地一下钻回去。不过他的地遁术还不熟练，有时候会钻错方向，从敌人脚边冒出来把自己吓一跳。',
+        storyEn: 'Earth Tunnel Soldier is a little soldier trained by Tu Xingsun in basic earth-tunneling. He loves popping up from underground to scare people, then diving back down. But his tunneling is still clumsy — sometimes he pops up right next to enemies and scares himself!'
     }
 ];
 
@@ -948,6 +1020,24 @@ const fengshenHardMonsters = [
         traitEn: 'An elite Jie Sect disciple from Golden Turtle Island',
         story: '金鳌岛是通天教主的道场，岛上住着截教最厉害的弟子们。这位弟子是金鳌岛精英中的精英，骑着一只小金鳌到处跑。他最骄傲的就是"我是金鳌岛出身的"，走到哪儿都要报一遍家门。',
         storyEn: 'Golden Turtle Island is Tongtian\'s headquarters, home to Jie Sect\'s strongest disciples. This elite disciple rides a small golden turtle everywhere. His proudest declaration is always "I\'m from Golden Turtle Island!" — he announces it wherever he goes.'
+    },
+    {
+        id: 'feng_shen_hu',
+        name: '封神虎',
+        nameEn: 'Fengshen Tiger',
+        emoji: '🐅',
+        hp: 7,
+        type: 'beast',
+        attack: 2,
+        attackName: '虎啸山林',
+        quips: ['吼!', '虎威!'],
+        behaviors: ['enrage', 'fear'],
+        enterQuips: ['封神虎下山了!'],
+        deathQuips: ['虎落平阳...'],
+        trait: '封神大战中被神力唤醒的猛虎',
+        traitEn: 'A fierce tiger awakened by divine power during the Fengshen War',
+        story: '封神虎原本是山林中一只普通的老虎，但封神大战中散落的神力落在它身上，让它拥有了超凡的力量和智慧。它的吼声能震慑方圆百里的妖怪，是山林中的绝对霸主。不过它有个弱点——特别怕打喷嚏，每次一打喷嚏就会震掉自己的虎威光环。',
+        storyEn: 'Fengshen Tiger was an ordinary mountain tiger until divine power from the Fengshen War fell upon it, granting extraordinary strength and wisdom. Its roar can intimidate monsters for miles. But it has a weakness — terrible sneezing fits that dispel its intimidating aura every time.'
     }
 ];
 
@@ -1102,6 +1192,24 @@ const fengshenBossMonsters = [
         traitEn: 'A mysterious lone immortal who answers to no one',
         story: '陆压道人是封神世界最神秘的人物之一，不属于任何教派，来去自如。他的斩仙飞刀是一击必杀的大招，连赵公明都栽在这把飞刀上。他最酷的一点是——谁的面子都不给，三教圣人他都不怕，活得特别洒脱。',
         storyEn: 'Luya Daoist is one of the most mysterious figures in Fengshen, belonging to no sect and coming and going freely. His Immortal-Slaying Flying Blade is a one-hit kill that even Zhao Gongming fell to. The coolest thing about him? He respects no one — not even the three saints — and lives completely free!'
+    },
+    {
+        id: 'wen_zhong',
+        name: '闻太师',
+        nameEn: 'Grand Preceptor Wen',
+        emoji: '⚔️',
+        hp: 10,
+        type: 'thunder',
+        attack: 3,
+        attackName: '九天雷罚',
+        quips: ['雷罚!', '天道好轮回!'],
+        behaviors: ['defend', 'summon', 'enrage'],
+        enterQuips: ['闻太师降临!', '九天应元雷声普化天尊!'],
+        deathQuips: ['天命如此...', '商朝...'],
+        trait: '商朝最忠诚的太师，雷法无双',
+        traitEn: 'The most loyal Grand Preceptor of Shang Dynasty, unrivaled in thunder magic',
+        story: '闻太师是商朝的擎天柱石，忠心耿耿地守护着殷商江山。他拜在截教碧游宫金灵圣母门下，学得一身惊天雷法，手持雌雄双鞭，骑墨麒麟，是封神大战中最令人敬畏的对手之一。纵使天命难违，他仍战到最后一刻，"知其不可为而为之"，是封神中最令人动容的悲剧英雄。',
+        storyEn: 'Grand Preceptor Wen was the pillar of the Shang Dynasty, loyally guarding its kingdom to the end. He studied thunder magic under Golden Spirit Holy Mother of Jie Sect, wielding twin whips and riding a black qilin. He was one of the most fearsome opponents in the Fengshen War. Even knowing fate was against him, he fought to the last moment — the most moving tragic hero in all of Fengshen.'
     }
 ];
 

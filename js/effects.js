@@ -181,6 +181,109 @@ function playSound(type) {
             osc.start(ctx.currentTime + i * 0.2);
             osc.stop(ctx.currentTime + i * 0.2 + 0.3);
         });
+    } else if (type === 'dodge') {
+        // Quick whoosh sound
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(600, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(1200, ctx.currentTime + 0.1);
+        osc.frequency.exponentialRampToValueAtTime(300, ctx.currentTime + 0.2);
+        gain.gain.setValueAtTime(0.15, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.25);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.3);
+    } else if (type === 'defend') {
+        // Metallic clang
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(1000, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(500, ctx.currentTime + 0.15);
+        gain.gain.setValueAtTime(0.25, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.2);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.25);
+    } else if (type === 'enrage') {
+        // Low rumble rising
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(100, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(400, ctx.currentTime + 0.3);
+        gain.gain.setValueAtTime(0.1, ctx.currentTime);
+        gain.gain.linearRampToValueAtTime(0.2, ctx.currentTime + 0.15);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.35);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.4);
+    } else if (type === 'summon') {
+        // Mystical ascending notes
+        const notes = [261.63, 329.63, 392, 523.25, 659.25];
+        notes.forEach((freq, i) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, ctx.currentTime + i * 0.06);
+            gain.gain.setValueAtTime(0, ctx.currentTime + i * 0.06);
+            gain.gain.linearRampToValueAtTime(0.15, ctx.currentTime + i * 0.06 + 0.02);
+            gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + i * 0.06 + 0.12);
+            osc.start(ctx.currentTime + i * 0.06);
+            osc.stop(ctx.currentTime + i * 0.06 + 0.15);
+        });
+    } else if (type === 'cardDrop') {
+        // Magical reveal - ascending sparkle
+        const notes = [392, 523.25, 659.25, 783.99, 1046.5];
+        notes.forEach((freq, i) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, ctx.currentTime + i * 0.1);
+            gain.gain.setValueAtTime(0, ctx.currentTime + i * 0.1);
+            gain.gain.linearRampToValueAtTime(0.2, ctx.currentTime + i * 0.1 + 0.02);
+            gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + i * 0.1 + 0.2);
+            osc.start(ctx.currentTime + i * 0.1);
+            osc.stop(ctx.currentTime + i * 0.1 + 0.25);
+        });
+    } else if (type === 'cardFlip') {
+        // Short flip/whoosh
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(400, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(800, ctx.currentTime + 0.08);
+        osc.frequency.exponentialRampToValueAtTime(600, ctx.currentTime + 0.15);
+        gain.gain.setValueAtTime(0.1, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.15);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.2);
+    } else if (type === 'bossEntrance') {
+        // Deep dramatic entrance
+        const notes = [130.81, 164.81, 196, 130.81];
+        notes.forEach((freq, i) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(freq, ctx.currentTime + i * 0.15);
+            gain.gain.setValueAtTime(0, ctx.currentTime + i * 0.15);
+            gain.gain.linearRampToValueAtTime(0.15, ctx.currentTime + i * 0.15 + 0.02);
+            gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + i * 0.15 + 0.2);
+            osc.start(ctx.currentTime + i * 0.15);
+            osc.stop(ctx.currentTime + i * 0.15 + 0.25);
+        });
     }
 }
 
@@ -379,4 +482,83 @@ function checkAchievements(streak, totalCorrect) {
             showAchievement(achievement);
         }
     });
+}
+
+// ===== v15.0 New Particle Effects =====
+
+function createWeaponTrail(color) {
+    const effectsLayer = document.getElementById('effects-layer');
+    if (!effectsLayer) return;
+    const count = 6;
+
+    for (let i = 0; i < count; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'weapon-trail-particle';
+        particle.style.background = color || '#ffaa00';
+        particle.style.left = (30 + Math.random() * 40) + '%';
+        particle.style.top = (20 + Math.random() * 30) + '%';
+        particle.style.animationDelay = (i * 0.05) + 's';
+        effectsLayer.appendChild(particle);
+        setTimeout(() => particle.remove(), 600);
+    }
+}
+
+function createBossEntrance(x, y) {
+    const effectsLayer = document.getElementById('effects-layer');
+    if (!effectsLayer) return;
+    const count = 12;
+    const emojis = ['💀', '⚡', '🔥', '💫', '✨'];
+
+    for (let i = 0; i < count; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'boss-entrance-particle';
+        particle.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        particle.style.fontSize = (0.8 + Math.random() * 1.2) + 'rem';
+
+        const angle = (i / count) * Math.PI * 2;
+        const distance = 50 + Math.random() * 80;
+
+        particle.style.left = (x || window.innerWidth * 0.75) + 'px';
+        particle.style.top = (y || window.innerHeight * 0.25) + 'px';
+        particle.style.setProperty('--tx', Math.cos(angle) * distance + 'px');
+        particle.style.setProperty('--ty', Math.sin(angle) * distance + 'px');
+
+        effectsLayer.appendChild(particle);
+        setTimeout(() => particle.remove(), 1000);
+    }
+}
+
+function createCardRevealEffect(rarity, x, y) {
+    const effectsLayer = document.getElementById('effects-layer');
+    if (!effectsLayer) return;
+
+    const colorMap = {
+        SR: '#9b59b6',
+        SSR: '#f39c12',
+        UR: '#e74c3c'
+    };
+    const color = colorMap[rarity] || '#9b59b6';
+    const count = rarity === 'UR' ? 30 : (rarity === 'SSR' ? 20 : 12);
+    const emojis = rarity === 'UR' ? ['🌈', '⭐', '✨', '💫', '🌟'] :
+                   rarity === 'SSR' ? ['⭐', '✨', '💛', '🌟'] :
+                   ['✨', '💜', '⭐'];
+
+    for (let i = 0; i < Math.min(count, 50); i++) {
+        const particle = document.createElement('div');
+        particle.className = 'card-reveal-particle';
+        particle.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        particle.style.fontSize = (0.6 + Math.random() * 1) + 'rem';
+
+        const angle = (i / count) * Math.PI * 2 + Math.random() * 0.5;
+        const distance = 40 + Math.random() * 100;
+
+        particle.style.left = (x || window.innerWidth / 2) + 'px';
+        particle.style.top = (y || window.innerHeight / 2) + 'px';
+        particle.style.setProperty('--tx', Math.cos(angle) * distance + 'px');
+        particle.style.setProperty('--ty', Math.sin(angle) * distance + 'px');
+        particle.style.animationDelay = (Math.random() * 0.3) + 's';
+
+        effectsLayer.appendChild(particle);
+        setTimeout(() => particle.remove(), 1200);
+    }
 }

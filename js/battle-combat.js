@@ -389,6 +389,19 @@ BattleMode.startBattle = function(difficulty, module) {
     battle.itemsUsed = 0;
     battle.itemsCollected = 0;
 
+    // v15.0: Reset behavior + card state
+    battle.turnCount = 0;
+    battle.monsterEnraged = false;
+    battle.monsterDefending = false;
+    battle.escapePending = false;
+    battle.summonActive = false;
+    battle.dodged = false;
+    battle.cardDropCount = 0;
+    battle.noDamageOnCurrentMonster = true;
+    battle.escapesPrevented = 0;
+    battle.survivedSelfDestruct = 0;
+    battle.bossWithSummonCleared = 0;
+
     this.generateMonsterQueue(difficulty);
 
     const diffSettings = {
@@ -432,6 +445,11 @@ BattleMode.startBattle = function(difficulty, module) {
     showPage('battle');
     App.currentPage = 'battle';
 
+    // v15.0: Initialize arena and card count display
+    this.initArena();
+    const cardCountEl = document.getElementById('battle-card-count');
+    if (cardCountEl) cardCountEl.textContent = '🃏 ' + this.getCardCount();
+
     this.updateInventoryUI();
     this.initStage();
 };
@@ -473,18 +491,26 @@ BattleMode.initStage = function() {
     battle.monsterMaxHP = monster.hp;
     battle.currentMonster = monster;
 
+    // v15.0: Reset behavior state for new monster
+    this.resetBehaviorState();
+
     this.updateUI();
 
     document.getElementById('monster-name').textContent = monster.name;
     const monsterEmoji = document.getElementById('monster-emoji');
     monsterEmoji.textContent = monster.emoji;
-    monsterEmoji.className = 'monster-emoji';
+    monsterEmoji.className = 'monster-emoji enemy-idle';
 
     this.showMonsterType(monster);
     this.showStageTransition(battle.currentStage, monster);
 
+    // v15.0: Update arena positions and animate enemy entrance
+    this.updateArenaPositions();
+
     setTimeout(() => {
-        this.showBattleQuestion();
+        this.enemyEnterAnimation(monster, () => {
+            this.showBattleQuestion();
+        });
     }, 1500);
 };
 
@@ -514,7 +540,7 @@ BattleMode.showMonsterType = function(monster) {
         typeTag = document.createElement('div');
         typeTag.id = 'monster-type-tag';
         typeTag.className = 'monster-type-tag';
-        document.querySelector('.monster-area')?.appendChild(typeTag);
+        (document.querySelector('.enemy-side') || document.querySelector('.monster-area'))?.appendChild(typeTag);
     }
     typeTag.textContent = typeNames[monster.type] || '\u666E\u901A';
     typeTag.style.background = typeColors[monster.type] || '#a8a878';
@@ -747,9 +773,33 @@ BattleMode.handleCorrectAnswer = function(btnElement) {
     const weapon = this.getRandomWeapon();
     if (weapon.emoji === '\uD83D\uDCA3') damage += 1;
 
+    // v15.0: Check dodge behavior before applying damage
+    const dodgeCheck = this.checkBehaviorTrigger('afterCorrect', { damage });
+    if (dodgeCheck && dodgeCheck.behavior === 'dodge') {
+        this.heroAttackAnimation(weapon, () => {
+            this.executeBehavior('dodge', (result) => {
+                // Dodged - skip damage, go to next question
+                battle.currentIndex++;
+                setTimeout(() => this.showBattleQuestion(), 600);
+            });
+        });
+        return;
+    }
+
+    // v15.0: Check fear at combo threshold
+    if (battle.combo >= 5) {
+        const fearCheck = this.checkBehaviorTrigger('comboThreshold', {});
+        if (fearCheck && fearCheck.behavior === 'fear') {
+            this.executeBehavior('fear', () => {});
+        }
+    }
+
+    // v15.0: Hero attack animation
+    this.setHeroState('cast_spell');
     this.fireWeapon(weapon, damage);
 
     setTimeout(() => {
+        this.setHeroState('idle');
         this.dealDamage(damage);
 
         if (battle.healCounter >= 5 && battle.playerHP < battle.playerMaxHP) {
@@ -970,11 +1020,17 @@ BattleMode.handleWrongAnswer = function(btnElement, correctAnswer, userAnswer) {
 
     playSound('wrong');
 
-    const monsterEmoji = document.getElementById('monster-emoji');
-    monsterEmoji.classList.add('threaten');
-    setTimeout(() => monsterEmoji.classList.remove('threaten'), 800);
+    // v15.0: Use enemy state system instead of raw class toggle
+    this.setEnemyState('threaten');
+    setTimeout(() => this.setEnemyState('idle'), 800);
 
     this.showBattleFeedback(false, '\u6B63\u786E\u7B54\u6848: ' + correctAnswer);
+
+    // v15.0: Check taunt behavior
+    const tauntCheck = this.checkBehaviorTrigger('afterWrong', {});
+    if (tauntCheck && tauntCheck.behavior === 'taunt') {
+        this.executeBehavior('taunt', () => {});
+    }
 
     const question = battle.questions[battle.currentIndex];
     const wrongItem = {
@@ -1086,15 +1142,26 @@ BattleMode.monsterQuips = ['\u54CE\u5466!', '\u597D\u75DB!', '\u545C\u545C...', 
 
 BattleMode.dealDamage = function(damage) {
     const battle = App.battle;
+
+    // v15.0: Defend check - halve damage (round up)
+    if (battle.monsterDefending) {
+        damage = Math.ceil(damage / 2);
+        battle.monsterDefending = false;
+        this.showBattleFeedback(false, '🛡️ 防御! 伤害减半');
+    }
+
     battle.monsterHP -= damage;
     battle.totalDamage += damage;
+    battle.turnCount++;
+
+    if (damage > 0) {
+        battle.noDamageOnCurrentMonster = false;
+    }
 
     playSound('hit');
 
-    const monsterEmoji = document.getElementById('monster-emoji');
-    monsterEmoji.classList.remove('hit');
-    void monsterEmoji.offsetWidth;
-    monsterEmoji.classList.add('hit');
+    // v15.0: Use enemy hit animation
+    this.enemyHitAnimation(() => {});
 
     this.showDamageNumber(damage);
     this.showMonsterQuip();
@@ -1104,8 +1171,36 @@ BattleMode.dealDamage = function(damage) {
     if (battle.monsterHP <= 0) {
         this.monsterDeath();
     } else {
-        battle.currentIndex++;
-        setTimeout(() => this.showBattleQuestion(), 800);
+        // v15.0: Check HP threshold behaviors (enrage, summon, escape)
+        const hpPercent = battle.monsterHP / battle.monsterMaxHP;
+        const hpCheck = this.checkBehaviorTrigger('hpThreshold', { hpPercent });
+        if (hpCheck) {
+            this.executeBehavior(hpCheck.behavior, () => {
+                // v15.0: Check turn interval behaviors (defend, heal)
+                const turnCheck = this.checkBehaviorTrigger('turnInterval', {});
+                if (turnCheck) {
+                    this.executeBehavior(turnCheck.behavior, () => {
+                        battle.currentIndex++;
+                        setTimeout(() => this.showBattleQuestion(), 400);
+                    });
+                } else {
+                    battle.currentIndex++;
+                    setTimeout(() => this.showBattleQuestion(), 400);
+                }
+            });
+        } else {
+            // v15.0: Check turn interval behaviors (defend, heal)
+            const turnCheck = this.checkBehaviorTrigger('turnInterval', {});
+            if (turnCheck) {
+                this.executeBehavior(turnCheck.behavior, () => {
+                    battle.currentIndex++;
+                    setTimeout(() => this.showBattleQuestion(), 400);
+                });
+            } else {
+                battle.currentIndex++;
+                setTimeout(() => this.showBattleQuestion(), 800);
+            }
+        }
     }
 };
 
@@ -1138,26 +1233,15 @@ BattleMode.monsterAttack = function() {
     const battle = App.battle;
     const monster = battle.currentMonster;
 
-    playSound('monsterAttack');
+    // v15.0: Enraged monsters deal +1 damage (applied in HP deduction below)
+    const enrageDamage = battle.monsterEnraged ? 1 : 0;
 
-    const monsterEmoji = document.getElementById('monster-emoji');
-    monsterEmoji.classList.add('attack');
+    playSound('monsterAttack');
 
     this.showAttackName(monster);
 
-    const monsterArea = document.querySelector('.monster-area');
-    const rect = monsterArea.getBoundingClientRect();
-    const attackEmoji = document.createElement('div');
-    attackEmoji.className = 'monster-attack-emoji';
-    attackEmoji.textContent = monster?.attack || '\uD83D\uDCA5';
-    attackEmoji.style.left = (rect.left + rect.width / 2 - 20) + 'px';
-    attackEmoji.style.top = (rect.bottom) + 'px';
-    document.getElementById('battle-page').appendChild(attackEmoji);
-
-    setTimeout(() => {
-        attackEmoji.remove();
-        monsterEmoji.classList.remove('attack');
-    }, 500);
+    // v15.0: Use arena-based enemy attack animation
+    this.enemyAttackAnimation(monster, () => {});
 
     if (battle.shield > 0) {
         battle.shield--;
@@ -1168,11 +1252,16 @@ BattleMode.monsterAttack = function() {
         return;
     }
 
+    // v15.0: Hero hit animation
+    this.heroHitAnimation(() => {});
+
     const screenFlash = document.getElementById('screen-flash');
     screenFlash.classList.add('show');
     setTimeout(() => screenFlash.classList.remove('show'), 300);
 
-    battle.playerHP--;
+    // v15.0: Enraged monsters deal extra damage
+    const hpLoss = 1 + enrageDamage;
+    battle.playerHP = Math.max(0, battle.playerHP - hpLoss);
     this.updateUI();
 
     if (battle.playerHP <= 0) {
@@ -1228,22 +1317,47 @@ BattleMode.monsterDeath = function() {
         }
     }
 
-    const monsterEmoji = document.getElementById('monster-emoji');
-    monsterEmoji.classList.add('death');
+    // v15.0: Use enemy death state
+    this.setEnemyState('death');
 
     playSound('defeat');
 
     createConfetti(40);
 
-    setTimeout(() => {
-        if (battle.currentStage >= battle.totalStages) {
-            this.gameOver(true);
-        } else {
-            battle.currentStage++;
-            battle.currentIndex++;
-            this.initStage();
+    // v15.0: Check death behaviors (selfDestruct) and card drop
+    const deathCheck = this.checkBehaviorTrigger('onDeath', {});
+
+    const afterDeath = () => {
+        // v15.0: Try card drop
+        this.tryDropCard();
+
+        // v15.0: Track boss summon clear
+        if (battle.currentMonster && battle.currentMonster.hp >= 8 && battle.summonActive) {
+            battle.bossWithSummonCleared++;
         }
-    }, 1200);
+
+        // Update card count display
+        const cardCountEl = document.getElementById('battle-card-count');
+        if (cardCountEl) cardCountEl.textContent = '🃏 ' + this.getCardCount();
+
+        setTimeout(() => {
+            if (battle.currentStage >= battle.totalStages) {
+                this.gameOver(true);
+            } else {
+                battle.currentStage++;
+                battle.currentIndex++;
+                this.initStage();
+            }
+        }, 800);
+    };
+
+    if (deathCheck && deathCheck.behavior === 'selfDestruct') {
+        setTimeout(() => {
+            this.executeBehavior('selfDestruct', () => afterDeath());
+        }, 600);
+    } else {
+        setTimeout(() => afterDeath(), 1200);
+    }
 };
 
 BattleMode.showHealEffect = function() {
@@ -1259,6 +1373,9 @@ BattleMode.gameOver = function(isVictory) {
     battle.active = false;
 
     if (isVictory) {
+        // v15.0: Hero victory animation
+        this.setHeroState('victory');
+
         let score = battle.monstersDefeated * 50;
         if (battle.noDamageTaken) score += 30;
         if (battle.maxCombo >= 10) score += 50;
@@ -1286,6 +1403,9 @@ BattleMode.gameOver = function(isVictory) {
 
         checkAchievements(battle.maxCombo, App.stats.totalCorrect);
     } else {
+        // v15.0: Hero defeat animation
+        this.setHeroState('defeat');
+
         document.getElementById('fail-monsters').textContent = battle.monstersDefeated;
         document.getElementById('fail-answers').textContent = battle.correctCount;
 
@@ -1378,11 +1498,38 @@ BattleMode.checkBattleAchievements = function() {
             if (ach) showAchievement(ach);
         }, 8000);
     }
+
+    // v15.0: Behavior-related achievements
+    const behaviorChecks = [
+        { id: 'dodge_master', condition: battle.dodged },
+        { id: 'survive_destruct', condition: battle.survivedSelfDestruct > 0 },
+        { id: 'no_escape', condition: battle.escapesPrevented > 0 },
+        { id: 'boss_summon_clear', condition: battle.bossWithSummonCleared > 0 },
+        { id: 'enrage_kill', condition: battle.monsterEnraged },
+        { id: 'perfect_stage', condition: battle.noDamageTaken && battle.monstersDefeated >= battle.totalStages }
+    ];
+
+    let delay = 9000;
+    for (const check of behaviorChecks) {
+        if (check.condition && !achievements.includes(check.id)) {
+            achievements.push(check.id);
+            saveProgress();
+            const achId = check.id;
+            setTimeout(() => {
+                const ach = MathData.achievements.find(a => a.id === achId);
+                if (ach) showAchievement(ach);
+            }, delay);
+            delay += 1000;
+        }
+    }
 };
 
 BattleMode.exitBattle = function() {
     const module = App.battle.module;
     App.battle.active = false;
+
+    // v15.0: Cleanup arena
+    this.cleanupArena();
     if (module === 'fraction') {
         showPage('fraction-mode');
         this.updateFractionCollectionCount();

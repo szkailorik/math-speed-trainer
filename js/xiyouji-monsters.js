@@ -185,6 +185,30 @@ const xiyoujiEasyMonsters = [
         traitEn: 'A hasty little messenger demon from Emerald Cloud Mountain',
         story: '急如火是翠云山牛魔王手下的小妖怪，和搭档"快如风"一起负责通风报信。他最大的特点就是急——吃饭急、走路急、说话急、连睡觉都急。每次送信都跑得上气不接下气，经常话还没说完就晕过去了。牛魔王总是说："你倒是慢点说啊！"但他就是慢不下来。',
         storyEn: 'Quick-as-Fire is a messenger demon under Bull Demon King at Emerald Cloud Mountain. His defining trait is being in a hurry about EVERYTHING - eating, walking, talking, even sleeping. Every message delivery leaves him gasping for breath, often fainting before finishing his report. Bull Demon King keeps saying "Slow down!" but he just can\'t.'
+    },
+    {
+        id: 'yun_xiao', name: '筋斗云宝宝', nameEn: 'Baby Somersault Cloud',
+        emoji: '☁️', hp: 3, type: 'wind',
+        attack: '🌪️', attackName: '旋风卷', quips: ['呼~', '飘起来~', '追不上我!'],
+        behaviors: ['dodge', 'escape'],
+        enterQuips: ['筋斗云宝宝飘来了!'],
+        deathQuips: ['散了...'],
+        trait: '从筋斗云上掉下来的小云朵，轻飘飘的到处飘',
+        traitEn: 'A little cloud that fell off Somersault Cloud, drifting everywhere',
+        story: '筋斗云宝宝是从悟空的筋斗云上掉下来的一小朵云。它飘来飘去，谁也抓不住它。虽然飞得没筋斗云快，但它特别喜欢跟小朋友玩捉迷藏，总是在你快要碰到它的时候"呼"地一下飘走。',
+        storyEn: 'Baby Somersault Cloud is a tiny cloud that fell off Wukong\'s Somersault Cloud. It floats around and nobody can catch it. Though not as fast as the real Somersault Cloud, it loves playing hide-and-seek with kids, whooshing away just as you almost touch it.'
+    },
+    {
+        id: 'xiao_tu_di', name: '小土地', nameEn: 'Little Land God',
+        emoji: '👴', hp: 4, type: 'earth',
+        attack: '🌿', attackName: '地灵术', quips: ['大圣饶命~', '老朽在此~'],
+        behaviors: ['fear', 'heal'],
+        enterQuips: ['土地公公到!'],
+        deathQuips: ['老朽...告退...'],
+        trait: '各地山神土地中最小的一位，胆子也最小',
+        traitEn: 'The smallest and most timid of all Land Gods',
+        story: '小土地是所有土地公公里面最年轻的一个，刚刚上任没多久。每次孙悟空大喝一声"土地！出来！"他都吓得浑身发抖，从土里钻出来的时候还带着一脸泥巴。不过他很善良，总是偷偷给路过的小动物种些小草莓。',
+        storyEn: 'Little Land God is the youngest of all Land Gods, newly appointed. Every time Wukong shouts "Land God! Come out!" he trembles with fear and pops out covered in mud. But he\'s very kind, secretly planting little strawberries for passing animals.'
     }
 ];
 
@@ -405,6 +429,30 @@ const xiyoujiNormalMonsters = [
         traitEn: 'A grey wolf spirit, Black Bear Spirit\'s best friend',
         story: '凌虚子是一只苍狼精，住在黑风山，和黑熊精是好朋友。他平时装扮成道士的模样，看起来仙风道骨。他最倒霉的一天就是去参加黑熊精的"佛衣会"——本来是去喝茶看袈裟的，结果遇上了孙悟空，成了第一个被打的。做妖怪，交朋友要谨慎啊。',
         storyEn: 'Void Walker is a grey wolf spirit on Black Wind Mountain, best friends with Black Bear Spirit. He usually dresses as a Taoist priest, looking quite refined. His worst day ever was attending Black Bear\'s "Kasaya Party" - he came for tea and to admire the robe, but ran into Wukong and became the first casualty. Lesson: choose your friends carefully.'
+    },
+    {
+        id: 'hong_hai_er_jr', name: '小红孩', nameEn: 'Little Red Boy',
+        emoji: '👦', hp: 5, type: 'fire',
+        attack: '🔥', attackName: '三昧真火', quips: ['看我的火!', '烫烫烫!'],
+        behaviors: ['enrage', 'taunt'],
+        enterQuips: ['小红孩驾到!'],
+        deathQuips: ['火灭了...'],
+        trait: '红孩儿的小跟班，学了一点三昧真火的皮毛',
+        traitEn: 'Red Boy\'s little follower who learned a bit of Samadhi True Fire',
+        story: '小红孩是红孩儿的头号小粉丝，天天跟在后面学喷火。可惜他学艺不精，每次喷火都把自己的眉毛烧掉。红孩儿被观音收走后，小红孩伤心了好久，但他继续练习三昧真火，梦想有一天能去南海找师父。',
+        storyEn: 'Little Red Boy is Red Boy\'s biggest fan, following him around trying to learn fire-breathing. But his skills are poor — he singes his own eyebrows every time. After Red Boy was taken by Guanyin, Little Red Boy was heartbroken but kept practicing, dreaming of finding his master at the South Sea someday.'
+    },
+    {
+        id: 'bai_gu_xiao', name: '白骨小妖', nameEn: 'Little Bone Imp',
+        emoji: '💀', hp: 5, type: 'ghost',
+        attack: '🦴', attackName: '白骨爪', quips: ['嘻嘻~', '来变身~'],
+        behaviors: ['dodge', 'taunt'],
+        enterQuips: ['白骨小妖现身!'],
+        deathQuips: ['变不了了...'],
+        trait: '白骨精留下的一缕执念化成的小妖',
+        traitEn: 'A small imp born from White Bone Spirit\'s lingering obsession',
+        story: '白骨小妖是白骨精被孙悟空三打之后，残留在白虎岭的一缕执念化成的小妖。它继承了白骨精的变化天赋，但因为太小了，每次变化都只能变成小动物——比如一只小白兔或者一只小白猫。它最大的梦想是有一天能像白骨精那样变成人形。',
+        storyEn: 'Little Bone Imp was born from White Bone Spirit\'s lingering obsession after being defeated three times by Wukong. It inherited her transformation talent but can only turn into small animals — a white bunny or a white kitten. Its biggest dream is to transform into human form like White Bone Spirit someday.'
     }
 ];
 
@@ -571,6 +619,18 @@ const xiyoujiHardMonsters = [
         traitEn: 'The most agile of Nine Spirits Sage\'s lion disciples',
         story: '猱狮精是九灵元圣弟子中身手最敏捷的一位。"猱"本身就是一种身手灵活的猿猴，所以猱狮精结合了狮子的力量和猿猴的敏捷。它打起架来上蹿下跳，让人眼花缭乱。可惜再快也快不过筋斗云——悟空一个翻身就追上了它。',
         storyEn: 'Nimble Lion Spirit is the most agile among Nine Spirits Sage\'s disciples. "猱" means a nimble monkey, so this spirit combines a lion\'s power with a monkey\'s agility. It bounces around in battle so fast it\'s dizzying. But nothing outpaces Cloud Somersault - Wukong caught up with one flip.'
+    },
+    {
+        id: 'niu_mo_jr', name: '小牛魔', nameEn: 'Little Bull Demon',
+        emoji: '🐂', hp: 7, type: 'fighting',
+        attack: '🔱', attackName: '铁扇挥击', quips: ['哞!', '看我力气!'],
+        behaviors: ['enrage', 'defend'],
+        enterQuips: ['小牛魔来了!'],
+        deathQuips: ['哞...'],
+        trait: '牛魔王年轻时的样子，蛮力惊人',
+        traitEn: 'A young version of Bull Demon King, with incredible brute strength',
+        story: '小牛魔是牛魔王年轻时候的模样，那时候的他还没有当上平天大圣，只是翠云山上一头愣头愣脑的小牛犊。他力气大得惊人，但脑子不太灵光，总是被孙悟空耍得团团转。他从铁扇公主那里偷学了一招铁扇挥击，虽然威力不如芭蕉扇，但也能刮起一阵不小的风。',
+        storyEn: 'Little Bull Demon is Bull Demon King in his youth, before becoming the Great Sage Equal to Heaven. He was just a clumsy young calf on Emerald Cloud Mountain — incredibly strong but not too bright, always outsmarted by Wukong. He secretly learned a fan strike from Princess Iron Fan. Though weaker than the Banana Leaf Fan, it still packs quite a punch.'
     }
 ];
 
@@ -665,5 +725,17 @@ const xiyoujiBossMonsters = [
         traitEn: 'The 6th Great Sage - God-Driver, even deities step aside for him',
         story: '禺狨王是七大圣中排行第六的驱神大圣，本体是一只金丝猴。他的称号最霸气——"驱神"，意思是连神仙都要被他赶跑。虽然在原著中他只出现了名字，但光凭这个称号就足以让所有神仙闻风丧胆。他是七大圣中唯一以金丝猴为本体的，也被认为是猴族中最尊贵的存在之一。悟空排行第七，但论霸气，六哥也不遑多让。',
         storyEn: 'Golden Snub-Nose King is the 6th Great Sage - the God-Driving Great Sage. His true form is a golden snub-nosed monkey. His title is the most fearsome - "God-Driver" means even deities flee before him. Though he only appears by name in the novel, that title alone is enough to terrify immortals. As the only golden monkey among the seven, he\'s considered one of the most noble in the monkey kingdom. Wukong ranks 7th, but in sheer intimidation, Number Six holds his own.'
+    },
+    {
+        id: 'xuan_zang_phantom', name: '心魔唐僧', nameEn: 'Phantom Tang Monk',
+        emoji: '🧘', hp: 10, type: 'psychic',
+        attack: '📿', attackName: '心魔侵蚀', quips: ['阿弥陀佛...', '心魔难除...'],
+        behaviors: ['defend', 'summon', 'heal'],
+        enterQuips: ['心魔幻影出现!'],
+        deathQuips: ['心魔...散了...'],
+        trait: '唐僧内心的心魔幻影，考验取经人的意志',
+        traitEn: 'A phantom born from Tang Monk\'s inner demons, testing the pilgrim\'s resolve',
+        story: '心魔唐僧不是真正的唐僧，而是取经路上最可怕的考验——来自内心的恐惧与怀疑。它化为唐僧的模样，念着紧箍咒，让悟空无法分辨真假。它代表着每个人心中最深处的动摇：你走的路真的对吗？你的努力真的有意义吗？只有坚定信念，才能让心魔消散。',
+        storyEn: 'Phantom Tang Monk is not the real Tang Monk, but the most terrifying trial on the journey — fear and doubt from within. It takes Tang Monk\'s form, chanting the Band-Tightening Spell, making Wukong unable to tell real from fake. It represents everyone\'s deepest uncertainty: Is your path right? Do your efforts matter? Only unshakeable faith can dispel the inner demons.'
     }
 ];
