@@ -172,8 +172,45 @@ const App = {
         noDamageOnCurrentMonster: true,
         escapesPrevented: 0,
         survivedSelfDestruct: 0,
-        bossWithSummonCleared: 0
-    }
+        bossWithSummonCleared: 0,
+        // v16.0: combo stage system
+        comboStage: 'normal',        // 'normal'|'awakened'|'will'|'godlike'|'invincible'
+        comboShieldActive: false,     // combo >= 10 first wrong doesn't reset
+        comboShieldUsed: false,       // shield used this battle
+        lastAnswerWrong: false,       // for memory combo recovery
+        // v16.0: new behavior states
+        monsterShielded: false,       // monster has active shield
+        monsterCursed: false,         // curse active (5 choices)
+        curseRemainingTurns: 0,       // curse countdown
+        monsterPhase: 1,             // boss phase (1 or 2)
+        splitActive: false,           // split minion alive
+        counterPending: false,        // counter attack next correct
+        // v16.0: personality tracking
+        behaviorsEncountered: [],     // track all behavior types seen
+        personalitiesEncountered: []  // track all personality types seen
+    },
+
+    // v16.0: Trial Tower state
+    tower: {
+        active: false,
+        currentFloor: 1,
+        maxFloorReached: 0,
+        playerHP: 5,
+        playerMaxHP: 5,
+        currentZone: 'intro',       // 'intro'|'trial'|'inferno'|'top'
+        monstersDefeatedThisRun: 0,
+        totalDamageThisRun: 0,
+        startTime: null,
+        dailyAttemptUsed: false,
+        dailyAttemptDate: null,
+        floorMonster: null,
+        floorQuestions: [],
+        floorIndex: 0,
+        fusionQuestionsAnswered: 0
+    },
+
+    // v16.0: Math Crystal currency
+    crystals: 0
 };
 
 // ===== Utility Functions =====

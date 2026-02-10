@@ -141,6 +141,31 @@ const BattleMode = {
             story: '泡泡蛙住在九九潭里，它能吹出装着数字的泡泡。如果你能算对泡泡里的算式，泡泡就会变成彩虹色！',
             storyEn: 'Bubble Frog lives in Times Pond, blowing bubbles filled with numbers. If you solve the equation in a bubble, it turns rainbow-colored!'
         },
+        // v16.0 新增怪兽
+        {
+            id: 'suan_shu_tu', name: '算术兔', emoji: '🐰', hp: 3, type: 'normal',
+            difficulty: 'easy',
+            personality: 'timid',
+            story: '算术兔是九九乘法表世界里最胆小的小妖怪。它总是躲在算式后面偷偷看小朋友做题，一旦被发现就会"噗"地分裂成两只更小的兔子逃跑。据说它的耳朵能接收到正确答案的电波，但因为太害羞了从来不告诉别人。',
+            enterQuips: ['哇...好多人...算术兔好害怕...', '请...请不要看我...'],
+            deathQuips: ['呜呜...算术兔要消失了...', '再见...希望下次能更勇敢...'],
+            tauntQuips: ['你...你别过来...', '算术兔虽然害怕...但不会认输的...'],
+            fearQuips: ['太可怕了！算术兔要分裂逃跑了！', '救命！好厉害的连击！'],
+            behaviors: ['split'],
+            attackEmoji: '🥕'
+        },
+        {
+            id: 'gui_ji_shu', name: '诡计鼠', emoji: '🐭', hp: 3, type: 'dark',
+            difficulty: 'easy',
+            personality: 'cunning',
+            story: '诡计鼠住在数学迷宫的最深处，它的小眼睛滴溜溜转，脑子里全是花花肠子。它最喜欢在算式里偷偷把数字换掉，让小朋友算错。不过只要你算得够快，它就来不及做手脚，只能灰溜溜地躲开。',
+            enterQuips: ['嘿嘿嘿~诡计鼠来啦！', '让我看看谁会上当~'],
+            deathQuips: ['可恶...我的诡计失败了...', '下次一定能骗到你！'],
+            tauntQuips: ['嘻嘻，你猜这个答案对不对~', '上当了吧？哈哈！'],
+            fearQuips: ['怎么可能算这么快！', '我...我的诡计没用了！'],
+            behaviors: ['dodge'],
+            attackEmoji: '🧀'
+        },
     ],
 
     // 中级怪兽（普通模式用）- HP 4-6
@@ -309,6 +334,43 @@ const BattleMode = {
             story: '魔方怪是由九九乘法表凝聚而成的立方体妖怪。它身上每一面都刻着不同的算式，只有全部答对才能让它停止旋转。',
             storyEn: 'Puzzle Cube is a cubic monster formed from the times table. Each face is carved with different equations - answer them all to stop its spinning.'
         },
+        // v16.0 新增怪兽
+        {
+            id: 'nu_huo_niu', name: '怒火牛', emoji: '🐂', hp: 5, type: 'fire',
+            difficulty: 'normal',
+            personality: 'violent',
+            story: '怒火牛是从九九乘法表里冲出来的暴脾气公牛。它的角上刻满了算式，每答错一题它就会更加愤怒，鼻孔喷出灼热的火焰。但如果你连续答对三题，它就会变得温顺无比，还会用舌头舔你的手表示敬佩。它的座右铭是"用力量证明一切"。',
+            enterQuips: ['哞——！怒火牛冲锋！', '谁惹我谁倒霉！'],
+            deathQuips: ['哞...牛也有倒下的时候...', '好厉害...我服了...'],
+            tauntQuips: ['就这？连牛都打不过？', '我的角可不是摆设！'],
+            fearQuips: ['怎...怎么连击这么猛！', '慢点慢点，让牛喘口气！'],
+            behaviors: ['counter'],
+            attackEmoji: '🔥'
+        },
+        {
+            id: 'tie_jia_gui', name: '铁甲龟', emoji: '🐢', hp: 5, type: 'steel',
+            difficulty: 'normal',
+            personality: 'defensive',
+            story: '铁甲龟在数学王国已经活了一千年，龟壳上镀了九层铁甲，每一层刻着一段乘法口诀。它从不主动攻击，但防御力惊人——据说连龙的火焰都烧不穿它的壳。小朋友们经常爬到它的壳上做题，因为那是整个数学世界最安全的地方。',
+            enterQuips: ['铁甲龟慢吞吞地出现了~', '千年老龟，稳如泰山！'],
+            deathQuips: ['龟壳...裂开了...', '千年防线...被突破了...'],
+            tauntQuips: ['尽管打，我一点都不痛~', '打了这么久才这点伤害？'],
+            fearQuips: ['壳上有裂缝了！', '这个攻击力...太恐怖了！'],
+            behaviors: ['shield'],
+            attackEmoji: '🛡️'
+        },
+        {
+            id: 'yin_ying_ya', name: '阴影鸦', emoji: '🐦‍⬛', hp: 4, type: 'dark',
+            difficulty: 'normal',
+            personality: 'sinister',
+            story: '阴影鸦是数学黑暗面的使者，全身漆黑如墨，只有眼睛发出诡异的紫光。它会在你做题时突然飞到头顶，用阴森的叫声打断你的思路。它最擅长的就是在关键时刻施加诅咒，让算式中的数字变得模糊不清。不过据说它其实是被黑暗侵蚀的好鸟，只要击败它就能解除它身上的诅咒。',
+            enterQuips: ['嘎——！阴影降临！', '黑暗中...有双眼睛在看你...'],
+            deathQuips: ['嘎...黑暗...散去了...', '谢谢你...解除了我的诅咒...'],
+            tauntQuips: ['看不清题目了吧？嘿嘿~', '诅咒已经开始生效了~'],
+            fearQuips: ['光...太亮了！', '不要用连击破除我的黑暗！'],
+            behaviors: ['curse'],
+            attackEmoji: '🌑'
+        },
     ],
 
     // 高级怪兽（困难模式用）- HP 6-8
@@ -419,6 +481,43 @@ const BattleMode = {
             story: '水晶蜘蛛的丝线是用纯净的冰晶制成的，阳光下闪闪发光。它编织的蛛网上写满了数学公式，像一幅美丽的艺术品。',
             storyEn: 'Crystal Spider\'s silk is made of pure ice crystal, sparkling in sunlight. Its web is covered with math formulas, like a beautiful work of art.'
         },
+        // v16.0 新增怪兽
+        {
+            id: 'yan_mo_xiong', name: '炎魔熊', emoji: '🐻', hp: 7, type: 'fire',
+            difficulty: 'hard',
+            personality: 'violent',
+            story: '炎魔熊是数学火山深处最凶猛的野兽，全身燃烧着熊熊烈火，每一步都会在地上留下滚烫的脚印。它是乘法王国的守卫长，负责阻拦实力不够的挑战者。当它进入暴怒状态时，火焰会变成蓝色，攻击力翻倍。只有连续快速答题才能在它暴怒前击败它。',
+            enterQuips: ['吼！！炎魔熊从火山中走出！', '火焰就是我的铠甲！'],
+            deathQuips: ['火焰...熄灭了...', '好强...下次我会更猛的...'],
+            tauntQuips: ['这点攻击像挠痒痒！', '你的速度配不上你的勇气！'],
+            fearQuips: ['蓝焰都挡不住！？', '不可能！竟然这么快！'],
+            behaviors: ['counter', 'enrage'],
+            attackEmoji: '🔥'
+        },
+        {
+            id: 'huan_ying_hu', name: '幻影狐', emoji: '🦊', hp: 6, type: 'psychic',
+            difficulty: 'hard',
+            personality: 'cunning',
+            story: '幻影狐是九尾狐的远亲，虽然只有三条尾巴，但它的幻术已经出神入化。它能在战斗中制造出完美的分身，让你根本分不清哪个是真的哪个是假的。每答对一题它就会分裂出新的分身，但同时也会露出破绽让你有机会闪避。在整个数学世界，它的智商排名前三。',
+            enterQuips: ['嘻嘻~你看到的是真的我吗？', '幻影狐有三条命哦~'],
+            deathQuips: ['原来...真身也会倒下...', '聪明反被聪明误...'],
+            tauntQuips: ['哪个是真的？猜猜看~', '我的分身比本体还厉害！'],
+            fearQuips: ['连我的分身都被秒杀了！', '好可怕的计算速度...'],
+            behaviors: ['dodge', 'split'],
+            attackEmoji: '💜'
+        },
+        {
+            id: 'ming_jie_ya', name: '冥界鸦', emoji: '🦅', hp: 6, type: 'dark',
+            difficulty: 'hard',
+            personality: 'sinister',
+            story: '冥界鸦是从算式墓地飞出来的不祥之鸟，浑身散发着幽冷的紫色光芒。它收集了所有被丢弃的错误答案，用这些错误的力量诅咒挑战者。当它血量降低时，会选择自爆，将积累的错误能量全部释放出来。不过传说中，如果你能在它自爆前打败它，就能获得永不犯错的祝福。',
+            enterQuips: ['嘎嘎嘎...冥界的使者来了...', '错误的亡灵在呼唤...'],
+            deathQuips: ['错误...终将消散...', '冥界...在等我回去...'],
+            tauntQuips: ['你犯过的错误我都记得~', '诅咒会让你越来越慢...'],
+            fearQuips: ['不...错误的力量快要用完了...', '别再答对了！'],
+            behaviors: ['curse', 'selfDestruct'],
+            attackEmoji: '💀'
+        },
     ],
 
     // Boss怪兽（困难模式最终关卡）- HP 8-12 - 恐怖但可爱的终极Boss
@@ -478,6 +577,37 @@ const BattleMode = {
             trait: '统治九九王国的霸主', traitEn: 'The overlord ruling the Kingdom of Times Tables',
             story: '算术之王是九九乘法表的最终守护者。它头戴金冠，手持算式权杖，统治着整个数学王国。只有最勇敢、最聪明的小勇者才能挑战它！',
             storyEn: 'Math King is the ultimate guardian of the times table. Wearing a golden crown and wielding an equation scepter, it rules the entire Math Kingdom. Only the bravest and smartest heroes can challenge it!'
+        },
+        // v16.0 新增Boss
+        {
+            id: 'jiu_jiu_shen_long', name: '九九神龙', emoji: '🐲', hp: 10, type: 'dragon',
+            difficulty: 'boss',
+            personality: 'domineering',
+            story: '九九神龙是隐藏在乘法表最深处的上古神兽，传说它的九十九片鳞片上分别刻着九九乘法表的每一个算式。它沉睡了千年，只有当有人集齐所有正确答案时才会苏醒。苏醒后的神龙会进入二阶段形态——真·九九神龙，此时它的力量增强数倍，鳞片变成金色，能召唤小龙守卫，并用铁壁防御抵挡攻击。只有最顶尖的速算达人才能战胜它！',
+            enterQuips: ['千年沉睡...今日苏醒！九九神龙降世！', '乘法表的力量在我鳞片上燃烧！'],
+            deathQuips: ['九十九片鳞片...全部碎裂...你是真正的速算之王！', '千年之后...再来挑战...'],
+            tauntQuips: ['小小挑战者，你的速度还不够！', '九九八十一种方式让你失败！'],
+            fearQuips: ['竟然...伤到了我的鳞片！', '这个速度...千年来第一次见到！'],
+            behaviors: ['transform', 'summon', 'defend', 'counter'],
+            attackEmoji: '🌟',
+            phase2Emoji: '🐉',
+            phase2Name: '真·九九神龙',
+            phase2HP: 6
+        },
+        {
+            id: 'suan_shi_mo_zun', name: '算式魔尊', emoji: '😈', hp: 8, type: 'dark',
+            difficulty: 'boss',
+            personality: 'domineering',
+            story: '算式魔尊是数学世界黑暗面的终极统治者，它能将任何算式扭曲成错误的形态。它的身体由无数错误答案堆积而成，散发着令人窒息的紫黑色雾气。当它进入第二阶段时，会变身为真·算式魔尊，此时它的诅咒之力达到巅峰，还会释放护盾保护自己并进入狂暴状态。传说只有心中毫无畏惧、头脑清晰如水的勇者才能击破它的黑暗结界。',
+            enterQuips: ['哈哈哈！算式魔尊驾到！数字在我面前颤抖！', '错误就是力量！混沌就是秩序！'],
+            deathQuips: ['不...黑暗怎么会输给光明...', '算式...恢复了正确的形态...'],
+            tauntQuips: ['你的答案在我眼里都是错的！', '黑暗诅咒会让你的脑子一片空白！'],
+            fearQuips: ['怎么可能！每一题都答对了！', '我的错误之力...在消散...'],
+            behaviors: ['transform', 'curse', 'shield', 'enrage'],
+            attackEmoji: '💀',
+            phase2Emoji: '👿',
+            phase2Name: '真·算式魔尊',
+            phase2HP: 6
         },
     ],
 

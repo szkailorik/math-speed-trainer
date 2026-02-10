@@ -1331,6 +1331,12 @@ BattleMode.monsterDeath = function() {
     const deathCheck = this.checkBehaviorTrigger('onDeath', {});
 
     const afterDeath = () => {
+        // v16.0: Tower mode floor progression
+        if (App.tower.active) {
+            this.onTowerFloorComplete();
+            return;
+        }
+
         // v15.0: Try card drop
         this.tryDropCard();
 
@@ -1374,6 +1380,12 @@ BattleMode.showHealEffect = function() {
 BattleMode.gameOver = function(isVictory) {
     const battle = App.battle;
     battle.active = false;
+
+    // v16.0: Tower mode handles its own game over
+    if (App.tower.active && !isVictory) {
+        this.onTowerFloorFail();
+        return;
+    }
 
     if (isVictory) {
         // v15.0: Hero victory animation
@@ -1528,6 +1540,12 @@ BattleMode.checkBattleAchievements = function() {
 };
 
 BattleMode.exitBattle = function() {
+    // v16.0: Tower mode exit
+    if (App.tower.active) {
+        this.exitTower();
+        return;
+    }
+
     const module = App.battle.module;
     App.battle.active = false;
 

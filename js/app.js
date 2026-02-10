@@ -141,4 +141,37 @@ document.addEventListener('DOMContentLoaded', () => {
             BattleMode.renderCardGrid(btn.dataset.filter);
         });
     });
+
+    // v16.0: Trial Tower entry
+    document.getElementById('trial-tower-btn')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (BattleMode.isTowerUnlocked()) {
+            BattleMode.showTowerLobby();
+        } else {
+            alert('试炼之塔尚未解锁！\n需要总分达到500分才能开启。');
+        }
+    });
+
+    // v16.0: Battle result/fail buttons - handle tower mode
+    document.getElementById('battle-retry-btn')?.addEventListener('click', () => {
+        if (App.tower.active || App.tower.maxFloorReached > 0) {
+            BattleMode.showTowerLobby();
+        }
+    });
+    document.getElementById('battle-home-btn')?.addEventListener('click', () => {
+        if (App.tower.active) {
+            App.tower.active = false;
+        }
+    });
+    document.getElementById('battle-retry-fail-btn')?.addEventListener('click', () => {
+        if (App.tower.active || App.tower.maxFloorReached > 0) {
+            BattleMode.showTowerLobby();
+        }
+    });
+    document.getElementById('battle-home-fail-btn')?.addEventListener('click', () => {
+        if (App.tower.active) {
+            App.tower.active = false;
+        }
+    });
 });

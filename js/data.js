@@ -1010,6 +1010,29 @@ const MathData = {
         { id: 'enrage_kill', name: '怒而斩之', desc: '击败愤怒状态的怪物', icon: '😤', special: 'enrage_kill' },
         { id: 'perfect_stage', name: '完美关卡', desc: '无伤击败一只怪物', icon: '✨', special: 'perfect_stage' },
         { id: 'behavior_all', name: '见多识广', desc: '见证所有9种怪物行为', icon: '📔', special: 'behavior_all' },
+        // v16.0: 连击相关成就
+        { id: 'combo_awakened', name: '觉醒之力', desc: '首次达到连击觉醒状态(3连)', icon: '✨', special: 'combo_awakened' },
+        { id: 'combo_will', name: '战意昂扬', desc: '达到战意状态(5连)3次', icon: '⚡', special: 'combo_will' },
+        { id: 'combo_godlike', name: '超神时刻', desc: '达到超神状态(10连)', icon: '🌟', special: 'combo_godlike' },
+        { id: 'combo_invincible', name: '无敌降临', desc: '达到无敌状态(15连)', icon: '👑', special: 'combo_invincible' },
+        { id: 'combo_unbroken', name: '不败战神', desc: '单局连击30+不断', icon: '💪', special: 'combo_unbroken' },
+        { id: 'combo_recover', name: '追忆连击', desc: '使用追忆连击恢复连击3次', icon: '🔄', special: 'combo_recover' },
+        // v16.0: 试炼之塔成就
+        { id: 'tower_enter', name: '踏入试炼', desc: '首次进入试炼之塔', icon: '🗼', special: 'tower_enter' },
+        { id: 'tower_10', name: '突破门卫', desc: '通关试炼之塔第10层', icon: '🗿', special: 'tower_10' },
+        { id: 'tower_20', name: '击败守卫', desc: '通关试炼之塔第20层', icon: '⚔️', special: 'tower_20' },
+        { id: 'tower_30', name: '塔顶王者', desc: '通关试炼之塔第30层', icon: '👑', special: 'tower_30' },
+        { id: 'tower_speed', name: '速通大师', desc: '30分钟内通关全塔', icon: '⏱️', special: 'tower_speed' },
+        { id: 'tower_flawless', name: '完美攀登', desc: '通关前10层不受伤', icon: '💎', special: 'tower_flawless' },
+        // v16.0: 新行为相关成就
+        { id: 'counter_survivor', name: '反击幸存者', desc: '在怪物反击后存活并击败它', icon: '🛡️', special: 'counter_survivor' },
+        { id: 'split_cleaner', name: '分裂清道夫', desc: '消灭分裂怪物5次', icon: '✂️', special: 'split_cleaner' },
+        { id: 'curse_breaker', name: '破咒者', desc: '在诅咒状态下连续答对3题', icon: '🔓', special: 'curse_breaker' },
+        { id: 'shield_breaker', name: '破盾大师', desc: '击破怪物护盾10次', icon: '💥', special: 'shield_breaker' },
+        { id: 'phase2_slayer', name: '真形终结', desc: '击败变身Boss的第二形态', icon: '⚔️', special: 'phase2_slayer' },
+        { id: 'behavior_master', name: '百战老将', desc: '经历过所有14种怪物行为', icon: '🎖️', special: 'behavior_master' },
+        { id: 'all_personality', name: '知己知彼', desc: '击败过所有6种性格的怪物', icon: '📖', special: 'all_personality' },
+        { id: 'math_demon_slayer', name: '弑神者', desc: '击败数学魔神最终形态', icon: '🔮', special: 'math_demon_slayer' },
     ]
 };
 

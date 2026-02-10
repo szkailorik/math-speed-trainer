@@ -304,6 +304,9 @@ function initEventListeners() {
             } else if (module === 'achievements') {
                 renderAchievements();
                 showPage('achievements');
+            } else if (module === 'mixed') {
+                // v16.0: Trial tower - handled by app.js event listener
+                return;
             } else if (module) {
                 startPractice(module);
             }

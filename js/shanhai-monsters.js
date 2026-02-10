@@ -379,6 +379,31 @@ const shanhaiFractionEasyMonsters = [
         traitEn: 'A magical rabbit living in the clouds',
         story: '云兔住在山海经描述的不周山顶的云层里。它能在云朵间跳来跳去，用云做成软绵绵的数学题让小朋友练习。',
         storyEn: 'Cloud Rabbit lives in the clouds atop Mount Buzhou. It hops between clouds, making fluffy math problems for kids to practice.'
+    },
+    // v16.0 新增怪兽
+    {
+        id: 'dan_dan_shu', name: '胆胆鼠', emoji: '🐁', hp: 3, type: 'earth',
+        difficulty: 'easy',
+        personality: 'timid',
+        story: '胆胆鼠住在山海经里的穷山之中，天生胆小如鼠——不，它比鼠还胆小。听到一点声响就会吓得缩成一团，然后拼命往洞里逃。不过它挖洞的速度是山海经中最快的，一眨眼就消失在地下。小朋友如果算题太慢，它就趁机溜走了。',
+        enterQuips: ['吱...吱吱...好可怕...', '胆胆鼠不想打架...能不能让我走...'],
+        deathQuips: ['吱...太厉害了...', '胆胆鼠要回洞里了...'],
+        tauntQuips: ['你...你别过来...我会逃跑的...', '吱吱...求你慢一点...'],
+        fearQuips: ['救命！太快了！胆胆鼠要逃了！', '吱——！挖洞逃跑！'],
+        behaviors: ['escape'],
+        attackEmoji: '💨'
+    },
+    {
+        id: 'yu_lin_gui', name: '玉鳞龟', emoji: '🐢', hp: 3, type: 'water',
+        difficulty: 'easy',
+        personality: 'defensive',
+        story: '玉鳞龟是昆仑山玉池中修炼千年的小龟妖，它的龟壳是由纯净的白玉凝结而成，坚硬无比。遇到危险时它会把头和脚全缩进壳里，形成一个完美的玉球。传说它的龟壳能反弹任何攻击，但其实它只是太害羞了不想见人。',
+        enterQuips: ['玉鳞龟缓缓爬出来...', '我的壳壳最硬了！'],
+        deathQuips: ['玉壳...碎了...', '千年修炼...付之东流...'],
+        tauntQuips: ['打呀打呀，我缩着就好~', '你打了半天我一点感觉都没有~'],
+        fearQuips: ['壳上有裂缝了...怎么办！', '这攻击居然穿透了我的玉壳！'],
+        behaviors: ['shield'],
+        attackEmoji: '🛡️'
     }
 ];
 
@@ -797,6 +822,43 @@ const shanhaiFractionNormalMonsters = [
         traitEn: 'A thousand-year stone guardian awakened',
         story: '石狮子原本是守护山海经入口的石像，修炼千年后获得了生命。它用坚硬的身体挡住分数题，只有答对才能通过。',
         storyEn: 'Stone Lion was originally a stone statue guarding Shanhaijing\'s entrance, gaining life after a thousand years of cultivation. It blocks fraction problems with its hard body - answer correctly to pass.'
+    },
+    // v16.0 新增怪兽
+    {
+        id: 'ling_hu_xian', name: '灵狐仙', emoji: '🦊', hp: 5, type: 'psychic',
+        difficulty: 'normal',
+        personality: 'cunning',
+        story: '灵狐仙是青丘山上修炼五百年的小狐狸，已经能变出人形但尾巴总是藏不住。它最擅长用花言巧语迷惑对手，在战斗中不断嘲讽让人分心。它的闪避能力极强，身形如鬼魅般难以捉摸，只有快速准确的答题才能命中它。',
+        enterQuips: ['呵呵~灵狐仙来陪你玩~', '青丘山最聪明的狐狸来了~'],
+        deathQuips: ['哎呀...被看穿了...', '狐狸也有失手的时候...'],
+        tauntQuips: ['这么简单的分数都不会？', '你的脑子还不如我的尾巴灵活~'],
+        fearQuips: ['怎么可能算这么快！', '我...我的幻术没用了！'],
+        behaviors: ['dodge', 'taunt'],
+        attackEmoji: '💫'
+    },
+    {
+        id: 'chi_yan_xiong', name: '赤焰熊', emoji: '🐻', hp: 5, type: 'fire',
+        difficulty: 'normal',
+        personality: 'violent',
+        story: '赤焰熊栖息在山海经记载的炎火之山，它的毛发是永不熄灭的赤色火焰。性格暴躁，一言不合就挥掌攻击。它对分数题有一种本能的愤怒——因为它觉得"把好好的数字掰成两半"是不可容忍的事情。每次被反击时它会更加愤怒。',
+        enterQuips: ['吼！赤焰熊从火山中走出！', '谁敢在我的地盘做分数题！'],
+        deathQuips: ['火焰...熄灭了...', '好厉害的分数高手...'],
+        tauntQuips: ['你的攻击跟挠痒痒一样！', '赤焰熊最恨分数！砸碎你！'],
+        fearQuips: ['怎...怎么反弹了！', '我的火焰都打不动你！'],
+        behaviors: ['counter'],
+        attackEmoji: '🔥'
+    },
+    {
+        id: 'you_ming_chan', name: '幽冥蟾', emoji: '🐸', hp: 4, type: 'poison',
+        difficulty: 'normal',
+        personality: 'sinister',
+        story: '幽冥蟾是深藏在山海经幽暗沼泽中的三足毒蟾蜍，传说它的毒液能让人看到可怕的幻象。它总是蹲在暗处，发出阴森森的笑声，然后对路过的挑战者施加诅咒。被诅咒的人会暂时忘记分数的计算方法，必须加倍努力才能解除诅咒。',
+        enterQuips: ['呱呱呱...幽冥蟾从沼泽中浮出...', '来...让我给你看看可怕的东西...'],
+        deathQuips: ['诅咒...解除了...', '沼泽在等我回去...'],
+        tauntQuips: ['嘿嘿嘿...分数变得模糊了吧？', '诅咒会让你越来越笨~'],
+        fearQuips: ['不可能！诅咒被破解了！', '你...你怎么不受影响的！'],
+        behaviors: ['curse'],
+        attackEmoji: '💜'
     }
 ];
 
@@ -1061,6 +1123,31 @@ const shanhaiFractionHardMonsters = [
         traitEn: 'An ancient divine turtle carrying mountains and rivers',
         story: '玄龟是山海经中记载的神龟，它的龟壳上刻满了分数公式。据说它的龟壳是用不老石制成，坚不可摧。',
         storyEn: 'Xuan Gui is a divine turtle from Shanhaijing, its shell carved with fraction formulas. Legend says its shell is made of ageless stone, completely indestructible.'
+    },
+    // v16.0 新增怪兽
+    {
+        id: 'shen_mu_xian', name: '神木仙', emoji: '🌳', hp: 7, type: 'earth',
+        difficulty: 'hard',
+        personality: 'defensive',
+        story: '神木仙是山海经中建木化身的远古树妖，据说建木是连接天地的神树，而神木仙就是从建木上掉落的一片叶子修炼而成。它的树皮如铁甲般坚硬，能产生强大的护盾抵挡攻击，受伤后还能从大地中汲取力量自我疗愈。它是分数森林中最难攻克的堡垒。',
+        enterQuips: ['神木仙扎根大地...', '千年神木，岿然不动！'],
+        deathQuips: ['树...倒了...', '大地之力...枯竭了...'],
+        tauntQuips: ['尽管攻击吧，我会自己恢复的~', '我的护盾和大地一样坚固！'],
+        fearQuips: ['树根被砍断了！', '大地的力量传不过来了！'],
+        behaviors: ['shield', 'heal'],
+        attackEmoji: '🍃'
+    },
+    {
+        id: 'jiu_wei_gui', name: '九尾龟', emoji: '🐢', hp: 6, type: 'dark',
+        difficulty: 'hard',
+        personality: 'sinister',
+        story: '九尾龟是山海经中记载的上古凶兽，与九尾狐齐名。它的九条尾巴分别代表九种不同的诅咒之力，每条尾巴拍打一下就能施放一种诅咒。它还能召唤小龟妖作为帮手，用数量优势压垮对手。它最阴险的一点是——看起来慢吞吞人畜无害，实际上诡计多端。',
+        enterQuips: ['九尾龟从深渊中爬出...', '九尾诅咒...准备好了吗？'],
+        deathQuips: ['九条尾巴...断了...', '诅咒之力...消散了...'],
+        tauntQuips: ['嘿嘿嘿...第几条尾巴的诅咒呢？', '小龟们，出来帮忙~'],
+        fearQuips: ['我的小龟们都被打败了！', '诅咒居然被破解了！'],
+        behaviors: ['curse', 'summon'],
+        attackEmoji: '💀'
     }
 ];
 
@@ -1221,5 +1308,21 @@ const shanhaiFractionBossMonsters = [
         traitEn: 'An ancient divine beast ruling mountains and seas',
         story: '山海兽是山海经中最强大的存在，据说它的一声怒吼能让山崩地裂。只有集齐所有分数知识才能挑战它！',
         storyEn: 'Shanhai Beast is the most powerful being in Shanhaijing. Its roar can shatter mountains. Only those who master all fraction knowledge can challenge it!'
+    },
+    // v16.0 新增Boss
+    {
+        id: 'tai_sui_shen_jun', name: '太岁神君', emoji: '🌀', hp: 9, type: 'ancient',
+        difficulty: 'boss',
+        personality: 'domineering',
+        story: '太岁神君是山海经中记载的最神秘的上古凶神之一。传说"太岁头上动土"就是说的它——任何人靠近它都会遭到厄运。太岁神君掌握着天地间最强大的力量，能召唤山海经中所有的妖怪为它而战。当它进入第二阶段变身为真·太岁神君时，它的力量会暴增数倍，能用反击之力将所有攻击弹回去。只有分数计算达到炉火纯青的小朋友才能战胜它。',
+        enterQuips: ['太岁神君临凡！天地变色！', '太岁头上动土？不怕死的来！'],
+        deathQuips: ['太岁之力...终有尽时...', '你是千年来第一个打败我的人...'],
+        tauntQuips: ['太岁面前，一切皆为蝼蚁！', '你的分数能力还差得远呢！'],
+        fearQuips: ['居然...伤到了太岁的真身！', '这个分数能力...前所未见！'],
+        behaviors: ['transform', 'counter', 'summon'],
+        attackEmoji: '⚡',
+        phase2Emoji: '😤',
+        phase2Name: '真·太岁神君',
+        phase2HP: 6
     }
 ];
