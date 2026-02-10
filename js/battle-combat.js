@@ -611,6 +611,9 @@ BattleMode.showBattleQuestion = function() {
     // Reset debounce lock for new question
     _battleAnswerLocked = false;
 
+    // v16.1: Record question start time for dodge mechanic
+    battle.questionStartTime = Date.now();
+
     if (battle.currentIndex >= battle.questions.length) {
         battle.questions = shuffle([...battle.questions]);
         battle.currentIndex = 0;
@@ -714,6 +717,9 @@ BattleMode.checkAnswer = function(answer, btnElement) {
 
 BattleMode.handleCorrectAnswer = function(btnElement) {
     const battle = App.battle;
+
+    // v16.1: Calculate answer time for dodge mechanic
+    battle.answerTime = battle.questionStartTime ? (Date.now() - battle.questionStartTime) : 0;
 
     battle.combo++;
     battle.healCounter++;

@@ -217,7 +217,11 @@ function startQuestionTimer() {
 
         if (remaining <= 0) {
             clearInterval(App.practice.timerInterval);
-            handleWrongAnswer(null);
+            // v16.1: Check debounce lock to prevent race with user click
+            if (!_practiceAnswerLocked) {
+                _practiceAnswerLocked = true;
+                handleWrongAnswer(null);
+            }
         }
     }, 50);
 }

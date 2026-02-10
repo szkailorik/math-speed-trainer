@@ -124,10 +124,15 @@ BattleMode._isBossBehavior = function(monster, behavior) {
 BattleMode._checkBehaviorCondition = function(behavior, phase, monster, battle, hpPercent, context) {
     switch (behavior) {
         case 'dodge':
-            // After correct answer, 15% chance for tricky monsters
+            // v16.1: Time-based dodge - slow answers give monster time to react
             if (phase !== 'afterCorrect') return false;
             if (battle.dodged) return false; // Max once per monster
-            return Math.random() < 0.15;
+            var dodgeThreshold = battle.difficulty === 'easy' ? 8000 :
+                                 battle.difficulty === 'hard' ? 3000 : 5000;
+            if (!battle.answerTime || battle.answerTime < dodgeThreshold) return false;
+            // Slow answer: 50% dodge chance; very slow (1.5x threshold): 80%
+            var dodgeChance = battle.answerTime >= dodgeThreshold * 1.5 ? 0.8 : 0.5;
+            return Math.random() < dodgeChance;
 
         case 'taunt':
             // After wrong answer
@@ -209,7 +214,7 @@ BattleMode.executeDodge = function(cb) {
 
     const enemyEmoji = document.getElementById('monster-emoji');
     this.showSpeechBubble(enemyEmoji, quip, 1000);
-    this.showBattleFeedback(false, '💨 闪避! 伤害无效!');
+    this.showBattleFeedback(false, '💨 回答太慢，被闪避了!');
 
     setTimeout(() => {
         this.setEnemyState('idle');

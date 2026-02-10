@@ -2,6 +2,9 @@
  * daily.js - Daily challenge mode
  */
 
+// v16.1: Debounce lock to prevent rapid double-clicks
+var _dailyAnswerLocked = false;
+
 function initDailyChallenge() {
     const allQuestions = [];
     const modules = ['xiaojiujiu', 'times', 'multiply', 'fraction', 'decimal', 'unit'];
@@ -50,6 +53,9 @@ function startDailyChallenge() {
 function showDailyQuestion() {
     const { questions, currentIndex } = App.daily;
 
+    // v16.1: Reset debounce lock for new question
+    _dailyAnswerLocked = false;
+
     if (currentIndex >= questions.length) {
         endDailyChallenge();
         return;
@@ -95,6 +101,10 @@ function showDailyQuestion() {
 }
 
 function checkDailyAnswer(userAnswer, btnElement) {
+    // v16.1: Debounce to prevent double-fire
+    if (_dailyAnswerLocked) return;
+    _dailyAnswerLocked = true;
+
     const question = App.daily.questions[App.daily.currentIndex];
     const correctAnswer = question.display || question.a;
     const questionCard = document.getElementById('daily-question-card');
