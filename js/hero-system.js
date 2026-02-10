@@ -14,6 +14,12 @@ BattleMode.initHeroLayers = function() {
     var existing = heroSide.querySelector('.hero-layers');
     if (existing) existing.remove();
 
+    // v16.2 fix: Hide the original hero-emoji to avoid duplicate display
+    var originalEmoji = heroSide.querySelector('.hero-emoji');
+    if (originalEmoji) {
+        originalEmoji.style.display = 'none';
+    }
+
     var layers = document.createElement('div');
     layers.className = 'hero-layers';
     layers.innerHTML =

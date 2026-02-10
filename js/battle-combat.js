@@ -771,6 +771,9 @@ BattleMode.startBattleTimer = function() {
     battle.inDangerZone = false;
 
     const timerProgress = document.getElementById('battle-timer-progress');
+    const timerHint = document.getElementById('battle-timer-hint');
+    const hintText = timerHint ? timerHint.querySelector('.timer-hint-text') : null;
+    const hintIcon = timerHint ? timerHint.querySelector('.timer-hint-icon') : null;
     if (!timerProgress) return;
 
     // Timer duration based on difficulty
@@ -780,9 +783,14 @@ BattleMode.startBattleTimer = function() {
 
     const startTime = Date.now();
 
-    // Reset timer bar
+    // Reset timer bar and hint
     timerProgress.style.width = '100%';
     timerProgress.className = 'battle-timer-progress timer-safe';
+    if (timerHint) timerHint.className = 'battle-timer-hint';
+    if (hintText) hintText.textContent = '\u65F6\u95F4\u5230\u602A\u517D\u4F1A\u653B\u51FB\u54E6!';
+    if (hintIcon) hintIcon.textContent = '\u23F3';
+
+    var prevPhase = 'safe';
 
     battle.battleTimerInterval = setInterval(() => {
         const elapsed = Date.now() - startTime;
@@ -791,12 +799,24 @@ BattleMode.startBattleTimer = function() {
 
         timerProgress.style.width = (remaining * 100) + '%';
 
-        // Update color based on remaining time
+        // Update color + hint based on remaining time
         if (remainingMs <= dangerThreshold) {
             timerProgress.className = 'battle-timer-progress timer-danger';
             battle.inDangerZone = true;
+            if (prevPhase !== 'danger') {
+                prevPhase = 'danger';
+                if (timerHint) timerHint.className = 'battle-timer-hint hint-danger';
+                if (hintText) hintText.textContent = '\u602A\u517D\u8981\u653B\u51FB\u4E86\uFF01\u5FEB\u7B54!';
+                if (hintIcon) hintIcon.textContent = '\u26A0\uFE0F';
+            }
         } else if (remainingMs <= duration * 0.5) {
             timerProgress.className = 'battle-timer-progress timer-warning';
+            if (prevPhase !== 'warning') {
+                prevPhase = 'warning';
+                if (timerHint) timerHint.className = 'battle-timer-hint hint-warning';
+                if (hintText) hintText.textContent = '\u52A0\u5FEB\u901F\u5EA6\uFF0C\u602A\u517D\u5728\u84C4\u529B...';
+                if (hintIcon) hintIcon.textContent = '\u23F1\uFE0F';
+            }
         } else {
             timerProgress.className = 'battle-timer-progress timer-safe';
         }

@@ -4897,13 +4897,16 @@ body.keyboard-active #battle-page .battle-answer-area {
 }
 
 /* v16.2: Battle Timer Bar */
+.battle-timer-wrapper {
+    margin-bottom: 10px;
+}
+
 .battle-timer-bar {
     width: 100%;
     height: 3px;
     background: rgba(255, 255, 255, 0.1);
     border-radius: 2px;
     overflow: hidden;
-    margin-bottom: 8px;
 }
 
 .battle-timer-progress {
@@ -4930,6 +4933,39 @@ body.keyboard-active #battle-page .battle-answer-area {
 @keyframes timer-pulse {
     0%, 100% { opacity: 1; }
     50% { opacity: 0.5; }
+}
+
+/* Timer hint text */
+.battle-timer-hint {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    margin-top: 4px;
+    font-size: 0.65rem;
+    color: rgba(255, 255, 255, 0.4);
+    transition: color 0.3s ease, transform 0.3s ease;
+    line-height: 1;
+}
+
+.timer-hint-icon {
+    font-size: 0.7rem;
+}
+
+.battle-timer-hint.hint-warning {
+    color: rgba(255, 152, 0, 0.7);
+}
+
+.battle-timer-hint.hint-danger {
+    color: rgba(244, 67, 54, 0.9);
+    animation: hint-shake 0.4s ease-in-out infinite;
+    font-weight: 600;
+}
+
+@keyframes hint-shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-2px); }
+    75% { transform: translateX(2px); }
 }
 
 /* ===== Arena Projectiles ===== */

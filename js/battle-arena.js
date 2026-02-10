@@ -275,14 +275,21 @@ BattleMode.showSpeechBubble = function(targetEl, text, duration) {
 // ===== Hero State Management =====
 
 BattleMode.setHeroState = function(state) {
+    // v16.2: Apply state to hero-char-layer (primary) when hero-layers exists,
+    // and also to hero-emoji (fallback)
+    const stateClasses = ['hero-idle', 'hero-attack', 'hero-cast_spell', 'hero-hit', 'hero-heal', 'hero-victory', 'hero-defeat'];
+
+    const charLayer = document.querySelector('.hero-char-layer');
+    if (charLayer) {
+        charLayer.classList.remove(...stateClasses);
+        charLayer.classList.add('hero-' + state);
+    }
+
     const heroEmoji = document.querySelector('.hero-emoji');
-    if (!heroEmoji) return;
-
-    // Remove all state classes
-    heroEmoji.classList.remove('hero-idle', 'hero-attack', 'hero-cast_spell', 'hero-hit', 'hero-heal', 'hero-victory', 'hero-defeat');
-
-    // Add new state
-    heroEmoji.classList.add('hero-' + state);
+    if (heroEmoji) {
+        heroEmoji.classList.remove(...stateClasses);
+        heroEmoji.classList.add('hero-' + state);
+    }
 };
 
 // ===== Enemy State Management =====
@@ -346,9 +353,11 @@ BattleMode.cleanupArena = function() {
     // Remove projectiles
     document.querySelectorAll('.arena-attack-projectile').forEach(el => el.remove());
 
-    // v16.2: Remove hero layers
+    // v16.2: Remove hero layers and restore original hero-emoji
     const heroLayers = document.querySelector('.hero-layers');
     if (heroLayers) heroLayers.remove();
+    const originalEmoji = document.querySelector('.hero-emoji');
+    if (originalEmoji) originalEmoji.style.display = '';
 
     // Reset hero state
     this.setHeroState('idle');
