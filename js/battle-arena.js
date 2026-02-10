@@ -110,19 +110,29 @@ BattleMode.updateArenaPositions = function() {
 
 BattleMode.heroAttackAnimation = function(weapon, callback) {
     const heroEmoji = document.querySelector('.hero-emoji');
+    const weaponLayer = document.querySelector('.hero-weapon-layer');
     if (!heroEmoji) {
         if (callback) callback();
         return;
     }
 
-    // Cast spell animation
+    // Phase 1: Raise weapon (0.2s)
+    if (weaponLayer) {
+        weaponLayer.textContent = weapon.emoji;
+        weaponLayer.classList.add('weapon-raise');
+    }
     this.setHeroState('cast_spell');
 
     setTimeout(() => {
-        // Fire weapon horizontally
+        // Phase 2: Swing weapon (0.3s)
+        if (weaponLayer) {
+            weaponLayer.classList.remove('weapon-raise');
+            weaponLayer.classList.add('weapon-swing');
+        }
         this.fireWeaponHorizontal(weapon);
 
         setTimeout(() => {
+            if (weaponLayer) weaponLayer.classList.remove('weapon-swing');
             this.setHeroState('idle');
             if (callback) callback();
         }, 400);
@@ -282,7 +292,7 @@ BattleMode.setEnemyState = function(state) {
     if (!enemyEmoji) return;
 
     // Remove all state classes
-    enemyEmoji.classList.remove('enemy-idle', 'enemy-hit', 'enemy-attack', 'enemy-threaten', 'enemy-weak', 'enemy-enrage', 'enemy-death', 'enemy-dodge', 'enemy-defend', 'enemy-fear');
+    enemyEmoji.classList.remove('enemy-idle', 'enemy-hit', 'enemy-attack', 'enemy-threaten', 'enemy-weak', 'enemy-enrage', 'enemy-death', 'enemy-dodge', 'enemy-defend', 'enemy-fear', 'enemy-charge');
 
     // Add new state
     enemyEmoji.classList.add('enemy-' + state);
@@ -335,6 +345,10 @@ BattleMode.cleanupArena = function() {
 
     // Remove projectiles
     document.querySelectorAll('.arena-attack-projectile').forEach(el => el.remove());
+
+    // v16.2: Remove hero layers
+    const heroLayers = document.querySelector('.hero-layers');
+    if (heroLayers) heroLayers.remove();
 
     // Reset hero state
     this.setHeroState('idle');

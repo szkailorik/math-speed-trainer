@@ -61,7 +61,12 @@ function startPractice(module) {
             return;
         }
         const diffData = moduleData[App.difficulty] || moduleData.easy;
-        questions = shuffle(diffData).slice(0, Math.min(App.settings.count, diffData.length));
+        // v16.2: Use weighted selection if available
+        if (typeof QuestionEngine !== 'undefined' && typeof QuestionEngine.weightedSelect === 'function') {
+            questions = QuestionEngine.weightedSelect(diffData, Math.min(App.settings.count, diffData.length), module);
+        } else {
+            questions = shuffle(diffData).slice(0, Math.min(App.settings.count, diffData.length));
+        }
     }
 
     // B05 fix: clear any leftover timer before starting new practice
@@ -260,6 +265,12 @@ function handleCorrectAnswer(btnElement) {
     const questionCard = document.getElementById('question-card');
     questionCard.classList.add('correct');
 
+    // v16.2: Update question weight
+    var question = App.practice.questions[App.practice.currentIndex];
+    if (typeof QuestionEngine !== 'undefined' && typeof QuestionEngine.updateWeight === 'function') {
+        QuestionEngine.updateWeight(App.currentModule || 'xiaojiujiu', question.q, true, false);
+    }
+
     App.practice.correctCount++;
     App.practice.streak++;
     App.stats.totalCorrect++;
@@ -359,6 +370,11 @@ function handleWrongAnswer(userAnswer) {
 
     questionCard.classList.add('wrong');
 
+    // v16.2: Update question weight
+    if (typeof QuestionEngine !== 'undefined' && typeof QuestionEngine.updateWeight === 'function') {
+        QuestionEngine.updateWeight(App.currentModule || 'xiaojiujiu', question.q, false, false);
+    }
+
     const formattedQuestion = formatFraction(question.q);
     const formattedAnswer = formatFraction(String(correctAnswer));
     questionText.innerHTML = `${formattedQuestion}<br><span style="color: var(--success); font-size: 1.5rem;">\u6B63\u786E\u7B54\u6848: ${formattedAnswer}</span>`;
@@ -369,6 +385,7 @@ function handleWrongAnswer(userAnswer) {
         q: question.q,
         a: question.display || question.a,
         yourAnswer: userAnswer,
+        module: App.currentModule || 'xiaojiujiu',
         timestamp: Date.now()
     };
 

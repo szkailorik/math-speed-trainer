@@ -11,7 +11,12 @@ function initDailyChallenge() {
 
     modules.forEach(m => {
         const data = MathData[m].normal || MathData[m].easy;
-        const picked = shuffle([...data]).slice(0, 3);
+        var picked;
+        if (typeof QuestionEngine !== 'undefined' && typeof QuestionEngine.weightedSelect === 'function') {
+            picked = QuestionEngine.weightedSelect(data, 3, m);
+        } else {
+            picked = shuffle([...data]).slice(0, 3);
+        }
         allQuestions.push(...picked);
     });
 
@@ -118,6 +123,11 @@ function checkDailyAnswer(userAnswer, btnElement) {
 
     const isCorrect = String(userAnswer) === String(correctAnswer);
 
+    // v16.2: Update question weight
+    if (typeof QuestionEngine !== 'undefined' && typeof QuestionEngine.updateWeight === 'function') {
+        QuestionEngine.updateWeight(question.module || 'mixed', question.q, isCorrect, false);
+    }
+
     App.daily.results.push(isCorrect);
 
     const dot = document.querySelector(`.progress-dot[data-index="${App.daily.currentIndex}"]`);
@@ -132,6 +142,7 @@ function checkDailyAnswer(userAnswer, btnElement) {
             q: question.q,
             a: question.display || question.a,
             yourAnswer: userAnswer,
+            module: question.module || 'mixed',
             timestamp: Date.now()
         };
         const exists = App.wrongBook.some(item => item.q === wrongItem.q);

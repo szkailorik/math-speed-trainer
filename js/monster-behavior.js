@@ -124,15 +124,12 @@ BattleMode._isBossBehavior = function(monster, behavior) {
 BattleMode._checkBehaviorCondition = function(behavior, phase, monster, battle, hpPercent, context) {
     switch (behavior) {
         case 'dodge':
-            // v16.1: Time-based dodge - slow answers give monster time to react
+            // v16.2: Only dodge when player answered in the danger zone (last 1.5s of timer)
             if (phase !== 'afterCorrect') return false;
             if (battle.dodged) return false; // Max once per monster
-            var dodgeThreshold = battle.difficulty === 'easy' ? 8000 :
-                                 battle.difficulty === 'hard' ? 3000 : 5000;
-            if (!battle.answerTime || battle.answerTime < dodgeThreshold) return false;
-            // Slow answer: 50% dodge chance; very slow (1.5x threshold): 80%
-            var dodgeChance = battle.answerTime >= dodgeThreshold * 1.5 ? 0.8 : 0.5;
-            return Math.random() < dodgeChance;
+            if (!battle.inDangerZone) return false; // Only in danger zone
+            // In danger zone: 50% dodge chance
+            return Math.random() < 0.5;
 
         case 'taunt':
             // After wrong answer

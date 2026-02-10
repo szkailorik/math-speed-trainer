@@ -5,6 +5,9 @@
 // B04 fix: debounce flag for battle answers
 var _battleAnswerLocked = false;
 
+// v16.2: re-entry lock for showBattleQuestion
+var _questionDisplayPending = false;
+
 // ===== Battle Mode Init =====
 
 BattleMode.init = function() {
@@ -420,7 +423,13 @@ BattleMode.startBattle = function(difficulty, module) {
     const dataKey = dataKeyMap[battle.module] || 'xiaojiujiu';
     const moduleData = MathData[dataKey];
     const diffData = moduleData[difficulty] || moduleData.easy;
-    const mainQuestions = shuffle([...diffData]);
+    // v16.2: Use weighted selection if available
+    var mainQuestions;
+    if (typeof QuestionEngine !== 'undefined' && typeof QuestionEngine.weightedSelect === 'function') {
+        mainQuestions = QuestionEngine.weightedSelect(diffData, diffData.length, battle.module);
+    } else {
+        mainQuestions = shuffle([...diffData]);
+    }
 
     if (moduleData.warmup && moduleData.warmup.length > 0) {
         const warmupPool = shuffle([...moduleData.warmup]);
@@ -448,6 +457,11 @@ BattleMode.startBattle = function(difficulty, module) {
 
     // v15.0: Initialize arena and card count display
     this.initArena();
+
+    // v16.2: Initialize hero layers and combo engine
+    this.initHeroLayers();
+    this.resetComboState();
+
     const cardCountEl = document.getElementById('battle-card-count');
     if (cardCountEl) cardCountEl.textContent = '🃏 ' + this.getCardCount();
 
@@ -479,6 +493,12 @@ BattleMode.generateMonsterQueue = function(difficulty) {
 
 BattleMode.initStage = function() {
     const battle = App.battle;
+
+    // v16.2: Clear old question to prevent flash when entering new stage
+    document.getElementById('battle-question-text').textContent = '';
+    document.getElementById('battle-choices').innerHTML = '';
+    document.getElementById('battle-question-card').style.opacity = '0';
+
     const stageIndex = battle.currentStage - 1;
 
     let monster = battle.monsterQueue[stageIndex];
@@ -577,7 +597,7 @@ BattleMode.showStageTransition = function(stage, monster) {
 
     setTimeout(() => {
         transition.classList.remove('show');
-    }, 1200);
+    }, 1500);
 };
 
 BattleMode.updateUI = function() {
@@ -606,10 +626,17 @@ BattleMode.updateUI = function() {
 };
 
 BattleMode.showBattleQuestion = function() {
+    // v16.2: prevent re-entry
+    if (_questionDisplayPending) return;
+    _questionDisplayPending = true;
+
     const battle = App.battle;
 
     // Reset debounce lock for new question
     _battleAnswerLocked = false;
+
+    // v16.2: Restore question card visibility
+    document.getElementById('battle-question-card').style.opacity = '1';
 
     // v16.1: Record question start time for dodge mechanic
     battle.questionStartTime = Date.now();
@@ -661,6 +688,10 @@ BattleMode.showBattleQuestion = function() {
 
         choicesContainer.appendChild(btn);
     });
+
+    // v16.2: Unlock re-entry after rendering + start countdown timer
+    _questionDisplayPending = false;
+    this.startBattleTimer();
 };
 
 BattleMode.generateChoices = function(correctAnswer) {
@@ -700,13 +731,25 @@ BattleMode.checkAnswer = function(answer, btnElement) {
     if (_battleAnswerLocked) return;
     _battleAnswerLocked = true;
 
+    // v16.2: Stop countdown timer
     const battle = App.battle;
+    if (battle.battleTimerInterval) {
+        clearInterval(battle.battleTimerInterval);
+        battle.battleTimerInterval = null;
+    }
+    battle.inDangerZone = false;
+
     const question = battle.questions[battle.currentIndex];
     const isCorrect = String(answer) === String(question.a);
 
     document.querySelectorAll('.battle-choice-btn').forEach(btn => {
         btn.disabled = true;
     });
+
+    // v16.2: Update question weight
+    if (typeof QuestionEngine !== 'undefined' && typeof QuestionEngine.updateWeight === 'function') {
+        QuestionEngine.updateWeight(battle.module || 'xiaojiujiu', question.q, isCorrect, false);
+    }
 
     if (isCorrect) {
         this.handleCorrectAnswer(btnElement);
@@ -715,18 +758,102 @@ BattleMode.checkAnswer = function(answer, btnElement) {
     }
 };
 
+// ===== v16.2: Battle Countdown Timer =====
+
+BattleMode.startBattleTimer = function() {
+    const battle = App.battle;
+
+    // Clear any existing timer
+    if (battle.battleTimerInterval) {
+        clearInterval(battle.battleTimerInterval);
+        battle.battleTimerInterval = null;
+    }
+    battle.inDangerZone = false;
+
+    const timerProgress = document.getElementById('battle-timer-progress');
+    if (!timerProgress) return;
+
+    // Timer duration based on difficulty
+    const durations = { easy: 5000, normal: 3000, hard: 2000 };
+    const duration = durations[battle.difficulty] || 5000;
+    const dangerThreshold = 1500; // Last 1.5s is danger zone
+
+    const startTime = Date.now();
+
+    // Reset timer bar
+    timerProgress.style.width = '100%';
+    timerProgress.className = 'battle-timer-progress timer-safe';
+
+    battle.battleTimerInterval = setInterval(() => {
+        const elapsed = Date.now() - startTime;
+        const remaining = Math.max(0, 1 - elapsed / duration);
+        const remainingMs = duration - elapsed;
+
+        timerProgress.style.width = (remaining * 100) + '%';
+
+        // Update color based on remaining time
+        if (remainingMs <= dangerThreshold) {
+            timerProgress.className = 'battle-timer-progress timer-danger';
+            battle.inDangerZone = true;
+        } else if (remainingMs <= duration * 0.5) {
+            timerProgress.className = 'battle-timer-progress timer-warning';
+        } else {
+            timerProgress.className = 'battle-timer-progress timer-safe';
+        }
+
+        if (remaining <= 0) {
+            clearInterval(battle.battleTimerInterval);
+            battle.battleTimerInterval = null;
+            // Timeout - auto wrong answer
+            if (!_battleAnswerLocked) {
+                _battleAnswerLocked = true;
+                BattleMode.handleTimeoutAnswer();
+            }
+        }
+    }, 50);
+};
+
+BattleMode.handleTimeoutAnswer = function() {
+    const battle = App.battle;
+    const question = battle.questions[battle.currentIndex];
+
+    // v16.2: Update weight with timeout penalty
+    if (typeof QuestionEngine !== 'undefined' && typeof QuestionEngine.updateWeight === 'function') {
+        QuestionEngine.updateWeight(battle.module || 'xiaojiujiu', question.q, false, true);
+    }
+
+    // Disable all choice buttons
+    document.querySelectorAll('.battle-choice-btn').forEach(btn => {
+        btn.disabled = true;
+        if (String(btn.textContent) === String(question.a)) {
+            btn.classList.add('correct');
+        }
+    });
+
+    this.showBattleFeedback(false, '\u23F0 \u65F6\u95F4\u5230! \u6B63\u786E\u7B54\u6848: ' + question.a);
+
+    // Treat as wrong answer
+    this.handleWrongAnswer(null, question.a, null);
+};
+
 BattleMode.handleCorrectAnswer = function(btnElement) {
     const battle = App.battle;
+
+    // v16.2: Clear countdown timer
+    if (battle.battleTimerInterval) {
+        clearInterval(battle.battleTimerInterval);
+        battle.battleTimerInterval = null;
+    }
 
     // v16.1: Calculate answer time for dodge mechanic
     battle.answerTime = battle.questionStartTime ? (Date.now() - battle.questionStartTime) : 0;
 
-    battle.combo++;
+    // v16.2: Use combo-engine instead of manual combo tracking
+    const comboResult = this.processCorrectCombo();
+
+    // Keep healCounter and correctCount (not managed by combo-engine)
     battle.healCounter++;
     battle.correctCount++;
-    if (battle.combo > battle.maxCombo) {
-        battle.maxCombo = battle.combo;
-    }
 
     if (btnElement) {
         btnElement.classList.add('correct');
@@ -801,12 +928,9 @@ BattleMode.handleCorrectAnswer = function(btnElement) {
         }
     }
 
-    // v15.0: Hero attack animation
-    this.setHeroState('cast_spell');
-    this.fireWeapon(weapon, damage);
-
-    setTimeout(() => {
-        this.setHeroState('idle');
+    // v16.2: Use hero-system combo attack animation (replaces fireWeapon)
+    const targetEl = document.getElementById('monster-emoji');
+    this.executeComboAttack(battle.combo, targetEl, () => {
         this.dealDamage(damage);
 
         if (battle.healCounter >= 5 && battle.playerHP < battle.playerMaxHP) {
@@ -816,7 +940,7 @@ BattleMode.handleCorrectAnswer = function(btnElement) {
         }
 
         this.tryDropItem();
-    }, 400);
+    });
 };
 
 BattleMode.tryDropItem = function() {
@@ -1017,7 +1141,15 @@ BattleMode.useItem = function(index) {
 BattleMode.handleWrongAnswer = function(btnElement, correctAnswer, userAnswer) {
     const battle = App.battle;
 
-    battle.combo = 0;
+    // v16.2: Clear countdown timer
+    if (battle.battleTimerInterval) {
+        clearInterval(battle.battleTimerInterval);
+        battle.battleTimerInterval = null;
+    }
+
+    // v16.2: Use combo-engine for combo break (replaces manual battle.combo = 0)
+    const comboResult = this.processWrongCombo();
+
     battle.healCounter = 0;
     battle.noDamageTaken = false;
 
@@ -1026,10 +1158,6 @@ BattleMode.handleWrongAnswer = function(btnElement, correctAnswer, userAnswer) {
     }
 
     playSound('wrong');
-
-    // v15.0: Use enemy state system instead of raw class toggle
-    this.setEnemyState('threaten');
-    setTimeout(() => this.setEnemyState('idle'), 800);
 
     this.showBattleFeedback(false, '\u6B63\u786E\u7B54\u6848: ' + correctAnswer);
 
@@ -1045,6 +1173,7 @@ BattleMode.handleWrongAnswer = function(btnElement, correctAnswer, userAnswer) {
         a: question.a,
         yourAnswer: userAnswer || null,
         timestamp: Date.now(),
+        module: battle.module || 'xiaojiujiu',
         monsterEmoji: battle.currentMonster ? battle.currentMonster.emoji : null,
         monsterName: battle.currentMonster ? battle.currentMonster.name : null
     };
@@ -1054,6 +1183,8 @@ BattleMode.handleWrongAnswer = function(btnElement, correctAnswer, userAnswer) {
         saveProgress();
     }
 
+    // v16.2: Monster charge animation before attack
+    this.setEnemyState('charge');
     setTimeout(() => {
         this.monsterAttack();
     }, 500);
@@ -1088,61 +1219,6 @@ BattleMode.getRandomWeapon = function() {
     }
 
     return this.weapons[0];
-};
-
-BattleMode.fireWeapon = function(weapon, damage) {
-    const battle = App.battle;
-    const weaponArea = document.getElementById('weapon-area');
-    const questionArea = document.querySelector('.battle-question-area');
-    const rect = questionArea.getBoundingClientRect();
-
-    playSound('attack');
-
-    const weaponEl = document.createElement('div');
-    weaponEl.className = 'weapon';
-    weaponEl.textContent = weapon.emoji;
-
-    if (damage >= 4) {
-        weaponEl.classList.add('super-weapon');
-    } else if (damage >= 2) {
-        weaponEl.classList.add('strong-weapon');
-    }
-
-    const count = battle.combo >= 3 ? Math.min(battle.combo - 1, 3) : 1;
-
-    for (let i = 0; i < count; i++) {
-        const w = weaponEl.cloneNode(true);
-        w.style.left = (rect.left + rect.width / 2 - 20 + (i - 1) * 30) + 'px';
-        w.style.bottom = (window.innerHeight - rect.top) + 'px';
-
-        if (battle.combo >= 5) {
-            w.style.fontSize = '3rem';
-        }
-
-        if (damage >= 3) {
-            w.style.filter = 'drop-shadow(0 0 10px gold)';
-        }
-
-        weaponArea.appendChild(w);
-
-        setTimeout(() => w.remove(), 500);
-    }
-
-    if (damage >= 4) {
-        this.showSuperAttackEffect(weapon);
-    }
-};
-
-BattleMode.showSuperAttackEffect = function(weapon) {
-    const effectEl = document.createElement('div');
-    effectEl.className = 'super-attack-effect';
-    effectEl.innerHTML = `
-        <div class="super-attack-emoji">${weapon.emoji}</div>
-        <div class="super-attack-name">${weapon.name}!</div>
-    `;
-    document.getElementById('battle-page').appendChild(effectEl);
-
-    setTimeout(() => effectEl.remove(), 1000);
 };
 
 BattleMode.monsterQuips = ['\u54CE\u5466!', '\u597D\u75DB!', '\u545C\u545C...', '\u4F4F\u624B!', '\u4E0D\u8981!', '\u6551\u547D!'];
@@ -1387,6 +1463,12 @@ BattleMode.gameOver = function(isVictory) {
     const battle = App.battle;
     battle.active = false;
 
+    // v16.2: Cleanup timer
+    if (battle.battleTimerInterval) {
+        clearInterval(battle.battleTimerInterval);
+        battle.battleTimerInterval = null;
+    }
+
     // v16.0: Tower mode handles its own game over
     if (App.tower.active && !isVictory) {
         this.onTowerFloorFail();
@@ -1554,6 +1636,12 @@ BattleMode.exitBattle = function() {
 
     const module = App.battle.module;
     App.battle.active = false;
+
+    // v16.2: Cleanup timer
+    if (App.battle.battleTimerInterval) {
+        clearInterval(App.battle.battleTimerInterval);
+        App.battle.battleTimerInterval = null;
+    }
 
     // v15.0: Cleanup arena
     this.cleanupArena();
