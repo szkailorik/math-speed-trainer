@@ -2339,14 +2339,6 @@ body.keyboard-active #battle-page .battle-answer-area {
         font-size: 0.6rem;
     }
 
-    .adventure-status {
-        padding: 12px 14px;
-    }
-
-    .adventure-go-btn {
-        padding: 8px 16px;
-        font-size: 0.85rem;
-    }
 }
 
 @media (min-width: 768px) {
@@ -4429,60 +4421,7 @@ body.keyboard-active #battle-page .battle-answer-area {
 
 /* dark tower override removed - app is permanently dark */
 
-/* 冒险状态栏 */
-.adventure-status {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 14px 18px;
-    margin-bottom: 20px;
-    background: linear-gradient(135deg, rgba(108,92,231,0.3), rgba(162,155,254,0.15));
-    border: 1px solid rgba(255, 215, 0, 0.2);
-    border-radius: var(--radius);
-    color: white;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-}
-
-.adventure-status-info {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.adventure-status-icon {
-    font-size: 1.3rem;
-}
-
-.adventure-status-text {
-    font-size: 0.9rem;
-    font-weight: 500;
-}
-
-.adventure-go-btn {
-    padding: 10px 20px;
-    background: linear-gradient(135deg, #FFD700, #FFA500);
-    border: none;
-    border-radius: var(--radius-full);
-    font-size: 0.9rem;
-    font-weight: 700;
-    color: #2D1B69;
-    cursor: pointer;
-    transition: var(--transition);
-    white-space: nowrap;
-}
-
-.adventure-go-btn:hover {
-    transform: scale(1.05);
-    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
-}
-
-.adventure-go-btn:active {
-    transform: scale(0.97);
-}
-
-/* dark adventure-status override removed - app is permanently dark */
+/* adventure-status removed in v16.2 */
 
 /* 头像选择器升级 */
 .avatar-picker {
@@ -6787,4 +6726,20 @@ body.keyboard-active #battle-page .battle-answer-area {
 .split-fragment {
     position: absolute;
     transition: all 0.5s ease;
+}
+
+/* v16.2: Monster dodge indicator tag */
+.monster-dodge-tag {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    font-size: 0.6rem;
+    background: rgba(100, 200, 255, 0.2);
+    color: #8ad4ff;
+    padding: 2px 6px;
+    border-radius: 8px;
+    border: 1px solid rgba(100, 200, 255, 0.3);
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 5;
 }

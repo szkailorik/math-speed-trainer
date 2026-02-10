@@ -565,6 +565,22 @@ BattleMode.showMonsterType = function(monster) {
     }
     typeTag.textContent = typeNames[monster.type] || '\u666E\u901A';
     typeTag.style.background = typeColors[monster.type] || '#a8a878';
+
+    // v16.2: Show dodge indicator if monster can dodge
+    let dodgeTag = document.getElementById('monster-dodge-tag');
+    const behaviors = this.getMonsterBehaviors(monster);
+    if (behaviors.includes('dodge')) {
+        if (!dodgeTag) {
+            dodgeTag = document.createElement('div');
+            dodgeTag.id = 'monster-dodge-tag';
+            dodgeTag.className = 'monster-dodge-tag';
+            (document.querySelector('.enemy-side') || document.querySelector('.monster-area'))?.appendChild(dodgeTag);
+        }
+        dodgeTag.textContent = '\uD83D\uDCA8 \u4F1A\u95EA\u907F';
+        dodgeTag.style.display = '';
+    } else if (dodgeTag) {
+        dodgeTag.style.display = 'none';
+    }
 };
 
 BattleMode.showStageTransition = function(stage, monster) {
@@ -779,7 +795,9 @@ BattleMode.startBattleTimer = function() {
     // Timer duration based on difficulty
     const durations = { easy: 5000, normal: 3000, hard: 2000 };
     const duration = durations[battle.difficulty] || 5000;
-    const dangerThreshold = 1500; // Last 1.5s is danger zone
+    // Danger zone proportional: ~20-25% of total time
+    const dangerThresholds = { easy: 1000, normal: 800, hard: 500 };
+    const dangerThreshold = dangerThresholds[battle.difficulty] || 1000;
 
     const startTime = Date.now();
 
@@ -875,6 +893,10 @@ BattleMode.handleCorrectAnswer = function(btnElement) {
     battle.healCounter++;
     battle.correctCount++;
 
+    // v16.2: Count toward today's practice stats
+    App.stats.todayCount++;
+    saveProgress();
+
     if (btnElement) {
         btnElement.classList.add('correct');
     }
@@ -927,12 +949,15 @@ BattleMode.handleCorrectAnswer = function(btnElement) {
     const weapon = this.getRandomWeapon();
     if (weapon.emoji === '\uD83D\uDCA3') damage += 1;
 
-    // v15.0: Check dodge behavior before applying damage
+    // v16.2: Check dodge behavior - partial damage on dodge (50%, rounded up)
     const dodgeCheck = this.checkBehaviorTrigger('afterCorrect', { damage });
     if (dodgeCheck && dodgeCheck.behavior === 'dodge') {
+        const grazeDamage = Math.max(1, Math.ceil(damage * 0.5));
         this.heroAttackAnimation(weapon, () => {
             this.executeBehavior('dodge', (result) => {
-                // Dodged - skip damage, go to next question
+                // Dodged but still graze damage
+                this.dealDamage(grazeDamage);
+                this.tryDropItem();
                 battle.currentIndex++;
                 setTimeout(() => this.showBattleQuestion(), 600);
             });

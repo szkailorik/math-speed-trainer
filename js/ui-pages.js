@@ -144,9 +144,6 @@ function updateHomeStats() {
     document.getElementById('today-count').textContent = App.stats.todayCount;
     document.getElementById('total-score').textContent = App.stats.totalScore;
     document.getElementById('wrong-count').textContent = App.wrongBook.length;
-
-    const advText = document.getElementById('adventure-text');
-    if (advText) advText.textContent = `\u4ECA\u65E5\u5DF2\u7EC3\u4E60 ${App.stats.todayCount} \u9898`;
 }
 
 // ===== Settings =====
@@ -326,13 +323,6 @@ function initEventListeners() {
             showPage(btn.dataset.target);
             updateHomeStats();
         });
-    });
-
-    // Adventure button
-    document.getElementById('adventure-go').addEventListener('click', () => {
-        const modules = ['xiaojiujiu', 'times', 'multiply', 'fraction', 'decimal', 'unit'];
-        const randomModule = modules[Math.floor(Math.random() * modules.length)];
-        startPractice(randomModule);
     });
 
     // Settings button

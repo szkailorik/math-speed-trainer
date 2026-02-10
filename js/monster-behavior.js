@@ -42,7 +42,7 @@ const DefaultQuips = {
     death: ['下次不会输的...', '记住我!', '可恶...', '我会回来的!'],
     enter: ['来挑战我吧!', '你准备好了吗?', '战斗开始!', '看我的厉害!'],
     enrage: ['可恶!!', '我生气了!', '不会放过你!', '啊啊啊!!'],
-    dodge: ['闪!', '太慢了~', '没打中~', '嘿嘿~'],
+    dodge: ['哎呀，差一点!', '好险好险~', '擦过去了!', '嘻嘻，再来!'],
     defend: ['挡!', '别想过来!', '铜墙铁壁!', '打不穿的!'],
     summon: ['小的们！上！', '援军来了！', '别想单挑！'],
     escape: ['溜了溜了~', '跑路啦~', '三十六计走为上~', '拜拜~'],
@@ -124,12 +124,12 @@ BattleMode._isBossBehavior = function(monster, behavior) {
 BattleMode._checkBehaviorCondition = function(behavior, phase, monster, battle, hpPercent, context) {
     switch (behavior) {
         case 'dodge':
-            // v16.2: Only dodge when player answered in the danger zone (last 1.5s of timer)
+            // v16.2: Only dodge when player answered in the danger zone
             if (phase !== 'afterCorrect') return false;
             if (battle.dodged) return false; // Max once per monster
             if (!battle.inDangerZone) return false; // Only in danger zone
-            // In danger zone: 50% dodge chance
-            return Math.random() < 0.5;
+            // 30% dodge chance (gentle for kids)
+            return Math.random() < 0.3;
 
         case 'taunt':
             // After wrong answer
@@ -211,7 +211,7 @@ BattleMode.executeDodge = function(cb) {
 
     const enemyEmoji = document.getElementById('monster-emoji');
     this.showSpeechBubble(enemyEmoji, quip, 1000);
-    this.showBattleFeedback(false, '💨 回答太慢，被闪避了!');
+    this.showBattleFeedback(true, '💨 擦到了! 快一点伤害更高哦');
 
     setTimeout(() => {
         this.setEnemyState('idle');
