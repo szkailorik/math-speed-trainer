@@ -25,8 +25,7 @@ BattleMode.saveTowerProgress = function() {
     var tower = App.tower;
     var data = {
         maxFloorReached: tower.maxFloorReached,
-        dailyAttemptDate: tower.dailyAttemptDate,
-        dailyAttemptUsed: tower.dailyAttemptUsed
+        lastAttemptTime: tower.lastAttemptTime
     };
     try {
         var key = 'mathSpeedTrainer_tower_' + currentUser.id;
@@ -40,8 +39,7 @@ BattleMode.loadTowerProgress = function() {
     var saved = this.getTowerProgress();
     if (saved) {
         App.tower.maxFloorReached = saved.maxFloorReached || 0;
-        App.tower.dailyAttemptDate = saved.dailyAttemptDate || null;
-        App.tower.dailyAttemptUsed = saved.dailyAttemptUsed || false;
+        App.tower.lastAttemptTime = saved.lastAttemptTime || null;
     }
 };
 
@@ -53,19 +51,21 @@ BattleMode.isTowerUnlocked = function() {
 
 // ===== Tower Lobby =====
 
+// v16.2: 10-minute cooldown constant (ms)
+var TOWER_COOLDOWN_MS = 10 * 60 * 1000;
+
+BattleMode.getTowerCooldownRemaining = function() {
+    var tower = App.tower;
+    if (!tower.lastAttemptTime) return 0;
+    var elapsed = Date.now() - tower.lastAttemptTime;
+    return Math.max(0, TOWER_COOLDOWN_MS - elapsed);
+};
+
 BattleMode.showTowerLobby = function() {
     this.loadTowerProgress();
-    var tower = App.tower;
-
-    var today = new Date().toDateString();
-    if (tower.dailyAttemptDate !== today) {
-        tower.dailyAttemptDate = today;
-        tower.dailyAttemptUsed = false;
-        this.saveTowerProgress();
-    }
-
     this.renderTowerLobby();
     showPage('tower-lobby');
+    this._startTowerCooldownTimer();
 };
 
 BattleMode.renderTowerLobby = function() {
@@ -105,8 +105,14 @@ BattleMode.renderTowerLobby = function() {
     }).join('');
 
     var continueFloor = Math.min(maxFloor + 1, 30);
-    var continueDisabled = tower.dailyAttemptUsed ? ' disabled' : '';
-    var dailyText = tower.dailyAttemptUsed ? '今日挑战已用完，明天再来' : '';
+    var cooldownRemaining = this.getTowerCooldownRemaining();
+    var inCooldown = cooldownRemaining > 0;
+    var continueDisabled = inCooldown ? ' disabled' : '';
+    var cooldownText = '';
+    if (inCooldown) {
+        var mins = Math.ceil(cooldownRemaining / 60000);
+        cooldownText = '冷却中，' + mins + '分钟后可再次挑战';
+    }
 
     lobbyContent.innerHTML =
         '<div class="tower-progress-section">' +
@@ -123,7 +129,7 @@ BattleMode.renderTowerLobby = function() {
             '<button class="tower-action-btn" id="tower-restart-btn"' + continueDisabled + '>' +
                 '从头开始' +
             '</button>' +
-            (dailyText ? '<p class="tower-daily-note">' + dailyText + '</p>' : '') +
+            (cooldownText ? '<p class="tower-daily-note" id="tower-cooldown-text">' + cooldownText + '</p>' : '') +
         '</div>';
 
     var continueBtn = document.getElementById('tower-continue-btn');
@@ -141,6 +147,38 @@ BattleMode.renderTowerLobby = function() {
     }
 };
 
+// ===== Cooldown Timer (updates lobby UI every second) =====
+
+BattleMode._startTowerCooldownTimer = function() {
+    if (this._towerCooldownInterval) {
+        clearInterval(this._towerCooldownInterval);
+        this._towerCooldownInterval = null;
+    }
+    var remaining = this.getTowerCooldownRemaining();
+    if (remaining <= 0) return;
+
+    var self = this;
+    this._towerCooldownInterval = setInterval(function() {
+        var left = self.getTowerCooldownRemaining();
+        var textEl = document.getElementById('tower-cooldown-text');
+        var contBtn = document.getElementById('tower-continue-btn');
+        var restBtn = document.getElementById('tower-restart-btn');
+
+        if (left <= 0) {
+            clearInterval(self._towerCooldownInterval);
+            self._towerCooldownInterval = null;
+            if (textEl) textEl.textContent = '可以挑战了!';
+            if (contBtn) contBtn.disabled = false;
+            if (restBtn) restBtn.disabled = false;
+            setTimeout(function() { if (textEl) textEl.style.display = 'none'; }, 1500);
+            return;
+        }
+        var mins = Math.floor(left / 60000);
+        var secs = Math.ceil((left % 60000) / 1000);
+        if (textEl) textEl.textContent = '冷却中，' + mins + '分' + secs + '秒后可再次挑战';
+    }, 1000);
+};
+
 // ===== Start Tower Run =====
 
 BattleMode.startTowerRun = function(startFloor) {
@@ -156,8 +194,7 @@ BattleMode.startTowerRun = function(startFloor) {
 
     tower.currentZone = this.getFloorZone(startFloor);
 
-    tower.dailyAttemptUsed = true;
-    tower.dailyAttemptDate = new Date().toDateString();
+    tower.lastAttemptTime = Date.now();
     this.saveTowerProgress();
 
     if (typeof checkAchievement === 'function') {
