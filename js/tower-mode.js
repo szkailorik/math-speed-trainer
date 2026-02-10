@@ -647,6 +647,12 @@ BattleMode.exitTower = function() {
     App.tower.active = false;
     App.battle.active = false;
 
+    // v16.2: Clear battle timer
+    if (App.battle.battleTimerInterval) {
+        clearInterval(App.battle.battleTimerInterval);
+        App.battle.battleTimerInterval = null;
+    }
+
     if (typeof this.cleanupArena === 'function') {
         this.cleanupArena();
     }

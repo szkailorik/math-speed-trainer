@@ -642,6 +642,9 @@ BattleMode.updateUI = function() {
 };
 
 BattleMode.showBattleQuestion = function() {
+    // v16.2: bail out if battle already exited
+    if (!App.battle.active) return;
+
     // v16.2: prevent re-entry
     if (_questionDisplayPending) return;
     _questionDisplayPending = true;
@@ -852,6 +855,7 @@ BattleMode.startBattleTimer = function() {
 };
 
 BattleMode.handleTimeoutAnswer = function() {
+    if (!App.battle.active) return;
     const battle = App.battle;
     const question = battle.questions[battle.currentIndex];
 
@@ -1358,6 +1362,7 @@ BattleMode.showMonsterQuip = function() {
 };
 
 BattleMode.monsterAttack = function() {
+    if (!App.battle.active) return;
     const battle = App.battle;
     const monster = battle.currentMonster;
 
@@ -1505,6 +1510,7 @@ BattleMode.showHealEffect = function() {
 };
 
 BattleMode.gameOver = function(isVictory) {
+    if (!App.battle.active) return;
     const battle = App.battle;
     battle.active = false;
 
