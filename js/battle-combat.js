@@ -764,11 +764,15 @@ BattleMode.checkAnswer = function(answer, btnElement) {
     if (_battleAnswerLocked) return;
     _battleAnswerLocked = true;
 
-    // v16.2: Stop countdown timer
+    // v16.2: Stop countdown timer + timeout
     const battle = App.battle;
     if (battle.battleTimerInterval) {
         clearInterval(battle.battleTimerInterval);
         battle.battleTimerInterval = null;
+    }
+    if (battle.battleTimeoutId) {
+        clearTimeout(battle.battleTimeoutId);
+        battle.battleTimeoutId = null;
     }
     battle.inDangerZone = false;
 
@@ -796,10 +800,14 @@ BattleMode.checkAnswer = function(answer, btnElement) {
 BattleMode.startBattleTimer = function() {
     const battle = App.battle;
 
-    // Clear any existing timer
+    // Clear any existing timers
     if (battle.battleTimerInterval) {
         clearInterval(battle.battleTimerInterval);
         battle.battleTimerInterval = null;
+    }
+    if (battle.battleTimeoutId) {
+        clearTimeout(battle.battleTimeoutId);
+        battle.battleTimeoutId = null;
     }
     battle.inDangerZone = false;
 
@@ -827,6 +835,7 @@ BattleMode.startBattleTimer = function() {
 
     var prevPhase = 'safe';
 
+    // Visual-only interval: updates progress bar + color, does NOT trigger timeout
     battle.battleTimerInterval = setInterval(() => {
         const elapsed = Date.now() - startTime;
         const remaining = Math.max(0, 1 - elapsed / duration);
@@ -856,16 +865,22 @@ BattleMode.startBattleTimer = function() {
             timerProgress.className = 'battle-timer-progress timer-safe';
         }
 
+        // Stop visual update when bar hits 0 (timeout handled by setTimeout below)
         if (remaining <= 0) {
             clearInterval(battle.battleTimerInterval);
             battle.battleTimerInterval = null;
-            // Timeout - auto wrong answer
-            if (!_battleAnswerLocked) {
-                _battleAnswerLocked = true;
-                BattleMode.handleTimeoutAnswer();
-            }
         }
     }, 50);
+
+    // Actual timeout: fires 200ms AFTER visual timer hits 0 (grace period)
+    // This prevents race condition where setInterval and click compete in the event loop
+    battle.battleTimeoutId = setTimeout(() => {
+        battle.battleTimeoutId = null;
+        if (!_battleAnswerLocked) {
+            _battleAnswerLocked = true;
+            BattleMode.handleTimeoutAnswer();
+        }
+    }, duration + 200);
 };
 
 BattleMode.handleTimeoutAnswer = function() {
@@ -895,10 +910,14 @@ BattleMode.handleTimeoutAnswer = function() {
 BattleMode.handleCorrectAnswer = function(btnElement) {
     const battle = App.battle;
 
-    // v16.2: Clear countdown timer
+    // v16.2: Clear countdown timer + timeout
     if (battle.battleTimerInterval) {
         clearInterval(battle.battleTimerInterval);
         battle.battleTimerInterval = null;
+    }
+    if (battle.battleTimeoutId) {
+        clearTimeout(battle.battleTimeoutId);
+        battle.battleTimeoutId = null;
     }
 
     // v16.1: Calculate answer time for dodge mechanic
@@ -1227,10 +1246,14 @@ BattleMode.useItem = function(index) {
 BattleMode.handleWrongAnswer = function(btnElement, correctAnswer, userAnswer) {
     const battle = App.battle;
 
-    // v16.2: Clear countdown timer
+    // v16.2: Clear countdown timer + timeout
     if (battle.battleTimerInterval) {
         clearInterval(battle.battleTimerInterval);
         battle.battleTimerInterval = null;
+    }
+    if (battle.battleTimeoutId) {
+        clearTimeout(battle.battleTimeoutId);
+        battle.battleTimeoutId = null;
     }
 
     // v16.2: Use combo-engine for combo break (replaces manual battle.combo = 0)
@@ -1551,10 +1574,14 @@ BattleMode.gameOver = function(isVictory) {
     const battle = App.battle;
     battle.active = false;
 
-    // v16.2: Cleanup timer
+    // v16.2: Cleanup timer + timeout
     if (battle.battleTimerInterval) {
         clearInterval(battle.battleTimerInterval);
         battle.battleTimerInterval = null;
+    }
+    if (battle.battleTimeoutId) {
+        clearTimeout(battle.battleTimeoutId);
+        battle.battleTimeoutId = null;
     }
 
     // v16.0: Tower mode handles its own game over
@@ -1725,10 +1752,14 @@ BattleMode.exitBattle = function() {
     const module = App.battle.module;
     App.battle.active = false;
 
-    // v16.2: Cleanup timer
+    // v16.2: Cleanup timer + timeout
     if (App.battle.battleTimerInterval) {
         clearInterval(App.battle.battleTimerInterval);
         App.battle.battleTimerInterval = null;
+    }
+    if (App.battle.battleTimeoutId) {
+        clearTimeout(App.battle.battleTimeoutId);
+        App.battle.battleTimeoutId = null;
     }
 
     // v15.0: Cleanup arena
