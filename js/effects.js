@@ -1426,6 +1426,298 @@ function playSound(type) {
         gainEcho.gain.exponentialRampToValueAtTime(0.01, t + 0.82);
         oscEcho.start(t + 0.4);
         oscEcho.stop(t + 0.85);
+
+    // --- v17.0 Move System Sounds ---
+
+    } else if (type === 'rankS') {
+        // Epic speed rank sound: 3-note ascending chord + shimmer
+        const t = ctx.currentTime;
+        // 3-note ascending chord (C5, E5, G5)
+        const chordFreqs = [523.25, 659.25, 783.99];
+        chordFreqs.forEach((freq) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, t);
+            gain.gain.setValueAtTime(0.15, t);
+            gain.gain.exponentialRampToValueAtTime(0.01, t + 0.25);
+            osc.start(t);
+            osc.stop(t + 0.25);
+        });
+        // Shimmer: sine at 1500Hz with tremolo
+        const oscShimmer = ctx.createOscillator();
+        const gainShimmer = ctx.createGain();
+        const lfo = ctx.createOscillator();
+        const lfoGain = ctx.createGain();
+        oscShimmer.connect(gainShimmer);
+        gainShimmer.connect(ctx.destination);
+        lfo.connect(lfoGain);
+        lfoGain.connect(gainShimmer.gain);
+        oscShimmer.type = 'sine';
+        oscShimmer.frequency.setValueAtTime(1500, t);
+        gainShimmer.gain.setValueAtTime(0.1, t);
+        gainShimmer.gain.exponentialRampToValueAtTime(0.01, t + 0.25);
+        lfo.type = 'sine';
+        lfo.frequency.setValueAtTime(20, t);
+        lfoGain.gain.setValueAtTime(0.05, t);
+        lfo.start(t);
+        oscShimmer.start(t);
+        lfo.stop(t + 0.25);
+        oscShimmer.stop(t + 0.25);
+
+    } else if (type === 'rankA') {
+        // Quick ascending two-note: sine 440->660Hz sweep
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(440, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(660, ctx.currentTime + 0.15);
+        gain.gain.setValueAtTime(0.12, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.15);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.2);
+
+    } else if (type === 'moveC') {
+        // Cute light tap sound: triangle wave at 300Hz, very short
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(300, ctx.currentTime);
+        gain.gain.setValueAtTime(0.1, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.1);
+
+    } else if (type === 'moveB') {
+        // Standard whoosh: sawtooth 600->200Hz
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(600, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(200, ctx.currentTime + 0.2);
+        gain.gain.setValueAtTime(0.15, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.2);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.25);
+
+    } else if (type === 'moveA') {
+        // Powerful impact: sawtooth 800->100Hz + square bass offset
+        const t = ctx.currentTime;
+        // Main impact
+        const osc1 = ctx.createOscillator();
+        const gain1 = ctx.createGain();
+        osc1.connect(gain1);
+        gain1.connect(ctx.destination);
+        osc1.type = 'sawtooth';
+        osc1.frequency.setValueAtTime(800, t);
+        osc1.frequency.exponentialRampToValueAtTime(100, t + 0.25);
+        gain1.gain.setValueAtTime(0.2, t);
+        gain1.gain.exponentialRampToValueAtTime(0.01, t + 0.25);
+        osc1.start(t);
+        osc1.stop(t + 0.3);
+        // Heavy bass offset by 0.1s
+        const osc2 = ctx.createOscillator();
+        const gain2 = ctx.createGain();
+        osc2.connect(gain2);
+        gain2.connect(ctx.destination);
+        osc2.type = 'square';
+        osc2.frequency.setValueAtTime(400, t + 0.1);
+        osc2.frequency.exponentialRampToValueAtTime(50, t + 0.35);
+        gain2.gain.setValueAtTime(0.2, t + 0.1);
+        gain2.gain.exponentialRampToValueAtTime(0.01, t + 0.35);
+        osc2.start(t + 0.1);
+        osc2.stop(t + 0.4);
+
+    } else if (type === 'moveS') {
+        // Epic release: charge + burst + bass
+        const t = ctx.currentTime;
+        // Charge: sine 200->800Hz
+        const oscCharge = ctx.createOscillator();
+        const gainCharge = ctx.createGain();
+        oscCharge.connect(gainCharge);
+        gainCharge.connect(ctx.destination);
+        oscCharge.type = 'sine';
+        oscCharge.frequency.setValueAtTime(200, t);
+        oscCharge.frequency.exponentialRampToValueAtTime(800, t + 0.2);
+        gainCharge.gain.setValueAtTime(0.25, t);
+        gainCharge.gain.exponentialRampToValueAtTime(0.01, t + 0.2);
+        oscCharge.start(t);
+        oscCharge.stop(t + 0.25);
+        // Burst: sawtooth 1000->100Hz offset 0.2s
+        const oscBurst = ctx.createOscillator();
+        const gainBurst = ctx.createGain();
+        oscBurst.connect(gainBurst);
+        gainBurst.connect(ctx.destination);
+        oscBurst.type = 'sawtooth';
+        oscBurst.frequency.setValueAtTime(1000, t + 0.2);
+        oscBurst.frequency.exponentialRampToValueAtTime(100, t + 0.4);
+        gainBurst.gain.setValueAtTime(0.25, t + 0.2);
+        gainBurst.gain.exponentialRampToValueAtTime(0.01, t + 0.4);
+        oscBurst.start(t + 0.2);
+        oscBurst.stop(t + 0.45);
+        // Bass: square 500->50Hz offset 0.25s
+        const oscBass = ctx.createOscillator();
+        const gainBass = ctx.createGain();
+        oscBass.connect(gainBass);
+        gainBass.connect(ctx.destination);
+        oscBass.type = 'square';
+        oscBass.frequency.setValueAtTime(500, t + 0.25);
+        oscBass.frequency.exponentialRampToValueAtTime(50, t + 0.4);
+        gainBass.gain.setValueAtTime(0.25, t + 0.25);
+        gainBass.gain.exponentialRampToValueAtTime(0.01, t + 0.4);
+        oscBass.start(t + 0.25);
+        oscBass.stop(t + 0.45);
+
+    } else if (type === 'desperateCounter') {
+        // Low rumble then explosive burst
+        const t = ctx.currentTime;
+        // Phase 1 (0-0.3s): Sawtooth 80->200Hz rumble building
+        const oscRumble = ctx.createOscillator();
+        const gainRumble = ctx.createGain();
+        oscRumble.connect(gainRumble);
+        gainRumble.connect(ctx.destination);
+        oscRumble.type = 'sawtooth';
+        oscRumble.frequency.setValueAtTime(80, t);
+        oscRumble.frequency.exponentialRampToValueAtTime(200, t + 0.3);
+        gainRumble.gain.setValueAtTime(0.1, t);
+        gainRumble.gain.linearRampToValueAtTime(0.25, t + 0.3);
+        oscRumble.start(t);
+        oscRumble.stop(t + 0.35);
+        // Phase 2 (0.3-0.6s): Square 800->100Hz burst
+        const oscBurst = ctx.createOscillator();
+        const gainBurst = ctx.createGain();
+        oscBurst.connect(gainBurst);
+        gainBurst.connect(ctx.destination);
+        oscBurst.type = 'square';
+        oscBurst.frequency.setValueAtTime(800, t + 0.3);
+        oscBurst.frequency.exponentialRampToValueAtTime(100, t + 0.6);
+        gainBurst.gain.setValueAtTime(0.3, t + 0.3);
+        gainBurst.gain.exponentialRampToValueAtTime(0.01, t + 0.6);
+        oscBurst.start(t + 0.3);
+        oscBurst.stop(t + 0.65);
+        // Phase 3 (0.3-0.6s): Sawtooth 600->80Hz
+        const oscSweep = ctx.createOscillator();
+        const gainSweep = ctx.createGain();
+        oscSweep.connect(gainSweep);
+        gainSweep.connect(ctx.destination);
+        oscSweep.type = 'sawtooth';
+        oscSweep.frequency.setValueAtTime(600, t + 0.3);
+        oscSweep.frequency.exponentialRampToValueAtTime(80, t + 0.6);
+        gainSweep.gain.setValueAtTime(0.2, t + 0.3);
+        gainSweep.gain.exponentialRampToValueAtTime(0.01, t + 0.6);
+        oscSweep.start(t + 0.3);
+        oscSweep.stop(t + 0.65);
+
+    } else if (type === 'finishingBlow') {
+        // Time-slow then heavy strike
+        const t = ctx.currentTime;
+        // Phase 1 (0-0.2s): Sine 200->100Hz low drone (time slowing)
+        const oscDrone = ctx.createOscillator();
+        const gainDrone = ctx.createGain();
+        oscDrone.connect(gainDrone);
+        gainDrone.connect(ctx.destination);
+        oscDrone.type = 'sine';
+        oscDrone.frequency.setValueAtTime(200, t);
+        oscDrone.frequency.exponentialRampToValueAtTime(100, t + 0.2);
+        gainDrone.gain.setValueAtTime(0.15, t);
+        gainDrone.gain.exponentialRampToValueAtTime(0.01, t + 0.2);
+        oscDrone.start(t);
+        oscDrone.stop(t + 0.25);
+        // Phase 2 (0.2-0.5s): Sawtooth 1200->100Hz heavy metallic impact
+        const oscImpact = ctx.createOscillator();
+        const gainImpact = ctx.createGain();
+        oscImpact.connect(gainImpact);
+        gainImpact.connect(ctx.destination);
+        oscImpact.type = 'sawtooth';
+        oscImpact.frequency.setValueAtTime(1200, t + 0.2);
+        oscImpact.frequency.exponentialRampToValueAtTime(100, t + 0.5);
+        gainImpact.gain.setValueAtTime(0.3, t + 0.2);
+        gainImpact.gain.exponentialRampToValueAtTime(0.01, t + 0.5);
+        oscImpact.start(t + 0.2);
+        oscImpact.stop(t + 0.55);
+        // Phase 3 (0.2-0.5s): Triangle 80Hz constant bass impact
+        const oscBassImpact = ctx.createOscillator();
+        const gainBassImpact = ctx.createGain();
+        oscBassImpact.connect(gainBassImpact);
+        gainBassImpact.connect(ctx.destination);
+        oscBassImpact.type = 'triangle';
+        oscBassImpact.frequency.setValueAtTime(80, t + 0.2);
+        gainBassImpact.gain.setValueAtTime(0.2, t + 0.2);
+        gainBassImpact.gain.exponentialRampToValueAtTime(0.01, t + 0.5);
+        oscBassImpact.start(t + 0.2);
+        oscBassImpact.stop(t + 0.55);
+
+    } else if (type === 'comboFinisher') {
+        // Ascending melody then explosion
+        const t = ctx.currentTime;
+        // 5-note ascending (C5, D5, E5, G5, C6) each 0.05s
+        const melodyFreqs = [523.25, 587.33, 659.25, 783.99, 1046.5];
+        melodyFreqs.forEach((freq, i) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, t + i * 0.05);
+            gain.gain.setValueAtTime(0.15, t + i * 0.05);
+            gain.gain.exponentialRampToValueAtTime(0.01, t + i * 0.05 + 0.06);
+            osc.start(t + i * 0.05);
+            osc.stop(t + i * 0.05 + 0.08);
+        });
+        // Burst at 0.3s: sawtooth 1000->100Hz + square 800->80Hz
+        const oscBurst1 = ctx.createOscillator();
+        const oscBurst2 = ctx.createOscillator();
+        const gainBurst = ctx.createGain();
+        oscBurst1.connect(gainBurst);
+        oscBurst2.connect(gainBurst);
+        gainBurst.connect(ctx.destination);
+        oscBurst1.type = 'sawtooth';
+        oscBurst2.type = 'square';
+        oscBurst1.frequency.setValueAtTime(1000, t + 0.3);
+        oscBurst1.frequency.exponentialRampToValueAtTime(100, t + 0.55);
+        oscBurst2.frequency.setValueAtTime(800, t + 0.3);
+        oscBurst2.frequency.exponentialRampToValueAtTime(80, t + 0.55);
+        gainBurst.gain.setValueAtTime(0.3, t + 0.3);
+        gainBurst.gain.exponentialRampToValueAtTime(0.01, t + 0.55);
+        oscBurst1.start(t + 0.3);
+        oscBurst2.start(t + 0.3);
+        oscBurst1.stop(t + 0.6);
+        oscBurst2.stop(t + 0.6);
+
+    } else if (type === 'shieldBash') {
+        // Metallic clang: triangle ring + square bass thud
+        const t = ctx.currentTime;
+        // Metallic ring: triangle 1200->600Hz
+        const oscRing = ctx.createOscillator();
+        const gainRing = ctx.createGain();
+        oscRing.connect(gainRing);
+        gainRing.connect(ctx.destination);
+        oscRing.type = 'triangle';
+        oscRing.frequency.setValueAtTime(1200, t);
+        oscRing.frequency.exponentialRampToValueAtTime(600, t + 0.15);
+        gainRing.gain.setValueAtTime(0.2, t);
+        gainRing.gain.exponentialRampToValueAtTime(0.01, t + 0.15);
+        oscRing.start(t);
+        oscRing.stop(t + 0.2);
+        // Bass thud: square 200Hz short
+        const oscThud = ctx.createOscillator();
+        const gainThud = ctx.createGain();
+        oscThud.connect(gainThud);
+        gainThud.connect(ctx.destination);
+        oscThud.type = 'square';
+        oscThud.frequency.setValueAtTime(200, t);
+        gainThud.gain.setValueAtTime(0.2, t);
+        gainThud.gain.exponentialRampToValueAtTime(0.01, t + 0.05);
+        oscThud.start(t);
+        oscThud.stop(t + 0.08);
     }
 }
 

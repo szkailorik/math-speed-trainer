@@ -6743,3 +6743,367 @@ body.keyboard-active #battle-page .battle-answer-area {
     pointer-events: none;
     z-index: 5;
 }
+
+/* ===== v17.0: Move System - Speed Rank Display ===== */
+.speed-rank-display {
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 50;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s;
+    text-align: center;
+}
+.speed-rank-display.show {
+    opacity: 1;
+}
+.speed-rank-icon {
+    font-size: 1.5rem;
+    display: block;
+}
+.speed-rank-text {
+    font-size: 1.2rem;
+    font-weight: 800;
+    text-shadow: 0 0 10px currentColor, 0 2px 4px rgba(0,0,0,0.5);
+    display: block;
+    margin-top: 2px;
+}
+.speed-rank-display.rank-S {
+    color: #FFD700;
+    animation: rank-pop-S 0.8s ease-out forwards;
+}
+.speed-rank-display.rank-A {
+    color: #4A90D9;
+    animation: rank-pop-A 0.8s ease-out forwards;
+}
+.speed-rank-display.rank-B {
+    color: #FFFFFF;
+    animation: rank-pop-B 0.6s ease-out forwards;
+}
+.speed-rank-display.rank-C {
+    color: #888888;
+    animation: rank-pop-C 0.6s ease-out forwards;
+}
+
+@keyframes rank-pop-S {
+    0% { transform: translate(-50%, -50%) scale(0.3); opacity: 0; }
+    20% { transform: translate(-50%, -50%) scale(1.6); opacity: 1; }
+    40% { transform: translate(-50%, -50%) scale(1.3); }
+    60% { transform: translate(-50%, -50%) scale(1.5); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(1.5); opacity: 0; }
+}
+@keyframes rank-pop-A {
+    0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+    30% { transform: translate(-50%, -50%) scale(1.3); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(1.2); opacity: 0; }
+}
+@keyframes rank-pop-B {
+    0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
+    30% { transform: translate(-50%, -50%) scale(1.05); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(1.0); opacity: 0; }
+}
+@keyframes rank-pop-C {
+    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
+    30% { opacity: 0.7; transform: translate(-50%, -50%) scale(0.9); }
+    100% { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
+}
+
+/* S rank gold sparkle */
+.speed-rank-display.rank-S::after {
+    content: '';
+    position: absolute;
+    inset: -15px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,215,0,0.3) 0%, transparent 70%);
+    animation: rank-s-glow 0.8s ease-out;
+    pointer-events: none;
+}
+@keyframes rank-s-glow {
+    0% { transform: scale(0.5); opacity: 0; }
+    30% { transform: scale(1.5); opacity: 1; }
+    100% { transform: scale(2); opacity: 0; }
+}
+
+/* ===== v17.0: Move Name Popup ===== */
+.move-name-popup {
+    position: absolute;
+    top: 15%;
+    left: 20%;
+    transform: translateX(-50%);
+    z-index: 45;
+    pointer-events: none;
+    opacity: 0;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #fff;
+    text-shadow: 0 0 8px rgba(255,255,255,0.5), 0 2px 4px rgba(0,0,0,0.6);
+    white-space: nowrap;
+}
+.move-name-popup.show {
+    animation: move-name-pop 1s ease-out forwards;
+}
+@keyframes move-name-pop {
+    0% { opacity: 0; transform: translateX(-50%) translateY(10px) scale(0.8); }
+    15% { opacity: 1; transform: translateX(-50%) translateY(-5px) scale(1.1); }
+    30% { transform: translateX(-50%) translateY(0) scale(1.0); }
+    70% { opacity: 1; }
+    100% { opacity: 0; transform: translateX(-50%) translateY(-15px); }
+}
+
+/* ===== v17.0: Danger Mode (HP=1) ===== */
+.battle-arena.danger-mode {
+    box-shadow: inset 0 0 30px rgba(255, 0, 0, 0.25);
+    animation: danger-pulse 1.2s ease-in-out infinite;
+}
+@keyframes danger-pulse {
+    0%, 100% { box-shadow: inset 0 0 20px rgba(255, 0, 0, 0.15); }
+    50% { box-shadow: inset 0 0 40px rgba(255, 0, 0, 0.35); }
+}
+
+/* ===== v17.0: Move Particles ===== */
+.move-particle {
+    position: absolute;
+    pointer-events: none;
+    z-index: 40;
+    font-size: 1rem;
+    animation: move-particle-fly 0.7s ease-out forwards;
+}
+@keyframes move-particle-fly {
+    0% { transform: translate(0, 0) scale(1); opacity: 1; }
+    100% { transform: translate(var(--px, 30px), var(--py, -20px)) scale(0.3); opacity: 0; }
+}
+
+/* ===== v17.0: Special Move - Desperate Counter ===== */
+.desperate-flash {
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 0, 0, 0.3);
+    z-index: 55;
+    pointer-events: none;
+    animation: desperate-flash-anim 0.4s ease-out forwards;
+}
+@keyframes desperate-flash-anim {
+    0% { opacity: 0; }
+    30% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+.hero-emoji.hero-desperate,
+.hero-char-layer.hero-desperate {
+    animation: hero-desperate-charge 0.6s ease-out;
+    filter: drop-shadow(0 0 12px rgba(255, 50, 50, 0.8));
+}
+@keyframes hero-desperate-charge {
+    0% { transform: scale(1); }
+    30% { transform: scale(0.8) translateY(-10px); }
+    60% { transform: scale(1.3) translateX(40px); }
+    100% { transform: scale(1) translateX(0); }
+}
+
+.desperate-text {
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.3rem;
+    font-weight: 900;
+    color: #ff3333;
+    text-shadow: 0 0 15px rgba(255,50,50,0.8), 0 0 30px rgba(255,0,0,0.4);
+    z-index: 56;
+    pointer-events: none;
+    animation: desperate-text-pop 1.2s ease-out forwards;
+    white-space: nowrap;
+}
+@keyframes desperate-text-pop {
+    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+    20% { opacity: 1; transform: translate(-50%, -50%) scale(1.3); }
+    40% { transform: translate(-50%, -50%) scale(1.0); }
+    70% { opacity: 1; }
+    100% { opacity: 0; transform: translate(-50%, -50%) translateY(-20px); }
+}
+
+/* ===== v17.0: Special Move - Finishing Blow ===== */
+.arena-slow-motion {
+    transition: filter 0.3s;
+    filter: brightness(0.7) saturate(0.5);
+}
+
+.finishing-text {
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.2rem;
+    font-weight: 900;
+    color: #FFD700;
+    text-shadow: 0 0 15px rgba(255,215,0,0.8), 0 0 30px rgba(255,200,0,0.4);
+    z-index: 56;
+    pointer-events: none;
+    animation: finishing-text-pop 1s ease-out forwards;
+    white-space: nowrap;
+}
+@keyframes finishing-text-pop {
+    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.3); }
+    25% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
+    50% { transform: translate(-50%, -50%) scale(1.0); }
+    80% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+.finishing-skull {
+    position: absolute;
+    top: 35%;
+    right: 25%;
+    font-size: 2.5rem;
+    z-index: 57;
+    pointer-events: none;
+    animation: skull-flash 0.5s ease-out forwards;
+}
+@keyframes skull-flash {
+    0% { opacity: 0; transform: scale(0.3); }
+    40% { opacity: 1; transform: scale(1.5); }
+    100% { opacity: 0; transform: scale(2); }
+}
+
+/* ===== v17.0: Weapon Trajectories ===== */
+/* Zigzag for lightning */
+.hero-projectile.weapon-zigzag.fly {
+    animation: weapon-fly-zigzag 0.5s ease-in forwards;
+}
+@keyframes weapon-fly-zigzag {
+    0% { transform: translateX(0) translateY(0); opacity: 1; }
+    25% { transform: translateX(60px) translateY(-15px); }
+    50% { transform: translateX(120px) translateY(10px); }
+    75% { transform: translateX(180px) translateY(-10px); }
+    100% { transform: translateX(250px) translateY(0); opacity: 0.3; }
+}
+
+/* Wave for rainbow */
+.hero-projectile.weapon-wave.fly {
+    animation: weapon-fly-wave 0.6s ease-in forwards;
+}
+@keyframes weapon-fly-wave {
+    0% { transform: translateX(0) translateY(0) scale(1); opacity: 1; }
+    25% { transform: translateX(60px) translateY(-12px) scale(1.1); }
+    50% { transform: translateX(125px) translateY(8px) scale(1); }
+    75% { transform: translateX(190px) translateY(-8px) scale(0.9); }
+    100% { transform: translateX(250px) translateY(0) scale(0.8); opacity: 0.3; }
+}
+
+/* Arc for star/meteor */
+.hero-projectile.weapon-arc.fly {
+    animation: weapon-fly-arc 0.6s ease-in forwards;
+}
+@keyframes weapon-fly-arc {
+    0% { transform: translateX(0) translateY(0) scale(1); opacity: 1; }
+    30% { transform: translateX(75px) translateY(-30px) scale(1.1); }
+    60% { transform: translateX(160px) translateY(-15px) scale(1); }
+    100% { transform: translateX(250px) translateY(10px) scale(0.8); opacity: 0.3; }
+}
+
+/* Lob/parabola for bomb */
+.hero-projectile.weapon-lob.fly {
+    animation: weapon-fly-lob 0.7s ease-in forwards;
+}
+@keyframes weapon-fly-lob {
+    0% { transform: translateX(0) translateY(0) rotate(0deg); opacity: 1; }
+    30% { transform: translateX(70px) translateY(-40px) rotate(180deg); }
+    60% { transform: translateX(160px) translateY(-20px) rotate(360deg); }
+    100% { transform: translateX(250px) translateY(15px) rotate(540deg); opacity: 0.5; }
+}
+
+/* Fast straight for ice */
+.hero-projectile.weapon-fast.fly {
+    animation: weapon-fly-fast 0.4s ease-in forwards;
+}
+@keyframes weapon-fly-fast {
+    0% { transform: translateX(0) scale(1); opacity: 1; }
+    100% { transform: translateX(260px) scale(0.7); opacity: 0.2; }
+}
+
+/* Weapon hit effects */
+.weapon-hit-fire { animation: hit-fire 0.4s ease-out; }
+@keyframes hit-fire {
+    0% { filter: brightness(1); }
+    30% { filter: brightness(1.5) sepia(1) hue-rotate(-10deg); }
+    100% { filter: brightness(1); }
+}
+
+.weapon-hit-ice { animation: hit-ice 0.4s ease-out; }
+@keyframes hit-ice {
+    0% { filter: brightness(1); }
+    30% { filter: brightness(1.3) hue-rotate(180deg); }
+    100% { filter: brightness(1); }
+}
+
+.weapon-hit-thunder { animation: hit-thunder 0.3s ease-out; }
+@keyframes hit-thunder {
+    0% { filter: brightness(1); opacity: 1; }
+    20% { filter: brightness(2); opacity: 0.7; }
+    40% { filter: brightness(1); opacity: 1; }
+    60% { filter: brightness(1.8); opacity: 0.8; }
+    100% { filter: brightness(1); opacity: 1; }
+}
+
+.weapon-hit-bomb { animation: hit-bomb 0.5s ease-out; }
+@keyframes hit-bomb {
+    0% { transform: scale(1); filter: brightness(1); }
+    20% { transform: scale(1.3); filter: brightness(2); }
+    50% { transform: scale(0.9); filter: brightness(1.2); }
+    100% { transform: scale(1); filter: brightness(1); }
+}
+
+/* ===== v17.0: Hero Dash for A-rank moves ===== */
+.hero-emoji.hero-dash,
+.hero-char-layer.hero-dash {
+    animation: hero-move-dash 0.4s ease-out;
+}
+@keyframes hero-move-dash {
+    0% { transform: translateX(0); }
+    40% { transform: translateX(30px); }
+    100% { transform: translateX(0); }
+}
+
+/* ===== v17.0: Arena Dim for S-rank moves ===== */
+.battle-arena.arena-dimmed-s {
+    filter: brightness(0.5);
+    transition: filter 0.15s;
+}
+
+/* Giant projectile for S-rank */
+.giant-move-projectile {
+    position: absolute;
+    left: 25%;
+    top: 35%;
+    font-size: 2.5rem;
+    z-index: 48;
+    pointer-events: none;
+    animation: giant-move-fly 0.5s ease-in forwards;
+}
+@keyframes giant-move-fly {
+    0% { transform: translateX(0) scale(0.5); opacity: 0.5; }
+    30% { transform: translateX(30px) scale(1.5); opacity: 1; }
+    100% { transform: translateX(180px) scale(0.8); opacity: 0.3; }
+}
+
+/* Combo finisher */
+.combo-finisher-number {
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 3rem;
+    font-weight: 900;
+    color: #FFD700;
+    text-shadow: 0 0 20px rgba(255,215,0,0.8);
+    z-index: 58;
+    pointer-events: none;
+    animation: combo-number-explode 0.8s ease-out forwards;
+}
+@keyframes combo-number-explode {
+    0% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    40% { opacity: 1; transform: translate(-50%, -50%) scale(2); }
+    100% { opacity: 0; transform: translate(-50%, -50%) scale(3); }
+}

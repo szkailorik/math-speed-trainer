@@ -406,6 +406,10 @@ BattleMode.startBattle = function(difficulty, module) {
     battle.survivedSelfDestruct = 0;
     battle.bossWithSummonCleared = 0;
 
+    // v17.0: Move system state
+    battle.lastMoveName = null;
+    battle.desperateCounterUsed = 0;
+
     this.generateMonsterQueue(difficulty);
 
     const diffSettings = {
@@ -638,6 +642,16 @@ BattleMode.updateUI = function() {
         document.getElementById('combo-count').textContent = battle.combo;
     } else {
         comboEl.classList.remove('show');
+    }
+
+    // v17.0: danger-mode when HP = 1 (red pulse on arena)
+    const arena = document.querySelector('.battle-arena');
+    if (arena) {
+        if (battle.playerHP === 1) {
+            arena.classList.add('danger-mode');
+        } else {
+            arena.classList.remove('danger-mode');
+        }
     }
 };
 
@@ -950,7 +964,28 @@ BattleMode.handleCorrectAnswer = function(btnElement) {
         this.updateInventoryUI();
     }
 
-    const weapon = this.getRandomWeapon();
+    // v17.0: Speed rank calculation
+    const speedRank = this.getSpeedRank(battle.answerTime, battle.difficulty);
+    this.showSpeedRank(speedRank);
+
+    // v17.0: Speed rank damage multiplier
+    const speedMultipliers = { S: 1.5, A: 1.2, B: 1.0, C: 0.8 };
+    damage = Math.max(1, Math.round(damage * (speedMultipliers[speedRank] || 1.0)));
+
+    // v17.0: Weapon selection with speed-adjusted weights
+    const adjustedWeapons = this.getAdjustedWeaponWeights(speedRank);
+    let weapon;
+    if (adjustedWeapons && adjustedWeapons.length > 0) {
+        const totalWeight = adjustedWeapons.reduce((sum, w) => sum + w.weight, 0);
+        let rand = Math.random() * totalWeight;
+        for (const w of adjustedWeapons) {
+            rand -= w.weight;
+            if (rand <= 0) { weapon = w; break; }
+        }
+        if (!weapon) weapon = adjustedWeapons[0];
+    } else {
+        weapon = this.getRandomWeapon();
+    }
     if (weapon.emoji === '\uD83D\uDCA3') damage += 1;
 
     // v16.2: Check dodge behavior - partial damage on dodge (50%, rounded up)
@@ -959,7 +994,6 @@ BattleMode.handleCorrectAnswer = function(btnElement) {
         const grazeDamage = Math.max(1, Math.ceil(damage * 0.5));
         this.heroAttackAnimation(weapon, () => {
             this.executeBehavior('dodge', (result) => {
-                // Dodged but still graze damage
                 this.dealDamage(grazeDamage);
                 this.tryDropItem();
                 battle.currentIndex++;
@@ -977,9 +1011,12 @@ BattleMode.handleCorrectAnswer = function(btnElement) {
         }
     }
 
-    // v16.2: Use hero-system combo attack animation (replaces fireWeapon)
+    // v17.0: Select move based on speed rank + combo stage + battle state
+    const move = this.selectMove(speedRank, battle.comboStage || 'normal', battle);
     const targetEl = document.getElementById('monster-emoji');
-    this.executeComboAttack(battle.combo, targetEl, () => {
+
+    // v17.0: Execute move animation (replaces executeComboAttack)
+    this.executeMove(move, weapon, targetEl, () => {
         this.dealDamage(damage);
 
         if (battle.healCounter >= 5 && battle.playerHP < battle.playerMaxHP) {
