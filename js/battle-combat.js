@@ -1765,6 +1765,9 @@ BattleMode.exitBattle = function() {
         App.battle.battleTimeoutId = null;
     }
 
+    // v17.1.1: Clear dynamic scene elements
+    this._clearSceneElements();
+
     // v15.0: Cleanup arena
     this.cleanupArena();
     if (module === 'fraction') {

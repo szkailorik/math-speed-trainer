@@ -1092,3 +1092,233 @@
 .monster-aura.aura-boss.aura-wizard { background: radial-gradient(ellipse, rgba(80,70,200,0.7) 0%, transparent 70%); box-shadow: 0 0 25px rgba(80,70,200,0.5); }
 .monster-aura.aura-boss.aura-bug { background: radial-gradient(ellipse, rgba(160,200,50,0.7) 0%, transparent 70%); box-shadow: 0 0 25px rgba(160,200,50,0.5); }
 .monster-aura.aura-boss.aura-normal { background: radial-gradient(ellipse, rgba(160,165,175,0.7) 0%, transparent 70%); box-shadow: 0 0 25px rgba(160,165,175,0.5); }
+
+/* ==========================================================================
+   DYNAMIC SCENE ELEMENTS (JS-spawned)
+   ========================================================================== */
+.scene-element {
+    position: absolute;
+    pointer-events: none;
+    z-index: 4;
+    user-select: none;
+    line-height: 1;
+    text-align: center;
+}
+
+/* Glow type elements */
+.scene-element.scene-glow {
+    z-index: 3;
+    pointer-events: none;
+}
+
+/* ---------- Animation Classes ---------- */
+
+/* Float Up - elements rise upward, fading out */
+.scene-element.se-float-up {
+    animation-name: se-float-up;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+}
+@keyframes se-float-up {
+    0% { transform: translateY(0) scale(1); }
+    70% { opacity: inherit; }
+    100% { transform: translateY(-100px) scale(0.7); opacity: 0; }
+}
+
+/* Drift Right - elements drift left-to-right across the arena */
+.scene-element.se-drift-right {
+    animation-name: se-drift-right;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+}
+@keyframes se-drift-right {
+    0% { transform: translateX(-30px); }
+    100% { transform: translateX(calc(100vw)); }
+}
+
+/* Drift Left - elements drift right-to-left */
+.scene-element.se-drift-left {
+    animation-name: se-drift-left;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+}
+@keyframes se-drift-left {
+    0% { transform: translateX(30px); }
+    100% { transform: translateX(calc(-100vw)); }
+}
+
+/* Pulse - gentle scale pulse for stationary decorations */
+.scene-element.se-pulse {
+    animation-name: se-pulse;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+}
+@keyframes se-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.25); }
+}
+
+/* Sway - left/right sway with rotation for plants, candles */
+.scene-element.se-sway {
+    animation-name: se-sway;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    transform-origin: bottom center;
+}
+@keyframes se-sway {
+    0%, 100% { transform: rotate(0deg) translateX(0); }
+    25% { transform: rotate(5deg) translateX(6px); }
+    75% { transform: rotate(-5deg) translateX(-6px); }
+}
+
+/* Fall - elements fall from top to bottom (leaves, snow, rain) */
+.scene-element.se-fall {
+    animation-name: se-fall;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+}
+@keyframes se-fall {
+    0% { transform: translateY(-20px) translateX(0) rotate(0deg); }
+    25% { transform: translateY(60px) translateX(15px) rotate(90deg); }
+    50% { transform: translateY(140px) translateX(-10px) rotate(180deg); }
+    75% { transform: translateY(220px) translateX(20px) rotate(270deg); }
+    100% { transform: translateY(320px) translateX(5px) rotate(360deg); opacity: 0; }
+}
+
+/* Wave - wave pattern for water, floating objects */
+.scene-element.se-wave {
+    animation-name: se-wave;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+}
+@keyframes se-wave {
+    0%, 100% { transform: translateX(0) translateY(0); }
+    25% { transform: translateX(20px) translateY(-8px); }
+    50% { transform: translateX(0) translateY(-15px); }
+    75% { transform: translateX(-20px) translateY(-8px); }
+}
+
+/* Flicker - rapid opacity changes for flames, lightning, candles */
+.scene-element.se-flicker {
+    animation-name: se-flicker;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+}
+@keyframes se-flicker {
+    0%, 100% { opacity: inherit; transform: scaleY(1); }
+    10% { opacity: 0.6; transform: scaleY(1.1) scaleX(0.9); }
+    20% { opacity: 0.3; }
+    30% { opacity: 0.7; transform: scaleY(0.95) scaleX(1.05); }
+    40% { opacity: 0.4; }
+    50% { opacity: 0.8; transform: scaleY(1.05); }
+    60% { opacity: 0.3; }
+    70% { opacity: 0.9; transform: scaleY(1.1); }
+    80% { opacity: 0.5; }
+    90% { opacity: 0.7; }
+}
+
+/* Orbit - circular orbit for psychic, magic effects */
+.scene-element.se-orbit {
+    animation-name: se-orbit;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+}
+@keyframes se-orbit {
+    0% { transform: rotate(0deg) translateX(25px) rotate(0deg); }
+    100% { transform: rotate(360deg) translateX(25px) rotate(-360deg); }
+}
+
+/* Shimmer - twinkle for stars, crystals, sparkles */
+.scene-element.se-shimmer {
+    animation-name: se-shimmer;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+}
+@keyframes se-shimmer {
+    0%, 100% { opacity: 0.1; transform: scale(0.8); }
+    50% { opacity: inherit; transform: scale(1.3); }
+}
+
+/* Bounce - bouncing for fighting, energetic scenes */
+.scene-element.se-bounce {
+    animation-name: se-bounce;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+}
+@keyframes se-bounce {
+    0%, 100% { transform: translateY(0) scale(1); }
+    30% { transform: translateY(-20px) scale(1.1); }
+    50% { transform: translateY(0) scale(0.95); }
+    70% { transform: translateY(-10px) scale(1.05); }
+}
+
+/* Spin - continuous rotation for gears, portals */
+.scene-element.se-spin {
+    animation-name: se-spin;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+}
+@keyframes se-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Drip - fall straight down like drops */
+.scene-element.se-drip {
+    animation-name: se-drip;
+    animation-timing-function: ease-in;
+    animation-iteration-count: infinite;
+}
+@keyframes se-drip {
+    0% { transform: translateY(0); opacity: inherit; }
+    80% { opacity: inherit; }
+    100% { transform: translateY(250px); opacity: 0; }
+}
+
+/* ---------- Enhanced Glow Pulse ---------- */
+
+.scene-element.scene-glow.se-pulse {
+    animation-name: se-glow-pulse;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+}
+@keyframes se-glow-pulse {
+    0%, 100% { opacity: 0.15; transform: scaleX(1); }
+    50% { opacity: 0.35; transform: scaleX(1.05); }
+}
+
+/* ==========================================================================
+   SCENE BACKGROUND VISIBILITY ENHANCEMENTS
+   ========================================================================== */
+
+/* -- Fire scene -- */
+.scene-far.fire-scene::before { filter: drop-shadow(0 0 8px rgba(255,80,0,0.2)); }
+.scene-far.fire-scene::after { filter: blur(3px) drop-shadow(0 0 12px rgba(255,80,0,0.4)); }
+.scene-sky.fire-scene { background: linear-gradient(180deg, #1a0500 0%, #4a1200 35%, #6a2000 60%, #8b2500 100%); }
+
+/* -- Water scene -- */
+.scene-far.water-scene::before { filter: drop-shadow(0 0 6px rgba(30,120,255,0.15)); }
+.scene-far.water-scene::after { filter: drop-shadow(0 0 6px rgba(20,100,220,0.2)); }
+
+/* -- Ice scene -- */
+.scene-far.ice-scene::before { filter: drop-shadow(0 0 8px rgba(100,200,255,0.15)); }
+.scene-sky.ice-scene::before { height: 12px; filter: blur(5px); }
+
+/* -- Thunder scene -- */
+.scene-effects.thunder-scene::before { width: 3px; filter: blur(1px) drop-shadow(0 0 6px rgba(255,255,200,0.5)); }
+.scene-effects.thunder-scene::after { width: 3px; filter: blur(1px) drop-shadow(0 0 6px rgba(255,255,200,0.4)); }
+
+/* -- Grass scene -- */
+.scene-far.grass-scene::before { filter: drop-shadow(0 0 5px rgba(50,120,40,0.15)); }
+.scene-sky.grass-scene::after { width: 25px; height: 25px; box-shadow: 0 0 15px rgba(200,210,180,0.2), 0 0 30px rgba(200,210,180,0.1); }
+
+/* -- Dark scene -- */
+.scene-effects.dark-scene::before { height: 35%; background: linear-gradient(0deg, rgba(10,5,20,0.5), transparent); }
+.scene-effects.dark-scene::after { box-shadow: 60px -20px 6px rgba(100,50,160,0.3), 140px 10px 8px rgba(120,60,180,0.35); }
+
+/* -- Dragon scene -- */
+.scene-far.dragon-scene::before { filter: drop-shadow(0 0 8px rgba(150,80,220,0.15)); }
+.scene-sky.dragon-scene::after { box-shadow: 20px 10px 2px rgba(255,220,150,0.5), 60px 25px 2px rgba(255,220,150,0.4), 110px 5px 2px rgba(255,220,150,0.6), 150px 30px 2px rgba(255,220,150,0.4), 200px 15px 2px rgba(255,220,150,0.5), 240px 8px 2px rgba(255,220,150,0.4), 50px 40px 2px rgba(255,220,150,0.5), 170px 35px 2px rgba(255,220,150,0.4); }
+
+/* -- Fairy scene -- */
+.scene-far.fairy-scene::before { filter: drop-shadow(0 0 6px rgba(200,100,180,0.15)); }

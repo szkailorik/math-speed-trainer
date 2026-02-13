@@ -388,6 +388,9 @@ BattleMode.applyMonsterTheme = function(monster) {
         'arena-beast', 'arena-normal'
     ];
     oldAmbientClasses.forEach(function(cls) { arena.classList.remove(cls); });
+
+    // v17.1.1: Spawn dynamic scene elements
+    this._spawnSceneElements(sceneType);
 };
 
 // Update monster aura glow under the monster
@@ -411,6 +414,294 @@ BattleMode._updateMonsterAura = function(monster, sceneType) {
     }
 
     aura.style.display = 'block';
+};
+
+// ===== v17.1.1: Dynamic Scene Element Spawner =====
+
+var SceneElementConfigs = {
+    fire: [
+        { emoji: '🔥', anim: 'float-up', x: '10%', bottom: 5, size: 22, opacity: 0.35, delay: 0, duration: 5 },
+        { emoji: '🔥', anim: 'float-up', x: '50%', bottom: 2, size: 18, opacity: 0.3, delay: 1.5, duration: 6 },
+        { emoji: '🔥', anim: 'float-up', x: '85%', bottom: 8, size: 24, opacity: 0.25, delay: 3, duration: 4.5 },
+        { emoji: '🌋', anim: 'pulse', x: '75%', bottom: 3, size: 26, opacity: 0.2, delay: 0.5, duration: 7 },
+        { emoji: '💥', anim: 'flicker', x: '30%', y: '40%', size: 16, opacity: 0.3, delay: 2, duration: 3.5 },
+        { type: 'glow', x: '0', bottom: 0, width: '100%', height: '30%', color: 'rgba(255,80,0,0.25)', gradientPos: 'center bottom', blur: 12, opacity: 0.4, delay: 0, duration: 8, anim: 'pulse' },
+        { type: 'glow', x: '70%', y: '30%', width: '40%', height: '50%', color: 'rgba(255,60,0,0.12)', gradientPos: 'center center', blur: 20, opacity: 0.25, delay: 1, duration: 6, anim: 'shimmer' }
+    ],
+    water: [
+        { emoji: '🌊', anim: 'wave', x: '5%', bottom: 10, size: 24, opacity: 0.3, delay: 0, duration: 6 },
+        { emoji: '🌊', anim: 'wave', x: '60%', bottom: 6, size: 20, opacity: 0.25, delay: 2, duration: 7 },
+        { emoji: '💧', anim: 'float-up', x: '25%', bottom: 0, size: 16, opacity: 0.35, delay: 0.5, duration: 8 },
+        { emoji: '💧', anim: 'float-up', x: '70%', bottom: 3, size: 14, opacity: 0.3, delay: 3, duration: 9 },
+        { emoji: '🐚', anim: 'sway', x: '45%', bottom: 5, size: 18, opacity: 0.25, delay: 1, duration: 10 },
+        { emoji: '🐟', anim: 'drift-right', x: '10%', y: '55%', size: 20, opacity: 0.2, delay: 2.5, duration: 12 },
+        { type: 'glow', x: '0', bottom: 0, width: '100%', height: '30%', color: 'rgba(0,100,255,0.25)', gradientPos: 'center bottom', blur: 15, opacity: 0.35, delay: 0, duration: 7, anim: 'pulse' },
+        { type: 'glow', x: '0', y: '0', width: '100%', height: '100%', color: 'rgba(80,180,255,0.08)', gradientPos: 'center center', blur: 25, opacity: 0.2, delay: 1.5, duration: 5, anim: 'shimmer' }
+    ],
+    ice: [
+        { emoji: '❄️', anim: 'fall', x: '15%', y: '5%', size: 18, opacity: 0.35, delay: 0, duration: 7 },
+        { emoji: '❄️', anim: 'fall', x: '50%', y: '0%', size: 14, opacity: 0.3, delay: 2, duration: 9 },
+        { emoji: '❄️', anim: 'fall', x: '80%', y: '8%', size: 20, opacity: 0.25, delay: 4, duration: 6 },
+        { emoji: '🧊', anim: 'sway', x: '35%', y: '45%', size: 22, opacity: 0.2, delay: 1, duration: 8 },
+        { emoji: '💎', anim: 'pulse', x: '70%', y: '35%', size: 16, opacity: 0.3, delay: 3, duration: 5 },
+        { type: 'glow', x: '10%', y: '10%', width: '80%', height: '40%', color: 'rgba(100,200,255,0.15)', gradientPos: 'center top', blur: 20, opacity: 0.3, delay: 0, duration: 10, anim: 'shimmer' },
+        { type: 'glow', x: '0', bottom: 0, width: '100%', height: '25%', color: 'rgba(180,230,255,0.2)', gradientPos: 'center bottom', blur: 12, opacity: 0.35, delay: 1, duration: 7, anim: 'pulse' }
+    ],
+    thunder: [
+        { emoji: '⚡', anim: 'flicker', x: '10%', y: '15%', size: 24, opacity: 0.4, delay: 0, duration: 3 },
+        { emoji: '⚡', anim: 'flicker', x: '55%', y: '10%', size: 20, opacity: 0.35, delay: 1.5, duration: 3.5 },
+        { emoji: '⚡', anim: 'flicker', x: '80%', y: '25%', size: 18, opacity: 0.3, delay: 3, duration: 4 },
+        { emoji: '🌩️', anim: 'drift-left', x: '70%', y: '8%', size: 28, opacity: 0.2, delay: 0.5, duration: 12 },
+        { emoji: '⚡', anim: 'shimmer', x: '35%', y: '50%', size: 14, opacity: 0.35, delay: 2, duration: 2.5 },
+        { type: 'glow', x: '20%', y: '5%', width: '60%', height: '35%', color: 'rgba(255,220,50,0.2)', gradientPos: 'center top', blur: 18, opacity: 0.3, delay: 0, duration: 4, anim: 'flicker' },
+        { type: 'glow', x: '0', y: '0', width: '100%', height: '50%', color: 'rgba(40,30,60,0.3)', gradientPos: 'center top', blur: 10, opacity: 0.4, delay: 0, duration: 8, anim: 'pulse' }
+    ],
+    grass: [
+        { emoji: '🍃', anim: 'fall', x: '10%', y: '5%', size: 18, opacity: 0.35, delay: 0, duration: 8 },
+        { emoji: '🍃', anim: 'fall', x: '45%', y: '0%', size: 16, opacity: 0.3, delay: 2.5, duration: 9 },
+        { emoji: '🍃', anim: 'fall', x: '75%', y: '10%', size: 14, opacity: 0.25, delay: 5, duration: 7 },
+        { emoji: '🌸', anim: 'sway', x: '60%', y: '30%', size: 20, opacity: 0.3, delay: 1, duration: 10 },
+        { emoji: '🌙', anim: 'pulse', x: '85%', y: '8%', size: 22, opacity: 0.2, delay: 0, duration: 12 },
+        { emoji: '🦋', anim: 'drift-right', x: '5%', y: '40%', size: 16, opacity: 0.3, delay: 3, duration: 11 },
+        { type: 'glow', x: '0', bottom: 0, width: '100%', height: '25%', color: 'rgba(60,180,60,0.2)', gradientPos: 'center bottom', blur: 12, opacity: 0.35, delay: 0, duration: 7, anim: 'pulse' }
+    ],
+    dark: [
+        { emoji: '👻', anim: 'sway', x: '15%', y: '25%', size: 22, opacity: 0.25, delay: 0, duration: 8 },
+        { emoji: '👻', anim: 'float-up', x: '70%', y: '50%', size: 18, opacity: 0.2, delay: 3, duration: 10 },
+        { emoji: '🦇', anim: 'drift-left', x: '80%', y: '15%', size: 20, opacity: 0.3, delay: 1, duration: 7 },
+        { emoji: '🦇', anim: 'drift-right', x: '5%', y: '30%', size: 16, opacity: 0.25, delay: 4, duration: 9 },
+        { emoji: '💀', anim: 'pulse', x: '45%', y: '40%', size: 18, opacity: 0.2, delay: 2, duration: 6 },
+        { emoji: '🕯️', anim: 'flicker', x: '30%', bottom: 8, size: 16, opacity: 0.35, delay: 0.5, duration: 4 },
+        { type: 'glow', x: '0', bottom: 0, width: '100%', height: '35%', color: 'rgba(100,0,150,0.2)', gradientPos: 'center bottom', blur: 18, opacity: 0.35, delay: 0, duration: 9, anim: 'pulse' }
+    ],
+    ghost: [
+        { emoji: '👻', anim: 'sway', x: '20%', y: '20%', size: 22, opacity: 0.25, delay: 0, duration: 9 },
+        { emoji: '👻', anim: 'float-up', x: '65%', y: '45%', size: 18, opacity: 0.2, delay: 2, duration: 11 },
+        { emoji: '🔮', anim: 'pulse', x: '50%', y: '30%', size: 20, opacity: 0.3, delay: 1, duration: 6 },
+        { emoji: '🕯️', anim: 'flicker', x: '10%', bottom: 10, size: 16, opacity: 0.35, delay: 0.5, duration: 3.5 },
+        { emoji: '🕯️', anim: 'flicker', x: '85%', bottom: 12, size: 14, opacity: 0.3, delay: 2.5, duration: 4 },
+        { emoji: '🌙', anim: 'pulse', x: '80%', y: '5%', size: 24, opacity: 0.2, delay: 0, duration: 12 },
+        { type: 'glow', x: '0', bottom: 0, width: '100%', height: '30%', color: 'rgba(80,100,220,0.2)', gradientPos: 'center bottom', blur: 15, opacity: 0.3, delay: 0, duration: 8, anim: 'pulse' }
+    ],
+    dragon: [
+        { emoji: '🐉', anim: 'pulse', x: '50%', y: '20%', size: 28, opacity: 0.2, delay: 0, duration: 8 },
+        { emoji: '🔥', anim: 'float-up', x: '20%', bottom: 5, size: 18, opacity: 0.3, delay: 1, duration: 5 },
+        { emoji: '🔥', anim: 'float-up', x: '75%', bottom: 3, size: 16, opacity: 0.25, delay: 3, duration: 6 },
+        { emoji: '⭐', anim: 'shimmer', x: '10%', y: '15%', size: 14, opacity: 0.35, delay: 0.5, duration: 4 },
+        { emoji: '⭐', anim: 'shimmer', x: '85%', y: '10%', size: 16, opacity: 0.3, delay: 2.5, duration: 5 },
+        { emoji: '💎', anim: 'sway', x: '40%', bottom: 8, size: 20, opacity: 0.25, delay: 2, duration: 9 },
+        { type: 'glow', x: '10%', bottom: 0, width: '80%', height: '30%', color: 'rgba(150,50,255,0.2)', gradientPos: 'center bottom', blur: 15, opacity: 0.35, delay: 0, duration: 7, anim: 'pulse' },
+        { type: 'glow', x: '30%', y: '15%', width: '40%', height: '30%', color: 'rgba(255,200,50,0.1)', gradientPos: 'center center', blur: 20, opacity: 0.2, delay: 1, duration: 6, anim: 'shimmer' }
+    ],
+    fairy: [
+        { emoji: '🌸', anim: 'fall', x: '15%', y: '5%', size: 18, opacity: 0.35, delay: 0, duration: 8 },
+        { emoji: '🌸', anim: 'sway', x: '70%', y: '25%', size: 16, opacity: 0.3, delay: 2, duration: 10 },
+        { emoji: '✨', anim: 'shimmer', x: '25%', y: '20%', size: 14, opacity: 0.4, delay: 0.5, duration: 3 },
+        { emoji: '✨', anim: 'shimmer', x: '55%', y: '40%', size: 16, opacity: 0.35, delay: 1.5, duration: 4 },
+        { emoji: '✨', anim: 'shimmer', x: '80%', y: '15%', size: 12, opacity: 0.3, delay: 3, duration: 3.5 },
+        { emoji: '🍄', anim: 'sway', x: '40%', bottom: 5, size: 20, opacity: 0.25, delay: 1, duration: 7 },
+        { emoji: '🦋', anim: 'drift-right', x: '5%', y: '35%', size: 18, opacity: 0.3, delay: 4, duration: 11 },
+        { type: 'glow', x: '0', bottom: 0, width: '100%', height: '30%', color: 'rgba(255,150,200,0.2)', gradientPos: 'center bottom', blur: 15, opacity: 0.35, delay: 0, duration: 8, anim: 'pulse' }
+    ],
+    poison: [
+        { emoji: '🧪', anim: 'sway', x: '20%', y: '35%', size: 20, opacity: 0.3, delay: 0, duration: 7 },
+        { emoji: '☠️', anim: 'pulse', x: '55%', y: '25%', size: 18, opacity: 0.2, delay: 2, duration: 6 },
+        { emoji: '🫧', anim: 'float-up', x: '15%', bottom: 2, size: 16, opacity: 0.35, delay: 0.5, duration: 8 },
+        { emoji: '🫧', anim: 'float-up', x: '45%', bottom: 0, size: 14, opacity: 0.3, delay: 2.5, duration: 9 },
+        { emoji: '🫧', anim: 'float-up', x: '75%', bottom: 5, size: 18, opacity: 0.25, delay: 4, duration: 7 },
+        { emoji: '🐍', anim: 'sway', x: '70%', bottom: 8, size: 22, opacity: 0.2, delay: 1, duration: 10 },
+        { type: 'glow', x: '0', bottom: 0, width: '100%', height: '35%', color: 'rgba(100,0,180,0.2)', gradientPos: 'center bottom', blur: 18, opacity: 0.35, delay: 0, duration: 8, anim: 'pulse' },
+        { type: 'glow', x: '60%', y: '20%', width: '35%', height: '40%', color: 'rgba(0,200,0,0.1)', gradientPos: 'center center', blur: 22, opacity: 0.2, delay: 1, duration: 6, anim: 'shimmer' }
+    ],
+    rock: [
+        { emoji: '🪨', anim: 'sway', x: '10%', bottom: 10, size: 24, opacity: 0.25, delay: 0, duration: 10 },
+        { emoji: '🪨', anim: 'sway', x: '65%', bottom: 6, size: 20, opacity: 0.2, delay: 2, duration: 12 },
+        { emoji: '⛰️', anim: 'pulse', x: '40%', bottom: 3, size: 28, opacity: 0.15, delay: 0, duration: 15 },
+        { emoji: '💎', anim: 'pulse', x: '80%', y: '35%', size: 16, opacity: 0.3, delay: 1, duration: 5 },
+        { emoji: '✨', anim: 'fall', x: '25%', y: '15%', size: 14, opacity: 0.25, delay: 3, duration: 7 },
+        { emoji: '✨', anim: 'fall', x: '55%', y: '10%', size: 12, opacity: 0.2, delay: 5, duration: 8 },
+        { type: 'glow', x: '0', bottom: 0, width: '100%', height: '25%', color: 'rgba(140,100,40,0.2)', gradientPos: 'center bottom', blur: 12, opacity: 0.35, delay: 0, duration: 8, anim: 'pulse' }
+    ],
+    psychic: [
+        { emoji: '🔮', anim: 'orbit', x: '25%', y: '30%', size: 20, opacity: 0.35, delay: 0, duration: 8 },
+        { emoji: '🔮', anim: 'orbit', x: '70%', y: '25%', size: 18, opacity: 0.3, delay: 3, duration: 9 },
+        { emoji: '👁️', anim: 'pulse', x: '50%', y: '15%', size: 22, opacity: 0.2, delay: 1, duration: 6 },
+        { emoji: '✨', anim: 'shimmer', x: '15%', y: '20%', size: 14, opacity: 0.35, delay: 0.5, duration: 4 },
+        { emoji: '✨', anim: 'shimmer', x: '80%', y: '40%', size: 16, opacity: 0.3, delay: 2.5, duration: 3.5 },
+        { emoji: '💫', anim: 'sway', x: '40%', y: '50%', size: 18, opacity: 0.25, delay: 2, duration: 7 },
+        { type: 'glow', x: '10%', bottom: 0, width: '80%', height: '30%', color: 'rgba(220,80,200,0.2)', gradientPos: 'center bottom', blur: 18, opacity: 0.35, delay: 0, duration: 7, anim: 'pulse' },
+        { type: 'glow', x: '30%', y: '10%', width: '40%', height: '40%', color: 'rgba(150,50,250,0.1)', gradientPos: 'center center', blur: 22, opacity: 0.2, delay: 1, duration: 6, anim: 'shimmer' }
+    ],
+    steel: [
+        { emoji: '⚙️', anim: 'orbit', x: '15%', y: '25%', size: 22, opacity: 0.3, delay: 0, duration: 8 },
+        { emoji: '⚙️', anim: 'orbit', x: '75%', y: '35%', size: 18, opacity: 0.25, delay: 2, duration: 10 },
+        { emoji: '🔩', anim: 'sway', x: '45%', y: '45%', size: 16, opacity: 0.2, delay: 1, duration: 9 },
+        { emoji: '⚡', anim: 'flicker', x: '30%', y: '20%', size: 14, opacity: 0.35, delay: 0.5, duration: 3 },
+        { emoji: '⚡', anim: 'flicker', x: '65%', y: '15%', size: 16, opacity: 0.3, delay: 3, duration: 3.5 },
+        { emoji: '🏗️', anim: 'pulse', x: '85%', bottom: 5, size: 24, opacity: 0.15, delay: 0, duration: 12 },
+        { type: 'glow', x: '0', bottom: 0, width: '100%', height: '25%', color: 'rgba(180,190,220,0.2)', gradientPos: 'center bottom', blur: 12, opacity: 0.3, delay: 0, duration: 7, anim: 'pulse' }
+    ],
+    fighting: [
+        { emoji: '🥊', anim: 'sway', x: '10%', y: '30%', size: 22, opacity: 0.3, delay: 0, duration: 5 },
+        { emoji: '🥊', anim: 'sway', x: '80%', y: '40%', size: 20, opacity: 0.25, delay: 1.5, duration: 6 },
+        { emoji: '💪', anim: 'pulse', x: '45%', y: '20%', size: 24, opacity: 0.2, delay: 1, duration: 7 },
+        { emoji: '🔥', anim: 'flicker', x: '20%', bottom: 5, size: 16, opacity: 0.35, delay: 0.5, duration: 4 },
+        { emoji: '🔥', anim: 'flicker', x: '70%', bottom: 8, size: 14, opacity: 0.3, delay: 3, duration: 3.5 },
+        { emoji: '⭐', anim: 'shimmer', x: '55%', y: '15%', size: 14, opacity: 0.3, delay: 2, duration: 3 },
+        { type: 'glow', x: '0', bottom: 0, width: '100%', height: '28%', color: 'rgba(220,40,30,0.2)', gradientPos: 'center bottom', blur: 14, opacity: 0.35, delay: 0, duration: 7, anim: 'pulse' }
+    ],
+    wind: [
+        { emoji: '🌪️', anim: 'drift-right', x: '5%', y: '30%', size: 26, opacity: 0.2, delay: 0, duration: 10 },
+        { emoji: '☁️', anim: 'drift-right', x: '10%', y: '10%', size: 22, opacity: 0.2, delay: 1, duration: 14 },
+        { emoji: '☁️', anim: 'drift-left', x: '80%', y: '18%', size: 20, opacity: 0.15, delay: 4, duration: 12 },
+        { emoji: '🍃', anim: 'fall', x: '30%', y: '0%', size: 16, opacity: 0.35, delay: 0.5, duration: 5 },
+        { emoji: '🍃', anim: 'fall', x: '65%', y: '5%', size: 14, opacity: 0.3, delay: 3, duration: 6 },
+        { emoji: '🪶', anim: 'sway', x: '50%', y: '35%', size: 18, opacity: 0.25, delay: 2, duration: 9 },
+        { type: 'glow', x: '0', bottom: 0, width: '100%', height: '25%', color: 'rgba(80,200,180,0.18)', gradientPos: 'center bottom', blur: 15, opacity: 0.3, delay: 0, duration: 8, anim: 'pulse' }
+    ],
+    light: [
+        { emoji: '⭐', anim: 'shimmer', x: '10%', y: '15%', size: 16, opacity: 0.4, delay: 0, duration: 3 },
+        { emoji: '⭐', anim: 'shimmer', x: '45%', y: '10%', size: 18, opacity: 0.35, delay: 1, duration: 4 },
+        { emoji: '⭐', anim: 'shimmer', x: '80%', y: '20%', size: 14, opacity: 0.3, delay: 2.5, duration: 3.5 },
+        { emoji: '✨', anim: 'float-up', x: '25%', y: '40%', size: 16, opacity: 0.35, delay: 0.5, duration: 7 },
+        { emoji: '✨', anim: 'sway', x: '65%', y: '35%', size: 14, opacity: 0.3, delay: 3, duration: 8 },
+        { emoji: '☀️', anim: 'pulse', x: '50%', y: '5%', size: 28, opacity: 0.2, delay: 0, duration: 10 },
+        { type: 'glow', x: '20%', y: '0', width: '60%', height: '50%', color: 'rgba(255,220,80,0.15)', gradientPos: 'center top', blur: 20, opacity: 0.3, delay: 0, duration: 6, anim: 'shimmer' },
+        { type: 'glow', x: '0', bottom: 0, width: '100%', height: '25%', color: 'rgba(255,200,50,0.2)', gradientPos: 'center bottom', blur: 12, opacity: 0.35, delay: 0, duration: 7, anim: 'pulse' }
+    ],
+    demon: [
+        { emoji: '😈', anim: 'pulse', x: '50%', y: '18%', size: 24, opacity: 0.2, delay: 0, duration: 7 },
+        { emoji: '🔥', anim: 'float-up', x: '15%', bottom: 3, size: 18, opacity: 0.35, delay: 0.5, duration: 5 },
+        { emoji: '🔥', anim: 'float-up', x: '80%', bottom: 5, size: 16, opacity: 0.3, delay: 2, duration: 6 },
+        { emoji: '⛓️', anim: 'sway', x: '5%', y: '30%', size: 20, opacity: 0.2, delay: 1, duration: 9 },
+        { emoji: '💀', anim: 'sway', x: '70%', y: '40%', size: 16, opacity: 0.25, delay: 3, duration: 8 },
+        { emoji: '🩸', anim: 'fall', x: '40%', y: '5%', size: 14, opacity: 0.3, delay: 4, duration: 7 },
+        { type: 'glow', x: '0', bottom: 0, width: '100%', height: '30%', color: 'rgba(180,0,20,0.25)', gradientPos: 'center bottom', blur: 15, opacity: 0.4, delay: 0, duration: 8, anim: 'pulse' }
+    ],
+    beast: [
+        { emoji: '🐾', anim: 'sway', x: '15%', bottom: 8, size: 20, opacity: 0.25, delay: 0, duration: 9 },
+        { emoji: '🐾', anim: 'sway', x: '60%', bottom: 12, size: 16, opacity: 0.2, delay: 2, duration: 10 },
+        { emoji: '🌿', anim: 'sway', x: '5%', bottom: 5, size: 22, opacity: 0.3, delay: 0.5, duration: 7 },
+        { emoji: '🌿', anim: 'sway', x: '85%', bottom: 3, size: 18, opacity: 0.25, delay: 3, duration: 8 },
+        { emoji: '🌙', anim: 'pulse', x: '80%', y: '5%', size: 24, opacity: 0.2, delay: 0, duration: 12 },
+        { emoji: '🦁', anim: 'pulse', x: '45%', y: '25%', size: 26, opacity: 0.15, delay: 1, duration: 10 },
+        { type: 'glow', x: '0', bottom: 0, width: '100%', height: '25%', color: 'rgba(150,100,50,0.2)', gradientPos: 'center bottom', blur: 12, opacity: 0.35, delay: 0, duration: 8, anim: 'pulse' }
+    ],
+    ancient: [
+        { emoji: '🏛️', anim: 'pulse', x: '45%', bottom: 5, size: 28, opacity: 0.15, delay: 0, duration: 12 },
+        { emoji: '⚱️', anim: 'sway', x: '15%', y: '40%', size: 20, opacity: 0.25, delay: 1, duration: 9 },
+        { emoji: '✨', anim: 'shimmer', x: '25%', y: '20%', size: 14, opacity: 0.35, delay: 0.5, duration: 4 },
+        { emoji: '✨', anim: 'shimmer', x: '70%', y: '30%', size: 16, opacity: 0.3, delay: 2.5, duration: 3.5 },
+        { emoji: '📜', anim: 'sway', x: '75%', y: '45%', size: 18, opacity: 0.2, delay: 2, duration: 8 },
+        { emoji: '🔥', anim: 'flicker', x: '8%', bottom: 10, size: 16, opacity: 0.3, delay: 3, duration: 4 },
+        { type: 'glow', x: '0', bottom: 0, width: '100%', height: '28%', color: 'rgba(200,170,50,0.2)', gradientPos: 'center bottom', blur: 14, opacity: 0.35, delay: 0, duration: 8, anim: 'pulse' }
+    ],
+    spirit: [
+        { emoji: '👻', anim: 'sway', x: '20%', y: '25%', size: 20, opacity: 0.25, delay: 0, duration: 10 },
+        { emoji: '👻', anim: 'float-up', x: '65%', y: '45%', size: 18, opacity: 0.2, delay: 3, duration: 11 },
+        { emoji: '💫', anim: 'orbit', x: '35%', y: '30%', size: 16, opacity: 0.35, delay: 0.5, duration: 7 },
+        { emoji: '💫', anim: 'orbit', x: '70%', y: '20%', size: 14, opacity: 0.3, delay: 2, duration: 8 },
+        { emoji: '🌀', anim: 'orbit', x: '50%', y: '15%', size: 22, opacity: 0.2, delay: 1, duration: 9 },
+        { emoji: '🔮', anim: 'pulse', x: '80%', y: '40%', size: 18, opacity: 0.3, delay: 4, duration: 6 },
+        { type: 'glow', x: '0', bottom: 0, width: '100%', height: '30%', color: 'rgba(100,80,220,0.2)', gradientPos: 'center bottom', blur: 16, opacity: 0.35, delay: 0, duration: 8, anim: 'pulse' },
+        { type: 'glow', x: '25%', y: '10%', width: '50%', height: '40%', color: 'rgba(180,100,255,0.08)', gradientPos: 'center center', blur: 22, opacity: 0.2, delay: 1, duration: 6, anim: 'shimmer' }
+    ],
+    creature: [
+        { emoji: '🍄', anim: 'sway', x: '10%', bottom: 5, size: 22, opacity: 0.3, delay: 0, duration: 7 },
+        { emoji: '🍄', anim: 'sway', x: '70%', bottom: 8, size: 18, opacity: 0.25, delay: 2, duration: 8 },
+        { emoji: '🌿', anim: 'sway', x: '30%', bottom: 3, size: 20, opacity: 0.3, delay: 1, duration: 9 },
+        { emoji: '🌿', anim: 'sway', x: '85%', bottom: 6, size: 16, opacity: 0.25, delay: 3, duration: 10 },
+        { emoji: '🐛', anim: 'drift-right', x: '5%', y: '40%', size: 16, opacity: 0.2, delay: 2, duration: 12 },
+        { emoji: '✨', anim: 'shimmer', x: '25%', y: '25%', size: 14, opacity: 0.35, delay: 0.5, duration: 4 },
+        { emoji: '✨', anim: 'shimmer', x: '60%', y: '20%', size: 12, opacity: 0.3, delay: 3.5, duration: 3.5 },
+        { type: 'glow', x: '0', bottom: 0, width: '100%', height: '28%', color: 'rgba(60,160,60,0.2)', gradientPos: 'center bottom', blur: 14, opacity: 0.35, delay: 0, duration: 8, anim: 'pulse' }
+    ],
+    wizard: [
+        { emoji: '🪄', anim: 'sway', x: '15%', y: '35%', size: 22, opacity: 0.3, delay: 0, duration: 8 },
+        { emoji: '📖', anim: 'sway', x: '70%', y: '42%', size: 20, opacity: 0.25, delay: 2, duration: 9 },
+        { emoji: '⭐', anim: 'shimmer', x: '10%', y: '15%', size: 14, opacity: 0.35, delay: 0.5, duration: 3 },
+        { emoji: '⭐', anim: 'shimmer', x: '50%', y: '10%', size: 16, opacity: 0.3, delay: 1.5, duration: 4 },
+        { emoji: '⭐', anim: 'shimmer', x: '85%', y: '20%', size: 12, opacity: 0.4, delay: 3, duration: 3.5 },
+        { emoji: '🔮', anim: 'pulse', x: '40%', y: '25%', size: 18, opacity: 0.25, delay: 1, duration: 6 },
+        { type: 'glow', x: '0', bottom: 0, width: '100%', height: '30%', color: 'rgba(80,60,200,0.2)', gradientPos: 'center bottom', blur: 15, opacity: 0.35, delay: 0, duration: 7, anim: 'pulse' },
+        { type: 'glow', x: '30%', y: '5%', width: '40%', height: '35%', color: 'rgba(150,80,255,0.08)', gradientPos: 'center center', blur: 20, opacity: 0.2, delay: 1, duration: 6, anim: 'shimmer' }
+    ],
+    bug: [
+        { emoji: '🐛', anim: 'drift-right', x: '5%', y: '35%', size: 18, opacity: 0.25, delay: 0, duration: 11 },
+        { emoji: '🪲', anim: 'sway', x: '60%', y: '30%', size: 16, opacity: 0.2, delay: 2, duration: 9 },
+        { emoji: '🕸️', anim: 'pulse', x: '80%', y: '10%', size: 24, opacity: 0.15, delay: 0, duration: 12 },
+        { emoji: '🌿', anim: 'sway', x: '15%', bottom: 5, size: 20, opacity: 0.3, delay: 1, duration: 8 },
+        { emoji: '✨', anim: 'shimmer', x: '30%', y: '45%', size: 12, opacity: 0.35, delay: 0.5, duration: 3.5 },
+        { emoji: '✨', anim: 'shimmer', x: '70%', y: '50%', size: 10, opacity: 0.3, delay: 3, duration: 4 },
+        { type: 'glow', x: '0', bottom: 0, width: '100%', height: '25%', color: 'rgba(150,180,30,0.2)', gradientPos: 'center bottom', blur: 12, opacity: 0.35, delay: 0, duration: 8, anim: 'pulse' }
+    ],
+    normal: [
+        { emoji: '⭐', anim: 'shimmer', x: '10%', y: '15%', size: 16, opacity: 0.3, delay: 0, duration: 4 },
+        { emoji: '⭐', anim: 'shimmer', x: '50%', y: '10%', size: 14, opacity: 0.25, delay: 1.5, duration: 5 },
+        { emoji: '⭐', anim: 'shimmer', x: '85%', y: '20%', size: 18, opacity: 0.3, delay: 3, duration: 3.5 },
+        { emoji: '☁️', anim: 'drift-right', x: '5%', y: '12%', size: 22, opacity: 0.2, delay: 1, duration: 14 },
+        { emoji: '🌙', anim: 'pulse', x: '80%', y: '5%', size: 24, opacity: 0.2, delay: 0, duration: 12 },
+        { type: 'glow', x: '0', bottom: 0, width: '100%', height: '25%', color: 'rgba(150,150,150,0.15)', gradientPos: 'center bottom', blur: 12, opacity: 0.3, delay: 0, duration: 8, anim: 'pulse' }
+    ]
+};
+
+BattleMode._spawnSceneElements = function(sceneType) {
+    var arena = document.querySelector('.battle-arena');
+    if (!arena) return;
+
+    // Clear old elements
+    this._clearSceneElements();
+
+    var config = SceneElementConfigs[sceneType];
+    if (!config) config = SceneElementConfigs['normal'];
+
+    config.forEach(function(item) {
+        var el = document.createElement('div');
+        el.className = 'scene-element';
+
+        if (item.type === 'glow') {
+            el.classList.add('scene-glow');
+            el.style.width = item.width || '100%';
+            el.style.height = item.height || '25%';
+            if (item.bottom !== null && item.bottom !== undefined) {
+                el.style.bottom = (typeof item.bottom === 'number') ? item.bottom + '%' : item.bottom;
+                el.style.top = 'auto';
+            } else {
+                el.style.top = item.y || '0';
+            }
+            el.style.left = item.x || '0';
+            el.style.background = 'radial-gradient(ellipse at ' + (item.gradientPos || 'center bottom') + ', ' + (item.color || 'rgba(255,100,0,0.3)') + ', transparent 70%)';
+            if (item.blur) el.style.filter = 'blur(' + item.blur + 'px)';
+        } else {
+            // Emoji element
+            el.textContent = item.emoji || '';
+            el.style.fontSize = (item.size || 20) + 'px';
+            el.style.left = item.x || '50%';
+            if (item.bottom !== null && item.bottom !== undefined) {
+                el.style.bottom = (typeof item.bottom === 'number') ? item.bottom + '%' : item.bottom;
+                el.style.top = 'auto';
+            } else {
+                el.style.top = item.y || '50%';
+            }
+        }
+
+        el.style.opacity = item.opacity || 0.35;
+        el.style.animationDuration = (item.duration || 5) + 's';
+        el.style.animationDelay = (item.delay || 0) + 's';
+
+        if (item.zIndex) el.style.zIndex = item.zIndex;
+
+        if (item.anim) el.classList.add('se-' + item.anim);
+
+        arena.appendChild(el);
+    });
+};
+
+BattleMode._clearSceneElements = function() {
+    var arena = document.querySelector('.battle-arena');
+    if (!arena) return;
+    var oldElements = arena.querySelectorAll('.scene-element');
+    oldElements.forEach(function(el) { el.remove(); });
 };
 
 // ===== Hero Attack Animation =====
