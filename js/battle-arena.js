@@ -44,6 +44,208 @@ const ArenaThemes = {
 
 window.ArenaThemes = ArenaThemes;
 
+// v17.0: Monster type-based arena themes - changes per monster!
+const MonsterTypeThemes = {
+    fire: {
+        bg: 'linear-gradient(180deg, #1a0500 0%, #4a1500 25%, #8b2500 50%, #4a1a00 80%, #1a0800 100%)',
+        ground: 'linear-gradient(180deg, #5a2000 0%, #3a1200 50%, #2a0a00 100%)',
+        ambientColor: 'rgba(255, 100, 0, 0.08)',
+        particles: ['🔥', '🌋', '💥', '✨'],
+        ambientClass: 'arena-fire'
+    },
+    water: {
+        bg: 'linear-gradient(180deg, #001a33 0%, #003366 25%, #004488 50%, #002244 80%, #001122 100%)',
+        ground: 'linear-gradient(180deg, #003355 0%, #002244 50%, #001a33 100%)',
+        ambientColor: 'rgba(0, 120, 255, 0.08)',
+        particles: ['💧', '🌊', '🐚', '✨'],
+        ambientClass: 'arena-water'
+    },
+    ice: {
+        bg: 'linear-gradient(180deg, #0a1a2a 0%, #1a3a5a 25%, #2a5a7a 50%, #1a3a5a 80%, #0a1520 100%)',
+        ground: 'linear-gradient(180deg, #3a6a8a 0%, #2a4a6a 50%, #1a3050 100%)',
+        ambientColor: 'rgba(150, 220, 255, 0.1)',
+        particles: ['❄️', '🧊', '💎', '✨'],
+        ambientClass: 'arena-ice'
+    },
+    thunder: {
+        bg: 'linear-gradient(180deg, #0a0a15 0%, #1a1a30 25%, #2a2040 50%, #1a1525 80%, #050510 100%)',
+        ground: 'linear-gradient(180deg, #2a2540 0%, #1a1530 50%, #0a0a20 100%)',
+        ambientColor: 'rgba(255, 220, 50, 0.06)',
+        particles: ['⚡', '🌩️', '💛', '✨'],
+        ambientClass: 'arena-thunder'
+    },
+    electric: {
+        bg: 'linear-gradient(180deg, #0a0a15 0%, #1a1a30 25%, #2a2040 50%, #1a1525 80%, #050510 100%)',
+        ground: 'linear-gradient(180deg, #2a2540 0%, #1a1530 50%, #0a0a20 100%)',
+        ambientColor: 'rgba(255, 220, 50, 0.06)',
+        particles: ['⚡', '🌩️', '💛', '✨'],
+        ambientClass: 'arena-thunder'
+    },
+    grass: {
+        bg: 'linear-gradient(180deg, #0a1a0a 0%, #1a3a1a 25%, #2a5a2a 50%, #1a3a1a 80%, #0a150a 100%)',
+        ground: 'linear-gradient(180deg, #2a5a30 0%, #1a4020 50%, #0a2a10 100%)',
+        ambientColor: 'rgba(100, 200, 80, 0.08)',
+        particles: ['🍃', '🌿', '🌱', '✨'],
+        ambientClass: 'arena-grass'
+    },
+    dark: {
+        bg: 'linear-gradient(180deg, #050005 0%, #150520 25%, #200830 50%, #100520 80%, #050005 100%)',
+        ground: 'linear-gradient(180deg, #1a0a2a 0%, #0a0515 50%, #050008 100%)',
+        ambientColor: 'rgba(100, 0, 150, 0.08)',
+        particles: ['🌑', '💀', '🦇', '👁️'],
+        ambientClass: 'arena-dark'
+    },
+    demon: {
+        bg: 'linear-gradient(180deg, #1a0005 0%, #3a0010 25%, #5a0020 50%, #3a0010 80%, #100005 100%)',
+        ground: 'linear-gradient(180deg, #3a0015 0%, #2a000a 50%, #150005 100%)',
+        ambientColor: 'rgba(200, 0, 50, 0.08)',
+        particles: ['👹', '🔥', '💀', '⛓️'],
+        ambientClass: 'arena-demon'
+    },
+    ghost: {
+        bg: 'linear-gradient(180deg, #0a0515 0%, #1a1035 25%, #251845 50%, #1a1035 80%, #080510 100%)',
+        ground: 'linear-gradient(180deg, #201540 0%, #150a2a 50%, #0a0518 100%)',
+        ambientColor: 'rgba(150, 100, 255, 0.08)',
+        particles: ['👻', '🕯️', '💜', '✨'],
+        ambientClass: 'arena-ghost'
+    },
+    spirit: {
+        bg: 'linear-gradient(180deg, #0a0520 0%, #1a1040 25%, #2a1855 50%, #1a1040 80%, #080515 100%)',
+        ground: 'linear-gradient(180deg, #251845 0%, #1a1035 50%, #0a0520 100%)',
+        ambientColor: 'rgba(180, 130, 255, 0.08)',
+        particles: ['🌙', '✨', '💫', '🔮'],
+        ambientClass: 'arena-spirit'
+    },
+    psychic: {
+        bg: 'linear-gradient(180deg, #150520 0%, #2a1040 25%, #3a1555 50%, #2a1040 80%, #100515 100%)',
+        ground: 'linear-gradient(180deg, #301550 0%, #201040 50%, #100525 100%)',
+        ambientColor: 'rgba(250, 100, 200, 0.08)',
+        particles: ['🔮', '💫', '🧠', '✨'],
+        ambientClass: 'arena-psychic'
+    },
+    dragon: {
+        bg: 'linear-gradient(180deg, #0a0020 0%, #1a0050 25%, #2a0080 50%, #1a0050 80%, #050015 100%)',
+        ground: 'linear-gradient(180deg, #2a1060 0%, #1a0840 50%, #0a0525 100%)',
+        ambientColor: 'rgba(100, 50, 255, 0.1)',
+        particles: ['🐉', '💎', '⚡', '🔥'],
+        ambientClass: 'arena-dragon'
+    },
+    ancient: {
+        bg: 'linear-gradient(180deg, #0a0a0a 0%, #1a1515 25%, #2a2525 50%, #1a1515 80%, #080808 100%)',
+        ground: 'linear-gradient(180deg, #2a2520 0%, #1a1a15 50%, #0a0a08 100%)',
+        ambientColor: 'rgba(150, 130, 100, 0.08)',
+        particles: ['🏛️', '⚱️', '🗿', '✨'],
+        ambientClass: 'arena-ancient'
+    },
+    fairy: {
+        bg: 'linear-gradient(180deg, #150a1a 0%, #2a1535 25%, #3a2050 50%, #2a1535 80%, #100815 100%)',
+        ground: 'linear-gradient(180deg, #352050 0%, #251540 50%, #150a2a 100%)',
+        ambientColor: 'rgba(255, 150, 200, 0.1)',
+        particles: ['🌸', '🦋', '💖', '✨'],
+        ambientClass: 'arena-fairy'
+    },
+    light: {
+        bg: 'linear-gradient(180deg, #1a1500 0%, #2a2510 25%, #3a3520 50%, #2a2510 80%, #151000 100%)',
+        ground: 'linear-gradient(180deg, #3a3525 0%, #2a2518 50%, #1a1a0a 100%)',
+        ambientColor: 'rgba(255, 240, 100, 0.1)',
+        particles: ['⭐', '🌟', '💛', '✨'],
+        ambientClass: 'arena-light'
+    },
+    poison: {
+        bg: 'linear-gradient(180deg, #0a050a 0%, #1a0a1a 25%, #2a102a 50%, #1a0a1a 80%, #080508 100%)',
+        ground: 'linear-gradient(180deg, #2a152a 0%, #1a0a1a 50%, #0a050a 100%)',
+        ambientColor: 'rgba(180, 0, 200, 0.08)',
+        particles: ['☠️', '🧪', '💜', '🫧'],
+        ambientClass: 'arena-poison'
+    },
+    steel: {
+        bg: 'linear-gradient(180deg, #0a0a0f 0%, #1a1a25 25%, #2a2a3a 50%, #1a1a25 80%, #0a0a10 100%)',
+        ground: 'linear-gradient(180deg, #2a2a3a 0%, #1a1a2a 50%, #0a0a15 100%)',
+        ambientColor: 'rgba(180, 180, 210, 0.08)',
+        particles: ['⚙️', '🔩', '💠', '✨'],
+        ambientClass: 'arena-steel'
+    },
+    rock: {
+        bg: 'linear-gradient(180deg, #100a05 0%, #2a1a10 25%, #3a2a1a 50%, #2a1a10 80%, #0a0805 100%)',
+        ground: 'linear-gradient(180deg, #3a2a1a 0%, #2a1a10 50%, #1a1008 100%)',
+        ambientColor: 'rgba(180, 150, 80, 0.06)',
+        particles: ['🪨', '💎', '⛏️', '✨'],
+        ambientClass: 'arena-rock'
+    },
+    earth: {
+        bg: 'linear-gradient(180deg, #100a05 0%, #2a1a10 25%, #3a2a18 50%, #2a1a10 80%, #0a0805 100%)',
+        ground: 'linear-gradient(180deg, #3a2a18 0%, #2a1a10 50%, #1a1008 100%)',
+        ambientColor: 'rgba(180, 150, 80, 0.06)',
+        particles: ['🪨', '🌍', '🏔️', '✨'],
+        ambientClass: 'arena-earth'
+    },
+    ground: {
+        bg: 'linear-gradient(180deg, #100a05 0%, #2a1810 25%, #3a2818 50%, #2a1810 80%, #0a0805 100%)',
+        ground: 'linear-gradient(180deg, #3a2818 0%, #2a1810 50%, #1a1008 100%)',
+        ambientColor: 'rgba(220, 190, 100, 0.06)',
+        particles: ['🏜️', '🪨', '💨', '✨'],
+        ambientClass: 'arena-earth'
+    },
+    fighting: {
+        bg: 'linear-gradient(180deg, #1a0505 0%, #3a1515 25%, #5a2020 50%, #3a1515 80%, #150505 100%)',
+        ground: 'linear-gradient(180deg, #4a2020 0%, #3a1515 50%, #2a0a0a 100%)',
+        ambientColor: 'rgba(255, 80, 50, 0.08)',
+        particles: ['💪', '🥊', '💥', '🔥'],
+        ambientClass: 'arena-fighting'
+    },
+    wind: {
+        bg: 'linear-gradient(180deg, #0a1515 0%, #152a2a 25%, #1a3a3a 50%, #152a2a 80%, #0a1010 100%)',
+        ground: 'linear-gradient(180deg, #1a3535 0%, #152525 50%, #0a1515 100%)',
+        ambientColor: 'rgba(100, 220, 180, 0.08)',
+        particles: ['🌪️', '🍃', '💨', '☁️'],
+        ambientClass: 'arena-wind'
+    },
+    flying: {
+        bg: 'linear-gradient(180deg, #0a1525 0%, #1a2a4a 25%, #2a4070 50%, #1a2a4a 80%, #0a1020 100%)',
+        ground: 'linear-gradient(180deg, #2a4060 0%, #1a2a45 50%, #0a1525 100%)',
+        ambientColor: 'rgba(150, 180, 255, 0.08)',
+        particles: ['☁️', '🌤️', '🪶', '✨'],
+        ambientClass: 'arena-wind'
+    },
+    beast: {
+        bg: 'linear-gradient(180deg, #0a0a05 0%, #1a1a0a 25%, #2a2510 50%, #1a1a0a 80%, #080805 100%)',
+        ground: 'linear-gradient(180deg, #2a2515 0%, #1a1a0a 50%, #0a0a05 100%)',
+        ambientColor: 'rgba(150, 120, 80, 0.08)',
+        particles: ['🐾', '🌿', '🍂', '🦴'],
+        ambientClass: 'arena-beast'
+    },
+    creature: {
+        bg: 'linear-gradient(180deg, #050a05 0%, #0a1a0a 25%, #102a15 50%, #0a1a0a 80%, #050a05 100%)',
+        ground: 'linear-gradient(180deg, #1a2a1a 0%, #0a1a0a 50%, #050a05 100%)',
+        ambientColor: 'rgba(80, 180, 80, 0.08)',
+        particles: ['🌳', '🍄', '🐾', '✨'],
+        ambientClass: 'arena-grass'
+    },
+    wizard: {
+        bg: 'linear-gradient(180deg, #0a0520 0%, #1a1050 25%, #2a1870 50%, #1a1050 80%, #080515 100%)',
+        ground: 'linear-gradient(180deg, #251560 0%, #1a0a45 50%, #0a0525 100%)',
+        ambientColor: 'rgba(100, 80, 255, 0.1)',
+        particles: ['🪄', '📖', '⭐', '✨'],
+        ambientClass: 'arena-psychic'
+    },
+    bug: {
+        bg: 'linear-gradient(180deg, #0a0a05 0%, #1a2010 25%, #2a3018 50%, #1a2010 80%, #080a05 100%)',
+        ground: 'linear-gradient(180deg, #2a3018 0%, #1a2010 50%, #0a0a05 100%)',
+        ambientColor: 'rgba(150, 180, 50, 0.08)',
+        particles: ['🐛', '🍃', '🌿', '🪲'],
+        ambientClass: 'arena-grass'
+    },
+    normal: {
+        bg: 'linear-gradient(180deg, #0a0a0a 0%, #1a1a1a 25%, #2a2a2a 50%, #1a1a1a 80%, #0a0a0a 100%)',
+        ground: 'linear-gradient(180deg, #2a2a2a 0%, #1a1a1a 50%, #0a0a0a 100%)',
+        ambientColor: 'rgba(180, 180, 180, 0.06)',
+        particles: ['⭐', '✨', '💫'],
+        ambientClass: 'arena-normal'
+    }
+};
+
+window.MonsterTypeThemes = MonsterTypeThemes;
+
 // ===== Arena Initialization =====
 
 BattleMode.initArena = function() {
@@ -102,8 +304,74 @@ BattleMode.updateArenaPositions = function() {
     // Update HP displays
     this.updateUI();
 
-    // Show type tag
+    // Show type tag + apply type-based background
     this.showMonsterType(monster);
+    this.applyMonsterTheme(monster);
+};
+
+// ===== v17.0: Type-based Arena Background =====
+
+BattleMode.applyMonsterTheme = function(monster) {
+    const arena = document.querySelector('.battle-arena');
+    if (!arena || !monster) return;
+
+    const typeTheme = MonsterTypeThemes[monster.type] || MonsterTypeThemes.normal;
+    const ground = arena.querySelector('.arena-ground');
+
+    // Smooth transition for background change
+    arena.style.transition = 'background 0.8s ease';
+    arena.style.background = typeTheme.bg;
+    if (ground) {
+        ground.style.transition = 'background 0.8s ease';
+        ground.style.background = typeTheme.ground;
+    }
+
+    // Remove old ambient class, add new
+    var allAmbientClasses = [
+        'arena-fire', 'arena-water', 'arena-ice', 'arena-thunder',
+        'arena-grass', 'arena-dark', 'arena-demon', 'arena-ghost',
+        'arena-spirit', 'arena-psychic', 'arena-dragon', 'arena-ancient',
+        'arena-fairy', 'arena-light', 'arena-poison', 'arena-steel',
+        'arena-rock', 'arena-earth', 'arena-fighting', 'arena-wind',
+        'arena-beast', 'arena-normal'
+    ];
+    allAmbientClasses.forEach(function(cls) { arena.classList.remove(cls); });
+    if (typeTheme.ambientClass) {
+        arena.classList.add(typeTheme.ambientClass);
+    }
+
+    // Ambient color overlay
+    var ambientOverlay = arena.querySelector('.arena-ambient-overlay');
+    if (!ambientOverlay) {
+        ambientOverlay = document.createElement('div');
+        ambientOverlay.className = 'arena-ambient-overlay';
+        arena.insertBefore(ambientOverlay, arena.firstChild);
+    }
+    ambientOverlay.style.background = typeTheme.ambientColor || 'transparent';
+
+    // Spawn floating ambient particles
+    this._spawnAmbientParticles(arena, typeTheme.particles || ['✨']);
+};
+
+// Spawn floating ambient particles in the arena background
+BattleMode._spawnAmbientParticles = function(arena, particles) {
+    // Remove old ambient particles
+    arena.querySelectorAll('.arena-ambient-particle').forEach(function(el) { el.remove(); });
+
+    // Create 6-8 floating particles at random positions
+    var count = 6 + Math.floor(Math.random() * 3);
+    for (var i = 0; i < count; i++) {
+        var particle = document.createElement('div');
+        particle.className = 'arena-ambient-particle';
+        particle.textContent = particles[Math.floor(Math.random() * particles.length)];
+        particle.style.left = (5 + Math.random() * 90) + '%';
+        particle.style.top = (5 + Math.random() * 75) + '%';
+        particle.style.animationDelay = (Math.random() * 4) + 's';
+        particle.style.animationDuration = (3 + Math.random() * 4) + 's';
+        particle.style.fontSize = (10 + Math.random() * 8) + 'px';
+        particle.style.opacity = (0.15 + Math.random() * 0.25).toString();
+        arena.appendChild(particle);
+    }
 };
 
 // ===== Hero Attack Animation =====

@@ -1014,6 +1014,8 @@ BattleMode.handleCorrectAnswer = function(btnElement) {
         this.heroAttackAnimation(weapon, () => {
             this.executeBehavior('dodge', (result) => {
                 this.dealDamage(grazeDamage);
+                // If graze damage killed the monster, dealDamage→monsterDeath handles transition
+                if (battle.monsterHP <= 0) return;
                 this.tryDropItem();
                 battle.currentIndex++;
                 setTimeout(() => this.showBattleQuestion(), 600);
@@ -1423,6 +1425,7 @@ BattleMode.showMonsterQuip = function() {
 
 BattleMode.monsterAttack = function() {
     if (!App.battle.active) return;
+    if (App.battle.monsterHP <= 0) return; // Monster already defeated, skip attack
     const battle = App.battle;
     const monster = battle.currentMonster;
 
