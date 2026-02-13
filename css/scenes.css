@@ -1,0 +1,1094 @@
+/* ==========================================================================
+   Battle Scene Backgrounds - Math Speed Trainer
+   24 unique CSS-only scenes for monster type battle arenas
+   ========================================================================== */
+
+/* --- Base Scene Layer Styles --- */
+.scene-layer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    transition: opacity 0.5s ease;
+}
+.scene-sky { z-index: 0; }
+.scene-far { z-index: 1; }
+.scene-mid { z-index: 2; }
+.scene-effects { z-index: 3; }
+.hero-side { z-index: 10; }
+.enemy-side { z-index: 10; }
+
+.scene-layer.scene-entering {
+    animation: scene-fade-in 0.6s ease forwards;
+}
+@keyframes scene-fade-in { from { opacity: 0; } to { opacity: 1; } }
+
+/* --- Reusable Particle Keyframes --- */
+@keyframes ember-rise {
+    0%   { transform: translateY(0); opacity: 0.6; }
+    50%  { opacity: 0.8; }
+    100% { transform: translateY(-120px) translateX(15px); opacity: 0; }
+}
+@keyframes bubble-rise {
+    0%   { transform: translateY(0) translateX(0); opacity: 0.5; }
+    50%  { transform: translateY(-60px) translateX(5px); opacity: 0.6; }
+    100% { transform: translateY(-130px) translateX(-3px); opacity: 0; }
+}
+@keyframes snow-fall {
+    0%   { transform: translateY(-10px) translateX(0); opacity: 0.6; }
+    100% { transform: translateY(300px) translateX(30px); opacity: 0; }
+}
+@keyframes leaf-fall {
+    0%   { transform: translateY(-10px) translateX(0) rotate(0deg); opacity: 0.5; }
+    50%  { transform: translateY(140px) translateX(20px) rotate(180deg); opacity: 0.6; }
+    100% { transform: translateY(300px) translateX(-10px) rotate(360deg); opacity: 0; }
+}
+@keyframes wisp-float {
+    0%   { transform: translate(0, 0); opacity: 0.3; }
+    25%  { transform: translate(10px, -15px); opacity: 0.6; }
+    50%  { transform: translate(-5px, -25px); opacity: 0.3; }
+    75%  { transform: translate(15px, -10px); opacity: 0.5; }
+    100% { transform: translate(0, 0); opacity: 0.3; }
+}
+@keyframes spark-flash {
+    0%, 100% { opacity: 0; }
+    5% { opacity: 1; }
+    10% { opacity: 0; }
+}
+@keyframes wind-sweep {
+    0%   { transform: translateX(-100%); opacity: 0; }
+    10%  { opacity: 0.4; }
+    90%  { opacity: 0.4; }
+    100% { transform: translateX(200%); opacity: 0; }
+}
+@keyframes dust-drift {
+    0%   { transform: translate(0, 0); opacity: 0.3; }
+    33%  { transform: translate(8px, -5px); opacity: 0.5; }
+    66%  { transform: translate(-4px, -12px); opacity: 0.3; }
+    100% { transform: translate(0, 0); opacity: 0.3; }
+}
+@keyframes aura-pulse {
+    0%, 100% { opacity: 0.6; transform: translateX(-50%) scale(1); }
+    50% { opacity: 1; transform: translateX(-50%) scale(1.1); }
+}
+@keyframes lightning-flash {
+    0%, 94%, 100% { opacity: 0; }
+    95% { opacity: 1; }
+    96% { opacity: 0; }
+    97% { opacity: 0.8; }
+    98% { opacity: 0; }
+}
+@keyframes aurora-sway {
+    0%, 100% { transform: translateX(-5%) skewX(-2deg); }
+    50% { transform: translateX(5%) skewX(2deg); }
+}
+@keyframes mist-shift {
+    0%, 100% { transform: translateX(0); opacity: 0.15; }
+    50% { transform: translateX(20px); opacity: 0.25; }
+}
+@keyframes ghost-light-pulse {
+    0%, 100% { opacity: 0; transform: scale(0.8); }
+    50% { opacity: 0.4; transform: scale(1.2); }
+}
+@keyframes heat-wave {
+    0%   { transform: translateX(-100%) scaleY(1); }
+    50%  { transform: translateX(50%) scaleY(1.05); }
+    100% { transform: translateX(200%) scaleY(1); }
+}
+@keyframes float-rotate {
+    0%   { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+@keyframes energy-orbit {
+    0%   { transform: rotate(0deg) translateX(30px) rotate(0deg); opacity: 0.4; }
+    50%  { opacity: 0.7; }
+    100% { transform: rotate(360deg) translateX(30px) rotate(-360deg); opacity: 0.4; }
+}
+@keyframes flicker {
+    0%, 100% { opacity: 0.7; transform: scaleY(1); }
+    25% { opacity: 1; transform: scaleY(1.1) scaleX(0.9); }
+    50% { opacity: 0.8; transform: scaleY(0.9) scaleX(1.1); }
+    75% { opacity: 1; transform: scaleY(1.05); }
+}
+@keyframes spiral-up {
+    0%   { transform: rotate(0deg) translateX(10px) translateY(0); opacity: 0.5; }
+    100% { transform: rotate(720deg) translateX(10px) translateY(-150px); opacity: 0; }
+}
+@keyframes firefly-pulse {
+    0%, 100% { opacity: 0; }
+    30%, 70% { opacity: 0.7; }
+    50% { opacity: 1; }
+}
+@keyframes twinkle {
+    0%, 100% { opacity: 0.1; }
+    50% { opacity: 0.6; }
+}
+@keyframes sand-drift {
+    0%   { transform: translateX(-50px) translateY(0); opacity: 0; }
+    20%  { opacity: 0.4; }
+    80%  { opacity: 0.4; }
+    100% { transform: translateX(100px) translateY(-20px); opacity: 0; }
+}
+@keyframes rune-glow {
+    0%, 100% { opacity: 0.1; }
+    50% { opacity: 0.5; }
+}
+
+/* ==========================================================================
+   1. FIRE SCENE (火系)
+   ========================================================================== */
+.scene-sky.fire-scene {
+    background: linear-gradient(180deg, #1a0500 0%, #3d0e00 40%, #5c1a00 70%, #8b2500 100%);
+}
+.scene-sky.fire-scene::before {
+    content: ''; position: absolute; top: 0; left: 10%; width: 40%; height: 30%;
+    background: rgba(10,2,0,0.6); border-radius: 0 0 50% 50%; filter: blur(8px);
+}
+.scene-sky.fire-scene::after {
+    content: ''; position: absolute; top: 0; right: 5%; width: 35%; height: 25%;
+    background: rgba(10,2,0,0.5); border-radius: 0 0 40% 60%; filter: blur(10px);
+}
+.scene-far.fire-scene::before {
+    content: ''; position: absolute; bottom: 20%; left: 30%; width: 40%; height: 65%;
+    background: #1a0800; clip-path: polygon(50% 5%, 35% 50%, 20% 100%, 80% 100%, 65% 50%);
+}
+.scene-far.fire-scene::after {
+    content: ''; position: absolute; top: 10%; left: 44%; width: 12%; height: 10%;
+    background: radial-gradient(ellipse at center, rgba(255,80,0,0.4) 0%, transparent 70%); filter: blur(3px);
+}
+.scene-mid.fire-scene::before {
+    content: ''; position: absolute; bottom: 18%; left: 0; width: 18%; height: 50%;
+    background: #0d0400; clip-path: polygon(0 30%, 60% 15%, 80% 50%, 100% 100%, 0 100%);
+}
+.scene-mid.fire-scene::after {
+    content: ''; position: absolute; bottom: 18%; right: 0; width: 15%; height: 55%;
+    background: #0d0400; clip-path: polygon(20% 20%, 100% 10%, 100% 100%, 0 100%, 40% 60%);
+}
+.scene-effects.fire-scene::before {
+    content: ''; position: absolute; bottom: 20%; width: 3px; height: 3px; border-radius: 50%;
+    background: #ff6600; opacity: 0.6; animation: ember-rise 4s linear infinite;
+    box-shadow: 20px 10px 2px #ff4400, 50px -5px 3px #ff8800, 80px 15px 2px #ff5500,
+        120px 0px 2px #ff6600, 160px 20px 3px #ff4400, 200px -10px 2px #ff7700;
+}
+.scene-effects.fire-scene::after {
+    content: ''; position: absolute; bottom: 15%; left: 15%; width: 2px; height: 2px; border-radius: 50%;
+    background: #ffaa00; opacity: 0.5; animation: ember-rise 5s linear infinite 1.5s;
+    box-shadow: 30px 5px 2px #ff6600, 70px -8px 1px #ff8800, 110px 12px 2px #ff5500,
+        150px -3px 1px #ff7700, 190px 8px 2px #ff6600;
+}
+.battle-arena:has(.fire-scene) .arena-ground { box-shadow: 0 -8px 25px rgba(255,100,0,0.3); }
+
+/* ==========================================================================
+   2. WATER SCENE (水系)
+   ========================================================================== */
+.scene-sky.water-scene {
+    background: linear-gradient(180deg, #030a15 0%, #0a1e3d 40%, #0d2a4a 70%, #0f3555 100%);
+}
+.scene-far.water-scene::before {
+    content: ''; position: absolute; bottom: 25%; left: 0; width: 100%; height: 30%;
+    background: rgba(10,40,70,0.5);
+    clip-path: polygon(0 60%, 5% 50%, 15% 55%, 25% 40%, 35% 50%, 45% 35%, 55% 45%, 65% 30%, 75% 45%, 85% 35%, 95% 50%, 100% 40%, 100% 100%, 0 100%);
+}
+.scene-far.water-scene::after {
+    content: ''; position: absolute; bottom: 20%; left: 0; width: 100%; height: 25%;
+    background: rgba(8,30,55,0.6);
+    clip-path: polygon(0 70%, 10% 55%, 20% 65%, 30% 50%, 40% 60%, 50% 45%, 60% 55%, 70% 40%, 80% 55%, 90% 45%, 100% 55%, 100% 100%, 0 100%);
+}
+.scene-mid.water-scene::before {
+    content: ''; position: absolute; bottom: 18%; left: 0; width: 15%; height: 35%;
+    background: #061525; clip-path: polygon(0 40%, 40% 25%, 70% 50%, 100% 35%, 80% 100%, 0 100%);
+}
+.scene-mid.water-scene::after {
+    content: ''; position: absolute; bottom: 18%; right: 0; width: 18%; height: 40%;
+    background: #061525; clip-path: polygon(20% 30%, 60% 20%, 100% 45%, 100% 100%, 0 100%, 30% 55%);
+}
+.scene-effects.water-scene::before {
+    content: ''; position: absolute; bottom: 22%; left: 10%; width: 4px; height: 4px; border-radius: 50%;
+    background: rgba(100,180,255,0.4); animation: bubble-rise 5s linear infinite;
+    box-shadow: 25px 5px 2px rgba(80,160,240,0.3), 55px -10px 3px rgba(100,180,255,0.4),
+        90px 8px 4px rgba(80,160,240,0.3), 130px -5px 2px rgba(100,180,255,0.35), 170px 10px 3px rgba(80,160,240,0.4);
+}
+.scene-effects.water-scene::after {
+    content: ''; position: absolute; bottom: 20%; left: 20%; width: 3px; height: 3px; border-radius: 50%;
+    background: rgba(120,200,255,0.3); animation: bubble-rise 6s linear infinite 2s;
+    box-shadow: 15px 8px 2px rgba(100,180,255,0.35), 60px -3px 3px rgba(80,160,240,0.3),
+        100px 12px 2px rgba(120,200,255,0.35), 145px -7px 4px rgba(100,180,255,0.3);
+}
+.battle-arena:has(.water-scene) .arena-ground { box-shadow: 0 -8px 25px rgba(30,100,200,0.3); }
+
+/* ==========================================================================
+   3. ICE SCENE (冰系)
+   ========================================================================== */
+.scene-sky.ice-scene {
+    background: linear-gradient(180deg, #050a1a 0%, #0a1530 40%, #102040 70%, #1a3050 100%);
+}
+.scene-sky.ice-scene::before {
+    content: ''; position: absolute; top: 15%; left: 10%; width: 80%; height: 8px;
+    background: linear-gradient(90deg, transparent, rgba(50,200,150,0.15), rgba(150,80,200,0.15), rgba(50,180,200,0.1), transparent);
+    filter: blur(4px); animation: aurora-sway 8s ease-in-out infinite;
+}
+.scene-far.ice-scene::before {
+    content: ''; position: absolute; bottom: 20%; left: 10%; width: 80%; height: 55%;
+    background: #0a1525;
+    clip-path: polygon(0 100%, 5% 60%, 12% 80%, 20% 30%, 28% 65%, 35% 20%, 42% 55%, 50% 10%, 58% 50%, 65% 25%, 72% 60%, 80% 15%, 88% 55%, 95% 40%, 100% 70%, 100% 100%);
+}
+.scene-mid.ice-scene::before {
+    content: ''; position: absolute; top: 0; left: 5%; width: 25%; height: 30%;
+    background: #0a1525;
+    clip-path: polygon(10% 0, 15% 100%, 20% 0, 30% 0, 33% 80%, 40% 0, 55% 0, 56% 60%, 60% 0, 75% 0, 78% 90%, 82% 0);
+}
+.scene-mid.ice-scene::after {
+    content: ''; position: absolute; top: 0; right: 3%; width: 20%; height: 35%;
+    background: #0a1525;
+    clip-path: polygon(5% 0, 10% 80%, 15% 0, 30% 0, 35% 100%, 40% 0, 60% 0, 62% 70%, 68% 0, 85% 0, 88% 90%, 95% 0);
+}
+.scene-effects.ice-scene::before {
+    content: ''; position: absolute; top: -5%; left: 5%; width: 3px; height: 3px; border-radius: 50%;
+    background: rgba(220,240,255,0.5); animation: snow-fall 7s linear infinite;
+    box-shadow: 20px 10px 1px rgba(200,230,255,0.4), 60px 5px 2px rgba(220,240,255,0.5),
+        100px 15px 1px rgba(200,230,255,0.3), 140px 0 2px rgba(220,240,255,0.5),
+        180px 20px 1px rgba(200,230,255,0.4), 220px -5px 2px rgba(220,240,255,0.3);
+}
+.scene-effects.ice-scene::after {
+    content: ''; position: absolute; top: -5%; left: 15%; width: 2px; height: 2px; border-radius: 50%;
+    background: rgba(230,245,255,0.4); animation: snow-fall 9s linear infinite 3s;
+    box-shadow: 30px 8px 1px rgba(210,235,255,0.4), 80px -5px 2px rgba(230,245,255,0.3),
+        120px 12px 1px rgba(210,235,255,0.5), 160px 3px 1px rgba(230,245,255,0.3), 200px -8px 2px rgba(210,235,255,0.4);
+}
+.battle-arena:has(.ice-scene) .arena-ground {
+    box-shadow: 0 -8px 25px rgba(100,180,240,0.25), 0 -2px 10px rgba(200,230,255,0.15);
+}
+
+/* ==========================================================================
+   4. THUNDER SCENE (雷系)
+   ========================================================================== */
+.scene-sky.thunder-scene {
+    background: linear-gradient(180deg, #0a0a12 0%, #15101e 40%, #1a1525 70%, #201830 100%);
+}
+.scene-sky.thunder-scene::before {
+    content: ''; position: absolute; top: 0; left: 5%; width: 45%; height: 30%;
+    background: rgba(8,5,15,0.7); border-radius: 0 0 50% 40%; filter: blur(8px);
+}
+.scene-sky.thunder-scene::after {
+    content: ''; position: absolute; top: 0; right: 10%; width: 40%; height: 25%;
+    background: rgba(8,5,15,0.6); border-radius: 0 0 40% 55%; filter: blur(10px);
+}
+.scene-far.thunder-scene::before {
+    content: ''; position: absolute; bottom: 20%; left: 15%; width: 70%; height: 45%;
+    background: #08060f;
+    clip-path: polygon(0 100%, 0 60%, 8% 60%, 8% 40%, 15% 40%, 15% 55%, 20% 55%, 20% 35%, 28% 35%, 28% 50%, 35% 50%, 35% 30%, 42% 30%, 42% 45%, 50% 45%, 50% 25%, 58% 25%, 58% 50%, 65% 50%, 65% 35%, 72% 35%, 72% 55%, 80% 55%, 80% 40%, 88% 40%, 88% 60%, 95% 60%, 95% 45%, 100% 45%, 100% 100%);
+}
+.scene-mid.thunder-scene::before {
+    content: ''; position: absolute; bottom: 18%; left: 3%; width: 8%; height: 50%;
+    background: #060410; clip-path: polygon(30% 0, 70% 0, 80% 20%, 75% 20%, 80% 100%, 20% 100%, 25% 20%, 20% 20%);
+}
+.scene-mid.thunder-scene::after {
+    content: ''; position: absolute; bottom: 18%; right: 5%; width: 7%; height: 45%;
+    background: #060410; clip-path: polygon(30% 0, 70% 0, 80% 20%, 75% 20%, 80% 100%, 20% 100%, 25% 20%, 20% 20%);
+}
+.scene-effects.thunder-scene::before {
+    content: ''; position: absolute; top: 10%; left: 40%; width: 2px; height: 50%;
+    background: rgba(200,200,255,0.9);
+    clip-path: polygon(0 0, 100% 0, 60% 25%, 120% 30%, 40% 55%, 110% 60%, 50% 85%, 80% 100%, 0% 100%);
+    animation: lightning-flash 5s linear infinite; filter: blur(1px);
+}
+.scene-effects.thunder-scene::after {
+    content: ''; position: absolute; top: 5%; left: 65%; width: 2px; height: 45%;
+    background: rgba(220,220,255,0.8);
+    clip-path: polygon(0 0, 100% 0, 80% 20%, 130% 35%, 30% 55%, 100% 70%, 50% 100%, 0% 100%);
+    animation: lightning-flash 7s linear infinite 2s; filter: blur(1px);
+}
+.battle-arena:has(.thunder-scene) .arena-ground { box-shadow: 0 -6px 20px rgba(200,200,50,0.15); }
+
+/* ==========================================================================
+   5. GRASS SCENE (草系)
+   ========================================================================== */
+.scene-sky.grass-scene {
+    background: linear-gradient(180deg, #040d05 0%, #0a1a0c 40%, #0d200e 70%, #102810 100%);
+}
+.scene-sky.grass-scene::after {
+    content: ''; position: absolute; top: 10%; right: 12%; width: 20px; height: 20px;
+    border-radius: 50%; background: rgba(200,210,180,0.2);
+    box-shadow: 0 0 10px rgba(200,210,180,0.15), 0 0 20px rgba(200,210,180,0.08);
+}
+.scene-far.grass-scene::before {
+    content: ''; position: absolute; bottom: 20%; left: 0; width: 100%; height: 40%;
+    background: #060e06;
+    clip-path: polygon(0 80%, 10% 55%, 25% 65%, 40% 45%, 55% 55%, 70% 40%, 85% 50%, 100% 60%, 100% 100%, 0 100%);
+}
+.scene-mid.grass-scene::before {
+    content: ''; position: absolute; bottom: 18%; left: 2%; width: 20%; height: 60%;
+    background: #040a04;
+    clip-path: polygon(40% 100%, 45% 50%, 30% 45%, 45% 40%, 35% 30%, 50% 30%, 40% 15%, 55% 20%, 50% 5%, 60% 20%, 65% 10%, 65% 25%, 75% 30%, 60% 35%, 70% 45%, 55% 45%, 60% 100%);
+}
+.scene-mid.grass-scene::after {
+    content: ''; position: absolute; bottom: 18%; right: 0; width: 18%; height: 55%;
+    background: #040a04;
+    clip-path: polygon(40% 100%, 42% 50%, 30% 48%, 45% 38%, 35% 25%, 50% 28%, 42% 10%, 55% 22%, 55% 5%, 62% 18%, 68% 12%, 65% 28%, 72% 35%, 58% 40%, 65% 50%, 55% 50%, 58% 100%);
+}
+.scene-effects.grass-scene::before {
+    content: ''; position: absolute; top: -5%; left: 10%; width: 4px; height: 4px;
+    background: rgba(80,160,60,0.5); animation: leaf-fall 8s linear infinite;
+    box-shadow: 30px 5px 1px rgba(60,140,50,0.4), 80px -10px 1px rgba(80,160,60,0.5),
+        130px 8px 1px rgba(70,150,55,0.4), 180px -5px 1px rgba(80,160,60,0.5), 230px 12px 1px rgba(60,140,50,0.4);
+}
+.scene-effects.grass-scene::after {
+    content: ''; position: absolute; top: -8%; left: 25%; width: 3px; height: 3px;
+    background: rgba(100,180,70,0.4); animation: leaf-fall 10s linear infinite 3s;
+    box-shadow: 20px 8px 1px rgba(80,160,60,0.4), 65px -3px 1px rgba(100,180,70,0.3),
+        115px 15px 1px rgba(80,160,60,0.5), 165px -8px 1px rgba(100,180,70,0.3);
+}
+.battle-arena:has(.grass-scene) .arena-ground { box-shadow: 0 -6px 20px rgba(50,120,40,0.2); }
+
+/* ==========================================================================
+   6. DARK SCENE (暗系)
+   ========================================================================== */
+.scene-sky.dark-scene {
+    background: linear-gradient(180deg, #050308 0%, #080510 40%, #0a0615 70%, #0d081a 100%);
+}
+.scene-far.dark-scene::before {
+    content: ''; position: absolute; bottom: 20%; left: 25%; width: 50%; height: 60%;
+    background: #030208;
+    clip-path: polygon(20% 100%, 22% 40%, 18% 38%, 25% 35%, 25% 10%, 30% 10%, 30% 30%, 40% 30%, 40% 5%, 45% 0%, 50% 5%, 50% 30%, 55% 25%, 60% 25%, 60% 8%, 65% 3%, 70% 8%, 70% 30%, 75% 35%, 78% 38%, 75% 40%, 78% 100%);
+}
+.scene-mid.dark-scene::before {
+    content: ''; position: absolute; bottom: 18%; left: 3%; width: 15%; height: 40%;
+    background: #020108;
+    clip-path: polygon(40% 100%, 35% 60%, 15% 55%, 20% 50%, 10% 40%, 30% 35%, 25% 20%, 45% 30%, 50% 10%, 55% 30%, 65% 25%, 60% 40%, 70% 50%, 55% 55%, 60% 100%);
+}
+.scene-mid.dark-scene::after {
+    content: ''; position: absolute; bottom: 18%; right: 5%; width: 10%; height: 25%;
+    background: #020108;
+    clip-path: polygon(20% 100%, 25% 50%, 10% 45%, 40% 30%, 35% 20%, 55% 15%, 65% 25%, 70% 40%, 80% 50%, 75% 100%);
+}
+.scene-effects.dark-scene::before {
+    content: ''; position: absolute; bottom: 15%; left: 0; width: 100%; height: 30%;
+    background: linear-gradient(0deg, rgba(10,5,20,0.4), transparent);
+    animation: mist-shift 6s ease-in-out infinite;
+}
+.scene-effects.dark-scene::after {
+    content: ''; position: absolute; bottom: 40%; left: 30%; width: 6px; height: 6px; border-radius: 50%;
+    background: rgba(120,60,180,0.3);
+    box-shadow: 60px -20px 4px rgba(100,50,160,0.2), 140px 10px 5px rgba(120,60,180,0.25);
+    animation: ghost-light-pulse 4s ease-in-out infinite;
+}
+.battle-arena:has(.dark-scene) .arena-ground { box-shadow: 0 -5px 15px rgba(80,40,120,0.12); }
+
+/* ==========================================================================
+   7. GHOST SCENE (鬼系)
+   ========================================================================== */
+.scene-sky.ghost-scene {
+    background: linear-gradient(180deg, #0a0515 0%, #12082a 40%, #180a35 70%, #1e0d40 100%);
+}
+.scene-sky.ghost-scene::after {
+    content: ''; position: absolute; top: 8%; right: 15%; width: 28px; height: 28px;
+    border-radius: 50%; background: rgba(220,210,150,0.2);
+    box-shadow: 0 0 15px rgba(220,210,150,0.15), 0 0 30px rgba(220,210,150,0.08);
+}
+.scene-far.ghost-scene::before {
+    content: ''; position: absolute; bottom: 20%; left: 30%; width: 40%; height: 55%;
+    background: #06030f;
+    clip-path: polygon(15% 100%, 15% 40%, 10% 38%, 20% 30%, 20% 20%, 35% 15%, 50% 5%, 65% 15%, 80% 20%, 80% 30%, 90% 38%, 85% 40%, 85% 100%);
+}
+.scene-mid.ghost-scene::before {
+    content: ''; position: absolute; bottom: 18%; left: 5%; width: 25%; height: 20%;
+    background: #04020a;
+    clip-path: polygon(0 100%, 5% 60%, 10% 50%, 15% 60%, 20% 50%, 25% 55%, 30% 45%, 35% 55%, 40% 50%, 45% 55%, 50% 100%, 60% 100%, 62% 40%, 68% 40%, 68% 100%, 78% 100%, 80% 50%, 86% 50%, 86% 100%);
+}
+.scene-mid.ghost-scene::after {
+    content: ''; position: absolute; bottom: 18%; right: 8%; width: 6%; height: 30%;
+    background: #04020a; clip-path: polygon(30% 100%, 35% 30%, 45% 25%, 50% 10%, 55% 25%, 65% 30%, 70% 100%);
+}
+.scene-effects.ghost-scene::before {
+    content: ''; position: absolute; bottom: 30%; left: 10%; width: 5px; height: 5px; border-radius: 50%;
+    background: rgba(80,200,180,0.4); animation: wisp-float 6s ease-in-out infinite;
+    box-shadow: 40px -15px 4px rgba(60,180,160,0.3), 100px 10px 5px rgba(80,200,180,0.35),
+        160px -5px 4px rgba(60,180,160,0.3), 220px 15px 5px rgba(80,200,180,0.4);
+}
+.scene-effects.ghost-scene::after {
+    content: ''; position: absolute; bottom: 40%; left: 25%; width: 4px; height: 4px; border-radius: 50%;
+    background: rgba(100,220,200,0.3); animation: wisp-float 8s ease-in-out infinite 2s;
+    box-shadow: 50px 10px 4px rgba(80,200,180,0.25), 120px -8px 5px rgba(100,220,200,0.3), 180px 5px 4px rgba(80,200,180,0.3);
+}
+.battle-arena:has(.ghost-scene) .arena-ground { box-shadow: 0 -8px 25px rgba(60,120,180,0.2); }
+
+/* ==========================================================================
+   8. DRAGON SCENE (龙系)
+   ========================================================================== */
+.scene-sky.dragon-scene {
+    background: linear-gradient(180deg, #0d0520 0%, #1a0830 40%, #251040 70%, #30154a 100%);
+}
+.scene-sky.dragon-scene::after {
+    content: ''; position: absolute; top: 5%; left: 10%; width: 2px; height: 2px; background: transparent;
+    box-shadow: 20px 10px 1px rgba(255,220,150,0.4), 60px 25px 1px rgba(255,220,150,0.3),
+        110px 5px 1px rgba(255,220,150,0.5), 150px 30px 1px rgba(255,220,150,0.3),
+        200px 15px 1px rgba(255,220,150,0.4), 240px 8px 1px rgba(255,220,150,0.3),
+        50px 40px 1px rgba(255,220,150,0.4), 170px 35px 1px rgba(255,220,150,0.3);
+}
+.scene-far.dragon-scene::before {
+    content: ''; position: absolute; bottom: 20%; left: 20%; width: 60%; height: 60%;
+    background: #0a0418;
+    clip-path: polygon(0 100%, 10% 70%, 20% 55%, 30% 65%, 40% 30%, 50% 15%, 60% 30%, 65% 50%, 75% 45%, 85% 55%, 90% 70%, 100% 60%, 100% 100%);
+}
+.scene-mid.dragon-scene::before {
+    content: ''; position: absolute; bottom: 18%; left: 2%; width: 12%; height: 50%;
+    background: #060210; clip-path: polygon(30% 100%, 35% 30%, 20% 25%, 45% 10%, 50% 0%, 55% 10%, 80% 25%, 65% 30%, 70% 100%);
+}
+.scene-mid.dragon-scene::after {
+    content: ''; position: absolute; bottom: 18%; right: 3%; width: 10%; height: 45%;
+    background: #060210; clip-path: polygon(30% 100%, 35% 35%, 25% 30%, 50% 8%, 75% 30%, 65% 35%, 70% 100%);
+}
+.scene-effects.dragon-scene::before {
+    content: ''; position: absolute; bottom: 20%; left: 5%; width: 3px; height: 3px; border-radius: 50%;
+    background: #ff6600; opacity: 0.5; animation: ember-rise 4.5s linear infinite;
+    box-shadow: 25px 5px 2px #ff4400, 60px -8px 2px #ff8800, 95px 10px 3px #ff5500, 140px -3px 2px #ff6600, 185px 8px 2px #ff4400;
+}
+.scene-effects.dragon-scene::after {
+    content: ''; position: absolute; bottom: 30%; left: 0; width: 100%; height: 8px;
+    background: linear-gradient(90deg, transparent, rgba(255,120,0,0.08), transparent);
+    animation: heat-wave 8s ease-in-out infinite; filter: blur(2px);
+}
+.battle-arena:has(.dragon-scene) .arena-ground {
+    box-shadow: 0 -8px 25px rgba(150,80,200,0.2), 0 -4px 15px rgba(200,150,50,0.15);
+}
+
+/* ==========================================================================
+   9. FAIRY SCENE (妖精系)
+   ========================================================================== */
+.scene-sky.fairy-scene {
+    background: linear-gradient(180deg, #120818 0%, #1a0d25 40%, #200f30 70%, #281540 100%);
+}
+.scene-sky.fairy-scene::after {
+    content: ''; position: absolute; top: 5%; left: 5%; width: 2px; height: 2px; background: transparent;
+    box-shadow: 15px 8px 1px rgba(255,230,250,0.4), 55px 20px 1px rgba(255,230,250,0.3),
+        100px 12px 1px rgba(255,230,250,0.5), 145px 25px 1px rgba(255,230,250,0.3),
+        190px 5px 1px rgba(255,230,250,0.4), 235px 18px 1px rgba(255,230,250,0.3);
+}
+.scene-far.fairy-scene::before {
+    content: ''; position: absolute; bottom: 20%; left: 5%; width: 90%; height: 40%;
+    background: #0d0615;
+    clip-path: polygon(0 100%, 0 50%, 8% 40%, 15% 45%, 22% 35%, 30% 40%, 38% 30%, 45% 38%, 52% 28%, 60% 35%, 68% 25%, 75% 35%, 82% 30%, 90% 40%, 100% 35%, 100% 100%);
+}
+.scene-mid.fairy-scene::before {
+    content: ''; position: absolute; bottom: 18%; left: 3%; width: 12%; height: 35%;
+    background: #08040e;
+    clip-path: polygon(35% 100%, 45% 60%, 20% 55%, 15% 40%, 10% 55%, 0 50%, 0 30%, 20% 25%, 50% 20%, 80% 25%, 100% 30%, 100% 50%, 90% 55%, 85% 40%, 80% 55%, 55% 60%, 65% 100%);
+}
+.scene-mid.fairy-scene::after {
+    content: ''; position: absolute; bottom: 18%; right: 5%; width: 10%; height: 30%;
+    background: #08040e;
+    clip-path: polygon(35% 100%, 45% 60%, 20% 55%, 15% 40%, 10% 55%, 0 50%, 0 30%, 25% 22%, 50% 18%, 75% 22%, 100% 30%, 100% 50%, 90% 55%, 85% 40%, 80% 55%, 55% 60%, 65% 100%);
+}
+.scene-effects.fairy-scene::before {
+    content: ''; position: absolute; top: 20%; left: 10%; width: 3px; height: 3px; border-radius: 50%;
+    background: rgba(255,180,220,0.5); animation: wisp-float 7s ease-in-out infinite;
+    box-shadow: 20px 15px 3px rgba(255,200,230,0.4), 55px -10px 2px rgba(255,180,220,0.3),
+        95px 20px 3px rgba(255,220,240,0.5), 140px -5px 2px rgba(255,180,220,0.4),
+        185px 10px 3px rgba(255,200,230,0.3), 225px -15px 2px rgba(255,220,240,0.4);
+}
+.scene-effects.fairy-scene::after {
+    content: ''; position: absolute; top: 35%; left: 20%; width: 2px; height: 2px; border-radius: 50%;
+    background: rgba(255,255,255,0.5); animation: wisp-float 9s ease-in-out infinite 3s;
+    box-shadow: 30px 10px 2px rgba(255,220,240,0.4), 80px -12px 3px rgba(255,255,255,0.3),
+        130px 8px 2px rgba(255,220,240,0.5), 180px -6px 2px rgba(255,255,255,0.3);
+}
+.battle-arena:has(.fairy-scene) .arena-ground { box-shadow: 0 -8px 25px rgba(200,100,180,0.2); }
+
+/* ==========================================================================
+   10. POISON SCENE (毒系)
+   ========================================================================== */
+.scene-sky.poison-scene {
+    background: linear-gradient(180deg, #050a05 0%, #0a150a 40%, #0d1a10 70%, #101520 100%);
+}
+.scene-sky.poison-scene::before {
+    content: ''; position: absolute; top: 5%; left: 15%; width: 35%; height: 20%;
+    background: rgba(30,60,20,0.3); border-radius: 50%; filter: blur(15px);
+}
+.scene-sky.poison-scene::after {
+    content: ''; position: absolute; top: 10%; right: 20%; width: 30%; height: 18%;
+    background: rgba(40,20,50,0.3); border-radius: 50%; filter: blur(12px);
+}
+.scene-far.poison-scene::before {
+    content: ''; position: absolute; bottom: 20%; left: 10%; width: 30%; height: 50%;
+    background: #040806;
+    clip-path: polygon(30% 100%, 25% 60%, 15% 55%, 20% 40%, 10% 35%, 18% 25%, 28% 20%, 35% 10%, 40% 25%, 50% 30%, 55% 20%, 60% 35%, 55% 45%, 65% 55%, 55% 60%, 60% 100%);
+}
+.scene-far.poison-scene::after {
+    content: ''; position: absolute; bottom: 20%; right: 10%; width: 25%; height: 45%;
+    background: #040806;
+    clip-path: polygon(35% 100%, 30% 55%, 20% 50%, 25% 35%, 15% 30%, 30% 15%, 45% 10%, 55% 20%, 65% 30%, 60% 45%, 70% 50%, 65% 55%, 70% 100%);
+}
+.scene-effects.poison-scene::before {
+    content: ''; position: absolute; bottom: 22%; left: 10%; width: 4px; height: 4px; border-radius: 50%;
+    background: rgba(80,200,80,0.4); animation: bubble-rise 6s linear infinite;
+    box-shadow: 30px 5px 3px rgba(60,180,60,0.3), 70px -8px 4px rgba(80,200,80,0.35),
+        120px 10px 3px rgba(60,180,60,0.3), 170px -5px 4px rgba(80,200,80,0.4), 210px 8px 3px rgba(60,180,60,0.3);
+}
+.scene-effects.poison-scene::after {
+    content: ''; position: absolute; bottom: 20%; left: 0; width: 100%; height: 25%;
+    background: linear-gradient(0deg, rgba(50,20,60,0.15), transparent);
+    animation: mist-shift 7s ease-in-out infinite;
+}
+.battle-arena:has(.poison-scene) .arena-ground {
+    box-shadow: 0 -8px 25px rgba(80,150,60,0.2), 0 -4px 10px rgba(100,50,120,0.15);
+}
+
+/* ==========================================================================
+   11. ROCK SCENE (岩石/大地系) - also earth-scene, ground-scene
+   ========================================================================== */
+.scene-sky.rock-scene, .scene-sky.earth-scene, .scene-sky.ground-scene {
+    background: linear-gradient(180deg, #0d0a05 0%, #1a1408 40%, #241c0c 70%, #2e2410 100%);
+}
+.scene-far.rock-scene::before, .scene-far.earth-scene::before, .scene-far.ground-scene::before {
+    content: ''; position: absolute; bottom: 20%; left: 10%; width: 80%; height: 55%;
+    background: #0a0804;
+    clip-path: polygon(0 100%, 0 60%, 15% 60%, 15% 40%, 35% 40%, 35% 50%, 45% 50%, 45% 30%, 65% 30%, 65% 45%, 75% 45%, 75% 35%, 90% 35%, 90% 55%, 100% 55%, 100% 100%);
+}
+.scene-mid.rock-scene::before, .scene-mid.earth-scene::before, .scene-mid.ground-scene::before {
+    content: ''; position: absolute; bottom: 18%; left: 2%; width: 18%; height: 30%;
+    background: #080604; border-radius: 40% 50% 45% 55%;
+}
+.scene-mid.rock-scene::after, .scene-mid.earth-scene::after, .scene-mid.ground-scene::after {
+    content: ''; position: absolute; bottom: 18%; right: 3%; width: 15%; height: 25%;
+    background: #080604; border-radius: 45% 40% 50% 55%;
+}
+.scene-effects.rock-scene::before, .scene-effects.earth-scene::before, .scene-effects.ground-scene::before {
+    content: ''; position: absolute; top: 0; left: 15%; width: 3px; height: 3px; border-radius: 50%;
+    background: rgba(120,100,60,0.4); animation: dust-drift 8s ease-in-out infinite;
+    box-shadow: 40px 5px 1px rgba(100,80,50,0.3), 100px -8px 2px rgba(120,100,60,0.4), 160px 10px 1px rgba(100,80,50,0.35);
+}
+.battle-arena:has(.rock-scene) .arena-ground,
+.battle-arena:has(.earth-scene) .arena-ground,
+.battle-arena:has(.ground-scene) .arena-ground { box-shadow: 0 -6px 20px rgba(120,90,40,0.2); }
+
+/* ==========================================================================
+   12. PSYCHIC SCENE (超能系)
+   ========================================================================== */
+.scene-sky.psychic-scene {
+    background: linear-gradient(180deg, #100818 0%, #1a0d28 40%, #221038 70%, #2a1545 100%);
+}
+.scene-far.psychic-scene::before {
+    content: ''; position: absolute; top: 20%; left: 15%; width: 12px; height: 12px;
+    background: #0d0618; transform: rotate(30deg); animation: float-rotate 20s linear infinite;
+    box-shadow: 50px -25px 0 6px #0d0618, 110px 10px 0 8px #0d0618, 170px -15px 0 5px #0d0618,
+        80px 30px 0 7px #0d0618, 200px 5px 0 9px #0d0618;
+}
+.scene-mid.psychic-scene::before {
+    content: ''; position: absolute; bottom: 18%; left: 5%; width: 10%; height: 45%;
+    background: #0a0512; clip-path: polygon(30% 100%, 35% 40%, 25% 35%, 40% 10%, 55% 5%, 70% 10%, 75% 35%, 65% 40%, 70% 100%);
+}
+.scene-mid.psychic-scene::after {
+    content: ''; position: absolute; bottom: 18%; right: 5%; width: 8%; height: 40%;
+    background: #0a0512; clip-path: polygon(25% 100%, 30% 45%, 20% 40%, 45% 8%, 80% 40%, 70% 45%, 75% 100%);
+}
+.scene-effects.psychic-scene::before {
+    content: ''; position: absolute; top: 30%; left: 50%; width: 4px; height: 4px; border-radius: 50%;
+    background: rgba(200,100,255,0.5); animation: energy-orbit 6s linear infinite;
+    box-shadow: 20px -10px 3px rgba(180,80,240,0.4), -15px 15px 2px rgba(220,120,255,0.3), 25px 20px 3px rgba(200,100,255,0.4);
+}
+.scene-effects.psychic-scene::after {
+    content: ''; position: absolute; top: 40%; left: 45%; width: 3px; height: 3px; border-radius: 50%;
+    background: rgba(255,150,220,0.4); animation: energy-orbit 8s linear infinite reverse;
+    box-shadow: -20px -15px 3px rgba(255,130,200,0.3), 18px 12px 2px rgba(255,150,220,0.4);
+}
+.battle-arena:has(.psychic-scene) .arena-ground { box-shadow: 0 -8px 25px rgba(180,80,220,0.2); }
+
+/* ==========================================================================
+   13. STEEL SCENE (钢系)
+   ========================================================================== */
+.scene-sky.steel-scene {
+    background: linear-gradient(180deg, #0a0a0c 0%, #121416 40%, #181a1e 70%, #1e2024 100%);
+}
+.scene-far.steel-scene::before {
+    content: ''; position: absolute; bottom: 20%; left: 15%; width: 70%; height: 50%;
+    background: #08080a;
+    clip-path: polygon(0 100%, 0 60%, 10% 60%, 10% 40%, 20% 40%, 20% 55%, 25% 55%, 25% 30%, 30% 30%, 30% 25%, 35% 25%, 35% 30%, 40% 30%, 40% 50%, 50% 50%, 50% 35%, 60% 35%, 60% 45%, 70% 45%, 70% 25%, 75% 15%, 80% 25%, 80% 50%, 90% 50%, 90% 40%, 100% 40%, 100% 100%);
+}
+.scene-mid.steel-scene::before {
+    content: ''; position: absolute; bottom: 25%; left: 3%; width: 30px; height: 30px;
+    border: 3px solid #0d0d10; border-radius: 50%; background: transparent;
+}
+.scene-mid.steel-scene::after {
+    content: ''; position: absolute; bottom: 18%; left: 0; width: 8%; height: 60%;
+    background: #08080a; clip-path: polygon(20% 0, 80% 0, 85% 100%, 15% 100%);
+}
+.scene-effects.steel-scene::before {
+    content: ''; position: absolute; top: 30%; left: 20%; width: 2px; height: 2px; border-radius: 50%;
+    background: rgba(220,220,230,0.6); animation: spark-flash 4s linear infinite;
+    box-shadow: 60px 15px 1px rgba(200,200,210,0.5), 130px -10px 1px rgba(220,220,230,0.6), 200px 20px 1px rgba(200,200,210,0.4);
+}
+.scene-effects.steel-scene::after {
+    content: ''; position: absolute; top: 45%; left: 35%; width: 2px; height: 2px; border-radius: 50%;
+    background: rgba(230,230,240,0.5); animation: spark-flash 6s linear infinite 2s;
+    box-shadow: 50px -15px 1px rgba(210,210,220,0.4), 110px 10px 1px rgba(230,230,240,0.5);
+}
+.battle-arena:has(.steel-scene) .arena-ground { box-shadow: 0 -6px 20px rgba(150,150,165,0.15); }
+
+/* ==========================================================================
+   14. FIGHTING SCENE (格斗系)
+   ========================================================================== */
+.scene-sky.fighting-scene {
+    background: linear-gradient(180deg, #150505 0%, #2a0a05 40%, #3a1008 70%, #4a180a 100%);
+}
+.scene-far.fighting-scene::before {
+    content: ''; position: absolute; bottom: 20%; left: 10%; width: 80%; height: 50%;
+    background: #0d0404;
+    clip-path: polygon(0 100%, 0 70%, 5% 65%, 10% 70%, 10% 55%, 15% 50%, 20% 55%, 20% 45%, 25% 40%, 30% 45%, 30% 35%, 40% 30%, 50% 30%, 60% 30%, 70% 35%, 70% 45%, 75% 40%, 80% 45%, 80% 55%, 85% 50%, 90% 55%, 90% 70%, 95% 65%, 100% 70%, 100% 100%);
+}
+.scene-mid.fighting-scene::before {
+    content: ''; position: absolute; bottom: 18%; left: 5%; width: 8%; height: 50%;
+    background: #080303; clip-path: polygon(20% 100%, 30% 20%, 40% 18%, 60% 18%, 70% 20%, 80% 100%);
+}
+.scene-mid.fighting-scene::after {
+    content: ''; position: absolute; bottom: 18%; right: 5%; width: 8%; height: 48%;
+    background: #080303; clip-path: polygon(20% 100%, 30% 22%, 40% 20%, 60% 20%, 70% 22%, 80% 100%);
+}
+.scene-effects.fighting-scene::before {
+    content: ''; position: absolute; bottom: 60%; left: 7%; width: 6px; height: 8px;
+    background: rgba(255,140,30,0.6); border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    box-shadow: 0 0 6px rgba(255,100,0,0.4); animation: flicker 1.5s ease-in-out infinite;
+}
+.scene-effects.fighting-scene::after {
+    content: ''; position: absolute; bottom: 30%; left: 0; width: 100%; height: 6px;
+    background: linear-gradient(90deg, transparent, rgba(255,100,0,0.05), transparent);
+    animation: heat-wave 6s ease-in-out infinite;
+}
+.battle-arena:has(.fighting-scene) .arena-ground { box-shadow: 0 -8px 25px rgba(180,50,30,0.2); }
+
+/* ==========================================================================
+   15. WIND SCENE (风/飞行系) - also flying-scene
+   ========================================================================== */
+.scene-sky.wind-scene, .scene-sky.flying-scene {
+    background: linear-gradient(180deg, #051015 0%, #081820 40%, #0a2028 70%, #0d2830 100%);
+}
+.scene-sky.wind-scene::before, .scene-sky.flying-scene::before {
+    content: ''; position: absolute; top: 15%; left: 20%; width: 25%; height: 6px;
+    background: rgba(80,120,140,0.15); border-radius: 50%; filter: blur(3px);
+    animation: wind-sweep 12s linear infinite;
+}
+.scene-sky.wind-scene::after, .scene-sky.flying-scene::after {
+    content: ''; position: absolute; top: 30%; left: 10%; width: 20%; height: 4px;
+    background: rgba(80,120,140,0.1); border-radius: 50%; filter: blur(2px);
+    animation: wind-sweep 10s linear infinite 4s;
+}
+.scene-far.wind-scene::before, .scene-far.flying-scene::before {
+    content: ''; position: absolute; bottom: 35%; left: 25%; width: 35%; height: 30%;
+    background: #06101a;
+    clip-path: polygon(10% 80%, 15% 50%, 20% 60%, 30% 35%, 40% 45%, 50% 25%, 60% 40%, 70% 30%, 80% 50%, 90% 40%, 95% 70%, 100% 80%, 100% 100%, 0 100%, 0 80%);
+}
+.scene-far.wind-scene::after, .scene-far.flying-scene::after {
+    content: ''; position: absolute; bottom: 55%; left: 40%; width: 3px; height: 25%;
+    background: rgba(100,160,200,0.15); filter: blur(1px);
+}
+.scene-mid.wind-scene::before, .scene-mid.flying-scene::before {
+    content: ''; position: absolute; bottom: 18%; left: 8%; width: 4%; height: 55%;
+    background: #050d15; clip-path: polygon(30% 100%, 35% 10%, 50% 0%, 65% 10%, 70% 100%);
+}
+.scene-mid.wind-scene::after, .scene-mid.flying-scene::after {
+    content: ''; position: absolute; bottom: 18%; right: 10%; width: 3%; height: 50%;
+    background: #050d15; clip-path: polygon(25% 100%, 35% 8%, 50% 0%, 65% 8%, 75% 100%);
+}
+.scene-effects.wind-scene::before, .scene-effects.flying-scene::before {
+    content: ''; position: absolute; top: 25%; left: -10%; width: 30%; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(150,200,220,0.3), transparent);
+    animation: wind-sweep 4s linear infinite;
+}
+.scene-effects.wind-scene::after, .scene-effects.flying-scene::after {
+    content: ''; position: absolute; top: 45%; left: -10%; width: 25%; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(150,200,220,0.25), transparent);
+    animation: wind-sweep 3.5s linear infinite 1.5s;
+}
+.battle-arena:has(.wind-scene) .arena-ground,
+.battle-arena:has(.flying-scene) .arena-ground { box-shadow: 0 -6px 20px rgba(50,150,160,0.2); }
+
+/* ==========================================================================
+   16. LIGHT SCENE (光系)
+   ========================================================================== */
+.scene-sky.light-scene {
+    background: radial-gradient(ellipse at 50% 0%, #2a200a 0%, #15100a 70%);
+}
+.scene-sky.light-scene::before {
+    content: ''; position: absolute; top: 0; left: 40%; width: 20%; height: 100%;
+    background: linear-gradient(180deg, rgba(255,220,120,0.08), transparent 60%);
+    clip-path: polygon(30% 0, 70% 0, 100% 100%, 0 100%);
+}
+.scene-sky.light-scene::after {
+    content: ''; position: absolute; top: 0; left: 25%; width: 50%; height: 100%;
+    background: linear-gradient(180deg, rgba(255,220,120,0.05), transparent 50%);
+    clip-path: polygon(40% 0, 60% 0, 100% 100%, 0 100%);
+}
+.scene-far.light-scene::before {
+    content: ''; position: absolute; bottom: 20%; left: 35%; width: 30%; height: 60%;
+    background: #100d06;
+    clip-path: polygon(30% 100%, 35% 40%, 25% 38%, 40% 20%, 45% 10%, 50% 3%, 55% 10%, 60% 20%, 75% 38%, 65% 40%, 70% 100%);
+}
+.scene-mid.light-scene::before {
+    content: ''; position: absolute; bottom: 0; left: 15%; width: 3%; height: 80%;
+    background: rgba(255,220,120,0.04); filter: blur(3px);
+}
+.scene-mid.light-scene::after {
+    content: ''; position: absolute; bottom: 0; right: 20%; width: 3%; height: 75%;
+    background: rgba(255,220,120,0.04); filter: blur(3px);
+}
+.scene-effects.light-scene::before {
+    content: ''; position: absolute; top: 10%; left: 10%; width: 2px; height: 2px; border-radius: 50%;
+    background: rgba(255,220,120,0.4); animation: dust-drift 10s ease-in-out infinite;
+    box-shadow: 25px 30px 2px rgba(255,210,100,0.3), 60px 50px 1px rgba(255,220,120,0.4),
+        100px 40px 2px rgba(255,210,100,0.3), 140px 60px 1px rgba(255,220,120,0.35),
+        180px 45px 2px rgba(255,210,100,0.3), 220px 55px 1px rgba(255,220,120,0.4);
+}
+.battle-arena:has(.light-scene) .arena-ground { box-shadow: 0 -8px 25px rgba(200,170,60,0.25); }
+
+/* ==========================================================================
+   17. DEMON SCENE (恶魔系)
+   ========================================================================== */
+.scene-sky.demon-scene {
+    background: linear-gradient(180deg, #0a0204 0%, #1a0508 40%, #2a080a 70%, #150305 100%);
+}
+.scene-far.demon-scene::before {
+    content: ''; position: absolute; bottom: 20%; left: 25%; width: 50%; height: 60%;
+    background: #060103;
+    clip-path: polygon(15% 100%, 18% 50%, 10% 45%, 20% 30%, 15% 25%, 25% 15%, 30% 5%, 35% 15%, 40% 10%, 45% 5%, 50% 3%, 55% 5%, 60% 10%, 65% 15%, 70% 5%, 75% 15%, 85% 25%, 80% 30%, 90% 45%, 82% 50%, 85% 100%);
+}
+.scene-mid.demon-scene::before {
+    content: ''; position: absolute; bottom: 18%; left: 3%; width: 8%; height: 55%;
+    background: #040102;
+    clip-path: polygon(35% 100%, 38% 60%, 45% 55%, 42% 30%, 48% 20%, 44% 10%, 50% 0%, 56% 10%, 52% 20%, 58% 30%, 55% 55%, 62% 60%, 65% 100%);
+}
+.scene-mid.demon-scene::after {
+    content: ''; position: absolute; bottom: 18%; left: 15%; width: 2%; height: 45%;
+    background: #040102; clip-path: polygon(40% 100%, 45% 5%, 55% 5%, 60% 100%);
+}
+.scene-effects.demon-scene::before {
+    content: ''; position: absolute; bottom: 20%; left: 10%; width: 2px; height: 2px; border-radius: 50%;
+    background: #cc2200; opacity: 0.5; animation: ember-rise 5s linear infinite;
+    box-shadow: 30px 5px 2px #aa1100, 70px -8px 1px #cc2200, 120px 10px 2px #aa1100, 170px -3px 1px #cc2200;
+}
+.scene-effects.demon-scene::after {
+    content: ''; position: absolute; bottom: 15%; left: 0; width: 100%; height: 20%;
+    background: linear-gradient(0deg, rgba(15,5,5,0.4), transparent);
+    animation: mist-shift 8s ease-in-out infinite;
+}
+.battle-arena:has(.demon-scene) .arena-ground {
+    box-shadow: 0 -8px 25px rgba(180,20,10,0.25), -20px -2px 8px rgba(200,50,0,0.1), 20px -2px 8px rgba(200,50,0,0.1);
+}
+
+/* ==========================================================================
+   18. BEAST SCENE (野兽系)
+   ========================================================================== */
+.scene-sky.beast-scene {
+    background: linear-gradient(180deg, #100a05 0%, #1a1208 40%, #241a0a 70%, #2e200d 100%);
+}
+.scene-sky.beast-scene::after {
+    content: ''; position: absolute; top: 12%; left: 15%; width: 22px; height: 22px;
+    border-radius: 50%; background: rgba(200,180,120,0.12);
+    box-shadow: 0 0 10px rgba(200,180,120,0.08);
+}
+.scene-far.beast-scene::before {
+    content: ''; position: absolute; bottom: 20%; left: 10%; width: 25%; height: 45%;
+    background: #0a0804;
+    clip-path: polygon(30% 100%, 35% 55%, 20% 50%, 25% 40%, 10% 35%, 30% 30%, 50% 25%, 70% 30%, 90% 35%, 75% 40%, 80% 50%, 65% 55%, 70% 100%);
+}
+.scene-far.beast-scene::after {
+    content: ''; position: absolute; bottom: 20%; right: 15%; width: 20%; height: 40%;
+    background: #0a0804;
+    clip-path: polygon(30% 100%, 35% 55%, 20% 50%, 30% 38%, 15% 32%, 35% 28%, 50% 22%, 65% 28%, 85% 32%, 70% 38%, 80% 50%, 65% 55%, 70% 100%);
+}
+.scene-mid.beast-scene::before {
+    content: ''; position: absolute; bottom: 18%; left: 3%; width: 15%; height: 20%;
+    background: #080604; border-radius: 50% 50% 40% 40%;
+}
+.scene-mid.beast-scene::after {
+    content: ''; position: absolute; bottom: 18%; right: 5%; width: 12%; height: 18%;
+    background: #080604; border-radius: 45% 55% 40% 40%;
+}
+.scene-effects.beast-scene::before {
+    content: ''; position: absolute; bottom: 25%; left: 10%; width: 2px; height: 2px; border-radius: 50%;
+    background: rgba(160,130,80,0.3); animation: dust-drift 7s ease-in-out infinite;
+    box-shadow: 40px 5px 2px rgba(140,110,60,0.25), 90px -8px 1px rgba(160,130,80,0.3),
+        150px 10px 2px rgba(140,110,60,0.25), 200px -3px 1px rgba(160,130,80,0.3);
+}
+.battle-arena:has(.beast-scene) .arena-ground { box-shadow: 0 -6px 20px rgba(140,100,40,0.2); }
+
+/* ==========================================================================
+   19. ANCIENT SCENE (古代系)
+   ========================================================================== */
+.scene-sky.ancient-scene {
+    background: linear-gradient(180deg, #0a0a08 0%, #151210 40%, #1e1a15 70%, #28221a 100%);
+}
+.scene-far.ancient-scene::before {
+    content: ''; position: absolute; bottom: 20%; left: 20%; width: 25%; height: 50%;
+    background: #080706; clip-path: polygon(0 100%, 50% 10%, 100% 100%);
+}
+.scene-far.ancient-scene::after {
+    content: ''; position: absolute; bottom: 20%; right: 15%; width: 30%; height: 45%;
+    background: #080706;
+    clip-path: polygon(10% 100%, 10% 40%, 15% 35%, 15% 30%, 25% 30%, 25% 25%, 35% 25%, 35% 30%, 50% 30%, 50% 20%, 55% 15%, 60% 20%, 60% 30%, 75% 30%, 75% 35%, 80% 35%, 90% 40%, 90% 100%);
+}
+.scene-mid.ancient-scene::before {
+    content: ''; position: absolute; bottom: 18%; left: 5%; width: 6%; height: 40%;
+    background: #060504; clip-path: polygon(20% 100%, 25% 15%, 40% 10%, 60% 10%, 75% 15%, 80% 100%);
+}
+.scene-mid.ancient-scene::after {
+    content: ''; position: absolute; bottom: 18%; right: 8%; width: 5%; height: 35%;
+    background: #060504; clip-path: polygon(15% 100%, 20% 20%, 45% 15%, 55% 15%, 80% 20%, 85% 100%, 60% 95%, 40% 95%);
+}
+.scene-effects.ancient-scene::before {
+    content: ''; position: absolute; top: 20%; left: 10%; width: 2px; height: 2px; border-radius: 50%;
+    background: rgba(180,160,100,0.3); animation: sand-drift 8s ease-in-out infinite;
+    box-shadow: 50px 10px 1px rgba(160,140,80,0.25), 110px -5px 1px rgba(180,160,100,0.3), 170px 15px 1px rgba(160,140,80,0.2);
+}
+.scene-effects.ancient-scene::after {
+    content: ''; position: absolute; bottom: 30%; left: 20%; width: 3px; height: 3px; border-radius: 50%;
+    background: rgba(200,180,100,0.2); animation: rune-glow 5s ease-in-out infinite;
+    box-shadow: 40px -15px 2px rgba(200,180,100,0.15), 100px 10px 2px rgba(200,180,100,0.2), 160px -5px 2px rgba(200,180,100,0.15);
+}
+.battle-arena:has(.ancient-scene) .arena-ground { box-shadow: 0 -6px 20px rgba(180,150,80,0.18); }
+
+/* ==========================================================================
+   20. SPIRIT SCENE (灵系)
+   ========================================================================== */
+.scene-sky.spirit-scene {
+    background: linear-gradient(180deg, #08051a 0%, #0d0a25 40%, #120d30 70%, #18103a 100%);
+}
+.scene-sky.spirit-scene::before {
+    content: ''; position: absolute; top: 20%; left: 30%; width: 40%; height: 15%;
+    background: radial-gradient(ellipse, rgba(100,80,180,0.08), transparent); filter: blur(10px);
+}
+.scene-far.spirit-scene::before {
+    content: ''; position: absolute; bottom: 20%; left: 5%; width: 90%; height: 45%;
+    background: #06041a; opacity: 0.7; filter: blur(2px);
+    clip-path: polygon(0 100%, 0 65%, 8% 55%, 15% 60%, 25% 45%, 35% 50%, 45% 35%, 55% 40%, 65% 30%, 75% 40%, 85% 35%, 92% 50%, 100% 45%, 100% 100%);
+}
+.scene-mid.spirit-scene::before {
+    content: ''; position: absolute; bottom: 18%; left: 5%; width: 15%; height: 40%;
+    background: #050318; opacity: 0.6;
+    clip-path: polygon(40% 100%, 35% 60%, 25% 55%, 30% 40%, 20% 35%, 40% 20%, 55% 15%, 70% 22%, 75% 38%, 65% 42%, 70% 58%, 60% 60%, 65% 100%);
+}
+.scene-mid.spirit-scene::after {
+    content: ''; position: absolute; bottom: 18%; right: 8%; width: 12%; height: 35%;
+    background: #050318; opacity: 0.6;
+    clip-path: polygon(35% 100%, 30% 55%, 25% 48%, 35% 30%, 50% 18%, 65% 30%, 75% 48%, 70% 55%, 68% 100%);
+}
+.scene-effects.spirit-scene::before {
+    content: ''; position: absolute; top: 25%; left: 15%; width: 6px; height: 6px; border-radius: 50%;
+    background: rgba(150,180,255,0.3); animation: wisp-float 8s ease-in-out infinite;
+    box-shadow: 40px -10px 4px rgba(130,160,240,0.25), 90px 15px 5px rgba(150,180,255,0.3),
+        145px -5px 4px rgba(180,200,255,0.25), 200px 10px 5px rgba(150,180,255,0.3);
+}
+.scene-effects.spirit-scene::after {
+    content: ''; position: absolute; top: 40%; left: 25%; width: 4px; height: 4px; border-radius: 50%;
+    background: rgba(200,220,255,0.25); animation: wisp-float 10s ease-in-out infinite 3s;
+    box-shadow: 50px 8px 4px rgba(180,200,255,0.2), 110px -12px 5px rgba(200,220,255,0.25), 170px 5px 4px rgba(180,200,255,0.2);
+}
+.battle-arena:has(.spirit-scene) .arena-ground { box-shadow: 0 -8px 25px rgba(100,80,200,0.18); }
+
+/* ==========================================================================
+   21. CREATURE SCENE (生物系)
+   ========================================================================== */
+.scene-sky.creature-scene {
+    background: linear-gradient(180deg, #040d08 0%, #081510 40%, #0a1e15 70%, #0d2518 100%);
+}
+.scene-far.creature-scene::before {
+    content: ''; position: absolute; bottom: 20%; left: 5%; width: 90%; height: 55%;
+    background: #030a06;
+    clip-path: polygon(0 100%, 5% 60%, 8% 50%, 10% 30%, 13% 50%, 15% 55%, 20% 45%, 23% 25%, 26% 15%, 29% 25%, 32% 40%, 38% 50%, 42% 35%, 45% 20%, 48% 35%, 50% 45%, 55% 55%, 58% 40%, 62% 22%, 65% 10%, 68% 22%, 70% 38%, 75% 50%, 78% 42%, 82% 28%, 85% 42%, 88% 55%, 92% 48%, 95% 35%, 98% 50%, 100% 60%, 100% 100%);
+}
+.scene-mid.creature-scene::before {
+    content: ''; position: absolute; top: 10%; left: 3%; width: 15%; height: 50%;
+    background: #020805; opacity: 0.7;
+    clip-path: polygon(0 0, 20% 0, 30% 20%, 50% 25%, 60% 40%, 70% 50%, 80% 65%, 60% 70%, 40% 80%, 30% 100%, 20% 100%, 10% 80%, 0 60%);
+}
+.scene-mid.creature-scene::after {
+    content: ''; position: absolute; top: 5%; right: 5%; width: 12%; height: 45%;
+    background: #020805; opacity: 0.7;
+    clip-path: polygon(100% 0, 80% 0, 70% 15%, 50% 25%, 40% 45%, 30% 60%, 50% 70%, 60% 85%, 70% 100%, 80% 100%, 90% 75%, 100% 50%);
+}
+.scene-effects.creature-scene::before {
+    content: ''; position: absolute; bottom: 25%; left: 10%; width: 3px; height: 3px; border-radius: 50%;
+    background: rgba(150,200,80,0.4); animation: wisp-float 7s ease-in-out infinite;
+    box-shadow: 25px -10px 2px rgba(130,180,60,0.35), 60px 5px 3px rgba(150,200,80,0.4),
+        100px -8px 2px rgba(130,180,60,0.3), 145px 12px 3px rgba(150,200,80,0.4),
+        190px -5px 2px rgba(130,180,60,0.35), 230px 8px 2px rgba(150,200,80,0.3);
+}
+.scene-effects.creature-scene::after {
+    content: ''; position: absolute; bottom: 35%; left: 20%; width: 2px; height: 2px; border-radius: 50%;
+    background: rgba(180,220,100,0.3); animation: wisp-float 9s ease-in-out infinite 2.5s;
+    box-shadow: 35px 8px 2px rgba(160,200,80,0.3), 85px -6px 2px rgba(180,220,100,0.35),
+        140px 10px 2px rgba(160,200,80,0.3), 195px -4px 2px rgba(180,220,100,0.3);
+}
+.battle-arena:has(.creature-scene) .arena-ground { box-shadow: 0 -6px 20px rgba(60,120,40,0.2); }
+
+/* ==========================================================================
+   22. WIZARD SCENE (巫师系)
+   ========================================================================== */
+.scene-sky.wizard-scene {
+    background: linear-gradient(180deg, #06041a 0%, #0d0828 40%, #140d35 70%, #1a1042 100%);
+}
+.scene-sky.wizard-scene::after {
+    content: ''; position: absolute; top: 5%; left: 5%; width: 2px; height: 2px; background: transparent;
+    box-shadow: 15px 8px 1px rgba(200,210,255,0.5), 50px 15px 1px rgba(200,210,255,0.3),
+        85px 5px 1px rgba(200,210,255,0.4), 120px 20px 1px rgba(200,210,255,0.3),
+        160px 10px 1px rgba(200,210,255,0.5), 195px 25px 1px rgba(200,210,255,0.3),
+        230px 8px 1px rgba(200,210,255,0.4), 40px 30px 1px rgba(200,210,255,0.3),
+        110px 35px 1px rgba(200,210,255,0.4), 180px 28px 1px rgba(200,210,255,0.3);
+}
+.scene-far.wizard-scene::before {
+    content: ''; position: absolute; bottom: 20%; left: 30%; width: 40%; height: 60%;
+    background: #050315;
+    clip-path: polygon(25% 100%, 28% 50%, 20% 48%, 30% 30%, 35% 20%, 40% 10%, 45% 5%, 50% 0%, 55% 5%, 60% 10%, 65% 20%, 70% 30%, 80% 48%, 72% 50%, 75% 100%);
+}
+.scene-mid.wizard-scene::before {
+    content: ''; position: absolute; top: 30%; left: 10%; width: 10px; height: 14px;
+    background: #08051a; transform: rotate(-15deg); opacity: 0.7;
+    box-shadow: 25px 20px 0 2px #08051a, -10px 40px 0 1px #08051a;
+}
+.scene-mid.wizard-scene::after {
+    content: ''; position: absolute; bottom: 25%; left: 40%; width: 40px; height: 40px;
+    border: 1px solid rgba(100,80,200,0.1); border-radius: 50%; background: transparent;
+}
+.scene-effects.wizard-scene::before {
+    content: ''; position: absolute; bottom: 30%; left: 45%; width: 3px; height: 3px; border-radius: 50%;
+    background: rgba(100,120,255,0.5); animation: spiral-up 5s linear infinite;
+    box-shadow: 10px -15px 2px rgba(80,100,240,0.4), -12px -8px 2px rgba(120,140,255,0.3),
+        15px 10px 2px rgba(100,120,255,0.4), -8px 18px 2px rgba(80,100,240,0.35);
+}
+.scene-effects.wizard-scene::after {
+    content: ''; position: absolute; bottom: 25%; left: 50%; width: 2px; height: 2px; border-radius: 50%;
+    background: rgba(130,150,255,0.4); animation: spiral-up 7s linear infinite 2s;
+    box-shadow: -15px -10px 2px rgba(110,130,255,0.35), 12px -18px 2px rgba(130,150,255,0.3), -10px 15px 2px rgba(110,130,255,0.4);
+}
+.battle-arena:has(.wizard-scene) .arena-ground { box-shadow: 0 -8px 25px rgba(80,60,180,0.2); }
+
+/* ==========================================================================
+   23. BUG SCENE (虫系)
+   ========================================================================== */
+.scene-sky.bug-scene {
+    background: linear-gradient(180deg, #0a0d05 0%, #151a08 40%, #1a200a 70%, #20280d 100%);
+}
+.scene-far.bug-scene::before {
+    content: ''; position: absolute; bottom: 20%; left: 20%; width: 35%; height: 45%;
+    background: #060a04;
+    clip-path: polygon(10% 100%, 15% 60%, 25% 35%, 40% 18%, 55% 12%, 70% 18%, 80% 35%, 90% 60%, 95% 100%);
+}
+.scene-far.bug-scene::after {
+    content: ''; position: absolute; bottom: 20%; right: 15%; width: 25%; height: 35%;
+    background: #060a04;
+    clip-path: polygon(5% 100%, 15% 55%, 30% 25%, 50% 15%, 70% 25%, 85% 55%, 95% 100%);
+}
+.scene-mid.bug-scene::before {
+    content: ''; position: absolute; bottom: 18%; left: 2%; width: 18%; height: 50%;
+    background: #040804;
+    clip-path: polygon(0 100%, 10% 60%, 20% 50%, 30% 55%, 50% 40%, 60% 30%, 70% 35%, 90% 25%, 100% 30%, 80% 40%, 70% 50%, 60% 60%, 50% 100%);
+}
+.scene-mid.bug-scene::after {
+    content: ''; position: absolute; top: 5%; right: 3%; width: 20%; height: 30%;
+    border-top: 1px solid rgba(80,100,60,0.1); border-right: 1px solid rgba(80,100,60,0.1);
+    background: transparent;
+}
+.scene-effects.bug-scene::before {
+    content: ''; position: absolute; top: 20%; left: 10%; width: 4px; height: 4px; border-radius: 50%;
+    background: rgba(180,220,80,0.5); animation: firefly-pulse 4s ease-in-out infinite;
+    box-shadow: 30px 20px 3px rgba(160,200,60,0.4), 75px -10px 2px rgba(180,220,80,0.5),
+        120px 30px 3px rgba(160,200,60,0.3), 170px -15px 2px rgba(180,220,80,0.5), 215px 25px 3px rgba(160,200,60,0.4);
+}
+.scene-effects.bug-scene::after {
+    content: ''; position: absolute; top: 35%; left: 20%; width: 3px; height: 3px; border-radius: 50%;
+    background: rgba(200,240,100,0.4); animation: firefly-pulse 5s ease-in-out infinite 1.5s;
+    box-shadow: 40px -8px 2px rgba(180,220,80,0.3), 95px 15px 3px rgba(200,240,100,0.4),
+        150px -12px 2px rgba(180,220,80,0.35), 200px 10px 3px rgba(200,240,100,0.3);
+}
+.battle-arena:has(.bug-scene) .arena-ground { box-shadow: 0 -6px 20px rgba(130,160,50,0.18); }
+
+/* ==========================================================================
+   24. NORMAL SCENE (普通系)
+   ========================================================================== */
+.scene-sky.normal-scene {
+    background: linear-gradient(180deg, #0a0c10 0%, #121518 40%, #181c20 70%, #1e2228 100%);
+}
+.scene-far.normal-scene::before {
+    content: ''; position: absolute; bottom: 20%; left: 5%; width: 90%; height: 35%;
+    background: #0a0c10;
+    clip-path: polygon(0 100%, 0 70%, 15% 55%, 30% 60%, 45% 50%, 60% 55%, 75% 45%, 90% 55%, 100% 50%, 100% 100%);
+}
+.scene-mid.normal-scene::before {
+    content: ''; position: absolute; bottom: 18%; left: 5%; width: 30%; height: 15%;
+    background: #080a0e;
+    clip-path: polygon(0 70%, 5% 50%, 10% 55%, 15% 50%, 20% 55%, 25% 50%, 30% 55%, 35% 50%, 40% 55%, 45% 50%, 50% 55%, 50% 100%, 0 100%);
+}
+.scene-mid.normal-scene::after {
+    content: ''; position: absolute; bottom: 18%; right: 15%; width: 3%; height: 35%;
+    background: #080a0e; clip-path: polygon(35% 100%, 40% 20%, 45% 15%, 50% 10%, 55% 15%, 60% 20%, 65% 100%);
+}
+.scene-effects.normal-scene::before {
+    content: ''; position: absolute; top: 10%; left: 10%; width: 1px; height: 1px; background: transparent;
+    animation: twinkle 5s ease-in-out infinite;
+    box-shadow: 30px 15px 1px rgba(200,210,230,0.3), 100px 25px 1px rgba(200,210,230,0.2),
+        170px 10px 1px rgba(200,210,230,0.3), 240px 30px 1px rgba(200,210,230,0.2);
+}
+.scene-effects.normal-scene::after {
+    content: ''; position: absolute; top: 20%; left: 25%; width: 1px; height: 1px; background: transparent;
+    animation: twinkle 7s ease-in-out infinite 2s;
+    box-shadow: 50px 5px 1px rgba(200,210,230,0.25), 130px 20px 1px rgba(200,210,230,0.2), 210px 8px 1px rgba(200,210,230,0.3);
+}
+.battle-arena:has(.normal-scene) .arena-ground { box-shadow: 0 -5px 15px rgba(120,130,150,0.12); }
+
+/* ==========================================================================
+   MONSTER AURA (怪物光圈)
+   ========================================================================== */
+.monster-aura {
+    position: absolute; bottom: -5px; left: 50%; transform: translateX(-50%);
+    width: 60px; height: 15px; border-radius: 50%; z-index: 0;
+    animation: aura-pulse 2s ease-in-out infinite; pointer-events: none;
+}
+.monster-aura.aura-fire { background: radial-gradient(ellipse, rgba(255,100,0,0.5) 0%, transparent 70%); box-shadow: 0 0 15px rgba(255,100,0,0.3); }
+.monster-aura.aura-water { background: radial-gradient(ellipse, rgba(30,120,255,0.5) 0%, transparent 70%); box-shadow: 0 0 15px rgba(30,120,255,0.3); }
+.monster-aura.aura-ice { background: radial-gradient(ellipse, rgba(100,200,255,0.5) 0%, transparent 70%); box-shadow: 0 0 15px rgba(100,200,255,0.3); }
+.monster-aura.aura-thunder { background: radial-gradient(ellipse, rgba(255,220,50,0.5) 0%, transparent 70%); box-shadow: 0 0 15px rgba(255,220,50,0.3); }
+.monster-aura.aura-grass { background: radial-gradient(ellipse, rgba(60,180,50,0.5) 0%, transparent 70%); box-shadow: 0 0 15px rgba(60,180,50,0.3); }
+.monster-aura.aura-dark { background: radial-gradient(ellipse, rgba(100,50,150,0.5) 0%, transparent 70%); box-shadow: 0 0 15px rgba(100,50,150,0.3); }
+.monster-aura.aura-ghost { background: radial-gradient(ellipse, rgba(80,150,200,0.5) 0%, transparent 70%); box-shadow: 0 0 15px rgba(80,150,200,0.3); }
+.monster-aura.aura-dragon { background: radial-gradient(ellipse, rgba(150,80,220,0.5) 0%, transparent 70%); box-shadow: 0 0 15px rgba(150,80,220,0.3); }
+.monster-aura.aura-fairy { background: radial-gradient(ellipse, rgba(240,130,200,0.5) 0%, transparent 70%); box-shadow: 0 0 15px rgba(240,130,200,0.3); }
+.monster-aura.aura-poison { background: radial-gradient(ellipse, rgba(120,200,80,0.5) 0%, transparent 70%); box-shadow: 0 0 15px rgba(120,200,80,0.3); }
+.monster-aura.aura-rock, .monster-aura.aura-earth, .monster-aura.aura-ground { background: radial-gradient(ellipse, rgba(160,130,70,0.5) 0%, transparent 70%); box-shadow: 0 0 15px rgba(160,130,70,0.3); }
+.monster-aura.aura-psychic { background: radial-gradient(ellipse, rgba(220,100,200,0.5) 0%, transparent 70%); box-shadow: 0 0 15px rgba(220,100,200,0.3); }
+.monster-aura.aura-steel { background: radial-gradient(ellipse, rgba(170,170,190,0.5) 0%, transparent 70%); box-shadow: 0 0 15px rgba(170,170,190,0.3); }
+.monster-aura.aura-fighting { background: radial-gradient(ellipse, rgba(200,60,30,0.5) 0%, transparent 70%); box-shadow: 0 0 15px rgba(200,60,30,0.3); }
+.monster-aura.aura-wind, .monster-aura.aura-flying { background: radial-gradient(ellipse, rgba(80,180,200,0.5) 0%, transparent 70%); box-shadow: 0 0 15px rgba(80,180,200,0.3); }
+.monster-aura.aura-light { background: radial-gradient(ellipse, rgba(255,210,80,0.5) 0%, transparent 70%); box-shadow: 0 0 15px rgba(255,210,80,0.3); }
+.monster-aura.aura-demon { background: radial-gradient(ellipse, rgba(200,30,20,0.5) 0%, transparent 70%); box-shadow: 0 0 15px rgba(200,30,20,0.3); }
+.monster-aura.aura-beast { background: radial-gradient(ellipse, rgba(180,130,60,0.5) 0%, transparent 70%); box-shadow: 0 0 15px rgba(180,130,60,0.3); }
+.monster-aura.aura-ancient { background: radial-gradient(ellipse, rgba(200,170,80,0.5) 0%, transparent 70%); box-shadow: 0 0 15px rgba(200,170,80,0.3); }
+.monster-aura.aura-spirit { background: radial-gradient(ellipse, rgba(120,100,220,0.5) 0%, transparent 70%); box-shadow: 0 0 15px rgba(120,100,220,0.3); }
+.monster-aura.aura-creature { background: radial-gradient(ellipse, rgba(100,180,60,0.5) 0%, transparent 70%); box-shadow: 0 0 15px rgba(100,180,60,0.3); }
+.monster-aura.aura-wizard { background: radial-gradient(ellipse, rgba(80,70,200,0.5) 0%, transparent 70%); box-shadow: 0 0 15px rgba(80,70,200,0.3); }
+.monster-aura.aura-bug { background: radial-gradient(ellipse, rgba(160,200,50,0.5) 0%, transparent 70%); box-shadow: 0 0 15px rgba(160,200,50,0.3); }
+.monster-aura.aura-normal { background: radial-gradient(ellipse, rgba(160,165,175,0.5) 0%, transparent 70%); box-shadow: 0 0 15px rgba(160,165,175,0.3); }
+
+/* Boss aura - larger and stronger glow */
+.monster-aura.aura-boss { width: 80px; height: 20px; }
+.monster-aura.aura-boss.aura-fire { background: radial-gradient(ellipse, rgba(255,100,0,0.7) 0%, transparent 70%); box-shadow: 0 0 25px rgba(255,100,0,0.5); }
+.monster-aura.aura-boss.aura-water { background: radial-gradient(ellipse, rgba(30,120,255,0.7) 0%, transparent 70%); box-shadow: 0 0 25px rgba(30,120,255,0.5); }
+.monster-aura.aura-boss.aura-ice { background: radial-gradient(ellipse, rgba(100,200,255,0.7) 0%, transparent 70%); box-shadow: 0 0 25px rgba(100,200,255,0.5); }
+.monster-aura.aura-boss.aura-thunder { background: radial-gradient(ellipse, rgba(255,220,50,0.7) 0%, transparent 70%); box-shadow: 0 0 25px rgba(255,220,50,0.5); }
+.monster-aura.aura-boss.aura-grass { background: radial-gradient(ellipse, rgba(60,180,50,0.7) 0%, transparent 70%); box-shadow: 0 0 25px rgba(60,180,50,0.5); }
+.monster-aura.aura-boss.aura-dark { background: radial-gradient(ellipse, rgba(100,50,150,0.7) 0%, transparent 70%); box-shadow: 0 0 25px rgba(100,50,150,0.5); }
+.monster-aura.aura-boss.aura-ghost { background: radial-gradient(ellipse, rgba(80,150,200,0.7) 0%, transparent 70%); box-shadow: 0 0 25px rgba(80,150,200,0.5); }
+.monster-aura.aura-boss.aura-dragon { background: radial-gradient(ellipse, rgba(150,80,220,0.7) 0%, transparent 70%); box-shadow: 0 0 25px rgba(150,80,220,0.5); }
+.monster-aura.aura-boss.aura-fairy { background: radial-gradient(ellipse, rgba(240,130,200,0.7) 0%, transparent 70%); box-shadow: 0 0 25px rgba(240,130,200,0.5); }
+.monster-aura.aura-boss.aura-poison { background: radial-gradient(ellipse, rgba(120,200,80,0.7) 0%, transparent 70%); box-shadow: 0 0 25px rgba(120,200,80,0.5); }
+.monster-aura.aura-boss.aura-rock, .monster-aura.aura-boss.aura-earth, .monster-aura.aura-boss.aura-ground { background: radial-gradient(ellipse, rgba(160,130,70,0.7) 0%, transparent 70%); box-shadow: 0 0 25px rgba(160,130,70,0.5); }
+.monster-aura.aura-boss.aura-psychic { background: radial-gradient(ellipse, rgba(220,100,200,0.7) 0%, transparent 70%); box-shadow: 0 0 25px rgba(220,100,200,0.5); }
+.monster-aura.aura-boss.aura-steel { background: radial-gradient(ellipse, rgba(170,170,190,0.7) 0%, transparent 70%); box-shadow: 0 0 25px rgba(170,170,190,0.5); }
+.monster-aura.aura-boss.aura-fighting { background: radial-gradient(ellipse, rgba(200,60,30,0.7) 0%, transparent 70%); box-shadow: 0 0 25px rgba(200,60,30,0.5); }
+.monster-aura.aura-boss.aura-wind, .monster-aura.aura-boss.aura-flying { background: radial-gradient(ellipse, rgba(80,180,200,0.7) 0%, transparent 70%); box-shadow: 0 0 25px rgba(80,180,200,0.5); }
+.monster-aura.aura-boss.aura-light { background: radial-gradient(ellipse, rgba(255,210,80,0.7) 0%, transparent 70%); box-shadow: 0 0 25px rgba(255,210,80,0.5); }
+.monster-aura.aura-boss.aura-demon { background: radial-gradient(ellipse, rgba(200,30,20,0.7) 0%, transparent 70%); box-shadow: 0 0 25px rgba(200,30,20,0.5); }
+.monster-aura.aura-boss.aura-beast { background: radial-gradient(ellipse, rgba(180,130,60,0.7) 0%, transparent 70%); box-shadow: 0 0 25px rgba(180,130,60,0.5); }
+.monster-aura.aura-boss.aura-ancient { background: radial-gradient(ellipse, rgba(200,170,80,0.7) 0%, transparent 70%); box-shadow: 0 0 25px rgba(200,170,80,0.5); }
+.monster-aura.aura-boss.aura-spirit { background: radial-gradient(ellipse, rgba(120,100,220,0.7) 0%, transparent 70%); box-shadow: 0 0 25px rgba(120,100,220,0.5); }
+.monster-aura.aura-boss.aura-creature { background: radial-gradient(ellipse, rgba(100,180,60,0.7) 0%, transparent 70%); box-shadow: 0 0 25px rgba(100,180,60,0.5); }
+.monster-aura.aura-boss.aura-wizard { background: radial-gradient(ellipse, rgba(80,70,200,0.7) 0%, transparent 70%); box-shadow: 0 0 25px rgba(80,70,200,0.5); }
+.monster-aura.aura-boss.aura-bug { background: radial-gradient(ellipse, rgba(160,200,50,0.7) 0%, transparent 70%); box-shadow: 0 0 25px rgba(160,200,50,0.5); }
+.monster-aura.aura-boss.aura-normal { background: radial-gradient(ellipse, rgba(160,165,175,0.7) 0%, transparent 70%); box-shadow: 0 0 25px rgba(160,165,175,0.5); }

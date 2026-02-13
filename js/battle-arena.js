@@ -309,25 +309,77 @@ BattleMode.updateArenaPositions = function() {
     this.applyMonsterTheme(monster);
 };
 
-// ===== v17.0: Type-based Arena Background =====
+// ===== v17.1: Scene-based Arena Background System =====
+
+// All scene type names for class cleanup
+var _allSceneTypes = [
+    'fire', 'water', 'ice', 'thunder', 'electric', 'grass',
+    'dark', 'demon', 'ghost', 'spirit', 'psychic', 'dragon',
+    'ancient', 'fairy', 'light', 'poison', 'steel', 'rock',
+    'earth', 'ground', 'fighting', 'wind', 'flying', 'beast',
+    'creature', 'wizard', 'bug', 'normal'
+];
+
+// Map aliased types to canonical scene names
+var _sceneTypeMap = {
+    electric: 'thunder',
+    ground: 'rock',
+    earth: 'rock',
+    flying: 'wind'
+};
 
 BattleMode.applyMonsterTheme = function(monster) {
-    const arena = document.querySelector('.battle-arena');
+    var arena = document.querySelector('.battle-arena');
     if (!arena || !monster) return;
 
-    const typeTheme = MonsterTypeThemes[monster.type] || MonsterTypeThemes.normal;
-    const ground = arena.querySelector('.arena-ground');
+    var monsterType = monster.type || 'normal';
+    var sceneType = _sceneTypeMap[monsterType] || monsterType;
+    var sceneClass = sceneType + '-scene';
 
-    // Smooth transition for background change
+    // Get all scene layers
+    var sky = arena.querySelector('.scene-sky');
+    var far = arena.querySelector('.scene-far');
+    var mid = arena.querySelector('.scene-mid');
+    var effects = arena.querySelector('.scene-effects');
+    var layers = [sky, far, mid, effects];
+
+    // Remove old scene classes from all layers
+    layers.forEach(function(layer) {
+        if (!layer) return;
+        _allSceneTypes.forEach(function(t) {
+            var cls = (_sceneTypeMap[t] || t) + '-scene';
+            layer.classList.remove(cls);
+        });
+        layer.classList.remove('scene-entering');
+    });
+
+    // Apply new scene class + enter animation
+    layers.forEach(function(layer) {
+        if (!layer) return;
+        layer.classList.add(sceneClass);
+        layer.classList.add('scene-entering');
+    });
+
+    // Also update arena background from MonsterTypeThemes (base gradient)
+    var typeTheme = MonsterTypeThemes[monsterType] || MonsterTypeThemes.normal;
     arena.style.transition = 'background 0.8s ease';
     arena.style.background = typeTheme.bg;
+    var ground = arena.querySelector('.arena-ground');
     if (ground) {
         ground.style.transition = 'background 0.8s ease';
         ground.style.background = typeTheme.ground;
     }
 
-    // Remove old ambient class, add new
-    var allAmbientClasses = [
+    // Update monster aura
+    this._updateMonsterAura(monster, sceneType);
+
+    // Remove old ambient overlay and particles (replaced by scene layers)
+    var oldOverlay = arena.querySelector('.arena-ambient-overlay');
+    if (oldOverlay) oldOverlay.remove();
+    arena.querySelectorAll('.arena-ambient-particle').forEach(function(el) { el.remove(); });
+
+    // Remove old arena-* ambient classes
+    var oldAmbientClasses = [
         'arena-fire', 'arena-water', 'arena-ice', 'arena-thunder',
         'arena-grass', 'arena-dark', 'arena-demon', 'arena-ghost',
         'arena-spirit', 'arena-psychic', 'arena-dragon', 'arena-ancient',
@@ -335,43 +387,30 @@ BattleMode.applyMonsterTheme = function(monster) {
         'arena-rock', 'arena-earth', 'arena-fighting', 'arena-wind',
         'arena-beast', 'arena-normal'
     ];
-    allAmbientClasses.forEach(function(cls) { arena.classList.remove(cls); });
-    if (typeTheme.ambientClass) {
-        arena.classList.add(typeTheme.ambientClass);
-    }
-
-    // Ambient color overlay
-    var ambientOverlay = arena.querySelector('.arena-ambient-overlay');
-    if (!ambientOverlay) {
-        ambientOverlay = document.createElement('div');
-        ambientOverlay.className = 'arena-ambient-overlay';
-        arena.insertBefore(ambientOverlay, arena.firstChild);
-    }
-    ambientOverlay.style.background = typeTheme.ambientColor || 'transparent';
-
-    // Spawn floating ambient particles
-    this._spawnAmbientParticles(arena, typeTheme.particles || ['✨']);
+    oldAmbientClasses.forEach(function(cls) { arena.classList.remove(cls); });
 };
 
-// Spawn floating ambient particles in the arena background
-BattleMode._spawnAmbientParticles = function(arena, particles) {
-    // Remove old ambient particles
-    arena.querySelectorAll('.arena-ambient-particle').forEach(function(el) { el.remove(); });
+// Update monster aura glow under the monster
+BattleMode._updateMonsterAura = function(monster, sceneType) {
+    var aura = document.getElementById('monster-aura');
+    if (!aura) return;
 
-    // Create 6-8 floating particles at random positions
-    var count = 6 + Math.floor(Math.random() * 3);
-    for (var i = 0; i < count; i++) {
-        var particle = document.createElement('div');
-        particle.className = 'arena-ambient-particle';
-        particle.textContent = particles[Math.floor(Math.random() * particles.length)];
-        particle.style.left = (5 + Math.random() * 90) + '%';
-        particle.style.top = (5 + Math.random() * 75) + '%';
-        particle.style.animationDelay = (Math.random() * 4) + 's';
-        particle.style.animationDuration = (3 + Math.random() * 4) + 's';
-        particle.style.fontSize = (10 + Math.random() * 8) + 'px';
-        particle.style.opacity = (0.15 + Math.random() * 0.25).toString();
-        arena.appendChild(particle);
+    // Remove old aura classes
+    _allSceneTypes.forEach(function(t) {
+        var cls = 'aura-' + (_sceneTypeMap[t] || t);
+        aura.classList.remove(cls);
+    });
+    aura.classList.remove('aura-boss');
+
+    // Apply new aura class
+    aura.className = 'monster-aura aura-' + sceneType;
+
+    // Boss enhancement: bigger + brighter aura
+    if (monster.hp >= 8 || monster.isBoss) {
+        aura.classList.add('aura-boss');
     }
+
+    aura.style.display = 'block';
 };
 
 // ===== Hero Attack Animation =====
