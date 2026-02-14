@@ -860,5 +860,76 @@ const BattleMode = {
         { emoji: '💫', name: '星辰坠落', damage: 8, color: '#9b59b6' },
     ],
 
+    // ===== v21.0: 模块独占道具 =====
+    moduleItems: {
+        xiaojiujiu: [
+            { id: 'xjj_jiujiu_charm', name: '九九护符', emoji: '📿', type: 'buff', effect: { comboBonus: 3 }, desc: '连击伤害+3（小九九独占）', rarity: 'rare', module: 'xiaojiujiu', hint: '仅在小九九模块掉落' },
+            { id: 'xjj_multiply_eye', name: '乘法之眼', emoji: '👁️', type: 'buff', effect: { antiDodge: true }, desc: '看穿怪物闪避（小九九独占）', rarity: 'epic', module: 'xiaojiujiu', hint: '仅在小九九模块掉落' },
+            { id: 'xjj_koujue_book', name: '口诀天书', emoji: '📜', type: 'buff', effect: { allStatsUp: 1 }, desc: '攻防+1（小九九独占）', rarity: 'legendary', module: 'xiaojiujiu', hint: '仅在小九九模块掉落' },
+        ],
+        times: [
+            { id: 'times_crystal_ball', name: '魔法水晶球', emoji: '🔮', type: 'buff', effect: { critChance: 0.3 }, desc: '暴击率+30%（大九九独占）', rarity: 'rare', module: 'times', hint: '仅在大九九模块掉落' },
+            { id: 'times_sorting_hat', name: '分院帽', emoji: '🎩', type: 'buff', effect: { bestWeapon: true }, desc: '自动选择最优武器（大九九独占）', rarity: 'epic', module: 'times', hint: '仅在大九九模块掉落' },
+            { id: 'times_elder_wand', name: '老魔杖', emoji: '🪄', type: 'attack', effect: { damage: 6, doubleDamage: true }, desc: '单次伤害翻倍（大九九独占）', rarity: 'legendary', module: 'times', hint: '仅在大九九模块掉落' },
+        ],
+        multiply: [
+            { id: 'mult_fox_mask', name: '狐仙面具', emoji: '🎭', type: 'buff', effect: { dodgeNext: true }, desc: '闪避下次攻击（乘法独占）', rarity: 'rare', module: 'multiply', hint: '仅在乘法速记模块掉落' },
+            { id: 'mult_liaozhai_scroll', name: '聊斋古卷', emoji: '📕', type: 'heal', effect: { revive: true, hp: 1 }, desc: '复活+1HP（乘法独占）', rarity: 'epic', module: 'multiply', hint: '仅在乘法速记模块掉落' },
+            { id: 'mult_huapi', name: '画皮', emoji: '🖼️', type: 'buff', effect: { invincible: 3 }, desc: '无敌3题（乘法独占）', rarity: 'legendary', module: 'multiply', hint: '仅在乘法速记模块掉落' },
+        ],
+        fraction: [
+            { id: 'frac_jingwei_stone', name: '精卫之石', emoji: '🪨', type: 'buff', effect: { shield: 2 }, desc: '护盾+2（分数独占）', rarity: 'rare', module: 'fraction', hint: '仅在分数模块掉落' },
+            { id: 'frac_phoenix_feather', name: '凤凰之羽', emoji: '🪶', type: 'heal', effect: { revive: true, hpFull: true }, desc: '死亡时满血复活（分数独占）', rarity: 'epic', module: 'fraction', hint: '仅在分数模块掉落' },
+            { id: 'frac_shanhai_mirror', name: '山海宝鉴', emoji: '📖', type: 'buff', effect: { damageUp: 3 }, desc: '所有伤害+3（分数独占）', rarity: 'legendary', module: 'fraction', hint: '仅在分数模块掉落' },
+        ],
+        decimal: [
+            { id: 'dec_jingu_shard', name: '金箍棒碎片', emoji: '🏮', type: 'attack', effect: { damage: 2, multiHit: 3 }, desc: '攻击+2连续3次（小数独占）', rarity: 'rare', module: 'decimal', hint: '仅在小数模块掉落' },
+            { id: 'dec_dinghai_pin', name: '定海神针·缩', emoji: '📌', type: 'buff', effect: { enemyDamageHalf: true }, desc: '怪物攻击减半（小数独占）', rarity: 'epic', module: 'decimal', hint: '仅在小数模块掉落' },
+            { id: 'dec_ruyi_jingu', name: '如意金箍棒', emoji: '🔱', type: 'buff', effect: { allDamageMultiplier: 1.5 }, desc: '全场伤害×1.5（小数独占）', rarity: 'legendary', module: 'decimal', hint: '仅在小数模块掉落' },
+        ],
+        unit: [
+            { id: 'unit_fenghuo_shard', name: '风火轮碎片', emoji: '💫', type: 'buff', effect: { timeBonus: 2000 }, desc: '答题时间+2秒（单位独占）', rarity: 'rare', module: 'unit', hint: '仅在单位换算模块掉落' },
+            { id: 'unit_dashen_whip', name: '打神鞭', emoji: '⚡', type: 'buff', effect: { pierceDefense: true }, desc: '无视怪物防御（单位独占）', rarity: 'epic', module: 'unit', hint: '仅在单位换算模块掉落' },
+            { id: 'unit_fengshen_list', name: '封神榜', emoji: '📋', type: 'attack', effect: { executeBelow: 3 }, desc: '一击必杀HP≤3怪物（单位独占）', rarity: 'legendary', module: 'unit', hint: '仅在单位换算模块掉落' },
+        ]
+    },
+
+    // ===== v21.0: 模块独占武器 =====
+    moduleWeapons: {
+        xiaojiujiu: [
+            { emoji: '💊', name: '九转仙丹', weight: 8, sound: 'holy', color: '#ff69b4', module: 'xiaojiujiu' },
+            { emoji: '🧮', name: '算盘珠', weight: 8, sound: 'star', color: '#daa520', module: 'xiaojiujiu' },
+        ],
+        times: [
+            { emoji: '🦉', name: '守护神兽', weight: 8, sound: 'wind', color: '#8b4513', module: 'times' },
+            { emoji: '✨', name: '魔咒之光', weight: 8, sound: 'holy', color: '#ffd700', module: 'times' },
+        ],
+        multiply: [
+            { emoji: '👻', name: '鬼火', weight: 8, sound: 'fire', color: '#00ff88', module: 'multiply' },
+            { emoji: '🦊', name: '狐狸火', weight: 8, sound: 'fire', color: '#ff4500', module: 'multiply' },
+        ],
+        fraction: [
+            { emoji: '🐲', name: '神兽咆哮', weight: 8, sound: 'thunder', color: '#8b0000', module: 'fraction' },
+            { emoji: '📛', name: '灵符', weight: 8, sound: 'ice', color: '#ffd700', module: 'fraction' },
+        ],
+        decimal: [
+            { emoji: '⭕', name: '紧箍咒', weight: 8, sound: 'thunder', color: '#ff1493', module: 'decimal' },
+            { emoji: '🐒', name: '七十二变', weight: 8, sound: 'rainbow', color: '#ff8c00', module: 'decimal' },
+        ],
+        unit: [
+            { emoji: '🌩️', name: '天雷', weight: 8, sound: 'thunder', color: '#4169e1', module: 'unit' },
+            { emoji: '🌀', name: '土遁术', weight: 8, sound: 'wind', color: '#8b4513', module: 'unit' },
+        ]
+    },
+
+    // ===== v21.0: 模块掉落率配置 =====
+    moduleDropConfig: {
+        xiaojiujiu: { sharedChance: 0.15, exclusiveChance: 0.08, bossExclusiveChance: 0.25 },
+        times:      { sharedChance: 0.13, exclusiveChance: 0.10, bossExclusiveChance: 0.30 },
+        multiply:   { sharedChance: 0.12, exclusiveChance: 0.12, bossExclusiveChance: 0.35 },
+        fraction:   { sharedChance: 0.10, exclusiveChance: 0.15, bossExclusiveChance: 0.40 },
+        decimal:    { sharedChance: 0.10, exclusiveChance: 0.15, bossExclusiveChance: 0.40 },
+        unit:       { sharedChance: 0.10, exclusiveChance: 0.15, bossExclusiveChance: 0.40 }
+    },
 
 };

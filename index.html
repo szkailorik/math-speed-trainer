@@ -38,8 +38,10 @@
     <link rel="apple-touch-startup-image" href="icons/splash.png">
 
     <title>数学魔法学院</title>
-    <link rel="stylesheet" href="css/style.css?v=17.1">
-    <link rel="stylesheet" href="css/scenes.css?v=17.1">
+    <link rel="stylesheet" href="css/style.css?v=21.0">
+    <link rel="stylesheet" href="css/scenes.css?v=21.0">
+    <link rel="stylesheet" href="css/scenes-svg.css?v=21.0">
+    <link rel="stylesheet" href="css/knowledge.css?v=21.0">
 </head>
 <body>
     <!-- 主页面 -->
@@ -228,25 +230,16 @@
             </footer>
         </div>
 
-        <!-- 学习卡片页 -->
-        <div id="learn-page" class="page">
-            <header class="page-header">
+        <!-- 海拉鲁知识图鉴 (原秘术卷轴) -->
+        <div id="learn-page" class="page knowledge-page">
+            <header class="page-header knowledge-header">
                 <button class="back-btn" data-target="home">← 返回</button>
-                <h2>📜 秘术卷轴</h2>
+                <h2>📜 海拉鲁知识图鉴</h2>
                 <div class="header-spacer"></div>
             </header>
 
-            <div class="learn-tabs">
-                <button class="learn-tab active" data-tab="xiaojiujiu">小九九</button>
-                <button class="learn-tab" data-tab="times">大九九+平方</button>
-                <button class="learn-tab" data-tab="multiply">乘法速记</button>
-                <button class="learn-tab" data-tab="fraction">分数小数</button>
-                <button class="learn-tab" data-tab="decimal">小数规律</button>
-                <button class="learn-tab" data-tab="unit">单位换算</button>
-            </div>
-
             <div class="learn-content" id="learn-content">
-                <!-- 动态填充 -->
+                <!-- 由 KnowledgeUI.render() 动态填充 -->
             </div>
         </div>
 
@@ -440,7 +433,7 @@
 
             <div class="settings-footer">
                 <button class="reset-btn" id="reset-progress">重置所有进度</button>
-                <p class="version">版本 17.0</p>
+                <p class="version">版本 18.0</p>
             </div>
         </div>
 
@@ -944,11 +937,15 @@
 
             <!-- 第三人称对战舞台 -->
             <div class="battle-arena">
-                <!-- v17.1: 4层场景背景 -->
+                <!-- v18.0: 8层场景背景 -->
                 <div class="scene-layer scene-sky"></div>
+                <div class="scene-layer scene-stars"></div>
                 <div class="scene-layer scene-far"></div>
+                <div class="scene-layer scene-far-detail"></div>
                 <div class="scene-layer scene-mid"></div>
+                <div class="scene-layer scene-mid-detail"></div>
                 <div class="scene-layer scene-effects"></div>
+                <div class="scene-layer scene-atmosphere"></div>
 
                 <div class="arena-ground"></div>
                 <div class="hero-side">
@@ -1270,31 +1267,35 @@
         </div>
     </div>
 
-    <script src="js/data.js?v=17.0"></script>
-    <script src="js/shanhai-monsters.js?v=17.0"></script>
-    <script src="js/xiyouji-monsters.js?v=17.0"></script>
-    <script src="js/fengshen-monsters.js?v=17.0"></script>
-    <script src="js/liaozhai-monsters.js?v=17.0"></script>
-    <script src="js/hp-monsters.js?v=17.0"></script>
-    <script src="js/core.js?v=17.0"></script>
-    <script src="js/question-engine.js?v=17.0"></script>
-    <script src="js/effects.js?v=17.0"></script>
-    <script src="js/practice.js?v=17.0"></script>
-    <script src="js/daily.js?v=17.0"></script>
-    <script src="js/ui-pages.js?v=17.0"></script>
-    <script src="js/battle-data.js?v=17.0"></script>
-    <script src="js/card-data.js?v=17.0"></script>
-    <script src="js/battle-arena.js?v=17.0"></script>
-    <script src="js/monster-behavior.js?v=17.0"></script>
-    <script src="js/card-system.js?v=17.0"></script>
-    <script src="js/battle-collection.js?v=17.0"></script>
-    <script src="js/tower-data.js?v=17.0"></script>
-    <script src="js/hero-system.js?v=17.0"></script>
-    <script src="js/combo-engine.js?v=17.0"></script>
-    <script src="js/behavior-v2.js?v=17.0"></script>
-    <script src="js/move-system.js?v=17.0"></script>
-    <script src="js/tower-mode.js?v=17.0"></script>
-    <script src="js/battle-combat.js?v=17.0"></script>
-    <script src="js/app.js?v=17.0"></script>
+    <script src="js/data.js?v=21.0"></script>
+    <script src="js/shanhai-monsters.js?v=21.0"></script>
+    <script src="js/xiyouji-monsters.js?v=21.0"></script>
+    <script src="js/fengshen-monsters.js?v=21.0"></script>
+    <script src="js/liaozhai-monsters.js?v=21.0"></script>
+    <script src="js/hp-monsters.js?v=21.0"></script>
+    <script src="js/core.js?v=21.0"></script>
+    <script src="js/question-engine.js?v=21.0"></script>
+    <script src="js/effects.js?v=21.0"></script>
+    <script src="js/practice.js?v=21.0"></script>
+    <script src="js/daily.js?v=21.0"></script>
+    <script src="js/knowledge-data.js?v=21.0"></script>
+    <script src="js/knowledge-tracker.js?v=21.0"></script>
+    <script src="js/knowledge-ui.js?v=21.0"></script>
+    <script src="js/ui-pages.js?v=21.0"></script>
+    <script src="js/battle-data.js?v=21.0"></script>
+    <script src="js/card-data.js?v=21.0"></script>
+    <script src="js/battle-arena.js?v=21.0"></script>
+    <script src="js/monster-behavior.js?v=21.0"></script>
+    <script src="js/card-system.js?v=21.0"></script>
+    <script src="js/battle-collection.js?v=21.0"></script>
+    <script src="js/tower-data.js?v=21.0"></script>
+    <script src="js/hero-system.js?v=21.0"></script>
+    <script src="js/combo-engine.js?v=21.0"></script>
+    <script src="js/behavior-v2.js?v=21.0"></script>
+    <script src="js/move-system.js?v=21.0"></script>
+    <script src="js/tower-mode.js?v=21.0"></script>
+    <script src="js/momentum-system.js?v=21.0"></script>
+    <script src="js/battle-combat.js?v=21.0"></script>
+    <script src="js/app.js?v=21.0"></script>
 </body>
 </html>

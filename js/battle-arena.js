@@ -328,6 +328,16 @@ var _sceneTypeMap = {
     flying: 'wind'
 };
 
+// v18.0: All mood filter class names for cleanup
+var _allMoodClasses = [
+    'mood-fire', 'mood-water', 'mood-ice', 'mood-thunder',
+    'mood-grass', 'mood-dark', 'mood-demon', 'mood-ghost',
+    'mood-spirit', 'mood-psychic', 'mood-dragon', 'mood-ancient',
+    'mood-fairy', 'mood-light', 'mood-poison', 'mood-steel',
+    'mood-rock', 'mood-fighting', 'mood-wind', 'mood-beast',
+    'mood-creature', 'mood-wizard', 'mood-bug', 'mood-normal'
+];
+
 BattleMode.applyMonsterTheme = function(monster) {
     var arena = document.querySelector('.battle-arena');
     if (!arena || !monster) return;
@@ -336,12 +346,16 @@ BattleMode.applyMonsterTheme = function(monster) {
     var sceneType = _sceneTypeMap[monsterType] || monsterType;
     var sceneClass = sceneType + '-scene';
 
-    // Get all scene layers
+    // v18.0: Get all 8 scene layers
     var sky = arena.querySelector('.scene-sky');
+    var stars = arena.querySelector('.scene-stars');
     var far = arena.querySelector('.scene-far');
+    var farDetail = arena.querySelector('.scene-far-detail');
     var mid = arena.querySelector('.scene-mid');
+    var midDetail = arena.querySelector('.scene-mid-detail');
     var effects = arena.querySelector('.scene-effects');
-    var layers = [sky, far, mid, effects];
+    var atmosphere = arena.querySelector('.scene-atmosphere');
+    var layers = [sky, stars, far, farDetail, mid, midDetail, effects, atmosphere];
 
     // Remove old scene classes from all layers
     layers.forEach(function(layer) {
@@ -369,6 +383,10 @@ BattleMode.applyMonsterTheme = function(monster) {
         ground.style.transition = 'background 0.8s ease';
         ground.style.background = typeTheme.ground;
     }
+
+    // v18.0: Apply mood filter
+    _allMoodClasses.forEach(function(cls) { arena.classList.remove(cls); });
+    arena.classList.add('mood-' + sceneType);
 
     // Update monster aura
     this._updateMonsterAura(monster, sceneType);
@@ -733,8 +751,8 @@ BattleMode.heroAttackAnimation = function(weapon, callback) {
             if (weaponLayer) weaponLayer.classList.remove('weapon-swing');
             this.setHeroState('idle');
             if (callback) callback();
-        }, 400);
-    }, 200);
+        }, 300);
+    }, 150);
 };
 
 // ===== Hero Hit Animation =====
@@ -751,7 +769,7 @@ BattleMode.heroHitAnimation = function(callback) {
     setTimeout(() => {
         this.setHeroState('idle');
         if (callback) callback();
-    }, 400);
+    }, 300);
 };
 
 // ===== Enemy Enter Animation =====
@@ -780,14 +798,14 @@ BattleMode.enemyEnterAnimation = function(monster, callback) {
     const quip = enterQuips[Math.floor(Math.random() * enterQuips.length)];
 
     setTimeout(() => {
-        this.showSpeechBubble(enemyEmoji, quip, 1200);
+        this.showSpeechBubble(enemyEmoji, quip, 800);
         enemySide.classList.remove('entered');
-    }, 500);
+    }, 400);
 
     setTimeout(() => {
         this.setEnemyState('idle');
         if (callback) callback();
-    }, 1800);
+    }, 1200);
 };
 
 // ===== Enemy Hit Animation =====
@@ -798,7 +816,7 @@ BattleMode.enemyHitAnimation = function(callback) {
     setTimeout(() => {
         this.setEnemyState('idle');
         if (callback) callback();
-    }, 400);
+    }, 300);
 };
 
 // ===== Enemy Attack Animation =====
@@ -832,14 +850,14 @@ BattleMode.enemyAttackAnimation = function(monster, callback) {
 
             setTimeout(() => {
                 attackEl.remove();
-            }, 600);
+            }, 400);
         }
     }
 
     setTimeout(() => {
         this.setEnemyState('idle');
         if (callback) callback();
-    }, 500);
+    }, 350);
 };
 
 // ===== Speech Bubble =====
@@ -942,6 +960,121 @@ BattleMode.fireWeaponHorizontal = function(weapon) {
     setTimeout(() => weaponEl.remove(), 600);
 };
 
+// ===== v18.0: Smooth Scene Transition =====
+
+BattleMode.transitionScene = function(oldType, newType) {
+    var arena = document.querySelector('.battle-arena');
+    if (!arena) return;
+
+    var layers = arena.querySelectorAll('.scene-layer');
+
+    // 1. Fade out old scene (0.3s)
+    layers.forEach(function(l) {
+        l.style.transition = 'opacity 0.3s ease';
+        l.style.opacity = '0';
+    });
+
+    var self = this;
+    setTimeout(function() {
+        // 2. Apply new theme (triggers class swap)
+        if (App.battle && App.battle.currentMonster) {
+            self.applyMonsterTheme(App.battle.currentMonster);
+        }
+        // 3. Fade in new scene (0.5s)
+        layers.forEach(function(l) {
+            l.style.transition = 'opacity 0.5s ease';
+            l.style.opacity = '1';
+        });
+        // 4. Clean up inline transition after animation
+        setTimeout(function() {
+            layers.forEach(function(l) {
+                l.style.transition = '';
+            });
+        }, 600);
+    }, 300);
+};
+
+// ===== v18.0: Boss Entrance Effect =====
+
+BattleMode.bossEntranceEffect = function() {
+    var arena = document.querySelector('.battle-arena');
+    if (!arena) return;
+
+    // Flash effect
+    arena.classList.add('boss-entrance-flash');
+
+    // Shake effect
+    setTimeout(function() {
+        arena.classList.add('boss-entrance-shake');
+    }, 100);
+
+    // Boost monster aura
+    var aura = document.getElementById('monster-aura');
+    if (aura) {
+        aura.classList.add('aura-boss');
+        aura.style.transform = 'translateX(-50%) scale(1.5)';
+        setTimeout(function() {
+            aura.style.transition = 'transform 0.5s ease';
+            aura.style.transform = '';
+        }, 500);
+    }
+
+    // Cleanup classes
+    setTimeout(function() {
+        arena.classList.remove('boss-entrance-flash', 'boss-entrance-shake');
+    }, 800);
+};
+
+// ===== v18.0: Iris Wipe Transition =====
+
+BattleMode.irisWipeIn = function(callback) {
+    var arena = document.querySelector('.battle-arena');
+    if (!arena) {
+        if (callback) callback();
+        return;
+    }
+    arena.classList.add('battle-iris-enter');
+    setTimeout(function() {
+        arena.classList.remove('battle-iris-enter');
+        if (callback) callback();
+    }, 650);
+};
+
+// ===== v18.0: Low-end Performance Detection =====
+
+var _lowPerformance = false;
+var _perfFrameCount = 0;
+var _perfLastTime = 0;
+
+BattleMode.startPerfMonitor = function() {
+    _perfFrameCount = 0;
+    _perfLastTime = performance.now();
+    _lowPerformance = false;
+    this._perfRAF = requestAnimationFrame(this._perfCheck.bind(this));
+};
+
+BattleMode._perfCheck = function() {
+    _perfFrameCount++;
+    var now = performance.now();
+    if (now - _perfLastTime >= 2000) {
+        var fps = _perfFrameCount / ((now - _perfLastTime) / 1000);
+        if (fps < 30 && !_lowPerformance) {
+            _lowPerformance = true;
+            document.body.classList.add('low-perf');
+        }
+        _perfFrameCount = 0;
+        _perfLastTime = now;
+    }
+    this._perfRAF = requestAnimationFrame(this._perfCheck.bind(this));
+};
+
+BattleMode.stopPerfMonitor = function() {
+    if (this._perfRAF) {
+        cancelAnimationFrame(this._perfRAF);
+        this._perfRAF = null;
+    }
+};
+
 // ===== Cleanup Arena =====
 
 BattleMode.cleanupArena = function() {
@@ -950,6 +1083,9 @@ BattleMode.cleanupArena = function() {
 
     // Remove projectiles
     document.querySelectorAll('.arena-attack-projectile').forEach(el => el.remove());
+
+    // Remove damage numbers
+    document.querySelectorAll('.damage-number').forEach(el => el.remove());
 
     // v16.2: Remove hero layers and restore original hero-emoji
     const heroLayers = document.querySelector('.hero-layers');
@@ -965,4 +1101,16 @@ BattleMode.cleanupArena = function() {
     if (enemyEmoji) {
         enemyEmoji.className = 'monster-emoji';
     }
+
+    // v18.0: Remove mood filter
+    var arena = document.querySelector('.battle-arena');
+    if (arena) {
+        _allMoodClasses.forEach(function(cls) { arena.classList.remove(cls); });
+        arena.classList.remove('battle-iris-enter', 'battle-iris-exit');
+        arena.classList.remove('boss-entrance-flash', 'boss-entrance-shake');
+    }
+
+    // v18.0: Stop perf monitor
+    this.stopPerfMonitor();
+    document.body.classList.remove('low-perf');
 };

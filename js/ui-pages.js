@@ -290,7 +290,18 @@ function initEventListeners() {
 
             if (module === 'learn') {
                 showPage('learn');
-                renderLearnContent('xiaojiujiu');
+                try {
+                    if (typeof KnowledgeUI !== 'undefined' && KnowledgeUI.render) {
+                        KnowledgeUI.render();
+                    } else {
+                        // KnowledgeUI 未加载，显示回退内容
+                        var lc = document.getElementById('learn-content');
+                        if (lc) lc.innerHTML = '<div style="padding:40px 20px;text-align:center;color:#999;"><p>知识图鉴加载中...</p><p style="font-size:12px;margin-top:10px;">如持续显示此消息，请清除浏览器缓存后重新打开</p></div>';
+                    }
+                } catch (e) {
+                    var lc = document.getElementById('learn-content');
+                    if (lc) lc.innerHTML = '<div style="padding:40px 20px;text-align:center;color:#f44;"><p>知识图鉴加载出错</p><p style="font-size:12px;">' + e.message + '</p></div>';
+                }
             } else if (module === 'daily') {
                 App.currentModule = 'daily';
                 showPage('daily');
@@ -349,14 +360,8 @@ function initEventListeners() {
         });
     });
 
-    // Learn tabs
-    document.querySelectorAll('.learn-tab').forEach(tab => {
-        tab.addEventListener('click', () => {
-            document.querySelectorAll('.learn-tab').forEach(t => t.classList.remove('active'));
-            tab.classList.add('active');
-            renderLearnContent(tab.dataset.tab);
-        });
-    });
+    // Learn tabs (legacy - now handled by KnowledgeUI)
+    // Old tab listeners removed; KnowledgeUI manages its own events
 
     // Input answer submit
     document.getElementById('submit-btn').addEventListener('click', submitInputAnswer);

@@ -82,7 +82,8 @@ function startPractice(module) {
         streak: 0,
         startTime: Date.now(),
         timerInterval: null,
-        timePerQuestion: App.difficulty === 'easy' ? 15 : (App.difficulty === 'normal' ? 10 : 7)
+        // v20.0: Recalibrated practice timers (Easy 12s, Normal 8s, Hard 5s)
+        timePerQuestion: App.difficulty === 'easy' ? 12 : (App.difficulty === 'normal' ? 8 : 5)
     };
 
     const titles = {
@@ -271,6 +272,11 @@ function handleCorrectAnswer(btnElement) {
         QuestionEngine.updateWeight(App.currentModule || 'xiaojiujiu', question.q, true, false);
     }
 
+    // v19.0: Knowledge tracker
+    if (typeof KnowledgeTracker !== 'undefined') {
+        KnowledgeTracker.recordAnswer(App.currentModule || 'xiaojiujiu', question.q, true, 2);
+    }
+
     App.practice.correctCount++;
     App.practice.streak++;
     App.stats.totalCorrect++;
@@ -373,6 +379,11 @@ function handleWrongAnswer(userAnswer) {
     // v16.2: Update question weight
     if (typeof QuestionEngine !== 'undefined' && typeof QuestionEngine.updateWeight === 'function') {
         QuestionEngine.updateWeight(App.currentModule || 'xiaojiujiu', question.q, false, false);
+    }
+
+    // v19.0: Knowledge tracker
+    if (typeof KnowledgeTracker !== 'undefined') {
+        KnowledgeTracker.recordAnswer(App.currentModule || 'xiaojiujiu', question.q, false, 0);
     }
 
     const formattedQuestion = formatFraction(question.q);

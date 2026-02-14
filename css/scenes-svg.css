@@ -1,0 +1,814 @@
+/* ============================================================
+   scenes-svg.css
+   SVG data:URI decorations for the battle scene system.
+   24 scene types with decorations on .scene-far-detail
+   and .scene-mid-detail layers via ::before / ::after.
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   Animations
+   ------------------------------------------------------------ */
+
+@keyframes torch-flicker {
+    0%, 100% { opacity: 0.7; transform: scaleY(1); }
+    25% { opacity: 0.85; transform: scaleY(1.04); }
+    50% { opacity: 0.65; transform: scaleY(0.96); }
+    75% { opacity: 0.9; transform: scaleY(1.02); }
+}
+
+@keyframes crystal-pulse {
+    0%, 100% { opacity: 0.5; filter: brightness(1); }
+    50% { opacity: 0.7; filter: brightness(1.3); }
+}
+
+@keyframes rune-glow-pulse {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.6; }
+}
+
+/* ------------------------------------------------------------
+   Shared pseudo-element base
+   ------------------------------------------------------------ */
+
+.scene-far-detail::before,
+.scene-far-detail::after,
+.scene-mid-detail::before,
+.scene-mid-detail::after {
+    content: '';
+    position: absolute;
+    background-size: contain;
+    background-repeat: no-repeat;
+    pointer-events: none;
+}
+
+
+/* ============================================================
+   1. FIRE SCENE (火系)
+   far-detail: volcano smoke (left), rock (right)
+   mid-detail: rock formation (left), rock formation (right)
+   ============================================================ */
+
+.scene-far-detail.fire-scene::before {
+    bottom: 25%; left: 5%;
+    width: 50px; height: 70px;
+    opacity: 0.5;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 70'%3E%3Cellipse cx='25' cy='20' rx='20' ry='15' fill='%23555' opacity='0.3'/%3E%3Cellipse cx='20' cy='30' rx='15' ry='12' fill='%23666' opacity='0.25'/%3E%3Cellipse cx='30' cy='12' rx='12' ry='10' fill='%23555' opacity='0.2'/%3E%3Cpolygon points='10,70 15,45 25,40 35,45 40,70' fill='%23331a00' opacity='0.6'/%3E%3C/svg%3E");
+}
+
+.scene-far-detail.fire-scene::after {
+    bottom: 18%; right: 5%;
+    width: 60px; height: 50px;
+    opacity: 0.5;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 50'%3E%3Cellipse cx='20' cy='40' rx='18' ry='12' fill='%232a1a10' opacity='0.6'/%3E%3Cellipse cx='40' cy='38' rx='20' ry='14' fill='%23201508' opacity='0.7'/%3E%3Cellipse cx='30' cy='30' rx='15' ry='10' fill='%23251a0c' opacity='0.5'/%3E%3C/svg%3E");
+}
+
+.scene-mid-detail.fire-scene::before {
+    bottom: 10%; left: 4%;
+    width: 55px; height: 45px;
+    opacity: 0.55;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 50'%3E%3Cellipse cx='20' cy='40' rx='18' ry='12' fill='%232a1a10' opacity='0.6'/%3E%3Cellipse cx='40' cy='38' rx='20' ry='14' fill='%23201508' opacity='0.7'/%3E%3Cellipse cx='30' cy='30' rx='15' ry='10' fill='%23251a0c' opacity='0.5'/%3E%3C/svg%3E");
+}
+
+.scene-mid-detail.fire-scene::after {
+    bottom: 8%; right: 6%;
+    width: 50px; height: 40px;
+    opacity: 0.5;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 50'%3E%3Cellipse cx='20' cy='40' rx='18' ry='12' fill='%232a1a10' opacity='0.6'/%3E%3Cellipse cx='40' cy='38' rx='20' ry='14' fill='%23201508' opacity='0.7'/%3E%3Cellipse cx='30' cy='30' rx='15' ry='10' fill='%23251a0c' opacity='0.5'/%3E%3C/svg%3E");
+}
+
+
+/* ============================================================
+   2. WATER SCENE (水系)
+   far-detail: coral (left), coral (right)
+   mid-detail: coral (left), coral (right)
+   ============================================================ */
+
+.scene-far-detail.water-scene::before {
+    bottom: 20%; left: 5%;
+    width: 40px; height: 50px;
+    opacity: 0.45;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 60'%3E%3Cpath d='M25,60 L25,35 L15,20 L10,10 M25,35 L20,25 M25,60 L28,40 L35,25 L40,15 M28,40 L32,30' stroke='%23cc5566' stroke-width='3' fill='none' opacity='0.4' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+
+.scene-far-detail.water-scene::after {
+    bottom: 22%; right: 6%;
+    width: 35px; height: 45px;
+    opacity: 0.4;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 60'%3E%3Cpath d='M25,60 L25,35 L15,20 L10,10 M25,35 L20,25 M25,60 L28,40 L35,25 L40,15 M28,40 L32,30' stroke='%23cc5566' stroke-width='3' fill='none' opacity='0.4' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+
+.scene-mid-detail.water-scene::before {
+    bottom: 8%; left: 8%;
+    width: 45px; height: 55px;
+    opacity: 0.5;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 60'%3E%3Cpath d='M25,60 L25,35 L15,20 L10,10 M25,35 L20,25 M25,60 L28,40 L35,25 L40,15 M28,40 L32,30' stroke='%23ee7788' stroke-width='3' fill='none' opacity='0.5' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+
+.scene-mid-detail.water-scene::after {
+    bottom: 10%; right: 5%;
+    width: 40px; height: 50px;
+    opacity: 0.45;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 60'%3E%3Cpath d='M25,60 L25,35 L15,20 L10,10 M25,35 L20,25 M25,60 L28,40 L35,25 L40,15 M28,40 L32,30' stroke='%23ee7788' stroke-width='3' fill='none' opacity='0.5' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+
+
+/* ============================================================
+   3. ICE SCENE (冰系)
+   far-detail: crystal (left), crystal (right)
+   mid-detail: crystal (left), crystal (right)
+   ============================================================ */
+
+.scene-far-detail.ice-scene::before {
+    bottom: 20%; left: 4%;
+    width: 35px; height: 90px;
+    opacity: 0.5;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 100'%3E%3Cpolygon points='20,0 35,35 30,100 10,100 5,35' fill='%234ecdc4' opacity='0.6'/%3E%3Cpolygon points='20,0 25,35 22,100 18,100 15,35' fill='%237eddd6' opacity='0.3'/%3E%3Cline x1='20' y1='0' x2='30' y2='100' stroke='white' stroke-width='0.5' opacity='0.2'/%3E%3C/svg%3E");
+    animation: crystal-pulse 3s ease-in-out infinite;
+}
+
+.scene-far-detail.ice-scene::after {
+    bottom: 18%; right: 5%;
+    width: 30px; height: 75px;
+    opacity: 0.45;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 100'%3E%3Cpolygon points='20,0 35,35 30,100 10,100 5,35' fill='%234ecdc4' opacity='0.6'/%3E%3Cpolygon points='20,0 25,35 22,100 18,100 15,35' fill='%237eddd6' opacity='0.3'/%3E%3Cline x1='20' y1='0' x2='30' y2='100' stroke='white' stroke-width='0.5' opacity='0.2'/%3E%3C/svg%3E");
+    animation: crystal-pulse 3s ease-in-out infinite 0.5s;
+}
+
+.scene-mid-detail.ice-scene::before {
+    bottom: 5%; left: 8%;
+    width: 38px; height: 85px;
+    opacity: 0.55;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 100'%3E%3Cpolygon points='20,0 35,35 30,100 10,100 5,35' fill='%234ecdc4' opacity='0.6'/%3E%3Cpolygon points='20,0 25,35 22,100 18,100 15,35' fill='%237eddd6' opacity='0.3'/%3E%3Cline x1='20' y1='0' x2='30' y2='100' stroke='white' stroke-width='0.5' opacity='0.2'/%3E%3C/svg%3E");
+    animation: crystal-pulse 3s ease-in-out infinite 1s;
+}
+
+.scene-mid-detail.ice-scene::after {
+    bottom: 6%; right: 7%;
+    width: 28px; height: 65px;
+    opacity: 0.4;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 100'%3E%3Cpolygon points='20,0 35,35 30,100 10,100 5,35' fill='%234ecdc4' opacity='0.6'/%3E%3Cpolygon points='20,0 25,35 22,100 18,100 15,35' fill='%237eddd6' opacity='0.3'/%3E%3Cline x1='20' y1='0' x2='30' y2='100' stroke='white' stroke-width='0.5' opacity='0.2'/%3E%3C/svg%3E");
+    animation: crystal-pulse 3s ease-in-out infinite 1.5s;
+}
+
+
+/* ============================================================
+   4. THUNDER SCENE (雷系)
+   No SVG decorations - lightning effects are sufficient
+   ============================================================ */
+
+
+/* ============================================================
+   5. GRASS SCENE (草系)
+   far-detail: flower patches (left), flower (right)
+   mid-detail: flower (left), flower (right)
+   ============================================================ */
+
+.scene-far-detail.grass-scene::before {
+    bottom: 22%; left: 5%;
+    width: 45px; height: 35px;
+    opacity: 0.5;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 40'%3E%3Cline x1='12' y1='40' x2='12' y2='22' stroke='%23305020' stroke-width='2'/%3E%3Cline x1='30' y1='40' x2='30' y2='18' stroke='%23305020' stroke-width='2'/%3E%3Cline x1='42' y1='40' x2='42' y2='25' stroke='%23305020' stroke-width='2'/%3E%3Ccircle cx='12' cy='20' r='5' fill='%23ff88aa' opacity='0.6'/%3E%3Ccircle cx='30' cy='16' r='4' fill='%23ffaa44' opacity='0.5'/%3E%3Ccircle cx='42' cy='23' r='3' fill='%23aa88ff' opacity='0.5'/%3E%3C/svg%3E");
+}
+
+.scene-far-detail.grass-scene::after {
+    bottom: 24%; right: 6%;
+    width: 40px; height: 30px;
+    opacity: 0.45;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 40'%3E%3Cline x1='12' y1='40' x2='12' y2='22' stroke='%23305020' stroke-width='2'/%3E%3Cline x1='30' y1='40' x2='30' y2='18' stroke='%23305020' stroke-width='2'/%3E%3Cline x1='42' y1='40' x2='42' y2='25' stroke='%23305020' stroke-width='2'/%3E%3Ccircle cx='12' cy='20' r='5' fill='%23ff88aa' opacity='0.6'/%3E%3Ccircle cx='30' cy='16' r='4' fill='%23ffaa44' opacity='0.5'/%3E%3Ccircle cx='42' cy='23' r='3' fill='%23aa88ff' opacity='0.5'/%3E%3C/svg%3E");
+}
+
+.scene-mid-detail.grass-scene::before {
+    bottom: 8%; left: 6%;
+    width: 48px; height: 38px;
+    opacity: 0.55;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 40'%3E%3Cline x1='12' y1='40' x2='12' y2='22' stroke='%23305020' stroke-width='2'/%3E%3Cline x1='30' y1='40' x2='30' y2='18' stroke='%23305020' stroke-width='2'/%3E%3Cline x1='42' y1='40' x2='42' y2='25' stroke='%23305020' stroke-width='2'/%3E%3Ccircle cx='12' cy='20' r='5' fill='%23ff88aa' opacity='0.6'/%3E%3Ccircle cx='30' cy='16' r='4' fill='%23ffaa44' opacity='0.5'/%3E%3Ccircle cx='42' cy='23' r='3' fill='%23aa88ff' opacity='0.5'/%3E%3C/svg%3E");
+}
+
+.scene-mid-detail.grass-scene::after {
+    bottom: 5%; right: 5%;
+    width: 50px; height: 40px;
+    opacity: 0.5;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 40'%3E%3Cline x1='12' y1='40' x2='12' y2='22' stroke='%23305020' stroke-width='2'/%3E%3Cline x1='30' y1='40' x2='30' y2='18' stroke='%23305020' stroke-width='2'/%3E%3Cline x1='42' y1='40' x2='42' y2='25' stroke='%23305020' stroke-width='2'/%3E%3Ccircle cx='12' cy='20' r='5' fill='%23ff88aa' opacity='0.6'/%3E%3Ccircle cx='30' cy='16' r='4' fill='%23ffaa44' opacity='0.5'/%3E%3Ccircle cx='42' cy='23' r='3' fill='%23aa88ff' opacity='0.5'/%3E%3C/svg%3E");
+}
+
+
+/* ============================================================
+   6. DARK SCENE (暗系)
+   far-detail: dead tree (left), torch (right)
+   mid-detail: torch (left), torch (right)
+   ============================================================ */
+
+.scene-far-detail.dark-scene::before {
+    bottom: 18%; left: 3%;
+    width: 55px; height: 90px;
+    opacity: 0.5;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 100'%3E%3Cpath d='M28,100 L26,60 L15,40 L10,25 M26,60 L20,45 L22,30 M28,100 L32,55 L40,35 L50,20 M32,55 L38,40 L35,25 M30,70 L25,55' stroke='%23201010' stroke-width='3' fill='none' opacity='0.7'/%3E%3C/svg%3E");
+}
+
+.scene-far-detail.dark-scene::after {
+    bottom: 20%; right: 5%;
+    width: 25px; height: 70px;
+    opacity: 0.6;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 80'%3E%3Crect x='12' y='35' width='6' height='45' fill='%234a3020' rx='1'/%3E%3Cellipse cx='15' cy='30' rx='8' ry='14' fill='%23ff6600' opacity='0.7'/%3E%3Cellipse cx='15' cy='24' rx='5' ry='9' fill='%23ff9900' opacity='0.5'/%3E%3Cellipse cx='15' cy='19' rx='3' ry='5' fill='%23ffcc00' opacity='0.3'/%3E%3C/svg%3E");
+    animation: torch-flicker 1.5s ease-in-out infinite;
+}
+
+.scene-mid-detail.dark-scene::before {
+    bottom: 8%; left: 7%;
+    width: 28px; height: 72px;
+    opacity: 0.65;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 80'%3E%3Crect x='12' y='35' width='6' height='45' fill='%234a3020' rx='1'/%3E%3Cellipse cx='15' cy='30' rx='8' ry='14' fill='%23ff6600' opacity='0.7'/%3E%3Cellipse cx='15' cy='24' rx='5' ry='9' fill='%23ff9900' opacity='0.5'/%3E%3Cellipse cx='15' cy='19' rx='3' ry='5' fill='%23ffcc00' opacity='0.3'/%3E%3C/svg%3E");
+    animation: torch-flicker 1.5s ease-in-out infinite 0.3s;
+}
+
+.scene-mid-detail.dark-scene::after {
+    bottom: 6%; right: 6%;
+    width: 26px; height: 68px;
+    opacity: 0.6;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 80'%3E%3Crect x='12' y='35' width='6' height='45' fill='%234a3020' rx='1'/%3E%3Cellipse cx='15' cy='30' rx='8' ry='14' fill='%23ff6600' opacity='0.7'/%3E%3Cellipse cx='15' cy='24' rx='5' ry='9' fill='%23ff9900' opacity='0.5'/%3E%3Cellipse cx='15' cy='19' rx='3' ry='5' fill='%23ffcc00' opacity='0.3'/%3E%3C/svg%3E");
+    animation: torch-flicker 1.5s ease-in-out infinite 0.7s;
+}
+
+
+/* ============================================================
+   7. GHOST SCENE (鬼系)
+   far-detail: dead tree (left), dead tree (right)
+   mid-detail: torch (left), torch (right)
+   ============================================================ */
+
+.scene-far-detail.ghost-scene::before {
+    bottom: 18%; left: 4%;
+    width: 50px; height: 85px;
+    opacity: 0.45;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 100'%3E%3Cpath d='M28,100 L26,60 L15,40 L10,25 M26,60 L20,45 L22,30 M28,100 L32,55 L40,35 L50,20 M32,55 L38,40 L35,25 M30,70 L25,55' stroke='%23201010' stroke-width='3' fill='none' opacity='0.7'/%3E%3C/svg%3E");
+}
+
+.scene-far-detail.ghost-scene::after {
+    bottom: 20%; right: 5%;
+    width: 45px; height: 80px;
+    opacity: 0.4;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 100'%3E%3Cpath d='M28,100 L26,60 L15,40 L10,25 M26,60 L20,45 L22,30 M28,100 L32,55 L40,35 L50,20 M32,55 L38,40 L35,25 M30,70 L25,55' stroke='%23201010' stroke-width='3' fill='none' opacity='0.7'/%3E%3C/svg%3E");
+}
+
+.scene-mid-detail.ghost-scene::before {
+    bottom: 8%; left: 6%;
+    width: 26px; height: 68px;
+    opacity: 0.6;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 80'%3E%3Crect x='12' y='35' width='6' height='45' fill='%234a3020' rx='1'/%3E%3Cellipse cx='15' cy='30' rx='8' ry='14' fill='%23ff6600' opacity='0.7'/%3E%3Cellipse cx='15' cy='24' rx='5' ry='9' fill='%23ff9900' opacity='0.5'/%3E%3Cellipse cx='15' cy='19' rx='3' ry='5' fill='%23ffcc00' opacity='0.3'/%3E%3C/svg%3E");
+    animation: torch-flicker 1.5s ease-in-out infinite;
+}
+
+.scene-mid-detail.ghost-scene::after {
+    bottom: 6%; right: 7%;
+    width: 24px; height: 64px;
+    opacity: 0.55;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 80'%3E%3Crect x='12' y='35' width='6' height='45' fill='%234a3020' rx='1'/%3E%3Cellipse cx='15' cy='30' rx='8' ry='14' fill='%23ff6600' opacity='0.7'/%3E%3Cellipse cx='15' cy='24' rx='5' ry='9' fill='%23ff9900' opacity='0.5'/%3E%3Cellipse cx='15' cy='19' rx='3' ry='5' fill='%23ffcc00' opacity='0.3'/%3E%3C/svg%3E");
+    animation: torch-flicker 1.5s ease-in-out infinite 0.5s;
+}
+
+
+/* ============================================================
+   8. DRAGON SCENE (龙系)
+   far-detail: rock (left), crystal (right)
+   mid-detail: rock formation (left), rock formation (right)
+   ============================================================ */
+
+.scene-far-detail.dragon-scene::before {
+    bottom: 20%; left: 3%;
+    width: 55px; height: 45px;
+    opacity: 0.5;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 50'%3E%3Cellipse cx='20' cy='40' rx='18' ry='12' fill='%232a1a10' opacity='0.6'/%3E%3Cellipse cx='40' cy='38' rx='20' ry='14' fill='%23201508' opacity='0.7'/%3E%3Cellipse cx='30' cy='30' rx='15' ry='10' fill='%23251a0c' opacity='0.5'/%3E%3C/svg%3E");
+}
+
+.scene-far-detail.dragon-scene::after {
+    bottom: 18%; right: 5%;
+    width: 32px; height: 80px;
+    opacity: 0.45;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 100'%3E%3Cpolygon points='20,0 35,35 30,100 10,100 5,35' fill='%234ecdc4' opacity='0.6'/%3E%3Cpolygon points='20,0 25,35 22,100 18,100 15,35' fill='%237eddd6' opacity='0.3'/%3E%3Cline x1='20' y1='0' x2='30' y2='100' stroke='white' stroke-width='0.5' opacity='0.2'/%3E%3C/svg%3E");
+    animation: crystal-pulse 3s ease-in-out infinite;
+}
+
+.scene-mid-detail.dragon-scene::before {
+    bottom: 8%; left: 5%;
+    width: 60px; height: 48px;
+    opacity: 0.55;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 50'%3E%3Cellipse cx='20' cy='40' rx='18' ry='12' fill='%232a1a10' opacity='0.6'/%3E%3Cellipse cx='40' cy='38' rx='20' ry='14' fill='%23201508' opacity='0.7'/%3E%3Cellipse cx='30' cy='30' rx='15' ry='10' fill='%23251a0c' opacity='0.5'/%3E%3C/svg%3E");
+}
+
+.scene-mid-detail.dragon-scene::after {
+    bottom: 6%; right: 4%;
+    width: 50px; height: 42px;
+    opacity: 0.5;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 50'%3E%3Cellipse cx='20' cy='40' rx='18' ry='12' fill='%232a1a10' opacity='0.6'/%3E%3Cellipse cx='40' cy='38' rx='20' ry='14' fill='%23201508' opacity='0.7'/%3E%3Cellipse cx='30' cy='30' rx='15' ry='10' fill='%23251a0c' opacity='0.5'/%3E%3C/svg%3E");
+}
+
+
+/* ============================================================
+   9. FAIRY SCENE (妖精系)
+   far-detail: mushroom (left), mushroom (right)
+   mid-detail: flower patches (left), flower (right)
+   ============================================================ */
+
+.scene-far-detail.fairy-scene::before {
+    bottom: 20%; left: 4%;
+    width: 42px; height: 50px;
+    opacity: 0.5;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 60'%3E%3Cellipse cx='25' cy='25' rx='22' ry='18' fill='%23cc4488' opacity='0.7'/%3E%3Crect x='20' y='25' width='10' height='35' fill='%23eeddcc' opacity='0.5' rx='3'/%3E%3Ccircle cx='15' cy='18' r='4' fill='white' opacity='0.3'/%3E%3Ccircle cx='30' cy='15' r='3' fill='white' opacity='0.2'/%3E%3C/svg%3E");
+}
+
+.scene-far-detail.fairy-scene::after {
+    bottom: 22%; right: 6%;
+    width: 36px; height: 44px;
+    opacity: 0.45;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 60'%3E%3Cellipse cx='25' cy='25' rx='22' ry='18' fill='%23cc4488' opacity='0.7'/%3E%3Crect x='20' y='25' width='10' height='35' fill='%23eeddcc' opacity='0.5' rx='3'/%3E%3Ccircle cx='15' cy='18' r='4' fill='white' opacity='0.3'/%3E%3Ccircle cx='30' cy='15' r='3' fill='white' opacity='0.2'/%3E%3C/svg%3E");
+}
+
+.scene-mid-detail.fairy-scene::before {
+    bottom: 6%; left: 5%;
+    width: 50px; height: 38px;
+    opacity: 0.55;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 40'%3E%3Cline x1='12' y1='40' x2='12' y2='22' stroke='%23305020' stroke-width='2'/%3E%3Cline x1='30' y1='40' x2='30' y2='18' stroke='%23305020' stroke-width='2'/%3E%3Cline x1='42' y1='40' x2='42' y2='25' stroke='%23305020' stroke-width='2'/%3E%3Ccircle cx='12' cy='20' r='5' fill='%23ff88aa' opacity='0.6'/%3E%3Ccircle cx='30' cy='16' r='4' fill='%23ffaa44' opacity='0.5'/%3E%3Ccircle cx='42' cy='23' r='3' fill='%23aa88ff' opacity='0.5'/%3E%3C/svg%3E");
+}
+
+.scene-mid-detail.fairy-scene::after {
+    bottom: 8%; right: 7%;
+    width: 45px; height: 35px;
+    opacity: 0.5;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 40'%3E%3Cline x1='12' y1='40' x2='12' y2='22' stroke='%23305020' stroke-width='2'/%3E%3Cline x1='30' y1='40' x2='30' y2='18' stroke='%23305020' stroke-width='2'/%3E%3Cline x1='42' y1='40' x2='42' y2='25' stroke='%23305020' stroke-width='2'/%3E%3Ccircle cx='12' cy='20' r='5' fill='%23ff88aa' opacity='0.6'/%3E%3Ccircle cx='30' cy='16' r='4' fill='%23ffaa44' opacity='0.5'/%3E%3Ccircle cx='42' cy='23' r='3' fill='%23aa88ff' opacity='0.5'/%3E%3C/svg%3E");
+}
+
+
+/* ============================================================
+   10. POISON SCENE (毒系)
+   far-detail: mushroom (left), dead tree (right)
+   mid-detail: dead tree (left), dead tree (right)
+   ============================================================ */
+
+.scene-far-detail.poison-scene::before {
+    bottom: 20%; left: 4%;
+    width: 40px; height: 48px;
+    opacity: 0.5;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 60'%3E%3Cellipse cx='25' cy='25' rx='22' ry='18' fill='%23884488' opacity='0.7'/%3E%3Crect x='20' y='25' width='10' height='35' fill='%23ccbbaa' opacity='0.5' rx='3'/%3E%3Ccircle cx='15' cy='18' r='4' fill='white' opacity='0.2'/%3E%3Ccircle cx='30' cy='15' r='3' fill='white' opacity='0.15'/%3E%3C/svg%3E");
+}
+
+.scene-far-detail.poison-scene::after {
+    bottom: 18%; right: 5%;
+    width: 50px; height: 85px;
+    opacity: 0.45;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 100'%3E%3Cpath d='M28,100 L26,60 L15,40 L10,25 M26,60 L20,45 L22,30 M28,100 L32,55 L40,35 L50,20 M32,55 L38,40 L35,25 M30,70 L25,55' stroke='%23201010' stroke-width='3' fill='none' opacity='0.7'/%3E%3C/svg%3E");
+}
+
+.scene-mid-detail.poison-scene::before {
+    bottom: 6%; left: 6%;
+    width: 48px; height: 80px;
+    opacity: 0.5;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 100'%3E%3Cpath d='M28,100 L26,60 L15,40 L10,25 M26,60 L20,45 L22,30 M28,100 L32,55 L40,35 L50,20 M32,55 L38,40 L35,25 M30,70 L25,55' stroke='%23201010' stroke-width='3' fill='none' opacity='0.7'/%3E%3C/svg%3E");
+}
+
+.scene-mid-detail.poison-scene::after {
+    bottom: 8%; right: 6%;
+    width: 45px; height: 75px;
+    opacity: 0.45;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 100'%3E%3Cpath d='M28,100 L26,60 L15,40 L10,25 M26,60 L20,45 L22,30 M28,100 L32,55 L40,35 L50,20 M32,55 L38,40 L35,25 M30,70 L25,55' stroke='%23201010' stroke-width='3' fill='none' opacity='0.7'/%3E%3C/svg%3E");
+}
+
+
+/* ============================================================
+   11. ROCK SCENE (岩石系)
+   far-detail: rock formations (left), rock (right)
+   mid-detail: rock formation (left), rock (right)
+   ============================================================ */
+
+.scene-far-detail.rock-scene::before {
+    bottom: 20%; left: 3%;
+    width: 60px; height: 48px;
+    opacity: 0.55;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 50'%3E%3Cellipse cx='20' cy='40' rx='18' ry='12' fill='%232a1a10' opacity='0.6'/%3E%3Cellipse cx='40' cy='38' rx='20' ry='14' fill='%23201508' opacity='0.7'/%3E%3Cellipse cx='30' cy='30' rx='15' ry='10' fill='%23251a0c' opacity='0.5'/%3E%3C/svg%3E");
+}
+
+.scene-far-detail.rock-scene::after {
+    bottom: 22%; right: 4%;
+    width: 55px; height: 45px;
+    opacity: 0.5;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 50'%3E%3Cellipse cx='20' cy='40' rx='18' ry='12' fill='%232a1a10' opacity='0.6'/%3E%3Cellipse cx='40' cy='38' rx='20' ry='14' fill='%23201508' opacity='0.7'/%3E%3Cellipse cx='30' cy='30' rx='15' ry='10' fill='%23251a0c' opacity='0.5'/%3E%3C/svg%3E");
+}
+
+.scene-mid-detail.rock-scene::before {
+    bottom: 8%; left: 5%;
+    width: 65px; height: 52px;
+    opacity: 0.6;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 50'%3E%3Cellipse cx='20' cy='40' rx='18' ry='12' fill='%232a1a10' opacity='0.6'/%3E%3Cellipse cx='40' cy='38' rx='20' ry='14' fill='%23201508' opacity='0.7'/%3E%3Cellipse cx='30' cy='30' rx='15' ry='10' fill='%23251a0c' opacity='0.5'/%3E%3C/svg%3E");
+}
+
+.scene-mid-detail.rock-scene::after {
+    bottom: 6%; right: 5%;
+    width: 55px; height: 45px;
+    opacity: 0.5;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 50'%3E%3Cellipse cx='20' cy='40' rx='18' ry='12' fill='%232a1a10' opacity='0.6'/%3E%3Cellipse cx='40' cy='38' rx='20' ry='14' fill='%23201508' opacity='0.7'/%3E%3Cellipse cx='30' cy='30' rx='15' ry='10' fill='%23251a0c' opacity='0.5'/%3E%3C/svg%3E");
+}
+
+
+/* ============================================================
+   12. PSYCHIC SCENE (超能系)
+   far-detail: crystal (left), crystal (right)
+   mid-detail: rune symbol (left), rune (right)
+   ============================================================ */
+
+.scene-far-detail.psychic-scene::before {
+    bottom: 20%; left: 4%;
+    width: 30px; height: 80px;
+    opacity: 0.45;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 100'%3E%3Cpolygon points='20,0 35,35 30,100 10,100 5,35' fill='%23cc66ee' opacity='0.6'/%3E%3Cpolygon points='20,0 25,35 22,100 18,100 15,35' fill='%23dd88ff' opacity='0.3'/%3E%3Cline x1='20' y1='0' x2='30' y2='100' stroke='white' stroke-width='0.5' opacity='0.2'/%3E%3C/svg%3E");
+    animation: crystal-pulse 3s ease-in-out infinite;
+}
+
+.scene-far-detail.psychic-scene::after {
+    bottom: 18%; right: 5%;
+    width: 28px; height: 72px;
+    opacity: 0.4;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 100'%3E%3Cpolygon points='20,0 35,35 30,100 10,100 5,35' fill='%23cc66ee' opacity='0.6'/%3E%3Cpolygon points='20,0 25,35 22,100 18,100 15,35' fill='%23dd88ff' opacity='0.3'/%3E%3Cline x1='20' y1='0' x2='30' y2='100' stroke='white' stroke-width='0.5' opacity='0.2'/%3E%3C/svg%3E");
+    animation: crystal-pulse 3s ease-in-out infinite 0.8s;
+}
+
+.scene-mid-detail.psychic-scene::before {
+    bottom: 10%; left: 6%;
+    width: 40px; height: 40px;
+    opacity: 0.4;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 50'%3E%3Ccircle cx='25' cy='25' r='20' stroke='%238866cc' stroke-width='1.5' fill='none' opacity='0.4'/%3E%3Ccircle cx='25' cy='25' r='12' stroke='%238866cc' stroke-width='1' fill='none' opacity='0.3'/%3E%3Cline x1='25' y1='5' x2='25' y2='45' stroke='%238866cc' stroke-width='0.8' opacity='0.25'/%3E%3Cline x1='5' y1='25' x2='45' y2='25' stroke='%238866cc' stroke-width='0.8' opacity='0.25'/%3E%3C/svg%3E");
+    animation: rune-glow-pulse 2.5s ease-in-out infinite;
+}
+
+.scene-mid-detail.psychic-scene::after {
+    bottom: 12%; right: 7%;
+    width: 35px; height: 35px;
+    opacity: 0.35;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 50'%3E%3Ccircle cx='25' cy='25' r='20' stroke='%238866cc' stroke-width='1.5' fill='none' opacity='0.4'/%3E%3Ccircle cx='25' cy='25' r='12' stroke='%238866cc' stroke-width='1' fill='none' opacity='0.3'/%3E%3Cline x1='25' y1='5' x2='25' y2='45' stroke='%238866cc' stroke-width='0.8' opacity='0.25'/%3E%3Cline x1='5' y1='25' x2='45' y2='25' stroke='%238866cc' stroke-width='0.8' opacity='0.25'/%3E%3C/svg%3E");
+    animation: rune-glow-pulse 2.5s ease-in-out infinite 0.6s;
+}
+
+
+/* ============================================================
+   13. STEEL SCENE (钢系)
+   far-detail: gear (left), gear (right)
+   mid-detail: gear (left), gear (right)
+   ============================================================ */
+
+.scene-far-detail.steel-scene::before {
+    bottom: 22%; left: 4%;
+    width: 40px; height: 40px;
+    opacity: 0.4;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 50'%3E%3Ccircle cx='25' cy='25' r='12' fill='%23666680' opacity='0.5'/%3E%3Ccircle cx='25' cy='25' r='6' fill='%23888899' opacity='0.3'/%3E%3Crect x='22' y='2' width='6' height='10' fill='%23555566' opacity='0.5' rx='1'/%3E%3Crect x='22' y='38' width='6' height='10' fill='%23555566' opacity='0.5' rx='1'/%3E%3Crect x='2' y='22' width='10' height='6' fill='%23555566' opacity='0.5' rx='1'/%3E%3Crect x='38' y='22' width='10' height='6' fill='%23555566' opacity='0.5' rx='1'/%3E%3C/svg%3E");
+}
+
+.scene-far-detail.steel-scene::after {
+    bottom: 25%; right: 5%;
+    width: 35px; height: 35px;
+    opacity: 0.35;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 50'%3E%3Ccircle cx='25' cy='25' r='12' fill='%23666680' opacity='0.5'/%3E%3Ccircle cx='25' cy='25' r='6' fill='%23888899' opacity='0.3'/%3E%3Crect x='22' y='2' width='6' height='10' fill='%23555566' opacity='0.5' rx='1'/%3E%3Crect x='22' y='38' width='6' height='10' fill='%23555566' opacity='0.5' rx='1'/%3E%3Crect x='2' y='22' width='10' height='6' fill='%23555566' opacity='0.5' rx='1'/%3E%3Crect x='38' y='22' width='10' height='6' fill='%23555566' opacity='0.5' rx='1'/%3E%3C/svg%3E");
+}
+
+.scene-mid-detail.steel-scene::before {
+    bottom: 10%; left: 6%;
+    width: 45px; height: 45px;
+    opacity: 0.45;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 50'%3E%3Ccircle cx='25' cy='25' r='12' fill='%23666680' opacity='0.5'/%3E%3Ccircle cx='25' cy='25' r='6' fill='%23888899' opacity='0.3'/%3E%3Crect x='22' y='2' width='6' height='10' fill='%23555566' opacity='0.5' rx='1'/%3E%3Crect x='22' y='38' width='6' height='10' fill='%23555566' opacity='0.5' rx='1'/%3E%3Crect x='2' y='22' width='10' height='6' fill='%23555566' opacity='0.5' rx='1'/%3E%3Crect x='38' y='22' width='10' height='6' fill='%23555566' opacity='0.5' rx='1'/%3E%3C/svg%3E");
+}
+
+.scene-mid-detail.steel-scene::after {
+    bottom: 8%; right: 6%;
+    width: 38px; height: 38px;
+    opacity: 0.4;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 50'%3E%3Ccircle cx='25' cy='25' r='12' fill='%23666680' opacity='0.5'/%3E%3Ccircle cx='25' cy='25' r='6' fill='%23888899' opacity='0.3'/%3E%3Crect x='22' y='2' width='6' height='10' fill='%23555566' opacity='0.5' rx='1'/%3E%3Crect x='22' y='38' width='6' height='10' fill='%23555566' opacity='0.5' rx='1'/%3E%3Crect x='2' y='22' width='10' height='6' fill='%23555566' opacity='0.5' rx='1'/%3E%3Crect x='38' y='22' width='10' height='6' fill='%23555566' opacity='0.5' rx='1'/%3E%3C/svg%3E");
+}
+
+
+/* ============================================================
+   14. FIGHTING SCENE (格斗系)
+   far-detail: rock (left), torch (right)
+   mid-detail: torch (left), torch (right)
+   ============================================================ */
+
+.scene-far-detail.fighting-scene::before {
+    bottom: 20%; left: 4%;
+    width: 55px; height: 45px;
+    opacity: 0.5;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 50'%3E%3Cellipse cx='20' cy='40' rx='18' ry='12' fill='%232a1a10' opacity='0.6'/%3E%3Cellipse cx='40' cy='38' rx='20' ry='14' fill='%23201508' opacity='0.7'/%3E%3Cellipse cx='30' cy='30' rx='15' ry='10' fill='%23251a0c' opacity='0.5'/%3E%3C/svg%3E");
+}
+
+.scene-far-detail.fighting-scene::after {
+    bottom: 18%; right: 5%;
+    width: 25px; height: 68px;
+    opacity: 0.55;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 80'%3E%3Crect x='12' y='35' width='6' height='45' fill='%234a3020' rx='1'/%3E%3Cellipse cx='15' cy='30' rx='8' ry='14' fill='%23ff6600' opacity='0.7'/%3E%3Cellipse cx='15' cy='24' rx='5' ry='9' fill='%23ff9900' opacity='0.5'/%3E%3Cellipse cx='15' cy='19' rx='3' ry='5' fill='%23ffcc00' opacity='0.3'/%3E%3C/svg%3E");
+    animation: torch-flicker 1.5s ease-in-out infinite;
+}
+
+.scene-mid-detail.fighting-scene::before {
+    bottom: 8%; left: 6%;
+    width: 24px; height: 65px;
+    opacity: 0.6;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 80'%3E%3Crect x='12' y='35' width='6' height='45' fill='%234a3020' rx='1'/%3E%3Cellipse cx='15' cy='30' rx='8' ry='14' fill='%23ff6600' opacity='0.7'/%3E%3Cellipse cx='15' cy='24' rx='5' ry='9' fill='%23ff9900' opacity='0.5'/%3E%3Cellipse cx='15' cy='19' rx='3' ry='5' fill='%23ffcc00' opacity='0.3'/%3E%3C/svg%3E");
+    animation: torch-flicker 1.5s ease-in-out infinite 0.4s;
+}
+
+.scene-mid-detail.fighting-scene::after {
+    bottom: 6%; right: 7%;
+    width: 22px; height: 60px;
+    opacity: 0.55;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 80'%3E%3Crect x='12' y='35' width='6' height='45' fill='%234a3020' rx='1'/%3E%3Cellipse cx='15' cy='30' rx='8' ry='14' fill='%23ff6600' opacity='0.7'/%3E%3Cellipse cx='15' cy='24' rx='5' ry='9' fill='%23ff9900' opacity='0.5'/%3E%3Cellipse cx='15' cy='19' rx='3' ry='5' fill='%23ffcc00' opacity='0.3'/%3E%3C/svg%3E");
+    animation: torch-flicker 1.5s ease-in-out infinite 0.8s;
+}
+
+
+/* ============================================================
+   15. WIND SCENE (风系)
+   far-detail: (none - clouds are enough)
+   mid-detail: flower patch (right)
+   ============================================================ */
+
+.scene-mid-detail.wind-scene::after {
+    bottom: 6%; right: 6%;
+    width: 48px; height: 36px;
+    opacity: 0.4;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 40'%3E%3Cline x1='12' y1='40' x2='12' y2='22' stroke='%23305020' stroke-width='2'/%3E%3Cline x1='30' y1='40' x2='30' y2='18' stroke='%23305020' stroke-width='2'/%3E%3Cline x1='42' y1='40' x2='42' y2='25' stroke='%23305020' stroke-width='2'/%3E%3Ccircle cx='12' cy='20' r='5' fill='%23ff88aa' opacity='0.6'/%3E%3Ccircle cx='30' cy='16' r='4' fill='%23ffaa44' opacity='0.5'/%3E%3Ccircle cx='42' cy='23' r='3' fill='%23aa88ff' opacity='0.5'/%3E%3C/svg%3E");
+}
+
+
+/* ============================================================
+   16. LIGHT SCENE (光系)
+   far-detail: (none - sun rays are enough)
+   mid-detail: flower patch (right)
+   ============================================================ */
+
+.scene-mid-detail.light-scene::after {
+    bottom: 6%; right: 5%;
+    width: 50px; height: 38px;
+    opacity: 0.45;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 40'%3E%3Cline x1='12' y1='40' x2='12' y2='22' stroke='%23305020' stroke-width='2'/%3E%3Cline x1='30' y1='40' x2='30' y2='18' stroke='%23305020' stroke-width='2'/%3E%3Cline x1='42' y1='40' x2='42' y2='25' stroke='%23305020' stroke-width='2'/%3E%3Ccircle cx='12' cy='20' r='5' fill='%23ff88aa' opacity='0.6'/%3E%3Ccircle cx='30' cy='16' r='4' fill='%23ffaa44' opacity='0.5'/%3E%3Ccircle cx='42' cy='23' r='3' fill='%23aa88ff' opacity='0.5'/%3E%3C/svg%3E");
+}
+
+
+/* ============================================================
+   17. DEMON SCENE (魔系)
+   far-detail: dead tree (left), torch (right)
+   mid-detail: torch (left), torch (right)
+   ============================================================ */
+
+.scene-far-detail.demon-scene::before {
+    bottom: 18%; left: 3%;
+    width: 52px; height: 88px;
+    opacity: 0.5;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 100'%3E%3Cpath d='M28,100 L26,60 L15,40 L10,25 M26,60 L20,45 L22,30 M28,100 L32,55 L40,35 L50,20 M32,55 L38,40 L35,25 M30,70 L25,55' stroke='%23201010' stroke-width='3' fill='none' opacity='0.7'/%3E%3C/svg%3E");
+}
+
+.scene-far-detail.demon-scene::after {
+    bottom: 20%; right: 4%;
+    width: 26px; height: 70px;
+    opacity: 0.6;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 80'%3E%3Crect x='12' y='35' width='6' height='45' fill='%234a3020' rx='1'/%3E%3Cellipse cx='15' cy='30' rx='8' ry='14' fill='%23ff6600' opacity='0.7'/%3E%3Cellipse cx='15' cy='24' rx='5' ry='9' fill='%23ff9900' opacity='0.5'/%3E%3Cellipse cx='15' cy='19' rx='3' ry='5' fill='%23ffcc00' opacity='0.3'/%3E%3C/svg%3E");
+    animation: torch-flicker 1.5s ease-in-out infinite;
+}
+
+.scene-mid-detail.demon-scene::before {
+    bottom: 8%; left: 7%;
+    width: 24px; height: 66px;
+    opacity: 0.6;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 80'%3E%3Crect x='12' y='35' width='6' height='45' fill='%234a3020' rx='1'/%3E%3Cellipse cx='15' cy='30' rx='8' ry='14' fill='%23ff6600' opacity='0.7'/%3E%3Cellipse cx='15' cy='24' rx='5' ry='9' fill='%23ff9900' opacity='0.5'/%3E%3Cellipse cx='15' cy='19' rx='3' ry='5' fill='%23ffcc00' opacity='0.3'/%3E%3C/svg%3E");
+    animation: torch-flicker 1.5s ease-in-out infinite 0.3s;
+}
+
+.scene-mid-detail.demon-scene::after {
+    bottom: 6%; right: 6%;
+    width: 22px; height: 62px;
+    opacity: 0.55;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 80'%3E%3Crect x='12' y='35' width='6' height='45' fill='%234a3020' rx='1'/%3E%3Cellipse cx='15' cy='30' rx='8' ry='14' fill='%23ff6600' opacity='0.7'/%3E%3Cellipse cx='15' cy='24' rx='5' ry='9' fill='%23ff9900' opacity='0.5'/%3E%3Cellipse cx='15' cy='19' rx='3' ry='5' fill='%23ffcc00' opacity='0.3'/%3E%3C/svg%3E");
+    animation: torch-flicker 1.5s ease-in-out infinite 0.7s;
+}
+
+
+/* ============================================================
+   18. BEAST SCENE (野兽系)
+   far-detail: acacia tree (left), acacia (right)
+   mid-detail: acacia small (left), acacia small (right)
+   ============================================================ */
+
+.scene-far-detail.beast-scene::before {
+    bottom: 18%; left: 3%;
+    width: 65px; height: 85px;
+    opacity: 0.5;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 100'%3E%3Crect x='37' y='40' width='6' height='60' fill='%232a1a0a'/%3E%3Cellipse cx='40' cy='35' rx='35' ry='12' fill='%231a3a0a' opacity='0.7'/%3E%3Cellipse cx='40' cy='33' rx='30' ry='8' fill='%230a2505' opacity='0.5'/%3E%3C/svg%3E");
+}
+
+.scene-far-detail.beast-scene::after {
+    bottom: 22%; right: 5%;
+    width: 55px; height: 72px;
+    opacity: 0.4;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 100'%3E%3Crect x='37' y='40' width='6' height='60' fill='%232a1a0a'/%3E%3Cellipse cx='40' cy='35' rx='35' ry='12' fill='%231a3a0a' opacity='0.7'/%3E%3Cellipse cx='40' cy='33' rx='30' ry='8' fill='%230a2505' opacity='0.5'/%3E%3C/svg%3E");
+}
+
+.scene-mid-detail.beast-scene::before {
+    bottom: 6%; left: 6%;
+    width: 50px; height: 65px;
+    opacity: 0.55;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 100'%3E%3Crect x='37' y='40' width='6' height='60' fill='%232a1a0a'/%3E%3Cellipse cx='40' cy='35' rx='35' ry='12' fill='%231a3a0a' opacity='0.7'/%3E%3Cellipse cx='40' cy='33' rx='30' ry='8' fill='%230a2505' opacity='0.5'/%3E%3C/svg%3E");
+}
+
+.scene-mid-detail.beast-scene::after {
+    bottom: 8%; right: 7%;
+    width: 45px; height: 58px;
+    opacity: 0.45;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 100'%3E%3Crect x='37' y='40' width='6' height='60' fill='%232a1a0a'/%3E%3Cellipse cx='40' cy='35' rx='35' ry='12' fill='%231a3a0a' opacity='0.7'/%3E%3Cellipse cx='40' cy='33' rx='30' ry='8' fill='%230a2505' opacity='0.5'/%3E%3C/svg%3E");
+}
+
+
+/* ============================================================
+   19. ANCIENT SCENE (古代系)
+   far-detail: rune (left), torch (right)
+   mid-detail: rune (left), rune (right)
+   ============================================================ */
+
+.scene-far-detail.ancient-scene::before {
+    bottom: 22%; left: 5%;
+    width: 38px; height: 38px;
+    opacity: 0.4;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 50'%3E%3Ccircle cx='25' cy='25' r='20' stroke='%238866cc' stroke-width='1.5' fill='none' opacity='0.4'/%3E%3Ccircle cx='25' cy='25' r='12' stroke='%238866cc' stroke-width='1' fill='none' opacity='0.3'/%3E%3Cline x1='25' y1='5' x2='25' y2='45' stroke='%238866cc' stroke-width='0.8' opacity='0.25'/%3E%3Cline x1='5' y1='25' x2='45' y2='25' stroke='%238866cc' stroke-width='0.8' opacity='0.25'/%3E%3C/svg%3E");
+    animation: rune-glow-pulse 2.5s ease-in-out infinite;
+}
+
+.scene-far-detail.ancient-scene::after {
+    bottom: 20%; right: 5%;
+    width: 25px; height: 68px;
+    opacity: 0.55;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 80'%3E%3Crect x='12' y='35' width='6' height='45' fill='%234a3020' rx='1'/%3E%3Cellipse cx='15' cy='30' rx='8' ry='14' fill='%23ff6600' opacity='0.7'/%3E%3Cellipse cx='15' cy='24' rx='5' ry='9' fill='%23ff9900' opacity='0.5'/%3E%3Cellipse cx='15' cy='19' rx='3' ry='5' fill='%23ffcc00' opacity='0.3'/%3E%3C/svg%3E");
+    animation: torch-flicker 1.5s ease-in-out infinite;
+}
+
+.scene-mid-detail.ancient-scene::before {
+    bottom: 10%; left: 7%;
+    width: 42px; height: 42px;
+    opacity: 0.45;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 50'%3E%3Ccircle cx='25' cy='25' r='20' stroke='%238866cc' stroke-width='1.5' fill='none' opacity='0.4'/%3E%3Ccircle cx='25' cy='25' r='12' stroke='%238866cc' stroke-width='1' fill='none' opacity='0.3'/%3E%3Cline x1='25' y1='5' x2='25' y2='45' stroke='%238866cc' stroke-width='0.8' opacity='0.25'/%3E%3Cline x1='5' y1='25' x2='45' y2='25' stroke='%238866cc' stroke-width='0.8' opacity='0.25'/%3E%3C/svg%3E");
+    animation: rune-glow-pulse 2.5s ease-in-out infinite 0.5s;
+}
+
+.scene-mid-detail.ancient-scene::after {
+    bottom: 12%; right: 6%;
+    width: 36px; height: 36px;
+    opacity: 0.4;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 50'%3E%3Ccircle cx='25' cy='25' r='20' stroke='%238866cc' stroke-width='1.5' fill='none' opacity='0.4'/%3E%3Ccircle cx='25' cy='25' r='12' stroke='%238866cc' stroke-width='1' fill='none' opacity='0.3'/%3E%3Cline x1='25' y1='5' x2='25' y2='45' stroke='%238866cc' stroke-width='0.8' opacity='0.25'/%3E%3Cline x1='5' y1='25' x2='45' y2='25' stroke='%238866cc' stroke-width='0.8' opacity='0.25'/%3E%3C/svg%3E");
+    animation: rune-glow-pulse 2.5s ease-in-out infinite 1s;
+}
+
+
+/* ============================================================
+   20. SPIRIT SCENE (灵系)
+   far-detail: rune (left)
+   mid-detail: rune (left), rune (right)
+   ============================================================ */
+
+.scene-far-detail.spirit-scene::before {
+    bottom: 22%; left: 5%;
+    width: 40px; height: 40px;
+    opacity: 0.35;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 50'%3E%3Ccircle cx='25' cy='25' r='20' stroke='%2388aacc' stroke-width='1.5' fill='none' opacity='0.4'/%3E%3Ccircle cx='25' cy='25' r='12' stroke='%2388aacc' stroke-width='1' fill='none' opacity='0.3'/%3E%3Cline x1='25' y1='5' x2='25' y2='45' stroke='%2388aacc' stroke-width='0.8' opacity='0.25'/%3E%3Cline x1='5' y1='25' x2='45' y2='25' stroke='%2388aacc' stroke-width='0.8' opacity='0.25'/%3E%3C/svg%3E");
+    animation: rune-glow-pulse 2.5s ease-in-out infinite;
+}
+
+.scene-mid-detail.spirit-scene::before {
+    bottom: 10%; left: 6%;
+    width: 44px; height: 44px;
+    opacity: 0.4;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 50'%3E%3Ccircle cx='25' cy='25' r='20' stroke='%2388aacc' stroke-width='1.5' fill='none' opacity='0.4'/%3E%3Ccircle cx='25' cy='25' r='12' stroke='%2388aacc' stroke-width='1' fill='none' opacity='0.3'/%3E%3Cline x1='25' y1='5' x2='25' y2='45' stroke='%2388aacc' stroke-width='0.8' opacity='0.25'/%3E%3Cline x1='5' y1='25' x2='45' y2='25' stroke='%2388aacc' stroke-width='0.8' opacity='0.25'/%3E%3C/svg%3E");
+    animation: rune-glow-pulse 2.5s ease-in-out infinite 0.4s;
+}
+
+.scene-mid-detail.spirit-scene::after {
+    bottom: 12%; right: 7%;
+    width: 38px; height: 38px;
+    opacity: 0.35;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 50'%3E%3Ccircle cx='25' cy='25' r='20' stroke='%2388aacc' stroke-width='1.5' fill='none' opacity='0.4'/%3E%3Ccircle cx='25' cy='25' r='12' stroke='%2388aacc' stroke-width='1' fill='none' opacity='0.3'/%3E%3Cline x1='25' y1='5' x2='25' y2='45' stroke='%2388aacc' stroke-width='0.8' opacity='0.25'/%3E%3Cline x1='5' y1='25' x2='45' y2='25' stroke='%2388aacc' stroke-width='0.8' opacity='0.25'/%3E%3C/svg%3E");
+    animation: rune-glow-pulse 2.5s ease-in-out infinite 0.8s;
+}
+
+
+/* ============================================================
+   21. CREATURE SCENE (生物系)
+   far-detail: mushroom (left), mushroom (right)
+   mid-detail: mushroom (left), vine (right)
+   ============================================================ */
+
+.scene-far-detail.creature-scene::before {
+    bottom: 20%; left: 4%;
+    width: 40px; height: 48px;
+    opacity: 0.45;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 60'%3E%3Cellipse cx='25' cy='25' rx='22' ry='18' fill='%23cc4488' opacity='0.7'/%3E%3Crect x='20' y='25' width='10' height='35' fill='%23eeddcc' opacity='0.5' rx='3'/%3E%3Ccircle cx='15' cy='18' r='4' fill='white' opacity='0.3'/%3E%3Ccircle cx='30' cy='15' r='3' fill='white' opacity='0.2'/%3E%3C/svg%3E");
+}
+
+.scene-far-detail.creature-scene::after {
+    bottom: 22%; right: 6%;
+    width: 35px; height: 42px;
+    opacity: 0.4;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 60'%3E%3Cellipse cx='25' cy='25' rx='22' ry='18' fill='%23cc4488' opacity='0.7'/%3E%3Crect x='20' y='25' width='10' height='35' fill='%23eeddcc' opacity='0.5' rx='3'/%3E%3Ccircle cx='15' cy='18' r='4' fill='white' opacity='0.3'/%3E%3Ccircle cx='30' cy='15' r='3' fill='white' opacity='0.2'/%3E%3C/svg%3E");
+}
+
+.scene-mid-detail.creature-scene::before {
+    bottom: 6%; left: 5%;
+    width: 44px; height: 52px;
+    opacity: 0.5;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 60'%3E%3Cellipse cx='25' cy='25' rx='22' ry='18' fill='%23cc4488' opacity='0.7'/%3E%3Crect x='20' y='25' width='10' height='35' fill='%23eeddcc' opacity='0.5' rx='3'/%3E%3Ccircle cx='15' cy='18' r='4' fill='white' opacity='0.3'/%3E%3Ccircle cx='30' cy='15' r='3' fill='white' opacity='0.2'/%3E%3C/svg%3E");
+}
+
+.scene-mid-detail.creature-scene::after {
+    bottom: 8%; right: 5%;
+    width: 48px; height: 48px;
+    opacity: 0.35;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Cline x1='30' y1='0' x2='30' y2='60' stroke='%23aabb88' stroke-width='0.5' opacity='0.3'/%3E%3Cline x1='0' y1='30' x2='60' y2='30' stroke='%23aabb88' stroke-width='0.5' opacity='0.3'/%3E%3Cline x1='5' y1='5' x2='55' y2='55' stroke='%23aabb88' stroke-width='0.5' opacity='0.3'/%3E%3Cline x1='55' y1='5' x2='5' y2='55' stroke='%23aabb88' stroke-width='0.5' opacity='0.3'/%3E%3Ccircle cx='30' cy='30' r='12' stroke='%23aabb88' stroke-width='0.5' fill='none' opacity='0.25'/%3E%3Ccircle cx='30' cy='30' r='22' stroke='%23aabb88' stroke-width='0.5' fill='none' opacity='0.2'/%3E%3C/svg%3E");
+}
+
+
+/* ============================================================
+   22. WIZARD SCENE (巫师系)
+   far-detail: rune (left), crystal (right)
+   mid-detail: rune (left), rune (right)
+   ============================================================ */
+
+.scene-far-detail.wizard-scene::before {
+    bottom: 22%; left: 4%;
+    width: 40px; height: 40px;
+    opacity: 0.4;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 50'%3E%3Ccircle cx='25' cy='25' r='20' stroke='%238866cc' stroke-width='1.5' fill='none' opacity='0.4'/%3E%3Ccircle cx='25' cy='25' r='12' stroke='%238866cc' stroke-width='1' fill='none' opacity='0.3'/%3E%3Cline x1='25' y1='5' x2='25' y2='45' stroke='%238866cc' stroke-width='0.8' opacity='0.25'/%3E%3Cline x1='5' y1='25' x2='45' y2='25' stroke='%238866cc' stroke-width='0.8' opacity='0.25'/%3E%3C/svg%3E");
+    animation: rune-glow-pulse 2.5s ease-in-out infinite;
+}
+
+.scene-far-detail.wizard-scene::after {
+    bottom: 18%; right: 5%;
+    width: 30px; height: 78px;
+    opacity: 0.45;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 100'%3E%3Cpolygon points='20,0 35,35 30,100 10,100 5,35' fill='%234ecdc4' opacity='0.6'/%3E%3Cpolygon points='20,0 25,35 22,100 18,100 15,35' fill='%237eddd6' opacity='0.3'/%3E%3Cline x1='20' y1='0' x2='30' y2='100' stroke='white' stroke-width='0.5' opacity='0.2'/%3E%3C/svg%3E");
+    animation: crystal-pulse 3s ease-in-out infinite;
+}
+
+.scene-mid-detail.wizard-scene::before {
+    bottom: 10%; left: 6%;
+    width: 42px; height: 42px;
+    opacity: 0.45;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 50'%3E%3Ccircle cx='25' cy='25' r='20' stroke='%238866cc' stroke-width='1.5' fill='none' opacity='0.4'/%3E%3Ccircle cx='25' cy='25' r='12' stroke='%238866cc' stroke-width='1' fill='none' opacity='0.3'/%3E%3Cline x1='25' y1='5' x2='25' y2='45' stroke='%238866cc' stroke-width='0.8' opacity='0.25'/%3E%3Cline x1='5' y1='25' x2='45' y2='25' stroke='%238866cc' stroke-width='0.8' opacity='0.25'/%3E%3C/svg%3E");
+    animation: rune-glow-pulse 2.5s ease-in-out infinite 0.5s;
+}
+
+.scene-mid-detail.wizard-scene::after {
+    bottom: 12%; right: 7%;
+    width: 36px; height: 36px;
+    opacity: 0.4;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 50'%3E%3Ccircle cx='25' cy='25' r='20' stroke='%238866cc' stroke-width='1.5' fill='none' opacity='0.4'/%3E%3Ccircle cx='25' cy='25' r='12' stroke='%238866cc' stroke-width='1' fill='none' opacity='0.3'/%3E%3Cline x1='25' y1='5' x2='25' y2='45' stroke='%238866cc' stroke-width='0.8' opacity='0.25'/%3E%3Cline x1='5' y1='25' x2='45' y2='25' stroke='%238866cc' stroke-width='0.8' opacity='0.25'/%3E%3C/svg%3E");
+    animation: rune-glow-pulse 2.5s ease-in-out infinite 1s;
+}
+
+
+/* ============================================================
+   23. BUG SCENE (虫系)
+   far-detail: vine/web (left), vine/web (right)
+   mid-detail: flower (left), vine (right)
+   ============================================================ */
+
+.scene-far-detail.bug-scene::before {
+    bottom: 18%; left: 3%;
+    width: 50px; height: 50px;
+    opacity: 0.35;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Cline x1='30' y1='0' x2='30' y2='60' stroke='%23aabb88' stroke-width='0.5' opacity='0.3'/%3E%3Cline x1='0' y1='30' x2='60' y2='30' stroke='%23aabb88' stroke-width='0.5' opacity='0.3'/%3E%3Cline x1='5' y1='5' x2='55' y2='55' stroke='%23aabb88' stroke-width='0.5' opacity='0.3'/%3E%3Cline x1='55' y1='5' x2='5' y2='55' stroke='%23aabb88' stroke-width='0.5' opacity='0.3'/%3E%3Ccircle cx='30' cy='30' r='12' stroke='%23aabb88' stroke-width='0.5' fill='none' opacity='0.25'/%3E%3Ccircle cx='30' cy='30' r='22' stroke='%23aabb88' stroke-width='0.5' fill='none' opacity='0.2'/%3E%3C/svg%3E");
+}
+
+.scene-far-detail.bug-scene::after {
+    bottom: 20%; right: 4%;
+    width: 45px; height: 45px;
+    opacity: 0.3;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Cline x1='30' y1='0' x2='30' y2='60' stroke='%23aabb88' stroke-width='0.5' opacity='0.3'/%3E%3Cline x1='0' y1='30' x2='60' y2='30' stroke='%23aabb88' stroke-width='0.5' opacity='0.3'/%3E%3Cline x1='5' y1='5' x2='55' y2='55' stroke='%23aabb88' stroke-width='0.5' opacity='0.3'/%3E%3Cline x1='55' y1='5' x2='5' y2='55' stroke='%23aabb88' stroke-width='0.5' opacity='0.3'/%3E%3Ccircle cx='30' cy='30' r='12' stroke='%23aabb88' stroke-width='0.5' fill='none' opacity='0.25'/%3E%3Ccircle cx='30' cy='30' r='22' stroke='%23aabb88' stroke-width='0.5' fill='none' opacity='0.2'/%3E%3C/svg%3E");
+}
+
+.scene-mid-detail.bug-scene::before {
+    bottom: 6%; left: 5%;
+    width: 48px; height: 36px;
+    opacity: 0.45;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 40'%3E%3Cline x1='12' y1='40' x2='12' y2='22' stroke='%23305020' stroke-width='2'/%3E%3Cline x1='30' y1='40' x2='30' y2='18' stroke='%23305020' stroke-width='2'/%3E%3Cline x1='42' y1='40' x2='42' y2='25' stroke='%23305020' stroke-width='2'/%3E%3Ccircle cx='12' cy='20' r='5' fill='%23ff88aa' opacity='0.6'/%3E%3Ccircle cx='30' cy='16' r='4' fill='%23ffaa44' opacity='0.5'/%3E%3Ccircle cx='42' cy='23' r='3' fill='%23aa88ff' opacity='0.5'/%3E%3C/svg%3E");
+}
+
+.scene-mid-detail.bug-scene::after {
+    bottom: 8%; right: 5%;
+    width: 50px; height: 50px;
+    opacity: 0.35;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Cline x1='30' y1='0' x2='30' y2='60' stroke='%23aabb88' stroke-width='0.5' opacity='0.3'/%3E%3Cline x1='0' y1='30' x2='60' y2='30' stroke='%23aabb88' stroke-width='0.5' opacity='0.3'/%3E%3Cline x1='5' y1='5' x2='55' y2='55' stroke='%23aabb88' stroke-width='0.5' opacity='0.3'/%3E%3Cline x1='55' y1='5' x2='5' y2='55' stroke='%23aabb88' stroke-width='0.5' opacity='0.3'/%3E%3Ccircle cx='30' cy='30' r='12' stroke='%23aabb88' stroke-width='0.5' fill='none' opacity='0.25'/%3E%3Ccircle cx='30' cy='30' r='22' stroke='%23aabb88' stroke-width='0.5' fill='none' opacity='0.2'/%3E%3C/svg%3E");
+}
+
+
+/* ============================================================
+   24. NORMAL SCENE
+   far-detail: (none)
+   mid-detail: flower patch (right)
+   ============================================================ */
+
+.scene-mid-detail.normal-scene::after {
+    bottom: 6%; right: 6%;
+    width: 46px; height: 34px;
+    opacity: 0.4;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 40'%3E%3Cline x1='12' y1='40' x2='12' y2='22' stroke='%23305020' stroke-width='2'/%3E%3Cline x1='30' y1='40' x2='30' y2='18' stroke='%23305020' stroke-width='2'/%3E%3Cline x1='42' y1='40' x2='42' y2='25' stroke='%23305020' stroke-width='2'/%3E%3Ccircle cx='12' cy='20' r='5' fill='%23ff88aa' opacity='0.6'/%3E%3Ccircle cx='30' cy='16' r='4' fill='%23ffaa44' opacity='0.5'/%3E%3Ccircle cx='42' cy='23' r='3' fill='%23aa88ff' opacity='0.5'/%3E%3C/svg%3E");
+}

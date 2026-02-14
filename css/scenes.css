@@ -12,9 +12,13 @@
     transition: opacity 0.5s ease;
 }
 .scene-sky { z-index: 0; }
-.scene-far { z-index: 1; }
-.scene-mid { z-index: 2; }
-.scene-effects { z-index: 3; }
+.scene-stars { z-index: 1; }
+.scene-far { z-index: 2; }
+.scene-far-detail { z-index: 3; }
+.scene-mid { z-index: 4; }
+.scene-mid-detail { z-index: 5; }
+.scene-effects { z-index: 6; }
+.scene-atmosphere { z-index: 7; }
 .hero-side { z-index: 10; }
 .enemy-side { z-index: 10; }
 
@@ -1322,3 +1326,807 @@
 
 /* -- Fairy scene -- */
 .scene-far.fairy-scene::before { filter: drop-shadow(0 0 6px rgba(200,100,180,0.15)); }
+
+
+/* ==========================================================================
+   v18.0: ENHANCED SCENE LAYERS, ATMOSPHERE, AND EFFECTS
+   ========================================================================== */
+
+/* === v18.0: New Layer Base Styles === */
+.scene-stars { z-index: 1; }
+.scene-far-detail { z-index: 3; }
+.scene-mid-detail { z-index: 5; }
+.scene-atmosphere { z-index: 7; pointer-events: none; }
+
+.scene-far-detail,
+.scene-mid-detail,
+.scene-atmosphere {
+    will-change: transform, opacity;
+}
+
+/* === v18.0: Atmosphere Blend-Mode Overlays === */
+
+@keyframes atmosphere-pulse {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 1; }
+}
+
+.scene-atmosphere.fire-scene {
+    background: radial-gradient(ellipse at 50% 100%, rgba(255,100,0,0.4) 0%, rgba(255,60,0,0.15) 40%, transparent 70%);
+    mix-blend-mode: screen;
+    animation: atmosphere-pulse 7s ease-in-out infinite;
+}
+
+.scene-atmosphere.water-scene {
+    background: radial-gradient(ellipse at 50% 100%, rgba(30,100,255,0.35) 0%, rgba(20,80,200,0.12) 40%, transparent 70%);
+    mix-blend-mode: screen;
+    animation: atmosphere-pulse 8s ease-in-out infinite;
+}
+
+.scene-atmosphere.ice-scene {
+    background: radial-gradient(ellipse at 50% 0%, rgba(180,220,255,0.35) 0%, rgba(150,200,255,0.12) 40%, transparent 70%);
+    mix-blend-mode: screen;
+    animation: atmosphere-pulse 7s ease-in-out infinite;
+}
+
+.scene-atmosphere.thunder-scene {
+    background: radial-gradient(ellipse at 50% 0%, rgba(255,255,180,0.3) 0%, rgba(255,255,150,0.1) 35%, transparent 65%);
+    mix-blend-mode: screen;
+    animation: atmosphere-pulse 6s ease-in-out infinite;
+}
+
+.scene-atmosphere.grass-scene {
+    background: radial-gradient(ellipse at 50% 100%, rgba(60,180,50,0.3) 0%, rgba(40,140,30,0.1) 40%, transparent 70%);
+    mix-blend-mode: screen;
+    animation: atmosphere-pulse 8s ease-in-out infinite;
+}
+
+.scene-atmosphere.dark-scene {
+    background: radial-gradient(ellipse at 50% 50%, transparent 20%, rgba(5,0,15,0.5) 60%, rgba(0,0,10,0.7) 100%);
+    mix-blend-mode: multiply;
+    animation: atmosphere-pulse 8s ease-in-out infinite;
+}
+
+.scene-atmosphere.ghost-scene {
+    background:
+        radial-gradient(ellipse at 50% 50%, transparent 30%, rgba(20,10,40,0.2) 80%),
+        radial-gradient(ellipse at 50% 100%, rgba(80,60,180,0.3) 0%, rgba(60,40,150,0.1) 40%, transparent 70%);
+    mix-blend-mode: screen;
+    animation: atmosphere-pulse 7s ease-in-out infinite;
+}
+
+.scene-atmosphere.dragon-scene {
+    background: radial-gradient(ellipse at 50% 100%, rgba(160,80,220,0.3) 0%, rgba(200,160,50,0.15) 40%, transparent 70%);
+    mix-blend-mode: screen;
+    animation: atmosphere-pulse 7s ease-in-out infinite;
+}
+
+.scene-atmosphere.fairy-scene {
+    background: radial-gradient(ellipse at 50% 100%, rgba(255,120,200,0.35) 0%, rgba(255,100,180,0.12) 40%, transparent 70%);
+    mix-blend-mode: screen;
+    animation: atmosphere-pulse 6s ease-in-out infinite;
+}
+
+.scene-atmosphere.poison-scene {
+    background: radial-gradient(ellipse at 50% 100%, rgba(100,200,50,0.3) 0%, rgba(140,60,180,0.15) 40%, transparent 70%);
+    mix-blend-mode: screen;
+    animation: atmosphere-pulse 7s ease-in-out infinite;
+}
+
+.scene-atmosphere.rock-scene {
+    background: radial-gradient(ellipse at 50% 100%, rgba(160,120,70,0.3) 0%, rgba(130,90,50,0.1) 40%, transparent 70%);
+    mix-blend-mode: screen;
+    animation: atmosphere-pulse 8s ease-in-out infinite;
+}
+
+.scene-atmosphere.psychic-scene {
+    background: radial-gradient(ellipse at 50% 100%, rgba(240,100,200,0.3) 0%, rgba(180,60,220,0.15) 40%, transparent 70%);
+    mix-blend-mode: screen;
+    animation: atmosphere-pulse 6s ease-in-out infinite;
+}
+
+.scene-atmosphere.steel-scene {
+    background: radial-gradient(ellipse at 50% 100%, rgba(180,190,210,0.3) 0%, rgba(150,160,180,0.1) 40%, transparent 70%);
+    mix-blend-mode: screen;
+    animation: atmosphere-pulse 8s ease-in-out infinite;
+}
+
+.scene-atmosphere.fighting-scene {
+    background: radial-gradient(ellipse at 50% 100%, rgba(220,50,30,0.35) 0%, rgba(180,30,20,0.12) 40%, transparent 70%);
+    mix-blend-mode: screen;
+    animation: atmosphere-pulse 6s ease-in-out infinite;
+}
+
+.scene-atmosphere.wind-scene {
+    background: radial-gradient(ellipse at 50% 100%, rgba(80,220,240,0.3) 0%, rgba(60,200,220,0.1) 40%, transparent 70%);
+    mix-blend-mode: screen;
+    animation: atmosphere-pulse 7s ease-in-out infinite;
+}
+
+.scene-atmosphere.light-scene {
+    background: radial-gradient(ellipse at 50% 0%, rgba(255,220,100,0.4) 0%, rgba(255,200,80,0.15) 40%, transparent 70%);
+    mix-blend-mode: screen;
+    animation: atmosphere-pulse 7s ease-in-out infinite;
+}
+
+.scene-atmosphere.demon-scene {
+    background: radial-gradient(ellipse at 50% 100%, rgba(180,0,0,0.4) 0%, rgba(140,0,0,0.15) 40%, transparent 70%);
+    mix-blend-mode: screen;
+    animation: atmosphere-pulse 6s ease-in-out infinite;
+}
+
+.scene-atmosphere.beast-scene {
+    background: radial-gradient(ellipse at 50% 100%, rgba(180,130,60,0.3) 0%, rgba(150,100,40,0.1) 40%, transparent 70%);
+    mix-blend-mode: screen;
+    animation: atmosphere-pulse 8s ease-in-out infinite;
+}
+
+.scene-atmosphere.ancient-scene {
+    background: radial-gradient(ellipse at 50% 100%, rgba(200,170,80,0.35) 0%, rgba(170,140,60,0.12) 40%, transparent 70%);
+    mix-blend-mode: screen;
+    animation: atmosphere-pulse 7s ease-in-out infinite;
+}
+
+.scene-atmosphere.spirit-scene {
+    background: radial-gradient(ellipse at 50% 100%, rgba(80,60,200,0.3) 0%, rgba(120,80,220,0.12) 40%, transparent 70%);
+    mix-blend-mode: screen;
+    animation: atmosphere-pulse 7s ease-in-out infinite;
+}
+
+.scene-atmosphere.creature-scene {
+    background: radial-gradient(ellipse at 50% 100%, rgba(60,160,60,0.3) 0%, rgba(40,130,40,0.1) 40%, transparent 70%);
+    mix-blend-mode: screen;
+    animation: atmosphere-pulse 8s ease-in-out infinite;
+}
+
+.scene-atmosphere.wizard-scene {
+    background: radial-gradient(ellipse at 50% 100%, rgba(80,50,200,0.35) 0%, rgba(120,60,220,0.12) 40%, transparent 70%);
+    mix-blend-mode: screen;
+    animation: atmosphere-pulse 7s ease-in-out infinite;
+}
+
+.scene-atmosphere.bug-scene {
+    background: radial-gradient(ellipse at 50% 100%, rgba(200,220,50,0.3) 0%, rgba(160,200,30,0.1) 40%, transparent 70%);
+    mix-blend-mode: screen;
+    animation: atmosphere-pulse 8s ease-in-out infinite;
+}
+
+.scene-atmosphere.normal-scene {
+    background: radial-gradient(ellipse at 50% 100%, rgba(160,160,160,0.2) 0%, rgba(130,130,130,0.08) 40%, transparent 70%);
+    mix-blend-mode: screen;
+    animation: atmosphere-pulse 8s ease-in-out infinite;
+}
+
+/* === v18.0: Mood Filter System === */
+.battle-arena.mood-fire   { filter: contrast(1.1) brightness(1.05) saturate(1.2); }
+.battle-arena.mood-ice    { filter: contrast(1.05) brightness(1.1) hue-rotate(-5deg) saturate(1.1); }
+.battle-arena.mood-dark   { filter: contrast(1.15) brightness(0.85) saturate(0.8); }
+.battle-arena.mood-water  { filter: contrast(1.05) brightness(1.05) saturate(1.15); }
+.battle-arena.mood-thunder { filter: contrast(1.1) brightness(0.95) saturate(0.9); }
+.battle-arena.mood-grass  { filter: contrast(1.05) brightness(1.05) saturate(1.15); }
+.battle-arena.mood-dragon { filter: contrast(1.15) brightness(1.0) saturate(1.25); }
+.battle-arena.mood-fairy  { filter: brightness(1.1) saturate(1.3) hue-rotate(5deg); }
+.battle-arena.mood-poison { filter: contrast(1.1) brightness(0.9) saturate(1.1) hue-rotate(5deg); }
+.battle-arena.mood-ghost  { filter: contrast(1.1) brightness(0.9) saturate(0.85); }
+.battle-arena.mood-ancient { filter: sepia(0.15) contrast(1.05) brightness(0.95); }
+.battle-arena.mood-psychic { filter: contrast(1.05) brightness(1.05) saturate(1.2) hue-rotate(3deg); }
+.battle-arena.mood-light  { filter: brightness(1.15) contrast(1.05) saturate(1.1); }
+.battle-arena.mood-demon  { filter: contrast(1.2) brightness(0.85) saturate(1.1); }
+.battle-arena.mood-steel  { filter: contrast(1.1) brightness(1.0) saturate(0.7); }
+.battle-arena.mood-rock   { filter: contrast(1.1) brightness(0.95) saturate(0.85); }
+.battle-arena.mood-fighting { filter: contrast(1.15) brightness(1.0) saturate(1.15); }
+.battle-arena.mood-wind   { filter: contrast(1.05) brightness(1.08) saturate(1.05); }
+.battle-arena.mood-beast  { filter: contrast(1.1) brightness(0.95) saturate(1.0) sepia(0.08); }
+.battle-arena.mood-spirit { filter: contrast(1.1) brightness(0.92) saturate(0.9); }
+.battle-arena.mood-creature { filter: contrast(1.05) brightness(1.0) saturate(1.1); }
+.battle-arena.mood-wizard { filter: contrast(1.1) brightness(0.95) saturate(1.15); }
+.battle-arena.mood-bug    { filter: contrast(1.05) brightness(1.05) saturate(1.1); }
+.battle-arena.mood-normal { filter: none; }
+
+/* === v18.0: Enhanced Sky Gradients (Rich 10+ stop overrides) === */
+
+.scene-sky.fire-scene {
+    background:
+        radial-gradient(ellipse at 45% 85%, rgba(255,120,0,0.4) 0%, transparent 45%),
+        radial-gradient(ellipse at 70% 30%, rgba(180,50,0,0.15) 0%, transparent 40%),
+        linear-gradient(180deg,
+            #0a0200 0%, #1a0500 10%, #3a0e00 20%,
+            #5a1800 35%, #8b2500 50%, #b33000 65%,
+            #cc4400 75%, #8b2500 85%, #4a1200 95%, #1a0500 100%);
+}
+
+.scene-sky.water-scene {
+    background:
+        radial-gradient(ellipse at 50% 90%, rgba(30,120,255,0.25) 0%, transparent 50%),
+        radial-gradient(ellipse at 30% 20%, rgba(0,50,120,0.15) 0%, transparent 40%),
+        linear-gradient(180deg,
+            #010a1a 0%, #021030 8%, #041a4a 18%,
+            #062560 30%, #0a3580 42%, #104590 55%,
+            #1855a0 65%, #1050a0 75%, #082a60 88%, #031540 100%);
+}
+
+.scene-sky.ice-scene {
+    background:
+        radial-gradient(ellipse at 50% 10%, rgba(180,220,255,0.2) 0%, transparent 45%),
+        radial-gradient(ellipse at 60% 80%, rgba(100,160,220,0.15) 0%, transparent 40%),
+        linear-gradient(180deg,
+            #0a1525 0%, #122540 10%, #1a3560 20%,
+            #224570 32%, #2a5580 45%, #3268a0 55%,
+            #3a78b8 65%, #3268a0 78%, #1a3a68 90%, #0c1e3a 100%);
+}
+
+.scene-sky.thunder-scene {
+    background:
+        radial-gradient(ellipse at 40% 15%, rgba(255,255,180,0.08) 0%, transparent 35%),
+        radial-gradient(ellipse at 65% 50%, rgba(80,60,120,0.15) 0%, transparent 40%),
+        linear-gradient(180deg,
+            #050510 0%, #0a0a1e 8%, #121230 18%,
+            #1a1840 30%, #252250 42%, #302a60 55%,
+            #2a2555 65%, #201e45 75%, #151330 88%, #080814 100%);
+}
+
+.scene-sky.grass-scene {
+    background:
+        radial-gradient(ellipse at 50% 20%, rgba(100,150,80,0.1) 0%, transparent 45%),
+        radial-gradient(ellipse at 40% 85%, rgba(30,80,20,0.2) 0%, transparent 40%),
+        linear-gradient(180deg,
+            #0a1510 0%, #122518 10%, #1a3520 20%,
+            #1e4028 32%, #254a30 45%, #2d5838 55%,
+            #306040 65%, #285535 78%, #183822 90%, #0c1e12 100%);
+}
+
+.scene-sky.dark-scene {
+    background:
+        radial-gradient(ellipse at 50% 30%, rgba(40,20,60,0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 30% 80%, rgba(20,0,40,0.2) 0%, transparent 40%),
+        linear-gradient(180deg,
+            #020005 0%, #050010 8%, #0a0018 18%,
+            #0e0020 30%, #120028 42%, #150030 55%,
+            #120028 65%, #0e001e 75%, #080012 88%, #030008 100%);
+}
+
+.scene-sky.ghost-scene {
+    background:
+        radial-gradient(ellipse at 55% 25%, rgba(80,50,120,0.12) 0%, transparent 40%),
+        radial-gradient(ellipse at 40% 85%, rgba(50,30,100,0.2) 0%, transparent 45%),
+        linear-gradient(180deg,
+            #050312 0%, #0a0820 10%, #120e30 20%,
+            #1a1440 32%, #221a50 45%, #2a2060 55%,
+            #252058 65%, #1e1848 78%, #120e30 90%, #080618 100%);
+}
+
+.scene-sky.dragon-scene {
+    background:
+        radial-gradient(ellipse at 55% 80%, rgba(150,80,200,0.2) 0%, transparent 45%),
+        radial-gradient(ellipse at 35% 25%, rgba(200,150,50,0.1) 0%, transparent 40%),
+        linear-gradient(180deg,
+            #0a0515 0%, #150a28 10%, #201040 20%,
+            #2a1555 32%, #351a6a 45%, #3d2078 55%,
+            #351a6a 65%, #2a1555 78%, #180c35 90%, #0a0515 100%);
+}
+
+.scene-sky.fairy-scene {
+    background:
+        radial-gradient(ellipse at 50% 20%, rgba(255,150,220,0.15) 0%, transparent 45%),
+        radial-gradient(ellipse at 60% 80%, rgba(200,100,255,0.12) 0%, transparent 40%),
+        linear-gradient(180deg,
+            #120520 0%, #1e0a30 10%, #2a1045 20%,
+            #351558 32%, #401a6a 45%, #4a2078 55%,
+            #451e72 65%, #381860 78%, #250e42 90%, #140822 100%);
+}
+
+.scene-sky.poison-scene {
+    background:
+        radial-gradient(ellipse at 45% 80%, rgba(100,180,30,0.15) 0%, transparent 40%),
+        radial-gradient(ellipse at 60% 20%, rgba(120,40,160,0.12) 0%, transparent 40%),
+        linear-gradient(180deg,
+            #050a05 0%, #0a120a 10%, #101a10 20%,
+            #152515 32%, #1a2e1a 45%, #203820 55%,
+            #253025 65%, #1a2818 78%, #101a0e 90%, #050a05 100%);
+}
+
+.scene-sky.rock-scene {
+    background:
+        radial-gradient(ellipse at 50% 85%, rgba(140,100,60,0.2) 0%, transparent 45%),
+        radial-gradient(ellipse at 40% 30%, rgba(100,70,40,0.1) 0%, transparent 40%),
+        linear-gradient(180deg,
+            #0e0a08 0%, #1a1410 10%, #281e18 20%,
+            #362820 32%, #443228 45%, #503c30 55%,
+            #483628 65%, #382a20 78%, #221a14 90%, #120e0a 100%);
+}
+
+.scene-sky.psychic-scene {
+    background:
+        radial-gradient(ellipse at 50% 30%, rgba(240,100,200,0.12) 0%, transparent 45%),
+        radial-gradient(ellipse at 55% 80%, rgba(160,60,220,0.15) 0%, transparent 40%),
+        linear-gradient(180deg,
+            #0e0518 0%, #1a0a2a 10%, #281040 20%,
+            #351555 32%, #421a6a 45%, #4e2078 55%,
+            #451c70 65%, #381660 78%, #240e42 90%, #120620 100%);
+}
+
+.scene-sky.steel-scene {
+    background:
+        radial-gradient(ellipse at 50% 40%, rgba(180,190,210,0.1) 0%, transparent 45%),
+        radial-gradient(ellipse at 45% 85%, rgba(120,130,150,0.12) 0%, transparent 40%),
+        linear-gradient(180deg,
+            #0a0c10 0%, #141820 10%, #1e2430 20%,
+            #283040 32%, #323c50 45%, #3c4860 55%,
+            #364258 65%, #2c3648 78%, #1e2432 90%, #0e1018 100%);
+}
+
+.scene-sky.fighting-scene {
+    background:
+        radial-gradient(ellipse at 50% 85%, rgba(200,40,20,0.2) 0%, transparent 45%),
+        radial-gradient(ellipse at 40% 20%, rgba(150,30,10,0.1) 0%, transparent 40%),
+        linear-gradient(180deg,
+            #0a0205 0%, #1a0508 10%, #2a0a10 20%,
+            #3a1018 32%, #4a1520 45%, #581a28 55%,
+            #4e1822 65%, #3e1018 78%, #280a10 90%, #140508 100%);
+}
+
+.scene-sky.wind-scene {
+    background:
+        radial-gradient(ellipse at 50% 15%, rgba(120,200,230,0.12) 0%, transparent 45%),
+        radial-gradient(ellipse at 60% 70%, rgba(80,160,200,0.1) 0%, transparent 40%),
+        linear-gradient(180deg,
+            #081520 0%, #0c2030 10%, #122a42 20%,
+            #183555 32%, #1e4068 45%, #254a78 55%,
+            #224570 65%, #1a3860 78%, #102845 90%, #081520 100%);
+}
+
+.scene-sky.light-scene {
+    background:
+        radial-gradient(ellipse at 50% 10%, rgba(255,220,120,0.35) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 60%, rgba(255,200,80,0.1) 0%, transparent 45%),
+        linear-gradient(180deg,
+            #1a1508 0%, #2a2510 10%, #3a3518 20%,
+            #4a4520 32%, #5a5528 45%, #6a6530 55%,
+            #5e5a2a 65%, #4a4522 78%, #322e18 90%, #1a1508 100%);
+}
+
+.scene-sky.demon-scene {
+    background:
+        radial-gradient(ellipse at 50% 85%, rgba(180,0,0,0.25) 0%, transparent 45%),
+        radial-gradient(ellipse at 60% 25%, rgba(100,0,0,0.1) 0%, transparent 40%),
+        linear-gradient(180deg,
+            #0a0000 0%, #180000 8%, #280000 18%,
+            #380500 30%, #480a00 42%, #581000 55%,
+            #4a0a00 65%, #380500 75%, #220200 88%, #0e0000 100%);
+}
+
+.scene-sky.beast-scene {
+    background:
+        radial-gradient(ellipse at 45% 80%, rgba(160,120,50,0.18) 0%, transparent 45%),
+        radial-gradient(ellipse at 55% 25%, rgba(100,70,30,0.1) 0%, transparent 40%),
+        linear-gradient(180deg,
+            #0e0a05 0%, #1a1408 10%, #281e10 20%,
+            #362818 32%, #443020 45%, #503828 55%,
+            #483222 65%, #382818 78%, #241a10 90%, #120e08 100%);
+}
+
+.scene-sky.ancient-scene {
+    background:
+        radial-gradient(ellipse at 50% 80%, rgba(200,170,80,0.2) 0%, transparent 45%),
+        radial-gradient(ellipse at 40% 20%, rgba(150,120,50,0.1) 0%, transparent 40%),
+        linear-gradient(180deg,
+            #0e0a05 0%, #1c1508 10%, #2a2010 20%,
+            #382a18 32%, #463420 45%, #543e28 55%,
+            #4c3822 65%, #3c2c18 78%, #281e10 90%, #140e08 100%);
+}
+
+.scene-sky.spirit-scene {
+    background:
+        radial-gradient(ellipse at 50% 30%, rgba(80,60,180,0.12) 0%, transparent 45%),
+        radial-gradient(ellipse at 55% 80%, rgba(100,80,200,0.15) 0%, transparent 40%),
+        linear-gradient(180deg,
+            #060418 0%, #0c0a28 10%, #14103a 20%,
+            #1c184e 32%, #241e60 45%, #2c2470 55%,
+            #262068 65%, #1e1855 78%, #120e3a 90%, #080620 100%);
+}
+
+.scene-sky.creature-scene {
+    background:
+        radial-gradient(ellipse at 45% 85%, rgba(60,140,50,0.18) 0%, transparent 45%),
+        radial-gradient(ellipse at 60% 25%, rgba(40,100,30,0.1) 0%, transparent 40%),
+        linear-gradient(180deg,
+            #080e08 0%, #0e180e 10%, #142214 20%,
+            #1a2c1a 32%, #203620 45%, #264026 55%,
+            #223822 65%, #1a2e1a 78%, #102010 90%, #080e08 100%);
+}
+
+.scene-sky.wizard-scene {
+    background:
+        radial-gradient(ellipse at 50% 25%, rgba(100,60,200,0.12) 0%, transparent 45%),
+        radial-gradient(ellipse at 45% 80%, rgba(80,40,180,0.15) 0%, transparent 40%),
+        linear-gradient(180deg,
+            #080418 0%, #100a2a 10%, #181040 20%,
+            #201855 32%, #281e6a 45%, #302478 55%,
+            #2a2070 65%, #221a5c 78%, #161040 90%, #0a0620 100%);
+}
+
+.scene-sky.bug-scene {
+    background:
+        radial-gradient(ellipse at 50% 80%, rgba(180,200,40,0.15) 0%, transparent 45%),
+        radial-gradient(ellipse at 55% 20%, rgba(100,120,20,0.1) 0%, transparent 40%),
+        linear-gradient(180deg,
+            #0a0e05 0%, #121a08 10%, #1a2410 20%,
+            #222e18 32%, #2a3820 45%, #324228 55%,
+            #2e3c22 65%, #243218 78%, #182210 90%, #0c1208 100%);
+}
+
+.scene-sky.normal-scene {
+    background:
+        radial-gradient(ellipse at 50% 40%, rgba(140,140,160,0.08) 0%, transparent 45%),
+        radial-gradient(ellipse at 45% 80%, rgba(100,100,120,0.1) 0%, transparent 40%),
+        linear-gradient(180deg,
+            #0a0a0e 0%, #141418 10%, #1e1e24 20%,
+            #282830 32%, #32323c 45%, #3c3c48 55%,
+            #363640 65%, #2c2c35 78%, #1e1e25 90%, #101014 100%);
+}
+
+/* === v18.0: Star / Moon / Aurora System === */
+
+/* --- Dark/Ghost: Large moon + starfield --- */
+.scene-stars.dark-scene::before,
+.scene-stars.ghost-scene::before {
+    content: '';
+    position: absolute;
+    top: 8%;
+    right: 18%;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #e8e0d0, #c0b8a8 60%, transparent 70%);
+    box-shadow: 0 0 20px rgba(200,190,170,0.4), 0 0 50px rgba(200,190,170,0.15);
+}
+.scene-stars.dark-scene::after,
+.scene-stars.ghost-scene::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: transparent;
+    box-shadow:
+        20px 15px 1px 0 rgba(255,255,255,0.6),
+        55px 40px 1px 0 rgba(255,255,255,0.4),
+        90px 20px 1px 0 rgba(255,255,255,0.5),
+        130px 50px 1px 0 rgba(255,255,255,0.35),
+        170px 10px 1px 0 rgba(255,255,255,0.55),
+        200px 45px 1px 0 rgba(255,255,255,0.4),
+        240px 25px 1px 0 rgba(255,255,255,0.5),
+        280px 55px 1px 0 rgba(255,255,255,0.35),
+        30px 60px 1px 0 rgba(255,255,255,0.3),
+        75px 70px 1px 0 rgba(255,255,255,0.45),
+        120px 12px 1px 0 rgba(255,255,255,0.5),
+        160px 65px 1px 0 rgba(255,255,255,0.3),
+        210px 8px 1px 0 rgba(255,255,255,0.55),
+        250px 48px 1px 0 rgba(255,255,255,0.4),
+        45px 30px 1px 0 rgba(255,255,255,0.5),
+        105px 58px 1px 0 rgba(255,255,255,0.35),
+        145px 35px 1px 0 rgba(255,255,255,0.45),
+        185px 22px 1px 0 rgba(255,255,255,0.5),
+        225px 62px 1px 0 rgba(255,255,255,0.3),
+        265px 15px 1px 0 rgba(255,255,255,0.55),
+        10px 45px 1px 0 rgba(255,255,255,0.4),
+        60px 8px 1px 0 rgba(255,255,255,0.5),
+        100px 42px 1px 0 rgba(255,255,255,0.35),
+        150px 5px 1px 0 rgba(255,255,255,0.55),
+        195px 55px 1px 0 rgba(255,255,255,0.4);
+}
+
+/* --- Ice: Aurora band --- */
+@keyframes aurora-shift {
+    0%   { background-position: 0% 50%; opacity: 0.4; }
+    50%  { background-position: 100% 50%; opacity: 0.6; }
+    100% { background-position: 0% 50%; opacity: 0.4; }
+}
+.scene-stars.ice-scene::before {
+    content: '';
+    position: absolute;
+    top: 5%;
+    left: 0;
+    right: 0;
+    height: 30%;
+    background: linear-gradient(90deg,
+        transparent,
+        rgba(50,200,180,0.15),
+        rgba(80,220,160,0.2),
+        rgba(100,180,220,0.18),
+        rgba(60,200,200,0.15),
+        transparent
+    );
+    background-size: 200% 100%;
+    filter: blur(12px);
+    animation: aurora-shift 12s ease-in-out infinite;
+}
+
+/* --- Grass/Beast: Small moon + few stars --- */
+.scene-stars.grass-scene::before,
+.scene-stars.beast-scene::before {
+    content: '';
+    position: absolute;
+    top: 10%;
+    right: 15%;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 40% 40%, #e0d8c8, #b0a890 70%, transparent 80%);
+    box-shadow: 0 0 12px rgba(200,190,160,0.25);
+}
+.scene-stars.grass-scene::after,
+.scene-stars.beast-scene::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: transparent;
+    box-shadow:
+        40px 18px 1px 0 rgba(255,255,255,0.4),
+        110px 30px 1px 0 rgba(255,255,255,0.35),
+        180px 12px 1px 0 rgba(255,255,255,0.45),
+        250px 42px 1px 0 rgba(255,255,255,0.3),
+        70px 55px 1px 0 rgba(255,255,255,0.35),
+        140px 8px 1px 0 rgba(255,255,255,0.4),
+        220px 50px 1px 0 rgba(255,255,255,0.3),
+        30px 40px 1px 0 rgba(255,255,255,0.35);
+}
+
+/* --- Fire/Dragon/Demon: Heat glow (no stars) --- */
+.scene-stars.fire-scene::before,
+.scene-stars.dragon-scene::before,
+.scene-stars.demon-scene::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 40%;
+    background: linear-gradient(0deg, rgba(255,80,0,0.08) 0%, transparent 100%);
+}
+
+/* --- Light: Sun rays --- */
+.scene-stars.light-scene::before {
+    content: '';
+    position: absolute;
+    top: -10%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120%;
+    height: 60%;
+    background: radial-gradient(ellipse at 50% 0%, rgba(255,220,100,0.2) 0%, rgba(255,200,60,0.08) 40%, transparent 70%);
+}
+
+/* --- Normal/Wizard/Spirit: Standard starfield --- */
+.scene-stars.normal-scene::after,
+.scene-stars.wizard-scene::after,
+.scene-stars.spirit-scene::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: transparent;
+    box-shadow:
+        25px 12px 1px 0 rgba(255,255,255,0.45),
+        60px 35px 1px 0 rgba(255,255,255,0.35),
+        95px 18px 1px 0 rgba(255,255,255,0.5),
+        135px 48px 1px 0 rgba(255,255,255,0.3),
+        170px 8px 1px 0 rgba(255,255,255,0.45),
+        205px 42px 1px 0 rgba(255,255,255,0.4),
+        245px 20px 1px 0 rgba(255,255,255,0.5),
+        280px 52px 1px 0 rgba(255,255,255,0.35),
+        35px 55px 1px 0 rgba(255,255,255,0.3),
+        80px 5px 1px 0 rgba(255,255,255,0.5),
+        115px 60px 1px 0 rgba(255,255,255,0.35),
+        155px 28px 1px 0 rgba(255,255,255,0.45),
+        190px 58px 1px 0 rgba(255,255,255,0.3),
+        230px 10px 1px 0 rgba(255,255,255,0.55),
+        270px 38px 1px 0 rgba(255,255,255,0.4),
+        15px 28px 1px 0 rgba(255,255,255,0.45),
+        50px 50px 1px 0 rgba(255,255,255,0.35),
+        105px 38px 1px 0 rgba(255,255,255,0.4),
+        145px 10px 1px 0 rgba(255,255,255,0.5),
+        180px 55px 1px 0 rgba(255,255,255,0.3);
+}
+
+/* --- Fairy: Pink/purple starfield --- */
+.scene-stars.fairy-scene::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: transparent;
+    box-shadow:
+        20px 15px 1px 0 rgba(255,180,240,0.5),
+        55px 38px 1px 0 rgba(220,150,255,0.4),
+        90px 10px 1px 0 rgba(255,160,220,0.55),
+        130px 50px 1px 0 rgba(200,130,255,0.35),
+        170px 22px 1px 0 rgba(255,170,230,0.5),
+        205px 45px 1px 0 rgba(230,140,255,0.4),
+        245px 18px 1px 0 rgba(255,150,210,0.55),
+        280px 55px 1px 0 rgba(210,120,255,0.35),
+        35px 60px 1px 0 rgba(255,180,240,0.3),
+        75px 5px 1px 0 rgba(220,150,255,0.5),
+        115px 42px 1px 0 rgba(255,160,220,0.35),
+        155px 30px 1px 0 rgba(200,130,255,0.45),
+        195px 58px 1px 0 rgba(255,170,230,0.3),
+        235px 8px 1px 0 rgba(230,140,255,0.55),
+        270px 48px 1px 0 rgba(255,150,210,0.4),
+        45px 28px 1px 0 rgba(255,180,240,0.45),
+        100px 52px 1px 0 rgba(220,150,255,0.35),
+        140px 15px 1px 0 rgba(255,160,220,0.5),
+        185px 35px 1px 0 rgba(200,130,255,0.4),
+        220px 62px 1px 0 rgba(255,170,230,0.3);
+}
+
+/* === v18.0: Parallax Drift Animations === */
+@keyframes parallax-far {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(-3%); }
+}
+@keyframes parallax-mid {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(-5%); }
+}
+
+.scene-far-detail { animation: parallax-far 60s linear infinite; }
+.scene-mid-detail { animation: parallax-mid 40s linear infinite; }
+
+/* === v18.0: Silhouette Drop-Shadow Glow === */
+
+/* -- Far layer silhouette glow -- */
+.scene-far.fire-scene::before     { filter: drop-shadow(0 -5px 15px rgba(255,80,0,0.35)); }
+.scene-far.water-scene::before    { filter: drop-shadow(0 -5px 15px rgba(50,120,255,0.3)); }
+.scene-far.ice-scene::before      { filter: drop-shadow(0 -5px 15px rgba(100,200,255,0.3)); }
+.scene-far.thunder-scene::before  { filter: drop-shadow(0 -5px 15px rgba(200,200,100,0.3)); }
+.scene-far.grass-scene::before    { filter: drop-shadow(0 -5px 15px rgba(50,150,40,0.3)); }
+.scene-far.dark-scene::before     { filter: drop-shadow(0 -5px 15px rgba(80,40,150,0.3)); }
+.scene-far.ghost-scene::before    { filter: drop-shadow(0 -5px 15px rgba(100,60,180,0.3)); }
+.scene-far.dragon-scene::before   { filter: drop-shadow(0 -5px 15px rgba(150,80,220,0.3)); }
+.scene-far.fairy-scene::before    { filter: drop-shadow(0 -5px 15px rgba(220,100,200,0.3)); }
+.scene-far.poison-scene::before   { filter: drop-shadow(0 -5px 15px rgba(120,180,50,0.3)); }
+.scene-far.rock-scene::before     { filter: drop-shadow(0 -5px 15px rgba(140,100,60,0.3)); }
+.scene-far.psychic-scene::before  { filter: drop-shadow(0 -5px 15px rgba(220,80,200,0.3)); }
+.scene-far.steel-scene::before    { filter: drop-shadow(0 -5px 15px rgba(160,170,190,0.3)); }
+.scene-far.fighting-scene::before { filter: drop-shadow(0 -5px 15px rgba(200,40,30,0.3)); }
+.scene-far.wind-scene::before     { filter: drop-shadow(0 -5px 15px rgba(80,200,230,0.3)); }
+.scene-far.light-scene::before    { filter: drop-shadow(0 -5px 15px rgba(255,210,80,0.35)); }
+.scene-far.demon-scene::before    { filter: drop-shadow(0 -5px 15px rgba(180,0,0,0.35)); }
+.scene-far.beast-scene::before    { filter: drop-shadow(0 -5px 15px rgba(160,120,50,0.3)); }
+.scene-far.ancient-scene::before  { filter: drop-shadow(0 -5px 15px rgba(180,150,60,0.3)); }
+.scene-far.spirit-scene::before   { filter: drop-shadow(0 -5px 15px rgba(80,60,200,0.3)); }
+.scene-far.creature-scene::before { filter: drop-shadow(0 -5px 15px rgba(60,140,50,0.3)); }
+.scene-far.wizard-scene::before   { filter: drop-shadow(0 -5px 15px rgba(100,60,200,0.3)); }
+.scene-far.bug-scene::before      { filter: drop-shadow(0 -5px 15px rgba(180,200,40,0.3)); }
+.scene-far.normal-scene::before   { filter: drop-shadow(0 -5px 15px rgba(120,120,140,0.25)); }
+
+/* -- Mid layer silhouette glow -- */
+.scene-mid.fire-scene::before     { filter: drop-shadow(0 -3px 10px rgba(255,80,0,0.25)); }
+.scene-mid.water-scene::before    { filter: drop-shadow(0 -3px 10px rgba(50,120,255,0.2)); }
+.scene-mid.ice-scene::before      { filter: drop-shadow(0 -3px 10px rgba(100,200,255,0.2)); }
+.scene-mid.thunder-scene::before  { filter: drop-shadow(0 -3px 10px rgba(200,200,100,0.2)); }
+.scene-mid.grass-scene::before    { filter: drop-shadow(0 -3px 10px rgba(50,150,40,0.2)); }
+.scene-mid.dark-scene::before     { filter: drop-shadow(0 -3px 10px rgba(80,40,150,0.2)); }
+.scene-mid.ghost-scene::before    { filter: drop-shadow(0 -3px 10px rgba(100,60,180,0.2)); }
+.scene-mid.dragon-scene::before   { filter: drop-shadow(0 -3px 10px rgba(150,80,220,0.2)); }
+.scene-mid.fairy-scene::before    { filter: drop-shadow(0 -3px 10px rgba(220,100,200,0.2)); }
+.scene-mid.poison-scene::before   { filter: drop-shadow(0 -3px 10px rgba(120,180,50,0.2)); }
+.scene-mid.rock-scene::before     { filter: drop-shadow(0 -3px 10px rgba(140,100,60,0.2)); }
+.scene-mid.psychic-scene::before  { filter: drop-shadow(0 -3px 10px rgba(220,80,200,0.2)); }
+.scene-mid.steel-scene::before    { filter: drop-shadow(0 -3px 10px rgba(160,170,190,0.2)); }
+.scene-mid.fighting-scene::before { filter: drop-shadow(0 -3px 10px rgba(200,40,30,0.2)); }
+.scene-mid.wind-scene::before     { filter: drop-shadow(0 -3px 10px rgba(80,200,230,0.2)); }
+.scene-mid.light-scene::before    { filter: drop-shadow(0 -3px 10px rgba(255,210,80,0.25)); }
+.scene-mid.demon-scene::before    { filter: drop-shadow(0 -3px 10px rgba(180,0,0,0.25)); }
+.scene-mid.beast-scene::before    { filter: drop-shadow(0 -3px 10px rgba(160,120,50,0.2)); }
+.scene-mid.ancient-scene::before  { filter: drop-shadow(0 -3px 10px rgba(180,150,60,0.2)); }
+.scene-mid.spirit-scene::before   { filter: drop-shadow(0 -3px 10px rgba(80,60,200,0.2)); }
+.scene-mid.creature-scene::before { filter: drop-shadow(0 -3px 10px rgba(60,140,50,0.2)); }
+.scene-mid.wizard-scene::before   { filter: drop-shadow(0 -3px 10px rgba(100,60,200,0.2)); }
+.scene-mid.bug-scene::before      { filter: drop-shadow(0 -3px 10px rgba(180,200,40,0.2)); }
+.scene-mid.normal-scene::before   { filter: drop-shadow(0 -3px 10px rgba(120,120,140,0.15)); }
+
+/* === v18.0: prefers-reduced-motion === */
+@media (prefers-reduced-motion: reduce) {
+    .scene-element,
+    .scene-far-detail,
+    .scene-mid-detail,
+    .scene-atmosphere,
+    .scene-stars {
+        animation: none !important;
+    }
+}
+
+/* === v18.0: Low-Performance Degradation === */
+.low-perf .scene-far-detail,
+.low-perf .scene-mid-detail {
+    animation: none !important;
+}
+.low-perf .scene-atmosphere {
+    mix-blend-mode: normal !important;
+}
+.low-perf .scene-element:nth-child(n+5) {
+    display: none;
+}
+
+/* === v18.0: Iris Wipe Transition === */
+@property --iris-radius {
+    syntax: '<percentage>';
+    inherits: true;
+    initial-value: 105%;
+}
+.battle-iris-enter {
+    mask-image: radial-gradient(circle, black calc(var(--iris-radius) - 5%), transparent calc(var(--iris-radius) + 5%));
+    -webkit-mask-image: radial-gradient(circle, black calc(var(--iris-radius) - 5%), transparent calc(var(--iris-radius) + 5%));
+    animation: iris-open 0.6s ease-out forwards;
+}
+@keyframes iris-open {
+    from { --iris-radius: -5%; }
+    to { --iris-radius: 105%; }
+}
+.battle-iris-exit {
+    mask-image: radial-gradient(circle, black calc(var(--iris-radius) - 5%), transparent calc(var(--iris-radius) + 5%));
+    -webkit-mask-image: radial-gradient(circle, black calc(var(--iris-radius) - 5%), transparent calc(var(--iris-radius) + 5%));
+    animation: iris-close 0.5s ease-in forwards;
+}
+@keyframes iris-close {
+    from { --iris-radius: 105%; }
+    to { --iris-radius: -5%; }
+}
+
+/* === v18.0: Floating Damage Numbers === */
+.damage-number {
+    position: absolute;
+    font-weight: bold;
+    font-size: 20px;
+    color: #ffffff;
+    text-shadow: 2px 2px 0 #000, -1px -1px 0 #000;
+    animation: dmg-float 1.2s ease-out forwards;
+    pointer-events: none;
+    z-index: 20;
+}
+.damage-critical {
+    color: #ff4444;
+    font-size: 28px;
+    animation: dmg-critical 1.5s ease-out forwards;
+}
+.damage-heal {
+    color: #44ff44;
+    font-size: 18px;
+    animation: dmg-heal 1.5s ease-out forwards;
+}
+@keyframes dmg-float {
+    0%   { transform: translateY(0) scale(0.5); opacity: 1; }
+    20%  { transform: translateY(-20px) scale(1.2); opacity: 1; }
+    40%  { transform: translateY(-40px) scale(1); opacity: 1; }
+    100% { transform: translateY(-80px) scale(1); opacity: 0; }
+}
+@keyframes dmg-critical {
+    0%   { transform: translateY(0) scale(0.3); opacity: 1; }
+    15%  { transform: translateY(-30px) scale(1.5); opacity: 1; }
+    30%  { transform: translateY(-50px) scale(1.1); opacity: 1; }
+    100% { transform: translateY(-100px) scale(1); opacity: 0; }
+}
+@keyframes dmg-heal {
+    0%   { transform: translateY(0); opacity: 0.5; }
+    50%  { transform: translateY(-40px); opacity: 1; }
+    100% { transform: translateY(-70px); opacity: 0; }
+}
+
+/* === v18.0: Boss Entrance Effects === */
+.boss-entrance-flash {
+    animation: boss-flash 0.5s ease-out;
+}
+@keyframes boss-flash {
+    0% { filter: brightness(1); }
+    20% { filter: brightness(3); }
+    40% { filter: brightness(1.5); }
+    100% { filter: brightness(1); }
+}
+.boss-entrance-shake {
+    animation: boss-shake 0.5s ease-out;
+}
+@keyframes boss-shake {
+    0%, 100% { transform: translateY(0); }
+    10% { transform: translateY(-3px); }
+    20% { transform: translateY(3px); }
+    30% { transform: translateY(-2px); }
+    40% { transform: translateY(2px); }
+    50% { transform: translateY(-1px); }
+}

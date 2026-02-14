@@ -331,12 +331,12 @@ BattleMode.renderComboBreak = function(oldCombo) {
 
     document.body.appendChild(overlay);
 
-    // Auto-remove after 0.8 seconds
+    // Auto-remove after 0.6 seconds
     setTimeout(function() {
         if (overlay.parentNode) {
             overlay.parentNode.removeChild(overlay);
         }
-    }, 800);
+    }, 600);
 };
 
 // ===== 8. checkComboAchievements(combo, stage) =====

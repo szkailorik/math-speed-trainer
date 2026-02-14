@@ -2859,7 +2859,7 @@ body.keyboard-active #battle-page .battle-answer-area {
     font-weight: 800;
     color: #FFD93D;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5), 0 0 10px rgba(255, 217, 61, 0.5);
-    animation: damage-pop 0.8s ease forwards;
+    animation: damage-pop 0.6s ease forwards;
     white-space: nowrap;
 }
 
@@ -2879,7 +2879,7 @@ body.keyboard-active #battle-page .battle-answer-area {
     padding: 5px 12px;
     border-radius: 12px;
     white-space: nowrap;
-    animation: quip-pop 1s ease forwards;
+    animation: quip-pop 0.7s ease forwards;
     top: -40px;
 }
 
@@ -2905,7 +2905,7 @@ body.keyboard-active #battle-page .battle-answer-area {
 .weapon {
     position: absolute;
     font-size: 2.5rem;
-    animation: weapon-fly 0.4s ease-out forwards;
+    animation: weapon-fly 0.3s ease-out forwards;
     filter: drop-shadow(0 0 10px rgba(255, 200, 0, 0.8));
 }
 
@@ -3326,13 +3326,13 @@ body.keyboard-active #battle-page .battle-answer-area {
     font-weight: 800;
     color: #FFD93D;
     text-shadow: 0 0 20px rgba(255, 217, 61, 0.5);
-    animation: stage-text-pop 0.5s ease;
+    animation: stage-text-pop 0.4s ease;
 }
 
 .stage-transition-monster {
     font-size: 4rem;
     margin-top: 20px;
-    animation: stage-monster-appear 0.6s ease;
+    animation: stage-monster-appear 0.5s ease;
 }
 
 .stage-transition-name {
@@ -4634,7 +4634,7 @@ body.keyboard-active #battle-page .battle-answer-area {
 }
 
 .hero-attack {
-    animation: hero-attack 0.5s ease;
+    animation: hero-attack 0.35s ease;
 }
 
 @keyframes hero-attack {
@@ -4644,7 +4644,7 @@ body.keyboard-active #battle-page .battle-answer-area {
 }
 
 .hero-cast_spell {
-    animation: hero-cast 0.3s ease;
+    animation: hero-cast 0.2s ease;
 }
 
 @keyframes hero-cast {
@@ -4654,7 +4654,7 @@ body.keyboard-active #battle-page .battle-answer-area {
 }
 
 .hero-hit {
-    animation: hero-hit 0.4s ease;
+    animation: hero-hit 0.3s ease;
 }
 
 @keyframes hero-hit {
@@ -4707,7 +4707,7 @@ body.keyboard-active #battle-page .battle-answer-area {
 }
 
 .enemy-hit {
-    animation: enemy-hit-arena 0.3s ease !important;
+    animation: enemy-hit-arena 0.25s ease !important;
 }
 
 @keyframes enemy-hit-arena {
@@ -4717,7 +4717,7 @@ body.keyboard-active #battle-page .battle-answer-area {
 }
 
 .enemy-attack {
-    animation: enemy-attack-arena 0.5s ease !important;
+    animation: enemy-attack-arena 0.35s ease !important;
 }
 
 @keyframes enemy-attack-arena {
@@ -4727,7 +4727,7 @@ body.keyboard-active #battle-page .battle-answer-area {
 }
 
 .enemy-threaten {
-    animation: enemy-threaten-arena 0.8s ease !important;
+    animation: enemy-threaten-arena 0.6s ease !important;
 }
 
 @keyframes enemy-threaten-arena {
@@ -4760,7 +4760,7 @@ body.keyboard-active #battle-page .battle-answer-area {
 }
 
 .enemy-death {
-    animation: enemy-death-arena 1s ease forwards !important;
+    animation: enemy-death-arena 0.7s ease forwards !important;
 }
 
 @keyframes enemy-death-arena {
@@ -4770,7 +4770,7 @@ body.keyboard-active #battle-page .battle-answer-area {
 }
 
 .enemy-dodge {
-    animation: enemy-dodge 0.4s ease !important;
+    animation: enemy-dodge 0.3s ease !important;
 }
 
 @keyframes enemy-dodge {
@@ -4800,7 +4800,7 @@ body.keyboard-active #battle-page .battle-answer-area {
 
 /* v16.2: Enemy charge animation */
 .enemy-charge {
-    animation: enemy-charge 0.5s ease-out !important;
+    animation: enemy-charge 0.35s ease-out !important;
 }
 
 @keyframes enemy-charge {
@@ -4925,7 +4925,7 @@ body.keyboard-active #battle-page .battle-answer-area {
 }
 
 .hero-projectile.fly {
-    animation: projectile-fly-right 0.5s ease-out forwards;
+    animation: projectile-fly-right 0.35s ease-out forwards;
 }
 
 @keyframes projectile-fly-right {
@@ -4941,7 +4941,7 @@ body.keyboard-active #battle-page .battle-answer-area {
 }
 
 .enemy-projectile.fly {
-    animation: projectile-fly-left 0.5s ease-out forwards;
+    animation: projectile-fly-left 0.35s ease-out forwards;
 }
 
 @keyframes projectile-fly-left {
@@ -6661,7 +6661,7 @@ body.keyboard-active #battle-page .battle-answer-area {
     position: absolute;
     inset: 0;
     background: rgba(255,0,0,0.15);
-    animation: combo-break-flash 0.8s ease-out forwards;
+    animation: combo-break-flash 0.6s ease-out forwards;
 }
 @keyframes combo-break-flash {
     0% { opacity: 1; }

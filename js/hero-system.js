@@ -232,23 +232,23 @@ BattleMode.attackNormal = function(targetEl, cb) {
     self.setHeroState('cast_spell');
 
     setTimeout(function() {
-        // Weapon flies to enemy (0.3s)
+        // Weapon flies to enemy (0.2s)
         var weapon = self.getRandomWeapon();
         self.fireWeaponHorizontal(weapon);
 
         setTimeout(function() {
-            // Hit + damage number (0.2s)
+            // Hit + damage number (0.1s)
             if (targetEl) {
                 targetEl.classList.add('enemy-hit-flash');
                 setTimeout(function() {
                     targetEl.classList.remove('enemy-hit-flash');
-                }, 200);
+                }, 100);
             }
 
             self.setHeroState('idle');
             if (cb) cb();
-        }, 300);
-    }, 150);
+        }, 200);
+    }, 100);
 };
 
 // --- 5b. attackDouble: Combo 3-4, two rapid strikes ---
@@ -261,11 +261,11 @@ BattleMode.attackDouble = function(targetEl, cb) {
 
     playSound('attackDouble');
 
-    // Hero dash right (0.15s)
+    // Hero dash right (0.1s)
     heroEmoji.classList.add('hero-dash-right');
 
     setTimeout(function() {
-        // Weapon1 flies (0.2s)
+        // Weapon1 flies (0.15s)
         var w1 = document.createElement('div');
         w1.className = 'arena-attack-projectile hero-projectile combo-projectile';
         w1.textContent = '🔥';
@@ -277,10 +277,10 @@ BattleMode.attackDouble = function(targetEl, cb) {
             // Hit "-1"
             if (targetEl) {
                 targetEl.classList.add('enemy-hit-flash');
-                setTimeout(function() { targetEl.classList.remove('enemy-hit-flash'); }, 150);
+                setTimeout(function() { targetEl.classList.remove('enemy-hit-flash'); }, 100);
             }
 
-            // Weapon2 flies (0.15s)
+            // Weapon2 flies (0.1s)
             var w2 = document.createElement('div');
             w2.className = 'arena-attack-projectile hero-projectile combo-projectile';
             w2.textContent = '🔥';
@@ -292,19 +292,19 @@ BattleMode.attackDouble = function(targetEl, cb) {
                 // Hit "-1"
                 if (targetEl) {
                     targetEl.classList.add('enemy-hit-flash');
-                    setTimeout(function() { targetEl.classList.remove('enemy-hit-flash'); }, 150);
+                    setTimeout(function() { targetEl.classList.remove('enemy-hit-flash'); }, 100);
                 }
 
-                // Hero returns (0.15s)
+                // Hero returns (0.1s)
                 heroEmoji.classList.remove('hero-dash-right');
                 self.setHeroState('idle');
 
                 setTimeout(function() {
                     if (cb) cb();
-                }, 150);
-            }, 150);
-        }, 200);
-    }, 150);
+                }, 100);
+            }, 100);
+        }, 150);
+    }, 100);
 };
 
 // --- 5c. attackTriple: Combo 5-9, triple slash + finisher ---
@@ -317,7 +317,7 @@ BattleMode.attackTriple = function(targetEl, cb) {
 
     playSound('attackTriple');
 
-    // Hero teleport to center (0.1s)
+    // Hero teleport to center (0.08s)
     heroEmoji.classList.add('hero-teleport-center');
 
     setTimeout(function() {
@@ -327,44 +327,44 @@ BattleMode.attackTriple = function(targetEl, cb) {
         var tx = arenaRect.width * 0.75;
         var ty = arenaRect.height * 0.35;
 
-        // Slash1 (0.1s)
+        // Slash1 (0.07s)
         self.createSlashTrail(cx - 30, cy, tx, ty - 20, '#00bfff');
 
         setTimeout(function() {
-            // Slash2 (0.1s)
+            // Slash2 (0.07s)
             self.createSlashTrail(cx, cy - 20, tx + 10, ty, '#00e5ff');
 
             setTimeout(function() {
-                // Slash3 (0.1s)
+                // Slash3 (0.07s)
                 self.createSlashTrail(cx + 10, cy + 10, tx - 10, ty + 20, '#76ff03');
 
                 setTimeout(function() {
-                    // Charge finisher (0.15s)
+                    // Charge finisher (0.1s)
                     heroEmoji.classList.add('hero-charge');
 
                     setTimeout(function() {
                         heroEmoji.classList.remove('hero-charge');
 
-                        // Heavy hit + big damage (0.2s)
+                        // Heavy hit + big damage (0.15s)
                         if (targetEl) {
                             targetEl.classList.add('enemy-hit-heavy');
                             setTimeout(function() {
                                 targetEl.classList.remove('enemy-hit-heavy');
-                            }, 200);
+                            }, 150);
                         }
 
-                        // Hero returns (0.1s)
+                        // Hero returns (0.08s)
                         heroEmoji.classList.remove('hero-teleport-center');
                         self.setHeroState('idle');
 
                         setTimeout(function() {
                             if (cb) cb();
-                        }, 100);
-                    }, 150);
-                }, 100);
-            }, 100);
-        }, 100);
-    }, 100);
+                        }, 80);
+                    }, 100);
+                }, 70);
+            }, 70);
+        }, 70);
+    }, 80);
 };
 
 // --- 5d. attackCharged: Combo 10-14, charged attack with screen effects ---
@@ -377,11 +377,11 @@ BattleMode.attackCharged = function(targetEl, cb) {
 
     playSound('attackCharged');
 
-    // Screen dims slightly (0.1s)
+    // Screen dims slightly (0.08s)
     arena.classList.add('arena-dimmed');
 
     setTimeout(function() {
-        // Hero charges: shrink then grow + gather particles (0.3s)
+        // Hero charges: shrink then grow + gather particles (0.2s)
         heroEmoji.classList.add('hero-charging');
 
         var effectLayer = document.querySelector('.hero-effect-layer');
@@ -398,7 +398,7 @@ BattleMode.attackCharged = function(targetEl, cb) {
                 p.style.animationDelay = (i * 0.03) + 's';
                 effectLayer.appendChild(p);
                 (function(el) {
-                    setTimeout(function() { el.remove(); }, 400);
+                    setTimeout(function() { el.remove(); }, 300);
                 })(p);
             }
         }
@@ -406,7 +406,7 @@ BattleMode.attackCharged = function(targetEl, cb) {
         setTimeout(function() {
             heroEmoji.classList.remove('hero-charging');
 
-            // Release giant weapon (40% stage width) (0.3s)
+            // Release giant weapon (40% stage width) (0.25s)
             var giantWeapon = document.createElement('div');
             giantWeapon.className = 'giant-weapon-projectile';
             giantWeapon.textContent = '💎';
@@ -419,14 +419,14 @@ BattleMode.attackCharged = function(targetEl, cb) {
             setTimeout(function() {
                 giantWeapon.remove();
 
-                // Explosion + screen shake (0.3s)
+                // Explosion + screen shake (0.2s)
                 self.screenShake('heavy');
 
                 if (targetEl) {
                     targetEl.classList.add('enemy-hit-explosion');
                     setTimeout(function() {
                         targetEl.classList.remove('enemy-hit-explosion');
-                    }, 300);
+                    }, 200);
                 }
 
                 // Spawn explosion particles
@@ -448,14 +448,14 @@ BattleMode.attackCharged = function(targetEl, cb) {
 
                 arena.classList.remove('arena-dimmed');
 
-                // Recover (0.1s)
+                // Recover (0.08s)
                 setTimeout(function() {
                     self.setHeroState('idle');
                     if (cb) cb();
-                }, 100);
-            }, 300);
-        }, 300);
-    }, 100);
+                }, 80);
+            }, 200);
+        }, 200);
+    }, 80);
 };
 
 // --- 5e. attackUltimate: Combo 15+, full-screen ultimate ---
@@ -468,7 +468,7 @@ BattleMode.attackUltimate = function(targetEl, cb) {
 
     playSound('attackUltimate');
 
-    // Screen flash white (0.1s)
+    // Screen flash white (0.08s)
     var flash = document.createElement('div');
     flash.className = 'ultimate-screen-flash';
     arena.appendChild(flash);
@@ -476,11 +476,11 @@ BattleMode.attackUltimate = function(targetEl, cb) {
     setTimeout(function() {
         flash.remove();
 
-        // Hero flies to center + enlarge (0.2s)
+        // Hero flies to center + enlarge (0.15s)
         heroEmoji.classList.add('hero-ultimate-center');
 
         setTimeout(function() {
-            // Skill name flash "星辰一击!" (0.3s)
+            // Skill name flash "星辰一击!" (0.25s)
             var skillName = document.createElement('div');
             skillName.className = 'ultimate-skill-name';
             skillName.textContent = '星辰一击!';
@@ -489,7 +489,7 @@ BattleMode.attackUltimate = function(targetEl, cb) {
             setTimeout(function() {
                 skillName.remove();
 
-                // Rainbow beam from hero to enemy (0.4s)
+                // Rainbow beam from hero to enemy (0.35s)
                 var beam = document.createElement('div');
                 beam.className = 'ultimate-rainbow-beam';
                 arena.appendChild(beam);
@@ -497,7 +497,7 @@ BattleMode.attackUltimate = function(targetEl, cb) {
                 setTimeout(function() {
                     beam.remove();
 
-                    // Full screen explosion + particles (0.3s)
+                    // Full screen explosion + particles (0.25s)
                     self.screenShake('heavy');
 
                     var particleCount = Math.min(25, 50);
@@ -521,19 +521,19 @@ BattleMode.attackUltimate = function(targetEl, cb) {
                         targetEl.classList.add('enemy-hit-ultimate');
                         setTimeout(function() {
                             targetEl.classList.remove('enemy-hit-ultimate');
-                        }, 300);
+                        }, 250);
                     }
 
-                    // Recover + damage number (0.2s)
+                    // Recover + damage number (0.15s)
                     setTimeout(function() {
                         heroEmoji.classList.remove('hero-ultimate-center');
                         self.setHeroState('idle');
                         if (cb) cb();
-                    }, 200);
-                }, 400);
-            }, 300);
-        }, 200);
-    }, 100);
+                    }, 150);
+                }, 350);
+            }, 250);
+        }, 150);
+    }, 80);
 };
 
 // ===== 6. Execute Combo Attack (main dispatch) =====

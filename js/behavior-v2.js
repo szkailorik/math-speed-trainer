@@ -67,11 +67,11 @@ BattleMode.executeCounter = function(cb) {
     var heroEl = document.getElementById('hero-sprite');
     var arena = document.querySelector('.battle-arena');
 
-    // Step 1: Monster blocks - shield emoji appears (0.15s)
+    // Step 1: Monster blocks - shield emoji appears (0.1s)
     var shieldEl = document.createElement('div');
     shieldEl.className = 'behavior-effect counter-shield';
     shieldEl.textContent = '🛡️';
-    shieldEl.style.cssText = 'position:absolute;font-size:2rem;z-index:100;opacity:0;transition:opacity 0.15s;';
+    shieldEl.style.cssText = 'position:absolute;font-size:2rem;z-index:100;opacity:0;transition:opacity 0.1s;';
     if (enemyEmoji) {
         enemyEmoji.parentNode.appendChild(shieldEl);
         shieldEl.style.left = enemyEmoji.offsetLeft + 'px';
@@ -84,12 +84,12 @@ BattleMode.executeCounter = function(cb) {
     requestAnimationFrame(function() { shieldEl.style.opacity = '1'; });
 
     setTimeout(function() {
-        // Step 2: Weapon bounces back toward hero (0.2s)
+        // Step 2: Weapon bounces back toward hero (0.15s)
         shieldEl.style.opacity = '0';
         var bounceEl = document.createElement('div');
         bounceEl.className = 'behavior-effect counter-bounce';
         bounceEl.textContent = '⚔️';
-        bounceEl.style.cssText = 'position:absolute;font-size:1.5rem;z-index:100;transition:transform 0.2s ease-in,opacity 0.2s;';
+        bounceEl.style.cssText = 'position:absolute;font-size:1.5rem;z-index:100;transition:transform 0.15s ease-in,opacity 0.15s;';
         if (arena) {
             arena.appendChild(bounceEl);
             bounceEl.style.right = '60%';
@@ -100,12 +100,12 @@ BattleMode.executeCounter = function(cb) {
         }
 
         setTimeout(function() {
-            // Step 3: Hero hit animation (0.2s)
+            // Step 3: Hero hit animation (0.15s)
             bounceEl.remove();
             shieldEl.remove();
             if (heroEl) {
                 heroEl.classList.add('hit-flash');
-                setTimeout(function() { heroEl.classList.remove('hit-flash'); }, 200);
+                setTimeout(function() { heroEl.classList.remove('hit-flash'); }, 150);
             }
 
             // Apply damage
@@ -115,18 +115,18 @@ BattleMode.executeCounter = function(cb) {
             BattleMode.updateUI();
 
             setTimeout(function() {
-                // Step 4: "反击!" text (0.3s)
+                // Step 4: "反击!" text (0.2s)
                 if (enemyEmoji) {
-                    BattleMode.showSpeechBubble(enemyEmoji, quip, 800);
+                    BattleMode.showSpeechBubble(enemyEmoji, quip, 550);
                 }
                 BattleMode.showBattleFeedback(false, '⚔️ 反击! -1 HP，下次攻击+1');
 
                 setTimeout(function() {
                     if (cb) cb({ countered: true });
-                }, 300);
-            }, 200);
-        }, 200);
-    }, 150);
+                }, 200);
+            }, 150);
+        }, 150);
+    }, 100);
 };
 
 // ===== Execute Split =====
@@ -145,20 +145,20 @@ BattleMode.executeSplit = function(cb) {
 
     // Step 1: Monster death animation starts (midpoint preparation)
     if (enemyEmoji) {
-        enemyEmoji.style.transition = 'transform 0.3s, opacity 0.3s';
+        enemyEmoji.style.transition = 'transform 0.2s, opacity 0.2s';
         enemyEmoji.style.transform = 'scale(0.5)';
         enemyEmoji.style.opacity = '0.5';
     }
 
     setTimeout(function() {
-        // Step 2: Two small emojis fly out left and right (0.3s)
+        // Step 2: Two small emojis fly out left and right (0.2s)
         var splitLeft = document.createElement('div');
         var splitRight = document.createElement('div');
         splitLeft.className = 'behavior-effect split-fragment split-left';
         splitRight.className = 'behavior-effect split-fragment split-right';
         splitLeft.textContent = monsterChar;
         splitRight.textContent = monsterChar;
-        var splitStyle = 'position:absolute;font-size:1rem;z-index:100;transition:transform 0.3s ease-out,opacity 0.3s;';
+        var splitStyle = 'position:absolute;font-size:1rem;z-index:100;transition:transform 0.2s ease-out,opacity 0.2s;';
         splitLeft.style.cssText = splitStyle + 'right:25%;top:30%;';
         splitRight.style.cssText = splitStyle + 'right:15%;top:30%;';
 
@@ -173,9 +173,9 @@ BattleMode.executeSplit = function(cb) {
         });
 
         setTimeout(function() {
-            // Step 3: One disappears, one stays as the "split" (0.2s)
+            // Step 3: One disappears, one stays as the "split" (0.15s)
             splitLeft.style.opacity = '0';
-            setTimeout(function() { splitLeft.remove(); }, 200);
+            setTimeout(function() { splitLeft.remove(); }, 150);
 
             // Restore enemy emoji as the remaining split
             if (enemyEmoji) {
@@ -188,19 +188,19 @@ BattleMode.executeSplit = function(cb) {
             BattleMode.updateUI();
 
             setTimeout(function() {
-                // Step 4: "分裂!" text (0.3s)
+                // Step 4: "分裂!" text (0.2s)
                 if (enemyEmoji) {
-                    BattleMode.showSpeechBubble(enemyEmoji, quip, 800);
+                    BattleMode.showSpeechBubble(enemyEmoji, quip, 550);
                 }
                 BattleMode.showBattleFeedback(false, '💥 分裂! 需要额外答题!');
 
                 setTimeout(function() {
                     splitRight.remove();
                     if (cb) cb({ split: true });
-                }, 300);
-            }, 200);
-        }, 300);
-    }, 300);
+                }, 200);
+            }, 150);
+        }, 200);
+    }, 200);
 };
 
 // ===== Execute Curse =====
@@ -217,11 +217,11 @@ BattleMode.executeCurse = function(cb) {
     var heroEl = document.getElementById('hero-sprite');
     var arena = document.querySelector('.battle-arena');
 
-    // Step 1: Purple magic circle on ground (0.2s)
+    // Step 1: Purple magic circle on ground (0.15s)
     var circleEl = document.createElement('div');
     circleEl.className = 'behavior-effect curse-circle';
     circleEl.textContent = '⭕';
-    circleEl.style.cssText = 'position:absolute;font-size:2.5rem;z-index:90;opacity:0;transition:opacity 0.2s;' +
+    circleEl.style.cssText = 'position:absolute;font-size:2.5rem;z-index:90;opacity:0;transition:opacity 0.15s;' +
         'filter:hue-rotate(270deg) brightness(0.7);left:15%;bottom:15%;';
     if (arena) {
         arena.appendChild(circleEl);
@@ -229,11 +229,11 @@ BattleMode.executeCurse = function(cb) {
     }
 
     setTimeout(function() {
-        // Step 2: Dark mist rises and wraps hero (0.3s)
+        // Step 2: Dark mist rises and wraps hero (0.2s)
         var mistEl = document.createElement('div');
         mistEl.className = 'behavior-effect curse-mist';
         mistEl.textContent = '🌫️';
-        mistEl.style.cssText = 'position:absolute;font-size:2rem;z-index:95;opacity:0;transition:opacity 0.3s,transform 0.3s;' +
+        mistEl.style.cssText = 'position:absolute;font-size:2rem;z-index:95;opacity:0;transition:opacity 0.2s,transform 0.2s;' +
             'left:15%;bottom:20%;filter:hue-rotate(270deg);';
         if (arena) {
             arena.appendChild(mistEl);
@@ -244,13 +244,13 @@ BattleMode.executeCurse = function(cb) {
         }
 
         setTimeout(function() {
-            // Step 3: "诅咒!" text + hero turns slightly purple/dark (0.2s)
+            // Step 3: "诅咒!" text + hero turns slightly purple/dark (0.15s)
             circleEl.style.opacity = '0';
             mistEl.style.opacity = '0';
             setTimeout(function() {
                 circleEl.remove();
                 mistEl.remove();
-            }, 300);
+            }, 200);
 
             // Apply purple tint to hero
             if (heroEl) {
@@ -263,15 +263,15 @@ BattleMode.executeCurse = function(cb) {
             battle.curseRemainingTurns = 2;
 
             if (enemyEmoji) {
-                BattleMode.showSpeechBubble(enemyEmoji, quip, 800);
+                BattleMode.showSpeechBubble(enemyEmoji, quip, 550);
             }
             BattleMode.showBattleFeedback(false, '🔮 诅咒! 接下来2题选项增加!');
 
             setTimeout(function() {
                 if (cb) cb({ cursed: true });
-            }, 200);
-        }, 300);
-    }, 200);
+            }, 150);
+        }, 200);
+    }, 150);
 };
 
 // ===== Execute Shield =====
@@ -287,11 +287,11 @@ BattleMode.executeShield = function(behavior, cb) {
     var enemyEmoji = document.getElementById('monster-emoji');
     var arena = document.querySelector('.battle-arena');
 
-    // Step 1: Energy gathering effect around monster (0.2s)
+    // Step 1: Energy gathering effect around monster (0.15s)
     var energyEl = document.createElement('div');
     energyEl.className = 'behavior-effect shield-energy';
     energyEl.textContent = '✨';
-    energyEl.style.cssText = 'position:absolute;font-size:1.5rem;z-index:100;opacity:0;transition:opacity 0.2s;';
+    energyEl.style.cssText = 'position:absolute;font-size:1.5rem;z-index:100;opacity:0;transition:opacity 0.15s;';
     if (enemyEmoji) {
         energyEl.style.left = enemyEmoji.offsetLeft + 'px';
         energyEl.style.top = (enemyEmoji.offsetTop - 10) + 'px';
@@ -306,11 +306,11 @@ BattleMode.executeShield = function(behavior, cb) {
     setTimeout(function() {
         energyEl.style.opacity = '0';
 
-        // Step 2: Shield emoji materializes in front of monster (0.2s)
+        // Step 2: Shield emoji materializes in front of monster (0.15s)
         var shieldEl = document.createElement('div');
         shieldEl.className = 'behavior-effect shield-barrier';
         shieldEl.textContent = '🛡️';
-        shieldEl.style.cssText = 'position:absolute;font-size:2.5rem;z-index:100;opacity:0;transition:opacity 0.2s;';
+        shieldEl.style.cssText = 'position:absolute;font-size:2.5rem;z-index:100;opacity:0;transition:opacity 0.15s;';
         if (enemyEmoji) {
             shieldEl.style.left = (enemyEmoji.offsetLeft - 20) + 'px';
             shieldEl.style.top = enemyEmoji.offsetTop + 'px';
@@ -323,30 +323,30 @@ BattleMode.executeShield = function(behavior, cb) {
         requestAnimationFrame(function() { shieldEl.style.opacity = '1'; });
 
         setTimeout(function() {
-            // Step 3: Blue glow on shield (0.1s)
+            // Step 3: Blue glow on shield (0.07s)
             shieldEl.style.textShadow = '0 0 15px #4488ff, 0 0 30px #4488ff';
 
             setTimeout(function() {
                 energyEl.remove();
                 shieldEl.style.opacity = '0';
-                setTimeout(function() { shieldEl.remove(); }, 200);
+                setTimeout(function() { shieldEl.remove(); }, 150);
 
                 // Set shield state
                 battle.monsterShielded = true;
                 BattleMode.updateUI();
 
-                // Step 4: "护盾!" text (0.2s)
+                // Step 4: "护盾!" text (0.15s)
                 if (enemyEmoji) {
-                    BattleMode.showSpeechBubble(enemyEmoji, quip, 800);
+                    BattleMode.showSpeechBubble(enemyEmoji, quip, 550);
                 }
                 BattleMode.showBattleFeedback(false, '🛡️ 护盾! 需连续答对2题才能破盾!');
 
                 setTimeout(function() {
                     if (cb) cb({ shielded: true });
-                }, 200);
-            }, 100);
-        }, 200);
-    }, 200);
+                }, 150);
+            }, 70);
+        }, 150);
+    }, 150);
 };
 
 // ===== Execute Transform =====
@@ -367,7 +367,7 @@ BattleMode.executeTransform = function(cb) {
     var phase2Name = (monster && monster.phase2Name) ? monster.phase2Name : ((monster ? monster.name : '怪物') + '·真');
     var phase2HP = (monster && monster.phase2HP) ? monster.phase2HP : Math.ceil(battle.monsterMaxHP * 0.5);
 
-    // Step 1: Screen flash white (0.1s)
+    // Step 1: Screen flash white (0.07s)
     if (screenFlash) {
         screenFlash.style.background = 'white';
         screenFlash.classList.add('show');
@@ -379,9 +379,9 @@ BattleMode.executeTransform = function(cb) {
             screenFlash.style.background = '';
         }
 
-        // Step 2: Monster shrinks + dark energy swirl (0.3s)
+        // Step 2: Monster shrinks + dark energy swirl (0.2s)
         if (enemyEmoji) {
-            enemyEmoji.style.transition = 'transform 0.3s ease-in, filter 0.3s';
+            enemyEmoji.style.transition = 'transform 0.2s ease-in, filter 0.2s';
             enemyEmoji.style.transform = 'scale(0.3) rotate(360deg)';
             enemyEmoji.style.filter = 'brightness(0.3)';
         }
@@ -393,7 +393,7 @@ BattleMode.executeTransform = function(cb) {
                 var particle = document.createElement('div');
                 particle.className = 'behavior-effect transform-swirl';
                 particle.textContent = '🌀';
-                particle.style.cssText = 'position:absolute;font-size:1rem;z-index:100;opacity:0;transition:all 0.3s;';
+                particle.style.cssText = 'position:absolute;font-size:1rem;z-index:100;opacity:0;transition:all 0.2s;';
                 particle.style.right = (15 + Math.random() * 15) + '%';
                 particle.style.top = (20 + Math.random() * 20) + '%';
                 arena.appendChild(particle);
@@ -403,7 +403,7 @@ BattleMode.executeTransform = function(cb) {
         }
 
         setTimeout(function() {
-            // Step 3: Silence + dark screen (0.1s)
+            // Step 3: Silence + dark screen (0.07s)
             swirlParticles.forEach(function(p) { p.style.opacity = '0'; });
             if (screenFlash) {
                 screenFlash.style.background = 'rgba(0,0,0,0.8)';
@@ -414,7 +414,7 @@ BattleMode.executeTransform = function(cb) {
                 // Clean up swirl particles
                 swirlParticles.forEach(function(p) { p.remove(); });
 
-                // Step 4: New form erupts with energy burst (0.3s)
+                // Step 4: New form erupts with energy burst (0.2s)
                 if (screenFlash) {
                     screenFlash.classList.remove('show');
                     screenFlash.style.background = '';
@@ -423,7 +423,7 @@ BattleMode.executeTransform = function(cb) {
                 // Change monster appearance
                 if (enemyEmoji) {
                     enemyEmoji.textContent = phase2Emoji;
-                    enemyEmoji.style.transition = 'transform 0.3s ease-out, filter 0.3s';
+                    enemyEmoji.style.transition = 'transform 0.2s ease-out, filter 0.2s';
                     enemyEmoji.style.transform = 'scale(1.2)';
                     enemyEmoji.style.filter = 'brightness(1.2)';
                 }
@@ -435,7 +435,7 @@ BattleMode.executeTransform = function(cb) {
                         burst.className = 'behavior-effect transform-burst';
                         var burstEmojis = ['⚡', '💥', '🔥', '✨'];
                         burst.textContent = burstEmojis[Math.floor(Math.random() * burstEmojis.length)];
-                        burst.style.cssText = 'position:absolute;font-size:1.2rem;z-index:100;transition:all 0.3s;';
+                        burst.style.cssText = 'position:absolute;font-size:1.2rem;z-index:100;transition:all 0.2s;';
                         var angle = (j / 8) * Math.PI * 2;
                         burst.style.right = (20 + Math.cos(angle) * 10) + '%';
                         burst.style.top = (30 + Math.sin(angle) * 15) + '%';
@@ -446,12 +446,12 @@ BattleMode.executeTransform = function(cb) {
                                 el.style.opacity = '0';
                             });
                         })(burst, angle);
-                        setTimeout(function(el) { return function() { el.remove(); }; }(burst), 500);
+                        setTimeout(function(el) { return function() { el.remove(); }; }(burst), 350);
                     }
                 }
 
                 setTimeout(function() {
-                    // Step 5: New name + "变身!" text (0.3s)
+                    // Step 5: New name + "变身!" text (0.2s)
                     // Update battle state for phase 2
                     battle.monsterPhase = 2;
                     if (monster) {
@@ -461,7 +461,7 @@ BattleMode.executeTransform = function(cb) {
 
                     // Normalize monster scale
                     if (enemyEmoji) {
-                        enemyEmoji.style.transition = 'transform 0.2s';
+                        enemyEmoji.style.transition = 'transform 0.15s';
                         enemyEmoji.style.transform = 'scale(1)';
                         enemyEmoji.style.filter = '';
                     }
@@ -473,24 +473,24 @@ BattleMode.executeTransform = function(cb) {
                     }
 
                     if (enemyEmoji) {
-                        BattleMode.showSpeechBubble(enemyEmoji, quip, 1000);
+                        BattleMode.showSpeechBubble(enemyEmoji, quip, 700);
                     }
                     BattleMode.showBattleFeedback(false, '🔄 变身! 怪物进入第二形态!');
 
                     setTimeout(function() {
-                        // Step 6: HP bar refills animation (0.2s)
+                        // Step 6: HP bar refills animation (0.15s)
                         battle.monsterHP = phase2HP;
                         battle.monsterMaxHP = phase2HP;
                         BattleMode.updateUI();
 
                         setTimeout(function() {
                             if (cb) cb({ transformed: true });
-                        }, 200);
-                    }, 300);
-                }, 300);
-            }, 100);
-        }, 300);
-    }, 100);
+                        }, 150);
+                    }, 200);
+                }, 200);
+            }, 70);
+        }, 200);
+    }, 70);
 };
 
 // ===== Check Behavior V2 =====

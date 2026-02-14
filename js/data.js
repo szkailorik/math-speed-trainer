@@ -1033,6 +1033,38 @@ const MathData = {
         { id: 'behavior_master', name: '百战老将', desc: '经历过所有14种怪物行为', icon: '🎖️', special: 'behavior_master' },
         { id: 'all_personality', name: '知己知彼', desc: '击败过所有6种性格的怪物', icon: '📖', special: 'all_personality' },
         { id: 'math_demon_slayer', name: '弑神者', desc: '击败数学魔神最终形态', icon: '🔮', special: 'math_demon_slayer' },
+        // v21.0: 模块掌握成就 — 小九九
+        { id: 'xjj_battles_10', name: '乘法入门', desc: '小九九模块完成10场战斗', icon: '🌱', special: 'module_battles_10', module: 'xiaojiujiu' },
+        { id: 'xjj_combo_30', name: '乘法精通', desc: '小九九模块达成30连击', icon: '🔥', special: 'module_combo_30', module: 'xiaojiujiu' },
+        { id: 'xjj_hard_clear', name: '乘法大师', desc: '小九九困难难度通关', icon: '🏅', special: 'module_hard_clear', module: 'xiaojiujiu' },
+        { id: 'xjj_all_items', name: '乘法传说', desc: '收集小九九全部独占道具', icon: '👑', special: 'module_all_items', module: 'xiaojiujiu' },
+        // v21.0: 模块掌握成就 — 大九九
+        { id: 'times_battles_10', name: '数阵入门', desc: '大九九模块完成10场战斗', icon: '🌱', special: 'module_battles_10', module: 'times' },
+        { id: 'times_combo_30', name: '数阵精通', desc: '大九九模块达成30连击', icon: '🔥', special: 'module_combo_30', module: 'times' },
+        { id: 'times_hard_clear', name: '数阵大师', desc: '大九九困难难度通关', icon: '🏅', special: 'module_hard_clear', module: 'times' },
+        { id: 'times_all_items', name: '数阵传说', desc: '收集大九九全部独占道具', icon: '👑', special: 'module_all_items', module: 'times' },
+        // v21.0: 模块掌握成就 — 乘法速记
+        { id: 'multiply_battles_10', name: '速记入门', desc: '乘法速记模块完成10场战斗', icon: '🌱', special: 'module_battles_10', module: 'multiply' },
+        { id: 'multiply_combo_30', name: '速记精通', desc: '乘法速记模块达成30连击', icon: '🔥', special: 'module_combo_30', module: 'multiply' },
+        { id: 'multiply_hard_clear', name: '速记大师', desc: '乘法速记困难难度通关', icon: '🏅', special: 'module_hard_clear', module: 'multiply' },
+        { id: 'multiply_all_items', name: '速记传说', desc: '收集乘法速记全部独占道具', icon: '👑', special: 'module_all_items', module: 'multiply' },
+        // v21.0: 模块掌握成就 — 分数
+        { id: 'fraction_battles_10', name: '分数入门', desc: '分数模块完成10场战斗', icon: '🌱', special: 'module_battles_10', module: 'fraction' },
+        { id: 'fraction_combo_30', name: '分数精通', desc: '分数模块达成30连击', icon: '🔥', special: 'module_combo_30', module: 'fraction' },
+        { id: 'fraction_hard_clear', name: '分数大师', desc: '分数困难难度通关', icon: '🏅', special: 'module_hard_clear', module: 'fraction' },
+        { id: 'fraction_all_items', name: '分数传说', desc: '收集分数全部独占道具', icon: '👑', special: 'module_all_items', module: 'fraction' },
+        // v21.0: 模块掌握成就 — 小数
+        { id: 'decimal_battles_10', name: '小数入门', desc: '小数模块完成10场战斗', icon: '🌱', special: 'module_battles_10', module: 'decimal' },
+        { id: 'decimal_combo_30', name: '小数精通', desc: '小数模块达成30连击', icon: '🔥', special: 'module_combo_30', module: 'decimal' },
+        { id: 'decimal_hard_clear', name: '小数大师', desc: '小数困难难度通关', icon: '🏅', special: 'module_hard_clear', module: 'decimal' },
+        { id: 'decimal_all_items', name: '小数传说', desc: '收集小数全部独占道具', icon: '👑', special: 'module_all_items', module: 'decimal' },
+        // v21.0: 模块掌握成就 — 单位换算
+        { id: 'unit_battles_10', name: '换算入门', desc: '单位换算模块完成10场战斗', icon: '🌱', special: 'module_battles_10', module: 'unit' },
+        { id: 'unit_combo_30', name: '换算精通', desc: '单位换算模块达成30连击', icon: '🔥', special: 'module_combo_30', module: 'unit' },
+        { id: 'unit_hard_clear', name: '换算大师', desc: '单位换算困难难度通关', icon: '🏅', special: 'module_hard_clear', module: 'unit' },
+        { id: 'unit_all_items', name: '换算传说', desc: '收集单位换算全部独占道具', icon: '👑', special: 'module_all_items', module: 'unit' },
+        // v21.0: 跨模块成就
+        { id: 'six_realms', name: '六界通行者', desc: '在6个模块各完成至少1场困难战斗', icon: '🌈', special: 'six_realms' },
     ]
 };
 

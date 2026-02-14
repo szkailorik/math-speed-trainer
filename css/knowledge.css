@@ -1,0 +1,1193 @@
+/* ============================================================
+   Knowledge Compendium — Zelda: Tears of the Kingdom Theme
+   A Purah Pad / Hyrule Compendium inspired UI for the
+   math knowledge system. Mobile-first, self-contained.
+   ============================================================ */
+
+/* ===== 1. CSS Variables ===== */
+.knowledge-page {
+    --hyrule-bg: #0a1628;
+    --hyrule-surface: #111f36;
+    --hyrule-border: rgba(0, 180, 216, 0.15);
+    --sheikah-blue: #00b4d8;
+    --sheikah-blue-dim: rgba(0, 180, 216, 0.25);
+    --zonai-green: #47c78a;
+    --zonai-green-dim: rgba(71, 199, 138, 0.25);
+    --ancient-gold: #c8a850;
+    --ancient-gold-dim: rgba(200, 168, 80, 0.25);
+    --status-locked: #3a3a50;
+    --status-discovered: var(--sheikah-blue);
+    --status-mastered: var(--zonai-green);
+    --status-perfected: var(--ancient-gold);
+    --region-xiaojiujiu: #e06040;
+    --region-times: #4a90d9;
+    --region-divide: #a855f7;
+    --region-mixed: #ec4899;
+    --region-fraction: #f59e0b;
+    --region-power: #10b981;
+}
+
+
+/* ===== 2. Page Container & Header ===== */
+.knowledge-page {
+    position: fixed;
+    inset: 0;
+    z-index: 900;
+    background: var(--hyrule-bg);
+    color: #e0e8f0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'PingFang SC', sans-serif;
+    animation: hyrule-slide-in 0.35s ease-out;
+}
+
+.knowledge-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    background: linear-gradient(180deg, var(--hyrule-bg) 60%, transparent);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.knowledge-header .back-btn {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--hyrule-border);
+    border-radius: 10px;
+    background: var(--hyrule-surface);
+    color: var(--sheikah-blue);
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+    flex-shrink: 0;
+}
+
+.knowledge-header .back-btn:active {
+    background: var(--sheikah-blue-dim);
+    border-color: var(--sheikah-blue);
+}
+
+.knowledge-header h1 {
+    flex: 1;
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: #f0f4f8;
+}
+
+.knowledge-mode-toggle {
+    display: flex;
+    background: var(--hyrule-surface);
+    border: 1px solid var(--hyrule-border);
+    border-radius: 8px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.knowledge-mode-toggle button {
+    padding: 6px 12px;
+    border: none;
+    background: transparent;
+    color: #8094a8;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+
+.knowledge-mode-toggle button.active {
+    background: var(--sheikah-blue-dim);
+    color: var(--sheikah-blue);
+}
+
+
+/* ===== 3. Region Map Grid ===== */
+.region-map {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 8px 16px 24px;
+}
+
+.region-card {
+    position: relative;
+    display: grid;
+    grid-template-columns: 52px 1fr 56px;
+    grid-template-rows: auto auto auto;
+    align-items: center;
+    gap: 2px 12px;
+    padding: 14px;
+    background: var(--hyrule-surface);
+    border: 1px solid var(--hyrule-border);
+    border-radius: 12px;
+    cursor: pointer;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.25s, border-color 0.25s;
+}
+
+.region-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0.04;
+    pointer-events: none;
+    background:
+        repeating-linear-gradient(0deg, transparent, transparent 18px, currentColor 18px, currentColor 19px),
+        repeating-linear-gradient(90deg, transparent, transparent 18px, currentColor 18px, currentColor 19px);
+    animation: sheikah-pulse 6s ease-in-out infinite;
+}
+
+.region-card:active {
+    transform: scale(0.97);
+}
+
+.region-card .region-icon {
+    grid-row: 1 / 3;
+    width: 52px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.region-card .region-name {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #f0f4f8;
+    line-height: 1.3;
+}
+
+.region-card .region-sage {
+    font-size: 0.72rem;
+    color: #7088a0;
+    font-weight: 500;
+}
+
+.region-card .region-desc {
+    grid-column: 2 / 3;
+    font-size: 0.75rem;
+    color: #607888;
+    line-height: 1.4;
+    margin-top: 2px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.region-card .progress-ring {
+    grid-row: 1 / 3;
+    grid-column: 3;
+    justify-self: center;
+}
+
+.region-card .region-stats {
+    grid-column: 2 / 4;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 6px;
+    font-size: 0.72rem;
+    color: #7088a0;
+}
+
+.region-card .region-stats .shrine-count {
+    font-weight: 600;
+}
+
+/* Per-region color variants */
+.region-card.region-xiaojiujiu { border-left: 3px solid var(--region-xiaojiujiu); color: var(--region-xiaojiujiu); }
+.region-card.region-times      { border-left: 3px solid var(--region-times);      color: var(--region-times); }
+.region-card.region-divide     { border-left: 3px solid var(--region-divide);     color: var(--region-divide); }
+.region-card.region-mixed      { border-left: 3px solid var(--region-mixed);      color: var(--region-mixed); }
+.region-card.region-fraction   { border-left: 3px solid var(--region-fraction);   color: var(--region-fraction); }
+.region-card.region-power      { border-left: 3px solid var(--region-power);      color: var(--region-power); }
+
+.region-card.region-xiaojiujiu .region-icon { background: rgba(224, 96, 64, 0.12); }
+.region-card.region-times .region-icon      { background: rgba(74, 144, 217, 0.12); }
+.region-card.region-divide .region-icon     { background: rgba(168, 85, 247, 0.12); }
+.region-card.region-mixed .region-icon      { background: rgba(236, 72, 153, 0.12); }
+.region-card.region-fraction .region-icon   { background: rgba(245, 158, 11, 0.12); }
+.region-card.region-power .region-icon      { background: rgba(16, 185, 129, 0.12); }
+
+
+/* ===== 4. Region Detail / Shrine List ===== */
+.region-detail {
+    position: fixed;
+    inset: 0;
+    z-index: 910;
+    background: var(--hyrule-bg);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    animation: hyrule-slide-in 0.3s ease-out;
+}
+
+.region-banner {
+    position: relative;
+    padding: 20px 16px 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    overflow: hidden;
+}
+
+.region-banner::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(0, 180, 216, 0.06) 0%, transparent 60%);
+    pointer-events: none;
+}
+
+.region-banner .region-icon {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    border-radius: 14px;
+    background: var(--hyrule-surface);
+    border: 1px solid var(--hyrule-border);
+    flex-shrink: 0;
+}
+
+.region-banner .region-info {
+    flex: 1;
+}
+
+.region-banner .region-info h2 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #f0f4f8;
+}
+
+.region-banner .region-info .sage-name {
+    font-size: 0.78rem;
+    color: var(--sheikah-blue);
+    font-weight: 500;
+}
+
+.region-banner .overall-progress {
+    font-size: 0.75rem;
+    color: #7088a0;
+    margin-top: 4px;
+}
+
+.shrine-list {
+    padding: 0 16px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.shrine-entry {
+    display: grid;
+    grid-template-columns: 32px 1fr 28px;
+    grid-template-rows: auto auto;
+    gap: 0 10px;
+    align-items: center;
+    padding: 12px;
+    background: var(--hyrule-surface);
+    border: 1px solid var(--hyrule-border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.2s, border-color 0.2s, box-shadow 0.25s;
+}
+
+.shrine-entry:active {
+    transform: scale(0.98);
+}
+
+.shrine-entry .shrine-type-dot {
+    grid-row: 1 / 3;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    justify-self: center;
+}
+
+.shrine-entry .shrine-name {
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: #e0e8f0;
+    line-height: 1.3;
+}
+
+.shrine-entry .shrine-subtitle {
+    font-size: 0.72rem;
+    color: #607888;
+}
+
+.shrine-entry .mastery-indicator {
+    grid-row: 1 / 3;
+    justify-self: center;
+    font-size: 1.1rem;
+}
+
+.shrine-entry .shrine-preview {
+    grid-column: 2 / 4;
+    font-size: 0.7rem;
+    color: #506878;
+    margin-top: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Status variants */
+.shrine-entry.status-undiscovered {
+    opacity: 0.5;
+    border-color: var(--status-locked);
+}
+
+.shrine-entry.status-undiscovered .shrine-name {
+    color: var(--status-locked);
+    filter: blur(3px);
+    user-select: none;
+}
+
+.shrine-entry.status-discovered {
+    border-color: var(--sheikah-blue-dim);
+}
+
+.shrine-entry.status-discovered .shrine-type-dot {
+    box-shadow: 0 0 6px var(--sheikah-blue-dim);
+}
+
+.shrine-entry.status-mastered {
+    border-color: var(--zonai-green-dim);
+    box-shadow: 0 0 12px rgba(71, 199, 138, 0.08);
+}
+
+.shrine-entry.status-mastered .shrine-name {
+    color: var(--zonai-green);
+}
+
+.shrine-entry.status-perfected {
+    border-color: var(--ancient-gold-dim);
+    box-shadow: 0 0 16px rgba(200, 168, 80, 0.12);
+}
+
+.shrine-entry.status-perfected .shrine-name {
+    color: var(--ancient-gold);
+}
+
+.shrine-entry.status-perfected .mastery-indicator {
+    animation: star-sparkle 2s ease-in-out infinite;
+}
+
+/* Shrine type dots */
+.shrine-type-required  { background: #e05050; }
+.shrine-type-technique { background: #e0b840; }
+.shrine-type-reference { background: var(--sheikah-blue); }
+
+
+/* ===== 5. Knowledge Detail Card ===== */
+.knowledge-detail {
+    position: fixed;
+    inset: 0;
+    z-index: 920;
+    background: var(--hyrule-bg);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    animation: hyrule-slide-in 0.3s ease-out;
+}
+
+.knowledge-detail-header {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.knowledge-detail-header h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #f0f4f8;
+}
+
+.knowledge-detail-header .subtitle {
+    font-size: 0.8rem;
+    color: #7088a0;
+}
+
+.knowledge-detail-header .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    align-self: flex-start;
+    margin-top: 4px;
+}
+
+.knowledge-detail-header .status-badge.badge-discovered {
+    background: var(--sheikah-blue-dim);
+    color: var(--sheikah-blue);
+}
+
+.knowledge-detail-header .status-badge.badge-mastered {
+    background: var(--zonai-green-dim);
+    color: var(--zonai-green);
+}
+
+.knowledge-detail-header .status-badge.badge-perfected {
+    background: var(--ancient-gold-dim);
+    color: var(--ancient-gold);
+}
+
+.knowledge-formula-box {
+    margin: 0 16px;
+    padding: 24px 16px;
+    background: var(--hyrule-surface);
+    border: 1px solid var(--hyrule-border);
+    border-radius: 14px;
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 800;
+    color: #f0f4f8;
+    letter-spacing: 2px;
+    position: relative;
+    overflow: hidden;
+}
+
+.knowledge-formula-box::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0.03;
+    pointer-events: none;
+    background:
+        repeating-linear-gradient(0deg, transparent, transparent 24px, var(--sheikah-blue) 24px, var(--sheikah-blue) 25px),
+        repeating-linear-gradient(90deg, transparent, transparent 24px, var(--sheikah-blue) 24px, var(--sheikah-blue) 25px);
+}
+
+.knowledge-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 16px;
+}
+
+.knowledge-item {
+    padding: 8px 14px;
+    background: var(--sheikah-blue-dim);
+    border: 1px solid rgba(0, 180, 216, 0.2);
+    border-radius: 8px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--sheikah-blue);
+    transition: background 0.2s;
+}
+
+.knowledge-item:active {
+    background: rgba(0, 180, 216, 0.35);
+}
+
+.knowledge-tip {
+    margin: 0 16px 12px;
+    padding: 12px 14px;
+    background: rgba(71, 199, 138, 0.08);
+    border: 1px solid var(--zonai-green-dim);
+    border-radius: 10px;
+    font-size: 0.82rem;
+    color: #a0b8c0;
+    line-height: 1.5;
+}
+
+.knowledge-tip::before {
+    content: '\1F4A1';
+    margin-right: 6px;
+}
+
+.knowledge-battle {
+    margin: 0 16px 12px;
+    padding: 12px 14px;
+    background: rgba(224, 96, 64, 0.08);
+    border: 1px solid rgba(224, 96, 64, 0.2);
+    border-radius: 10px;
+    font-size: 0.82rem;
+    color: #a0b8c0;
+    line-height: 1.5;
+}
+
+.knowledge-battle::before {
+    content: '\2694\FE0F';
+    margin-right: 6px;
+}
+
+.knowledge-progress {
+    margin: 0 16px 12px;
+    padding: 14px;
+    background: var(--hyrule-surface);
+    border: 1px solid var(--hyrule-border);
+    border-radius: 10px;
+}
+
+.knowledge-progress .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: #7088a0;
+    margin-bottom: 8px;
+}
+
+.knowledge-progress .progress-bar {
+    height: 6px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.knowledge-progress .progress-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--sheikah-blue), var(--zonai-green));
+    transition: width 0.5s ease-out;
+}
+
+.knowledge-progress .progress-stats {
+    display: flex;
+    gap: 16px;
+    margin-top: 10px;
+    font-size: 0.72rem;
+    color: #607888;
+}
+
+.knowledge-related {
+    margin: 0 16px 12px;
+    padding: 14px;
+    background: var(--hyrule-surface);
+    border: 1px solid var(--hyrule-border);
+    border-radius: 10px;
+}
+
+.knowledge-related h4 {
+    font-size: 0.78rem;
+    color: #7088a0;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.knowledge-related a {
+    display: inline-block;
+    padding: 4px 10px;
+    margin: 3px 4px 3px 0;
+    background: var(--sheikah-blue-dim);
+    border-radius: 6px;
+    font-size: 0.75rem;
+    color: var(--sheikah-blue);
+    text-decoration: none;
+    transition: background 0.2s;
+}
+
+.knowledge-related a:active {
+    background: rgba(0, 180, 216, 0.4);
+}
+
+.knowledge-quiz-btn {
+    display: block;
+    width: calc(100% - 32px);
+    margin: 8px 16px 24px;
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--zonai-green), #38b27a);
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    letter-spacing: 0.5px;
+}
+
+.knowledge-quiz-btn:active {
+    transform: scale(0.97);
+    box-shadow: 0 0 20px var(--zonai-green-dim);
+}
+
+
+/* ===== 6. Quick Quiz Overlay ===== */
+.quiz-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 950;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(6, 12, 24, 0.92);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    animation: hyrule-slide-in 0.25s ease-out;
+    padding: 24px 16px;
+}
+
+.quiz-card {
+    width: 100%;
+    max-width: 400px;
+    padding: 28px 20px;
+    background: var(--hyrule-surface);
+    border: 1px solid var(--hyrule-border);
+    border-radius: 16px;
+    text-align: center;
+}
+
+.quiz-card .quiz-question {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #f0f4f8;
+    margin-bottom: 24px;
+    letter-spacing: 1px;
+}
+
+.quiz-choices {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.quiz-choices button {
+    padding: 14px 10px;
+    border: 1px solid var(--hyrule-border);
+    border-radius: 10px;
+    background: var(--hyrule-bg);
+    color: #d0d8e0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, transform 0.15s;
+}
+
+.quiz-choices button:active {
+    transform: scale(0.95);
+}
+
+.quiz-choices button.correct {
+    background: var(--zonai-green-dim);
+    border-color: var(--zonai-green);
+    color: var(--zonai-green);
+}
+
+.quiz-choices button.wrong {
+    background: rgba(224, 80, 80, 0.2);
+    border-color: #e05050;
+    color: #e05050;
+}
+
+.quiz-feedback {
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-align: center;
+    animation: mastery-up 0.4s ease-out;
+}
+
+.quiz-feedback.feedback-correct {
+    background: var(--zonai-green-dim);
+    color: var(--zonai-green);
+}
+
+.quiz-feedback.feedback-wrong {
+    background: rgba(224, 80, 80, 0.15);
+    color: #e05050;
+}
+
+.quiz-result {
+    width: 100%;
+    max-width: 400px;
+    padding: 28px 20px;
+    background: var(--hyrule-surface);
+    border: 1px solid var(--hyrule-border);
+    border-radius: 16px;
+    text-align: center;
+}
+
+.quiz-result h3 {
+    font-size: 1.2rem;
+    color: #f0f4f8;
+    margin-bottom: 8px;
+}
+
+.quiz-result .score {
+    font-size: 2.4rem;
+    font-weight: 800;
+    color: var(--zonai-green);
+    margin-bottom: 16px;
+}
+
+
+/* ===== 7. Quick View Mode ===== */
+.quick-view {
+    padding: 0 16px;
+}
+
+.quick-view-tabs {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    padding: 8px 0 12px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+}
+
+.quick-view-tabs::-webkit-scrollbar {
+    display: none;
+}
+
+.quick-view-tab {
+    flex-shrink: 0;
+    padding: 6px 14px;
+    border: 1px solid var(--hyrule-border);
+    border-radius: 20px;
+    background: var(--hyrule-surface);
+    color: #7088a0;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.quick-view-tab.active {
+    background: var(--sheikah-blue-dim);
+    color: var(--sheikah-blue);
+    border-color: var(--sheikah-blue);
+}
+
+.quick-view-content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-bottom: 24px;
+}
+
+.quick-view-card {
+    padding: 12px 14px;
+    background: var(--hyrule-surface);
+    border: 1px solid var(--hyrule-border);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+
+.quick-view-card:active {
+    border-color: var(--sheikah-blue);
+}
+
+.quick-view-card .qv-formula {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #e0e8f0;
+    flex: 1;
+}
+
+.quick-view-card .qv-status {
+    font-size: 0.9rem;
+}
+
+
+/* ===== 8. Korok Discovery ===== */
+.korok-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 960;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(6, 12, 24, 0.88);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    animation: hyrule-slide-in 0.3s ease-out;
+}
+
+.korok-popup {
+    width: 85%;
+    max-width: 340px;
+    padding: 32px 24px;
+    background: var(--hyrule-surface);
+    border: 1px solid var(--zonai-green-dim);
+    border-radius: 18px;
+    text-align: center;
+    box-shadow: 0 0 40px rgba(71, 199, 138, 0.1);
+}
+
+.korok-popup .korok-emoji {
+    font-size: 3rem;
+    animation: korok-bounce 1s ease-in-out infinite;
+    margin-bottom: 12px;
+}
+
+.korok-popup h3 {
+    font-size: 1.1rem;
+    color: var(--zonai-green);
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.korok-hint {
+    font-size: 0.85rem;
+    color: #7088a0;
+    line-height: 1.5;
+    margin-bottom: 14px;
+}
+
+.korok-reveal {
+    padding: 14px;
+    background: var(--zonai-green-dim);
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--zonai-green);
+    animation: lightroot-reveal 0.6s ease-out;
+}
+
+
+/* ===== 9. Sage Awakening ===== */
+.sage-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 970;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(6, 12, 24, 0.92);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    animation: hyrule-slide-in 0.35s ease-out;
+}
+
+.sage-popup {
+    width: 85%;
+    max-width: 360px;
+    padding: 36px 24px;
+    background: linear-gradient(180deg, var(--hyrule-surface), #0e1a30);
+    border: 1px solid var(--ancient-gold-dim);
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 0 60px rgba(200, 168, 80, 0.1);
+    animation: sage-glow 3s ease-in-out infinite;
+}
+
+.sage-popup .sage-icon {
+    font-size: 3.5rem;
+    margin-bottom: 14px;
+}
+
+.sage-popup h2 {
+    font-size: 1.3rem;
+    color: var(--ancient-gold);
+    font-weight: 800;
+    margin-bottom: 6px;
+}
+
+.sage-popup p {
+    font-size: 0.88rem;
+    color: #a0b0c0;
+    line-height: 1.5;
+    margin-bottom: 16px;
+}
+
+.sage-reward {
+    padding: 14px;
+    background: var(--ancient-gold-dim);
+    border: 1px solid rgba(200, 168, 80, 0.3);
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--ancient-gold);
+}
+
+
+/* ===== 10. Animations ===== */
+@keyframes hyrule-slide-in {
+    from {
+        opacity: 0;
+        transform: translateY(24px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes hyrule-slide-out {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(24px);
+    }
+}
+
+@keyframes lightroot-reveal {
+    0% {
+        opacity: 0;
+        filter: brightness(2.5);
+        transform: scale(0.9);
+    }
+    50% {
+        filter: brightness(1.8);
+    }
+    100% {
+        opacity: 1;
+        filter: brightness(1);
+        transform: scale(1);
+    }
+}
+
+@keyframes mastery-up {
+    0% {
+        transform: scale(0.85);
+        opacity: 0.5;
+    }
+    50% {
+        transform: scale(1.08);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes sheikah-pulse {
+    0%, 100% {
+        opacity: 0.03;
+    }
+    50% {
+        opacity: 0.08;
+    }
+}
+
+@keyframes progress-ring-fill {
+    from {
+        stroke-dashoffset: var(--ring-circumference, 251);
+    }
+    to {
+        stroke-dashoffset: var(--ring-offset, 0);
+    }
+}
+
+@keyframes korok-bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes sage-glow {
+    0%, 100% {
+        box-shadow: 0 0 40px rgba(200, 168, 80, 0.08);
+    }
+    50% {
+        box-shadow: 0 0 60px rgba(200, 168, 80, 0.18);
+    }
+}
+
+@keyframes star-sparkle {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    25% {
+        opacity: 0.7;
+        transform: scale(0.9);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.15);
+    }
+    75% {
+        opacity: 0.85;
+        transform: scale(0.95);
+    }
+}
+
+@keyframes triforce-rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+
+/* ===== 11. Sheikah Pattern Decoration ===== */
+.sheikah-pattern {
+    position: relative;
+}
+
+.sheikah-pattern::before,
+.sheikah-pattern::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    border-radius: inherit;
+}
+
+.sheikah-pattern::before {
+    opacity: 0.04;
+    background:
+        repeating-linear-gradient(0deg, transparent, transparent 20px, var(--sheikah-blue) 20px, var(--sheikah-blue) 20.5px),
+        repeating-linear-gradient(90deg, transparent, transparent 20px, var(--sheikah-blue) 20px, var(--sheikah-blue) 20.5px);
+    animation: sheikah-pulse 6s ease-in-out infinite;
+}
+
+.sheikah-pattern::after {
+    opacity: 0.06;
+    background:
+        repeating-linear-gradient(45deg, transparent, transparent 30px, var(--sheikah-blue) 30px, var(--sheikah-blue) 30.5px),
+        repeating-linear-gradient(-45deg, transparent, transparent 30px, var(--sheikah-blue) 30px, var(--sheikah-blue) 30.5px);
+    animation: sheikah-pulse 8s ease-in-out infinite reverse;
+}
+
+
+/* ===== 12. SVG Progress Ring Component ===== */
+.progress-ring {
+    width: 48px;
+    height: 48px;
+    position: relative;
+}
+
+.progress-ring svg {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+}
+
+.progress-ring-bg {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.06);
+    stroke-width: 3;
+}
+
+.progress-ring-fill {
+    fill: none;
+    stroke: var(--sheikah-blue);
+    stroke-width: 3;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.6s ease-out;
+    animation: progress-ring-fill 1s ease-out forwards;
+}
+
+.progress-ring-text {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: #a0b0c0;
+}
+
+
+/* ===== 13. Responsive ===== */
+
+/* 2-column region map at 480px */
+@media (min-width: 480px) {
+    .region-map {
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+    }
+
+    .region-card {
+        grid-template-columns: 44px 1fr;
+        grid-template-rows: auto auto auto;
+    }
+
+    .region-card .progress-ring {
+        grid-row: 1;
+        grid-column: 2;
+        justify-self: end;
+    }
+
+    .region-card .region-stats {
+        grid-column: 1 / -1;
+    }
+}
+
+/* 3-column region map at 768px */
+@media (min-width: 768px) {
+    .region-map {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+        max-width: 720px;
+        margin: 0 auto;
+    }
+
+    .knowledge-header h1 {
+        font-size: 1.3rem;
+    }
+
+    .quiz-card .quiz-question {
+        font-size: 1.8rem;
+    }
+
+    .knowledge-formula-box {
+        font-size: 2.4rem;
+        padding: 32px 20px;
+    }
+
+    .shrine-list {
+        max-width: 560px;
+        margin: 0 auto;
+    }
+}
+
+
+/* ===== 14. Reduced Motion ===== */
+@media (prefers-reduced-motion: reduce) {
+    .knowledge-page,
+    .region-detail,
+    .knowledge-detail,
+    .quiz-overlay,
+    .korok-overlay,
+    .sage-overlay {
+        animation: none !important;
+    }
+
+    .region-card::before,
+    .sheikah-pattern::before,
+    .sheikah-pattern::after {
+        animation: none !important;
+    }
+
+    .shrine-entry.status-perfected .mastery-indicator,
+    .korok-popup .korok-emoji,
+    .progress-ring-fill,
+    .quiz-feedback,
+    .korok-reveal {
+        animation: none !important;
+    }
+
+    * {
+        transition-duration: 0.01ms !important;
+    }
+}

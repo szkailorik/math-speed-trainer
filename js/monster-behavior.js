@@ -210,13 +210,13 @@ BattleMode.executeDodge = function(cb) {
     const quip = quips[Math.floor(Math.random() * quips.length)];
 
     const enemyEmoji = document.getElementById('monster-emoji');
-    this.showSpeechBubble(enemyEmoji, quip, 1000);
+    this.showSpeechBubble(enemyEmoji, quip, 700);
     this.showBattleFeedback(true, '💨 擦到了! 快一点伤害更高哦');
 
     setTimeout(() => {
         this.setEnemyState('idle');
         if (cb) cb({ dodged: true });
-    }, 1000);
+    }, 700);
 };
 
 // ===== Taunt =====
@@ -229,12 +229,12 @@ BattleMode.executeTaunt = function(cb) {
     const quip = quips[Math.floor(Math.random() * quips.length)];
 
     const enemyEmoji = document.getElementById('monster-emoji');
-    this.showSpeechBubble(enemyEmoji, quip, 1200);
+    this.showSpeechBubble(enemyEmoji, quip, 800);
 
     setTimeout(() => {
         this.setEnemyState('idle');
         if (cb) cb();
-    }, 1200);
+    }, 800);
 };
 
 // ===== Enrage =====
@@ -250,14 +250,14 @@ BattleMode.executeEnrage = function(cb) {
     const quip = quips[Math.floor(Math.random() * quips.length)];
 
     const enemyEmoji = document.getElementById('monster-emoji');
-    this.showSpeechBubble(enemyEmoji, quip, 1500);
+    this.showSpeechBubble(enemyEmoji, quip, 1000);
 
     this.showBattleFeedback(false, '😡 怪物愤怒了! 攻击+1');
 
     setTimeout(() => {
         // Stay in enraged visual state
         if (cb) cb();
-    }, 1500);
+    }, 1000);
 };
 
 // ===== Fear =====
@@ -270,13 +270,13 @@ BattleMode.executeFear = function(cb) {
     const quip = quips[Math.floor(Math.random() * quips.length)];
 
     const enemyEmoji = document.getElementById('monster-emoji');
-    this.showSpeechBubble(enemyEmoji, quip, 1200);
+    this.showSpeechBubble(enemyEmoji, quip, 800);
     this.showBattleFeedback(true, '😰 怪物害怕了!');
 
     setTimeout(() => {
         this.setEnemyState('idle');
         if (cb) cb();
-    }, 1200);
+    }, 800);
 };
 
 // ===== Defend =====
@@ -292,12 +292,12 @@ BattleMode.executeDefend = function(cb) {
     const quip = quips[Math.floor(Math.random() * quips.length)];
 
     const enemyEmoji = document.getElementById('monster-emoji');
-    this.showSpeechBubble(enemyEmoji, '🛡️ ' + quip, 1200);
+    this.showSpeechBubble(enemyEmoji, '🛡️ ' + quip, 800);
     this.showBattleFeedback(false, '🛡️ 防御姿态! 伤害减半!');
 
     setTimeout(() => {
         if (cb) cb();
-    }, 1200);
+    }, 800);
 };
 
 // ===== Summon =====
@@ -312,7 +312,7 @@ BattleMode.executeSummon = function(cb) {
     const quip = quips[Math.floor(Math.random() * quips.length)];
 
     const enemyEmoji = document.getElementById('monster-emoji');
-    this.showSpeechBubble(enemyEmoji, quip, 1500);
+    this.showSpeechBubble(enemyEmoji, quip, 1000);
     this.showBattleFeedback(false, '👾 召唤小弟! 需要额外答题!');
 
     // Create summon visual effect
@@ -322,12 +322,12 @@ BattleMode.executeSummon = function(cb) {
         summonEl.className = 'summon-minion';
         summonEl.textContent = '👾';
         arena.appendChild(summonEl);
-        setTimeout(() => summonEl.remove(), 2000);
+        setTimeout(() => summonEl.remove(), 1400);
     }
 
     setTimeout(() => {
         if (cb) cb({ summonActive: true });
-    }, 1500);
+    }, 1000);
 };
 
 // ===== Escape =====
@@ -340,7 +340,7 @@ BattleMode.executeEscape = function(cb) {
     const quip = quips[Math.floor(Math.random() * quips.length)];
 
     const enemyEmoji = document.getElementById('monster-emoji');
-    this.showSpeechBubble(enemyEmoji, quip, 1500);
+    this.showSpeechBubble(enemyEmoji, quip, 1000);
     this.showBattleFeedback(false, '🏃 怪物想逃跑! 答对下题阻止!');
 
     // Visual: monster turns away
@@ -350,7 +350,7 @@ BattleMode.executeEscape = function(cb) {
 
     setTimeout(() => {
         if (cb) cb({ escapePending: true });
-    }, 1500);
+    }, 1000);
 };
 
 // ===== Self Destruct =====
@@ -362,7 +362,7 @@ BattleMode.executeSelfDestruct = function(cb) {
     const quip = quips[Math.floor(Math.random() * quips.length)];
 
     const enemyEmoji = document.getElementById('monster-emoji');
-    this.showSpeechBubble(enemyEmoji, quip, 1000);
+    this.showSpeechBubble(enemyEmoji, quip, 800);
 
     setTimeout(() => {
         // Check if shield blocks
@@ -389,7 +389,7 @@ BattleMode.executeSelfDestruct = function(cb) {
         this.updateUI();
 
         if (cb) cb({ selfDestructed: true });
-    }, 1000);
+    }, 800);
 };
 
 // ===== Heal =====
@@ -401,7 +401,7 @@ BattleMode.executeHeal = function(cb) {
     const quip = quips[Math.floor(Math.random() * quips.length)];
 
     const enemyEmoji = document.getElementById('monster-emoji');
-    this.showSpeechBubble(enemyEmoji, '💚 ' + quip, 1200);
+    this.showSpeechBubble(enemyEmoji, '💚 ' + quip, 800);
 
     // Heal 1 HP (not exceeding max)
     const healAmount = 1;
@@ -413,12 +413,12 @@ BattleMode.executeHeal = function(cb) {
     // Green glow effect on enemy
     if (enemyEmoji) {
         enemyEmoji.classList.add('healing');
-        setTimeout(() => enemyEmoji.classList.remove('healing'), 1000);
+        setTimeout(() => enemyEmoji.classList.remove('healing'), 700);
     }
 
     setTimeout(() => {
         if (cb) cb();
-    }, 1200);
+    }, 800);
 };
 
 // ===== Reset behavior state for new monster =====
