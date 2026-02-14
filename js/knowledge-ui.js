@@ -14,7 +14,7 @@ var KnowledgeUI = {
 
     _currentRegion: null,
     _currentShrine: null,
-    _mode: 'explore',  // 'explore' or 'quickview'
+    _mode: 'quickview',  // 'quickview' (学习内容) or 'explore' (进度追踪)
     _quizState: null,
 
     // ===== 主入口 =====
