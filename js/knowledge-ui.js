@@ -144,7 +144,7 @@ var KnowledgeUI = {
         html += '</div>';
 
         // Practice button
-        html += '<button class="knowledge-practice-btn" onclick="startPractice(\'' + region.module + '\'); showPage(\'practice\');">' +
+        html += '<button class="knowledge-practice-btn" onclick="startPractice(\'' + region.module + '\');">' +
             '⚔️ 进入' + region.nameShort + '训练 →' +
         '</button>';
 
@@ -299,7 +299,7 @@ var KnowledgeUI = {
 
         // Practice button — placed before cards so it's immediately visible
         var tabNames = { xiaojiujiu:'小九九', times:'大九九+平方', multiply:'乘法速记', fraction:'分数小数', decimal:'小数规律', unit:'单位换算' };
-        html += '<button class="knowledge-practice-btn" onclick="startPractice(\'' + activeTab + '\'); showPage(\'practice\');">' +
+        html += '<button class="knowledge-practice-btn" onclick="startPractice(\'' + activeTab + '\');">' +
             '⚔️ 开始练习 ' + (tabNames[activeTab] || activeTab) + ' →' +
         '</button>';
 
