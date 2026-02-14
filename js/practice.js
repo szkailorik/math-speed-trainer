@@ -11,6 +11,10 @@ function startPractice(module) {
     if (module === 'xiaojiujiu') {
         showPage('xiaojiujiu-mode');
         BattleMode.updateCollectionCount();
+        // v23.0: Render chapter select cards
+        if (typeof ChapterSystem !== 'undefined') {
+            ChapterSystem.renderChapterSelect('xiaojiujiu');
+        }
         return;
     }
     if (module === 'fraction') {

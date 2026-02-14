@@ -209,7 +209,21 @@ const App = {
     },
 
     // v16.0: Math Crystal currency
-    crystals: 0
+    crystals: 0,
+
+    // v23.0: Chapter system state
+    chapter: {
+        active: false,
+        module: null,
+        chapterId: null,
+        chapterIndex: 0,
+        totalQuestions: 0,
+        correctQuestions: 0,
+        playerDamageTaken: 0,
+        playerDied: false,
+        isBossFight: false,
+        startTime: null
+    }
 };
 
 // ===== Utility Functions =====

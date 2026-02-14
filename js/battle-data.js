@@ -659,12 +659,17 @@ const BattleMode = {
                 ...hpBossMonsters
             ];
         }
-        return [
+        var base = [
             ...this.easyMonsters,
             ...this.normalMonsters,
             ...this.hardMonsters,
             ...this.bossMonsters
         ];
+        // v23.0: Merge chapter BOSS monsters
+        if (typeof chapterBossMonsters !== 'undefined' && chapterBossMonsters.xiaojiujiu) {
+            base = base.concat(chapterBossMonsters.xiaojiujiu);
+        }
+        return base;
     },
 
     // 获取模块的怪兽数组

@@ -90,6 +90,10 @@ BattleMode.init = function() {
 
     document.getElementById('collection-back-btn')?.addEventListener('click', () => {
         showPage('xiaojiujiu-mode');
+        // v23.0: Re-render chapter select
+        if (typeof ChapterSystem !== 'undefined') {
+            ChapterSystem.renderChapterSelect('xiaojiujiu');
+        }
     });
 
     document.querySelectorAll('.collection-filter-btn:not(.shanhai-filter)').forEach(btn => {
@@ -532,6 +536,11 @@ BattleMode.initStage = function() {
     battle.monsterMaxHP = monster.hp;
     battle.currentMonster = monster;
 
+    // v23.0: Track chapter boss fight
+    if (typeof ChapterSystem !== 'undefined') {
+        ChapterSystem.onStageInit(stageIndex);
+    }
+
     // v15.0: Reset behavior state for new monster
     this.resetBehaviorState();
 
@@ -822,6 +831,11 @@ BattleMode.checkAnswer = function(answer, btnElement) {
     // v16.2: Update question weight
     if (typeof QuestionEngine !== 'undefined' && typeof QuestionEngine.updateWeight === 'function') {
         QuestionEngine.updateWeight(battle.module || 'xiaojiujiu', question.q, isCorrect, false);
+    }
+
+    // v23.0: Track chapter question
+    if (typeof ChapterSystem !== 'undefined') {
+        ChapterSystem.onQuestionAnswered(isCorrect);
     }
 
     if (isCorrect) {
@@ -1679,7 +1693,16 @@ BattleMode.monsterAttack = function() {
     battle.playerHP = Math.max(0, battle.playerHP - hpLoss);
     this.updateUI();
 
+    // v23.0: Track chapter damage
+    if (typeof ChapterSystem !== 'undefined') {
+        ChapterSystem.onPlayerDamaged();
+    }
+
     if (battle.playerHP <= 0) {
+        // v23.0: Track player death for chapter star calculation
+        if (typeof ChapterSystem !== 'undefined') {
+            ChapterSystem.onPlayerDied();
+        }
         if (battle.hasRevive) {
             battle.hasRevive = false;
             battle.playerHP = 1;
@@ -1839,12 +1862,40 @@ BattleMode.gameOver = function(isVictory) {
         document.getElementById('result-max-combo').textContent = battle.maxCombo;
         document.getElementById('result-battle-score').textContent = '+' + score;
 
-        showPage('battle-result');
+        // v23.0: Chapter mode victory handling
+        if (App.chapter.active && typeof ChapterSystem !== 'undefined') {
+            // Show default result actions hidden, chapter system renders its own
+            var defaultActions = document.getElementById('default-result-actions');
+            if (defaultActions) defaultActions.style.display = 'none';
 
-        setTimeout(() => {
-            createConfetti(100);
-            playSound('complete');
-        }, 300);
+            showPage('battle-result');
+
+            setTimeout(() => {
+                createConfetti(100);
+                playSound('complete');
+            }, 300);
+
+            ChapterSystem.onChapterVictory();
+        } else {
+            // Default (non-chapter) result display
+            var defaultActions = document.getElementById('default-result-actions');
+            if (defaultActions) defaultActions.style.display = '';
+            var chapterStar = document.getElementById('chapter-star-display');
+            if (chapterStar) chapterStar.style.display = 'none';
+            var chapterAcc = document.getElementById('chapter-accuracy-display');
+            if (chapterAcc) chapterAcc.style.display = 'none';
+            var chapterRewards = document.getElementById('chapter-rewards-display');
+            if (chapterRewards) chapterRewards.style.display = 'none';
+            var chapterActions = document.getElementById('chapter-result-actions');
+            if (chapterActions) chapterActions.style.display = 'none';
+
+            showPage('battle-result');
+
+            setTimeout(() => {
+                createConfetti(100);
+                playSound('complete');
+            }, 300);
+        }
 
         this.checkBattleAchievements();
 
@@ -1866,6 +1917,38 @@ BattleMode.gameOver = function(isVictory) {
             encourages[Math.floor(Math.random() * encourages.length)];
 
         playSound('gameOver');
+
+        // v23.0: Chapter mode fail handling — update button behavior
+        if (App.chapter.active) {
+            var failRetryBtn = document.getElementById('battle-retry-fail-btn');
+            var failHomeBtn = document.getElementById('battle-home-fail-btn');
+            if (failRetryBtn) {
+                failRetryBtn.onclick = function() {
+                    ChapterSystem.retryChapter();
+                };
+            }
+            if (failHomeBtn) {
+                failHomeBtn.onclick = function() {
+                    App.chapter.active = false;
+                    showPage('xiaojiujiu-mode');
+                    ChapterSystem.renderChapterSelect('xiaojiujiu');
+                };
+            }
+        } else {
+            // Restore default fail button behavior
+            var failRetryBtn = document.getElementById('battle-retry-fail-btn');
+            var failHomeBtn = document.getElementById('battle-home-fail-btn');
+            if (failRetryBtn) {
+                failRetryBtn.onclick = function() {
+                    BattleMode.startBattle(App.battle.difficulty, App.battle.module);
+                };
+            }
+            if (failHomeBtn) {
+                failHomeBtn.onclick = function() {
+                    showPage('home');
+                };
+            }
+        }
 
         showPage('battle-fail');
     }
@@ -2073,5 +2156,9 @@ BattleMode.exitBattle = function() {
     } else {
         showPage('xiaojiujiu-mode');
         this.updateCollectionCount();
+        // v23.0: Re-render chapter select
+        if (typeof ChapterSystem !== 'undefined') {
+            ChapterSystem.renderChapterSelect('xiaojiujiu');
+        }
     }
 };

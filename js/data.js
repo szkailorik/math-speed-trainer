@@ -1065,6 +1065,27 @@ const MathData = {
         { id: 'unit_all_items', name: '换算传说', desc: '收集单位换算全部独占道具', icon: '👑', special: 'module_all_items', module: 'unit' },
         // v21.0: 跨模块成就
         { id: 'six_realms', name: '六界通行者', desc: '在6个模块各完成至少1场困难战斗', icon: '🌈', special: 'six_realms' },
+        // v23.0: 通用章节成就
+        { id: 'chapter_first_clear', name: '初闯成功', desc: '首次通关任意第1关', icon: '🏁', special: 'chapter_first_clear' },
+        { id: 'chapter_3star_ch1', name: '满星初试', desc: '任意模块第1关获3星', icon: '⭐', special: 'chapter_3star_ch1' },
+        { id: 'chapter_3star_ch2', name: '满星战场', desc: '任意模块第2关获3星', icon: '🌟', special: 'chapter_3star_ch2' },
+        { id: 'chapter_3star_ch3', name: '满星魔王', desc: '任意模块第3关获3星', icon: '💫', special: 'chapter_3star_ch3' },
+        { id: 'chapter_perfect_module', name: '完美征服', desc: '任一模块全3关获3星', icon: '👑', special: 'chapter_perfect_module' },
+        { id: 'chapter_speedrun', name: '闪电通关', desc: '2分钟内通关任意第1关', icon: '⚡', special: 'chapter_speedrun' },
+        { id: 'chapter_no_damage_ch3', name: '无伤魔王', desc: '无伤通关任意第3关', icon: '🛡️', special: 'chapter_no_damage_ch3' },
+        { id: 'chapter_boss_combo10', name: 'BOSS连击王', desc: '对章节BOSS达成10连击', icon: '🔥', special: 'chapter_boss_combo10' },
+        // v23.0: 小九九专属章节成就
+        { id: 'xjj_ch1_clear', name: '口诀入门', desc: '通关小九九第1关', icon: '📖', special: 'xjj_ch1_clear', module: 'xiaojiujiu' },
+        { id: 'xjj_ch2_clear', name: '速算突破', desc: '通关小九九第2关', icon: '⚔️', special: 'xjj_ch2_clear', module: 'xiaojiujiu' },
+        { id: 'xjj_ch3_clear', name: '魔帝终结', desc: '通关小九九第3关', icon: '👑', special: 'xjj_ch3_clear', module: 'xiaojiujiu' },
+        { id: 'xjj_9stars', name: '九九满星', desc: '小九九全9星', icon: '🏆', special: 'xjj_9stars', module: 'xiaojiujiu' },
+        { id: 'xjj_ch3_first_3star', name: '一战封帝', desc: '首次挑战第3关即获3星', icon: '🌈', special: 'xjj_ch3_first_3star', module: 'xiaojiujiu' },
+        { id: 'xjj_phase2_slayer', name: '真龙屠手', desc: '击败九九魔帝第二形态', icon: '🐲', special: 'xjj_phase2_slayer', module: 'xiaojiujiu' },
+        { id: 'xjj_replay_master', name: '精益求精', desc: '同一关重玩获得更高星级3次', icon: '🔄', special: 'xjj_replay_master', module: 'xiaojiujiu' },
+        // v23.0: 跨模块章节成就（为未来扩展预留）
+        { id: 'chapter_6mod_ch1', name: '六界探索者', desc: '6个模块的第1关都通关', icon: '🗺️', special: 'chapter_6mod_ch1' },
+        { id: 'chapter_6mod_ch3', name: '六界征服者', desc: '6个模块的第3关都通关', icon: '🌈', special: 'chapter_6mod_ch3' },
+        { id: 'chapter_54stars', name: '星辰大海', desc: '获得全部54星(6×3×3)', icon: '🌌', special: 'chapter_54stars' },
     ]
 };
 
