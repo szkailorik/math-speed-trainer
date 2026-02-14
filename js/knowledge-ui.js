@@ -38,8 +38,14 @@ var KnowledgeUI = {
 
         var regions = KnowledgeData.regions;
         var html = '<div class="knowledge-mode-bar">' +
-            '<button class="knowledge-mode-btn active" data-mode="explore">🗺️ 探索</button>' +
             '<button class="knowledge-mode-btn" data-mode="quickview">📋 速查</button>' +
+            '<button class="knowledge-mode-btn active" data-mode="explore">🗺️ 冒险地图</button>' +
+            '</div>';
+
+        // v22.0: Intro banner
+        html += '<div class="explore-intro">' +
+            '<div class="explore-intro-title">🗺️ 知识冒险地图</div>' +
+            '通过练习和战斗探索各区域，记录你掌握的每一个知识点！点击任意区域查看详细进度。' +
             '</div>';
 
         html += '<div class="region-map">';
@@ -116,22 +122,23 @@ var KnowledgeUI = {
             var status = KnowledgeTracker.getStatus(s.id);
             var progress = KnowledgeTracker.getProgress(s.id);
 
-            var isLocked = status === 'undiscovered';
-            var displayName = isLocked ? '？？？·？？？神庙' : s.name;
-            var displaySubtitle = isLocked ? '？？？' : s.subtitle;
+            // v22.0: Always show real names, use friendly status labels
+            var statusLabel = status === 'undiscovered' ? '未练习' :
+                              status === 'discovered' ? '已练习' :
+                              status === 'mastered' ? '已掌握' : '完美掌握';
 
             html += '<div class="shrine-entry status-' + status + ' shrine-type-' + s.type + '" data-shrine="' + s.id + '" data-region="' + regionId + '">' +
                 '<div class="shrine-entry-left">' +
-                    '<span class="shrine-entry-icon">' + (isLocked ? '❓' : s.icon) + '</span>' +
+                    '<span class="shrine-entry-icon">' + s.icon + '</span>' +
                     '<div class="shrine-entry-info">' +
-                        '<div class="shrine-entry-name">' + displayName + '</div>' +
-                        '<div class="shrine-entry-subtitle">' + displaySubtitle +
-                            ' <span class="shrine-type-badge shrine-type-' + s.type + '">' + (isLocked ? '' : s.typeLabel) + '</span>' +
+                        '<div class="shrine-entry-name">' + s.name + '</div>' +
+                        '<div class="shrine-entry-subtitle">' + s.subtitle +
+                            ' <span class="shrine-type-badge shrine-type-' + s.type + '">' + s.typeLabel + '</span>' +
                         '</div>' +
                     '</div>' +
                 '</div>' +
                 '<div class="shrine-entry-right">' +
-                    this._renderStatusIcon(status) +
+                    '<span class="shrine-status-label status-' + status + '">' + statusLabel + '</span>' +
                     (progress ? '<div class="shrine-entry-count">' + progress.correct + '/' + progress.encountered + '</div>' : '') +
                 '</div>' +
             '</div>';
@@ -165,14 +172,17 @@ var KnowledgeUI = {
 
         var status = KnowledgeTracker.getStatus(shrineId);
         var progress = KnowledgeTracker.getProgress(shrineId);
-        var isLocked = status === 'undiscovered';
+        // v22.0: Friendly status labels
+        var statusLabel = status === 'undiscovered' ? '未练习' :
+                          status === 'discovered' ? '已练习' :
+                          status === 'mastered' ? '已掌握' : '完美掌握';
 
         var html = '<div class="knowledge-detail" style="--region-color:' + region.color + '">';
 
         // Header
         html += '<div class="knowledge-detail-header">' +
             '<button class="knowledge-back-btn" data-action="back-to-region" data-region="' + regionId + '">← ' + region.nameShort + '</button>' +
-            '<div class="knowledge-detail-status">' + this._renderStatusBadge(status) + '</div>' +
+            '<div class="knowledge-detail-status"><span class="shrine-status-label status-' + status + '">' + statusLabel + '</span></div>' +
         '</div>';
 
         // Shrine name
@@ -184,29 +194,25 @@ var KnowledgeUI = {
             '</div>' +
         '</div>';
 
-        // Formula box
+        // v22.0: Always show formula content (no lock)
         html += '<div class="knowledge-formula-box">';
-        if (isLocked) {
-            html += '<div class="knowledge-locked-msg">在练习或战斗中遇到此类题目即可解锁</div>';
-        } else {
-            html += '<div class="knowledge-items">';
-            for (var i = 0; i < shrine.items.length; i++) {
-                html += '<span class="knowledge-item">' + shrine.items[i] + '</span>';
-            }
-            html += '</div>';
+        html += '<div class="knowledge-items">';
+        for (var i = 0; i < shrine.items.length; i++) {
+            html += '<span class="knowledge-item">' + shrine.items[i] + '</span>';
         }
         html += '</div>';
+        html += '</div>';
 
-        // Tip
-        if (!isLocked && shrine.tip) {
+        // Tip — always show
+        if (shrine.tip) {
             html += '<div class="knowledge-section">' +
                 '<div class="knowledge-section-title">💡 记忆秘技</div>' +
                 '<div class="knowledge-section-text">' + shrine.tip + '</div>' +
             '</div>';
         }
 
-        // Battle effect
-        if (!isLocked && shrine.battleEffect) {
+        // Battle effect — always show
+        if (shrine.battleEffect) {
             html += '<div class="knowledge-section">' +
                 '<div class="knowledge-section-title">⚔️ 战斗效果</div>' +
                 '<div class="knowledge-section-text">' + shrine.battleEffect + '</div>' +
@@ -278,8 +284,8 @@ var KnowledgeUI = {
         var activeTab = this._currentRegion || 'xiaojiujiu';
 
         var html = '<div class="knowledge-mode-bar">' +
-            '<button class="knowledge-mode-btn" data-mode="explore">🗺️ 探索</button>' +
             '<button class="knowledge-mode-btn active" data-mode="quickview">📋 速查</button>' +
+            '<button class="knowledge-mode-btn" data-mode="explore">🗺️ 冒险地图</button>' +
             '</div>';
 
         html += '<div class="quick-view">';
