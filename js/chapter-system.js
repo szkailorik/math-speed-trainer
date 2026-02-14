@@ -640,10 +640,10 @@ var ChapterSystem = {
 
         container.innerHTML = html;
 
-        // Update progress display
+        // Update progress badge
         var progressEl = document.getElementById('chapter-progress-display');
         if (progressEl) {
-            progressEl.textContent = '进度: ' + totalStars + '/' + maxStars + ' ⭐';
+            progressEl.textContent = totalStars + '/' + maxStars + ' ⭐';
         }
 
         // Bind click events

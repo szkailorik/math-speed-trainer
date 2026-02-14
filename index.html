@@ -463,48 +463,49 @@
             </header>
 
             <div class="mode-select-container">
-                <!-- v23.0: 冒险闯关区域 -->
+                <h3 class="mode-select-title">选择训练模式</h3>
+
+                <!-- v23.0: 冒险闯关 — 主推入口 -->
                 <div class="chapter-section">
-                    <h3 class="mode-select-title">⚔️ 冒险闯关</h3>
+                    <div class="chapter-section-header">
+                        <span class="chapter-section-icon">⚔️</span>
+                        <span class="chapter-section-label">冒险闯关</span>
+                        <span class="chapter-progress-badge" id="chapter-progress-display">0/9 ⭐</span>
+                    </div>
                     <div class="chapter-cards-row" id="chapter-cards-container">
                         <!-- 动态填充章节卡片 -->
                     </div>
-                    <div class="chapter-progress" id="chapter-progress-display">进度: 0/9 ⭐</div>
                 </div>
 
-                <!-- 经典模式区域 -->
-                <div class="classic-section">
-                    <h3 class="mode-select-title">📝 经典模式</h3>
-                    <div class="battle-difficulty-selector">
-                        <span class="diff-label">难度：</span>
-                        <button class="battle-diff-btn active" data-diff="easy">
-                            <span class="diff-icon">😊</span>
-                            <span class="diff-text">简单</span>
-                        </button>
-                        <button class="battle-diff-btn" data-diff="normal">
-                            <span class="diff-icon">😤</span>
-                            <span class="diff-text">普通</span>
-                        </button>
-                        <button class="battle-diff-btn" data-diff="hard">
-                            <span class="diff-icon">😈</span>
-                            <span class="diff-text">困难</span>
-                        </button>
-                    </div>
-
-                    <button class="mode-card battle-mode" id="select-battle-mode">
-                        <span class="mode-icon">⚔️</span>
-                        <span class="mode-name">怪兽战斗</span>
-                        <span class="mode-desc">消灭怪兽，拯救数学王国！</span>
+                <!-- 难度选择 + 经典战斗/练习 -->
+                <div class="battle-difficulty-selector">
+                    <span class="diff-label">难度：</span>
+                    <button class="battle-diff-btn active" data-diff="easy">
+                        <span class="diff-icon">😊</span>
+                        <span class="diff-text">简单</span>
                     </button>
-
-                    <button class="mode-card classic-mode" id="select-classic-mode">
-                        <span class="mode-icon">📝</span>
-                        <span class="mode-name">经典练习</span>
-                        <span class="mode-desc">专注练习，稳步提升</span>
+                    <button class="battle-diff-btn" data-diff="normal">
+                        <span class="diff-icon">😤</span>
+                        <span class="diff-text">普通</span>
+                    </button>
+                    <button class="battle-diff-btn" data-diff="hard">
+                        <span class="diff-icon">😈</span>
+                        <span class="diff-text">困难</span>
                     </button>
                 </div>
 
-                <!-- 图鉴 -->
+                <button class="mode-card battle-mode" id="select-battle-mode">
+                    <span class="mode-icon">⚔️</span>
+                    <span class="mode-name">怪兽战斗</span>
+                    <span class="mode-desc">消灭怪兽，拯救数学王国！</span>
+                </button>
+
+                <button class="mode-card classic-mode" id="select-classic-mode">
+                    <span class="mode-icon">📝</span>
+                    <span class="mode-name">经典练习</span>
+                    <span class="mode-desc">专注练习，稳步提升</span>
+                </button>
+
                 <button class="mode-card collection-mode" id="open-collection">
                     <span class="mode-icon">📖</span>
                     <span class="mode-name">妖怪图鉴</span>

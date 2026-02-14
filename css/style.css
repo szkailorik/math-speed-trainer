@@ -7112,130 +7112,143 @@ body.keyboard-active #battle-page .battle-answer-area {
 
 /* ===== v23.0: Chapter System Styles ===== */
 
-/* Chapter section layout */
+/* Chapter section — sits like a mode-card but contains 3 sub-cards */
 .chapter-section {
-    margin-bottom: 20px;
-    padding: 16px;
-    background: linear-gradient(135deg, rgba(108, 92, 231, 0.15), rgba(162, 155, 254, 0.1));
+    background: linear-gradient(135deg, rgba(255, 107, 107, 0.15) 0%, rgba(108, 92, 231, 0.12) 100%);
+    border: 2px solid rgba(255, 107, 107, 0.35);
     border-radius: var(--radius);
-    border: 2px solid rgba(108, 92, 231, 0.3);
+    padding: 12px 10px 10px;
+    cursor: default;
 }
 
-.classic-section {
-    margin-bottom: 16px;
-    padding: 16px;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: var(--radius);
+/* Chapter section header — single row */
+.chapter-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: 8px;
+}
+.chapter-section-icon {
+    font-size: 1.1rem;
+}
+.chapter-section-label {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #E8E0FF;
+}
+.chapter-progress-badge {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: rgba(255, 215, 0, 0.9);
+    background: rgba(255, 255, 255, 0.1);
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-left: 4px;
 }
 
 /* Chapter cards row */
 .chapter-cards-row {
     display: flex;
-    align-items: center;
+    align-items: stretch;
     justify-content: center;
-    gap: 8px;
-    padding: 12px 0;
-    overflow-x: auto;
+    gap: 6px;
 }
 
 .chapter-arrow {
-    font-size: 1.2rem;
-    color: rgba(108, 92, 231, 0.6);
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.3);
     flex-shrink: 0;
+    padding: 0 2px;
 }
 
-/* Chapter card */
+/* Chapter card — compact */
 .chapter-card {
+    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 12px 16px;
-    border-radius: 12px;
-    min-width: 80px;
+    padding: 10px 6px 8px;
+    border-radius: 10px;
+    min-width: 0;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.25s ease;
     position: relative;
 }
 
 .chapter-card.available {
-    background: linear-gradient(135deg, #6C5CE7, #a29bfe);
-    border: 2px solid #a29bfe;
-    box-shadow: 0 0 15px rgba(108, 92, 231, 0.4);
-    animation: chapter-pulse 2s ease-in-out infinite;
+    background: linear-gradient(135deg, rgba(108, 92, 231, 0.6), rgba(162, 155, 254, 0.4));
+    border: 2px solid rgba(162, 155, 254, 0.6);
+    box-shadow: 0 0 12px rgba(108, 92, 231, 0.3);
+    animation: chapter-pulse 2.5s ease-in-out infinite;
 }
 
 .chapter-card.cleared {
-    background: linear-gradient(135deg, #00b894, #55efc4);
-    border: 2px solid #55efc4;
+    background: linear-gradient(135deg, rgba(0, 184, 148, 0.45), rgba(85, 239, 196, 0.3));
+    border: 2px solid rgba(85, 239, 196, 0.5);
 }
 
 .chapter-card.locked {
-    background: rgba(100, 100, 100, 0.3);
-    border: 2px solid rgba(100, 100, 100, 0.4);
+    background: rgba(80, 80, 80, 0.25);
+    border: 2px solid rgba(100, 100, 100, 0.3);
     cursor: not-allowed;
-    filter: grayscale(0.6);
-    opacity: 0.7;
+    filter: grayscale(0.5);
+    opacity: 0.6;
 }
 
 .chapter-card:not(.locked):hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(108, 92, 231, 0.5);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(108, 92, 231, 0.4);
 }
 
 .chapter-card:not(.locked):active {
-    transform: scale(0.95);
+    transform: scale(0.96);
 }
 
 @keyframes chapter-pulse {
-    0%, 100% { box-shadow: 0 0 15px rgba(108, 92, 231, 0.4); }
-    50% { box-shadow: 0 0 25px rgba(108, 92, 231, 0.7); }
+    0%, 100% { box-shadow: 0 0 12px rgba(108, 92, 231, 0.3); }
+    50% { box-shadow: 0 0 20px rgba(108, 92, 231, 0.55); }
 }
 
 .chapter-card-icon {
-    font-size: 2rem;
-    margin-bottom: 4px;
+    font-size: 1.6rem;
+    line-height: 1;
+    margin-bottom: 3px;
 }
 
 .chapter-card-name {
-    font-size: 0.85rem;
+    font-size: 0.75rem;
     font-weight: 700;
     color: white;
-    margin-bottom: 4px;
+    margin-bottom: 2px;
 }
 
 .chapter-card-stars {
     display: flex;
-    gap: 2px;
-    margin-bottom: 4px;
+    gap: 1px;
+    margin-bottom: 2px;
 }
 
 .mini-star {
-    font-size: 0.7rem;
+    font-size: 0.6rem;
 }
 
 .mini-star.empty {
-    opacity: 0.4;
+    opacity: 0.35;
 }
 
 .chapter-card-subtitle {
-    font-size: 0.7rem;
-    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.6rem;
+    color: rgba(255, 255, 255, 0.7);
     white-space: nowrap;
 }
 
 .chapter-card-lock-text {
-    font-size: 0.6rem;
-    color: rgba(255, 255, 255, 0.5);
-    margin-top: 2px;
-}
-
-/* Chapter progress display */
-.chapter-progress {
-    text-align: center;
-    font-size: 0.85rem;
-    color: rgba(108, 92, 231, 0.9);
-    font-weight: 600;
-    margin-top: 8px;
+    font-size: 0.55rem;
+    color: rgba(255, 255, 255, 0.45);
+    margin-top: 1px;
 }
 
 /* Chapter star display in result page */
