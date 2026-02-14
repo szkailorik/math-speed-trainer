@@ -38,15 +38,12 @@ var KnowledgeUI = {
 
         var regions = KnowledgeData.regions;
         var html = '<div class="knowledge-mode-bar">' +
-            '<button class="knowledge-mode-btn" data-mode="quickview">📋 速查</button>' +
-            '<button class="knowledge-mode-btn active" data-mode="explore">🗺️ 冒险地图</button>' +
+            '<button class="knowledge-mode-btn" data-mode="quickview">📖 学习知识</button>' +
+            '<button class="knowledge-mode-btn active" data-mode="explore">📊 学习进度</button>' +
             '</div>';
 
-        // v22.0: Intro banner
-        html += '<div class="explore-intro">' +
-            '<div class="explore-intro-title">🗺️ 知识冒险地图</div>' +
-            '通过练习和战斗探索各区域，记录你掌握的每一个知识点！点击任意区域查看详细进度。' +
-            '</div>';
+        // v22.0: Mode description
+        html += '<div class="knowledge-mode-desc">查看每个知识板块的练习进度，点击可看详细内容。</div>';
 
         html += '<div class="region-map">';
 
@@ -284,9 +281,12 @@ var KnowledgeUI = {
         var activeTab = this._currentRegion || 'xiaojiujiu';
 
         var html = '<div class="knowledge-mode-bar">' +
-            '<button class="knowledge-mode-btn active" data-mode="quickview">📋 速查</button>' +
-            '<button class="knowledge-mode-btn" data-mode="explore">🗺️ 冒险地图</button>' +
+            '<button class="knowledge-mode-btn active" data-mode="quickview">📖 学习知识</button>' +
+            '<button class="knowledge-mode-btn" data-mode="explore">📊 学习进度</button>' +
             '</div>';
+
+        // v22.0: Mode description
+        html += '<div class="knowledge-mode-desc">选择板块查看公式和口诀，帮你快速记住知识点。</div>';
 
         html += '<div class="quick-view">';
 
