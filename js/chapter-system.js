@@ -1,7 +1,9 @@
 /**
- * chapter-system.js - v23.0 Chapter system logic
+ * chapter-system.js - v23.1 Chapter system logic
  * Handles chapter battle flow, star calculation, progress tracking,
  * UI rendering, rewards, and achievement checking.
+ * v23.1: Added perfectStreak tracking, consecutivePerfects unlock logic,
+ *        chapter-exclusive monster queue, new weapon pool, streak UI.
  */
 
 var ChapterSystem = {
@@ -38,6 +40,7 @@ var ChapterSystem = {
     },
 
     // ===== Unlock Logic =====
+    // v23.1: Rewritten to use consecutivePerfects instead of minStars
 
     isChapterUnlocked: function(module, chapterIndex) {
         if (!ChapterConfig[module]) return false;
@@ -48,7 +51,18 @@ var ChapterSystem = {
         var cond = config.unlockCondition;
         var progress = this.getChapterProgress(module, cond.chapter);
         if (!progress) return false;
-        return progress.stars >= cond.minStars;
+
+        // v23.1: Support new consecutivePerfects condition
+        if (typeof cond.consecutivePerfects === 'number') {
+            return (progress.perfectStreak || 0) >= cond.consecutivePerfects;
+        }
+
+        // Legacy fallback: minStars
+        if (typeof cond.minStars === 'number') {
+            return progress.stars >= cond.minStars;
+        }
+
+        return false;
     },
 
     // ===== Star Calculation =====
@@ -77,8 +91,9 @@ var ChapterSystem = {
     },
 
     // ===== Progress Update =====
+    // v23.1: Added perfectStreak and totalPerfects tracking
 
-    updateProgress: function(stars) {
+    updateProgress: function(stars, isPerfect, isDefeat) {
         var chapter = App.chapter;
         var data = this.loadProgress();
         var module = chapter.module;
@@ -88,6 +103,8 @@ var ChapterSystem = {
 
         var prev = data[module][chapterId] || {
             stars: 0,
+            perfectStreak: 0,     // v23.1: current consecutive perfect count
+            totalPerfects: 0,     // v23.1: cumulative perfect count
             bestAccuracy: 0,
             bestTime: Infinity,
             clearCount: 0,
@@ -102,6 +119,20 @@ var ChapterSystem = {
         var isFirstClear = prev.clearCount === 0;
         var improved = stars > prev.stars;
 
+        // v23.1: Perfect streak logic
+        // Only update streak for non-defeat scenarios (victory)
+        if (!isDefeat) {
+            if (isPerfect) {
+                // 100% accuracy → perfectStreak + 1
+                prev.perfectStreak = (prev.perfectStreak || 0) + 1;
+                prev.totalPerfects = (prev.totalPerfects || 0) + 1;
+            } else {
+                // Cleared but had errors → perfectStreak - 1 (min 0)
+                prev.perfectStreak = Math.max(0, (prev.perfectStreak || 0) - 1);
+            }
+        }
+        // Defeat → perfectStreak unchanged (no penalty for losing)
+
         // Stars only go up (never down)
         prev.stars = Math.max(prev.stars, stars);
         prev.bestAccuracy = Math.max(prev.bestAccuracy, accuracy);
@@ -113,7 +144,7 @@ var ChapterSystem = {
         data[module][chapterId] = prev;
         this.saveProgressData(data);
 
-        return { isFirstClear: isFirstClear, improved: improved, progress: prev };
+        return { isFirstClear: isFirstClear, improved: improved, progress: prev, isPerfect: isPerfect };
     },
 
     // ===== Rewards =====
@@ -366,35 +397,40 @@ var ChapterSystem = {
     },
 
     // ===== Generate Chapter Monster Queue =====
+    // v23.1: Rewritten to use chapter-exclusive monsters from chapterMonsters array
 
     generateChapterMonsterQueue: function(config, module) {
         var battle = App.battle;
         battle.monsterQueue = [];
 
-        var monsters = BattleMode.getModuleMonsters(module);
         var queue = [];
 
-        // Generate normal monsters according to monsterMix
-        var mix = config.monsterMix;
-        if (mix.easy) {
-            var pool = shuffle([].concat(monsters.easy));
-            queue = queue.concat(pool.slice(0, mix.easy));
+        // v23.1: Use chapter-exclusive monsters if available
+        if (config.chapterMonsters && config.chapterMonsters.length > 0) {
+            // Use all chapter-exclusive monsters, shuffled
+            queue = shuffle([].concat(config.chapterMonsters));
+        } else {
+            // Legacy fallback: use monsterMix from existing pool
+            var monsters = BattleMode.getModuleMonsters(module);
+            var mix = config.monsterMix;
+            if (mix.easy) {
+                var pool = shuffle([].concat(monsters.easy));
+                queue = queue.concat(pool.slice(0, mix.easy));
+            }
+            if (mix.normal) {
+                var pool = shuffle([].concat(monsters.normal));
+                queue = queue.concat(pool.slice(0, mix.normal));
+            }
+            if (mix.hard) {
+                var pool = shuffle([].concat(monsters.hard));
+                queue = queue.concat(pool.slice(0, mix.hard));
+            }
+            if (mix.boss) {
+                var pool = shuffle([].concat(monsters.boss));
+                queue = queue.concat(pool.slice(0, mix.boss));
+            }
+            queue = shuffle(queue);
         }
-        if (mix.normal) {
-            var pool = shuffle([].concat(monsters.normal));
-            queue = queue.concat(pool.slice(0, mix.normal));
-        }
-        if (mix.hard) {
-            var pool = shuffle([].concat(monsters.hard));
-            queue = queue.concat(pool.slice(0, mix.hard));
-        }
-        if (mix.boss) {
-            var pool = shuffle([].concat(monsters.boss));
-            queue = queue.concat(pool.slice(0, mix.boss));
-        }
-
-        // Shuffle normal monsters
-        queue = shuffle(queue);
 
         // Add chapter BOSS at the end
         queue.push(config.boss);
@@ -455,18 +491,25 @@ var ChapterSystem = {
     },
 
     // ===== Chapter Victory Handler =====
+    // v23.1: Updated to track perfectStreak
 
     onChapterVictory: function() {
+        var chapter = App.chapter;
         var stars = this.calculateStars();
-        var result = this.updateProgress(stars);
+
+        // v23.1: Determine if this was a perfect (100% accuracy) run
+        var accuracy = chapter.totalQuestions > 0 ? chapter.correctQuestions / chapter.totalQuestions : 0;
+        var isPerfect = accuracy >= 1.0;
+
+        var result = this.updateProgress(stars, isPerfect, false);
         var rewards = this.claimRewards(stars, result);
 
         // Check if next chapter just got unlocked
         var nextUnlocked = false;
-        var nextIndex = App.chapter.chapterIndex + 1;
-        var moduleConfig = ChapterConfig[App.chapter.module];
+        var nextIndex = chapter.chapterIndex + 1;
+        var moduleConfig = ChapterConfig[chapter.module];
         if (moduleConfig && nextIndex < moduleConfig.chapters.length) {
-            nextUnlocked = result.isFirstClear && this.isChapterUnlocked(App.chapter.module, nextIndex);
+            nextUnlocked = this.isChapterUnlocked(chapter.module, nextIndex);
         }
 
         // Render chapter result
@@ -476,6 +519,17 @@ var ChapterSystem = {
         this.checkChapterAchievements(stars, result);
 
         return { stars: stars, result: result, rewards: rewards, nextUnlocked: nextUnlocked };
+    },
+
+    // v23.1: Handle chapter defeat (HP = 0) — perfectStreak unchanged
+    onChapterDefeat: function() {
+        var chapter = App.chapter;
+        if (!chapter.active) return;
+
+        // On defeat, we still record the attempt but don't change perfectStreak
+        // Pass isDefeat=true so updateProgress knows not to modify streak
+        var stars = 0;
+        this.updateProgress(stars, false, true);
     },
 
     // ===== Render Chapter Result Page =====
@@ -526,6 +580,38 @@ var ChapterSystem = {
             var seconds = Math.floor((elapsed % 60000) / 1000);
             accuracyEl.innerHTML = '📊 准确率 ' + accuracy + '%&nbsp;&nbsp;⏱️ 用时 ' + minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
             accuracyEl.style.display = 'block';
+        }
+
+        // v23.1: Render perfectStreak progress
+        var streakEl = document.getElementById('chapter-streak-display');
+        if (streakEl) {
+            var progress = result.progress;
+            var streak = progress.perfectStreak || 0;
+            var nextChapterIndex = chapter.chapterIndex + 1;
+            var moduleConfig = ChapterConfig[chapter.module];
+            var needed = 0;
+            if (moduleConfig && nextChapterIndex < moduleConfig.chapters.length) {
+                var nextConfig = moduleConfig.chapters[nextChapterIndex];
+                if (nextConfig.unlockCondition && typeof nextConfig.unlockCondition.consecutivePerfects === 'number') {
+                    needed = nextConfig.unlockCondition.consecutivePerfects;
+                }
+            }
+            if (needed > 0) {
+                var streakHtml = '';
+                if (result.isPerfect) {
+                    streakHtml = '<div class="streak-progress perfect">💯 全对！连续全对 ' + streak + '/' + needed;
+                    if (streak >= needed) {
+                        streakHtml += ' ✅ 下一关已解锁！';
+                    }
+                    streakHtml += '</div>';
+                } else {
+                    streakHtml = '<div class="streak-progress imperfect">连续全对 ' + streak + '/' + needed + ' — 差一点！继续加油</div>';
+                }
+                streakEl.innerHTML = streakHtml;
+                streakEl.style.display = 'block';
+            } else {
+                streakEl.style.display = 'none';
+            }
         }
 
         // Render rewards
@@ -584,6 +670,7 @@ var ChapterSystem = {
     },
 
     // ===== Render Chapter Select UI =====
+    // v23.1: Updated to show perfectStreak progress on locked cards
 
     renderChapterSelect: function(module) {
         var container = document.getElementById('chapter-cards-container');
@@ -626,8 +713,31 @@ var ChapterSystem = {
 
             html += '<div class="chapter-card-subtitle">' + ch.name + '</div>';
 
-            if (!unlocked) {
+            // v23.1: Show perfectStreak progress on cards
+            if (!unlocked && ch.unlockCondition && typeof ch.unlockCondition.consecutivePerfects === 'number') {
+                // Show streak progress for the prerequisite chapter
+                var prereqProgress = this.getChapterProgress(module, ch.unlockCondition.chapter);
+                var streak = prereqProgress ? (prereqProgress.perfectStreak || 0) : 0;
+                var needed = ch.unlockCondition.consecutivePerfects;
+                html += '<div class="chapter-card-streak">连续全对 ' + streak + '/' + needed + ' ⭐</div>';
+                if (streak > 0 && streak < needed) {
+                    html += '<div class="chapter-card-encourage">差一点！继续加油</div>';
+                }
+            } else if (!unlocked) {
                 html += '<div class="chapter-card-lock-text">通关上一关解锁</div>';
+            }
+
+            // v23.1: Show perfectStreak info for unlocked chapters with next-chapter requirements
+            if (unlocked && i < moduleConfig.chapters.length - 1) {
+                var nextCh = moduleConfig.chapters[i + 1];
+                if (nextCh.unlockCondition && typeof nextCh.unlockCondition.consecutivePerfects === 'number') {
+                    var currentProgress = this.getChapterProgress(module, ch.id);
+                    var currentStreak = currentProgress ? (currentProgress.perfectStreak || 0) : 0;
+                    var neededForNext = nextCh.unlockCondition.consecutivePerfects;
+                    if (currentStreak < neededForNext) {
+                        html += '<div class="chapter-card-streak-info">💯 ' + currentStreak + '/' + neededForNext + '</div>';
+                    }
+                }
             }
 
             html += '</div>';
@@ -683,6 +793,33 @@ var ChapterSystem = {
         var config = this.getCurrentConfig();
         if (!config) return;
         App.chapter.isBossFight = (stageIndex >= config.stageCount - 1);
+    },
+
+    // ===== v23.1: Get chapter flying weapon for current chapter =====
+
+    getChapterFlyingWeapon: function(module, chapterId) {
+        if (typeof chapterFlyingWeapons === 'undefined') return null;
+        var weapons = chapterFlyingWeapons[module];
+        if (!weapons) return null;
+        for (var i = 0; i < weapons.length; i++) {
+            if (weapons[i].chapter === chapterId) return weapons[i];
+        }
+        return null;
+    },
+
+    // ===== v23.1: Get chapter drop items for current chapter =====
+
+    getChapterDropItems: function(module, chapterId) {
+        if (typeof chapterItems === 'undefined') return [];
+        var items = chapterItems[module];
+        if (!items) return [];
+        var drops = [];
+        for (var i = 0; i < items.length; i++) {
+            if (items[i].isChapterDrop && items[i].chapter === chapterId) {
+                drops.push(items[i]);
+            }
+        }
+        return drops;
     },
 
     // ===== Achievement Checking =====

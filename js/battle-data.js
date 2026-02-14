@@ -669,6 +669,16 @@ const BattleMode = {
         if (typeof chapterBossMonsters !== 'undefined' && chapterBossMonsters.xiaojiujiu) {
             base = base.concat(chapterBossMonsters.xiaojiujiu);
         }
+        // v23.1: Merge chapter-exclusive monsters (33 new)
+        if (typeof chapterMonsters_ch1 !== 'undefined') {
+            base = base.concat(chapterMonsters_ch1);
+        }
+        if (typeof chapterMonsters_ch2 !== 'undefined') {
+            base = base.concat(chapterMonsters_ch2);
+        }
+        if (typeof chapterMonsters_ch3 !== 'undefined') {
+            base = base.concat(chapterMonsters_ch3);
+        }
         return base;
     },
 
