@@ -231,7 +231,7 @@ var KnowledgeUI = {
         }
 
         // Related shrines
-        if (!isLocked && shrine.related && shrine.related.length > 0) {
+        if (shrine.related && shrine.related.length > 0) {
             html += '<div class="knowledge-section">' +
                 '<div class="knowledge-section-title">🔗 关联神庙</div>' +
                 '<div class="knowledge-related">';
@@ -240,7 +240,7 @@ var KnowledgeUI = {
                 if (relatedShrine) {
                     var relStatus = KnowledgeTracker.getStatus(relatedShrine.id);
                     html += '<span class="knowledge-related-link status-' + relStatus + '" data-shrine="' + relatedShrine.id + '" data-region="' + regionId + '">' +
-                        relatedShrine.icon + ' ' + (relStatus === 'undiscovered' ? '???' : relatedShrine.subtitle) +
+                        relatedShrine.icon + ' ' + relatedShrine.subtitle +
                     '</span>';
                 }
             }
@@ -248,14 +248,12 @@ var KnowledgeUI = {
         }
 
         // Quiz button
-        if (!isLocked) {
-            html += '<button class="knowledge-quiz-btn" data-shrine="' + shrineId + '" data-region="' + regionId + '">' +
-                '⚔️ 挑战此神庙' +
-            '</button>';
-        }
+        html += '<button class="knowledge-quiz-btn" data-shrine="' + shrineId + '" data-region="' + regionId + '">' +
+            '⚔️ 挑战此神庙' +
+        '</button>';
 
         // Korok hint
-        if (!isLocked && shrine.korok) {
+        if (shrine.korok) {
             var korokFound = KnowledgeTracker.getProgress('_korok_' + shrineId);
             if (!korokFound) {
                 html += '<div class="knowledge-korok-hint" data-shrine="' + shrineId + '">' +
@@ -299,6 +297,12 @@ var KnowledgeUI = {
         }
         html += '</div>';
 
+        // Practice button — placed before cards so it's immediately visible
+        var tabNames = { xiaojiujiu:'小九九', times:'大九九+平方', multiply:'乘法速记', fraction:'分数小数', decimal:'小数规律', unit:'单位换算' };
+        html += '<button class="knowledge-practice-btn" onclick="startPractice(\'' + activeTab + '\'); showPage(\'practice\');">' +
+            '⚔️ 开始练习 ' + (tabNames[activeTab] || activeTab) + ' →' +
+        '</button>';
+
         // Content - use original MathData.learnCards
         var cards = MathData.learnCards[activeTab] || [];
         html += '<div class="quick-view-content">';
@@ -312,12 +316,6 @@ var KnowledgeUI = {
             }
             html += '</div></div>';
         }
-
-        // Practice button
-        var tabNames = { xiaojiujiu:'小九九', times:'大九九+平方', multiply:'乘法速记', fraction:'分数小数', decimal:'小数规律', unit:'单位换算' };
-        html += '<button class="knowledge-practice-btn" onclick="startPractice(\'' + activeTab + '\'); showPage(\'practice\');">' +
-            '开始练习 ' + (tabNames[activeTab] || activeTab) + ' →' +
-        '</button>';
 
         html += '</div>';
         container.innerHTML = html;
@@ -425,13 +423,13 @@ var KnowledgeUI = {
                 var isCorrect = answer === q.a;
 
                 if (isCorrect) {
-                    btn.classList.add('quiz-correct');
+                    btn.classList.add('correct');
                     state.correct++;
                 } else {
-                    btn.classList.add('quiz-wrong');
+                    btn.classList.add('wrong');
                     // Highlight correct answer
                     container.querySelectorAll('.quiz-choice-btn').forEach(function(b) {
-                        if (Number(b.dataset.answer) === q.a) b.classList.add('quiz-correct');
+                        if (Number(b.dataset.answer) === q.a) b.classList.add('correct');
                     });
                 }
 
