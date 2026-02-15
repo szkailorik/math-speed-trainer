@@ -20,26 +20,41 @@ function startPractice(module) {
     if (module === 'fraction') {
         showPage('fraction-mode');
         BattleMode.updateFractionCollectionCount();
+        if (typeof ChapterSystem !== 'undefined') {
+            ChapterSystem.renderChapterSelect('fraction');
+        }
         return;
     }
     if (module === 'decimal') {
         showPage('decimal-mode');
         BattleMode.updateDecimalCollectionCount();
+        if (typeof ChapterSystem !== 'undefined') {
+            ChapterSystem.renderChapterSelect('decimal');
+        }
         return;
     }
     if (module === 'unit') {
         showPage('unit-mode');
         BattleMode.updateUnitCollectionCount();
+        if (typeof ChapterSystem !== 'undefined') {
+            ChapterSystem.renderChapterSelect('unit');
+        }
         return;
     }
     if (module === 'multiply') {
         showPage('multiply-mode');
         BattleMode.updateMultiplyCollectionCount();
+        if (typeof ChapterSystem !== 'undefined') {
+            ChapterSystem.renderChapterSelect('multiply');
+        }
         return;
     }
     if (module === 'times') {
         showPage('times-mode');
         BattleMode.updateTimesCollectionCount();
+        if (typeof ChapterSystem !== 'undefined') {
+            ChapterSystem.renderChapterSelect('times');
+        }
         return;
     }
 

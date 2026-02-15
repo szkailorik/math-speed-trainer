@@ -666,16 +666,19 @@ var ChapterSystem = {
     },
 
     backToChapterSelect: function() {
+        var module = App.chapter.module || 'xiaojiujiu';
         App.chapter.active = false;
-        showPage('xiaojiujiu-mode');
-        this.renderChapterSelect('xiaojiujiu');
+        var pageMap = { xiaojiujiu: 'xiaojiujiu-mode', fraction: 'fraction-mode', decimal: 'decimal-mode', unit: 'unit-mode', multiply: 'multiply-mode', times: 'times-mode' };
+        showPage(pageMap[module] || 'xiaojiujiu-mode');
+        this.renderChapterSelect(module);
     },
 
     // ===== Render Chapter Select UI =====
     // v23.1: Updated to show perfectStreak progress on locked cards
 
     renderChapterSelect: function(module) {
-        var container = document.getElementById('chapter-cards-container');
+        var containerId = module === 'xiaojiujiu' ? 'chapter-cards-container' : module + '-chapter-cards-container';
+        var container = document.getElementById(containerId);
         if (!container) return;
         var moduleConfig = ChapterConfig[module];
         if (!moduleConfig) return;
@@ -753,7 +756,8 @@ var ChapterSystem = {
         container.innerHTML = html;
 
         // Update progress badge
-        var progressEl = document.getElementById('chapter-progress-display');
+        var progressId = module === 'xiaojiujiu' ? 'chapter-progress-display' : module + '-chapter-progress-display';
+        var progressEl = document.getElementById(progressId);
         if (progressEl) {
             progressEl.textContent = totalStars + '/' + maxStars + ' ⭐';
         }

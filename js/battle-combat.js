@@ -90,7 +90,6 @@ BattleMode.init = function() {
 
     document.getElementById('collection-back-btn')?.addEventListener('click', () => {
         showPage('xiaojiujiu-mode');
-        // v23.0: Re-render chapter select
         if (typeof ChapterSystem !== 'undefined') {
             ChapterSystem.renderChapterSelect('xiaojiujiu');
         }
@@ -153,6 +152,9 @@ BattleMode.init = function() {
 
     document.getElementById('shanhai-collection-back-btn')?.addEventListener('click', () => {
         showPage('fraction-mode');
+        if (typeof ChapterSystem !== 'undefined') {
+            ChapterSystem.renderChapterSelect('fraction');
+        }
     });
 
     document.querySelectorAll('.shanhai-filter').forEach(btn => {
@@ -204,6 +206,9 @@ BattleMode.init = function() {
 
     document.getElementById('xiyouji-collection-back-btn')?.addEventListener('click', () => {
         showPage('decimal-mode');
+        if (typeof ChapterSystem !== 'undefined') {
+            ChapterSystem.renderChapterSelect('decimal');
+        }
     });
 
     document.querySelectorAll('.xiyouji-filter').forEach(btn => {
@@ -234,6 +239,9 @@ BattleMode.init = function() {
 
     document.getElementById('fengshen-collection-back-btn')?.addEventListener('click', () => {
         showPage('unit-mode');
+        if (typeof ChapterSystem !== 'undefined') {
+            ChapterSystem.renderChapterSelect('unit');
+        }
     });
 
     document.querySelectorAll('.fengshen-filter').forEach(btn => {
@@ -284,6 +292,9 @@ BattleMode.init = function() {
 
     document.getElementById('liaozhai-collection-back-btn')?.addEventListener('click', () => {
         showPage('multiply-mode');
+        if (typeof ChapterSystem !== 'undefined') {
+            ChapterSystem.renderChapterSelect('multiply');
+        }
     });
 
     document.querySelectorAll('.liaozhai-filter').forEach(btn => {
@@ -334,6 +345,9 @@ BattleMode.init = function() {
 
     document.getElementById('hp-collection-back-btn')?.addEventListener('click', () => {
         showPage('times-mode');
+        if (typeof ChapterSystem !== 'undefined') {
+            ChapterSystem.renderChapterSelect('times');
+        }
     });
 
     document.querySelectorAll('.hp-filter').forEach(btn => {
@@ -1929,9 +1943,7 @@ BattleMode.gameOver = function(isVictory) {
             }
             if (failHomeBtn) {
                 failHomeBtn.onclick = function() {
-                    App.chapter.active = false;
-                    showPage('xiaojiujiu-mode');
-                    ChapterSystem.renderChapterSelect('xiaojiujiu');
+                    ChapterSystem.backToChapterSelect();
                 };
             }
         } else {
@@ -2156,9 +2168,9 @@ BattleMode.exitBattle = function() {
     } else {
         showPage('xiaojiujiu-mode');
         this.updateCollectionCount();
-        // v23.0: Re-render chapter select
-        if (typeof ChapterSystem !== 'undefined') {
-            ChapterSystem.renderChapterSelect('xiaojiujiu');
-        }
+    }
+    // v23.2: Re-render chapter select for all modules
+    if (typeof ChapterSystem !== 'undefined') {
+        ChapterSystem.renderChapterSelect(module || 'xiaojiujiu');
     }
 };
