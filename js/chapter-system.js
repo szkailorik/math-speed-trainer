@@ -450,23 +450,13 @@ var ChapterSystem = {
 
         var allQuestions = [];
         var pools = config.questionPools;
-        var ratio = config.questionRatio;
 
-        // Collect questions from each pool
+        // v23.2: Load ALL questions from each configured pool for maximum variety
         for (var i = 0; i < pools.length; i++) {
             var poolName = pools[i];
             var poolData = moduleData[poolName];
             if (poolData && poolData.length > 0) {
-                var r = ratio[poolName] || 0;
-                // Calculate how many questions from this pool
-                var targetCount = Math.ceil(poolData.length * r * 2);
-                var selected;
-                if (typeof QuestionEngine !== 'undefined' && typeof QuestionEngine.weightedSelect === 'function') {
-                    selected = QuestionEngine.weightedSelect(poolData, targetCount, module);
-                } else {
-                    selected = shuffle([].concat(poolData)).slice(0, targetCount);
-                }
-                allQuestions = allQuestions.concat(selected);
+                allQuestions = allQuestions.concat([].concat(poolData));
             }
         }
 

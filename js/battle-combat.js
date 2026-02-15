@@ -519,13 +519,16 @@ BattleMode.generateMonsterQueue = function(difficulty) {
         const easy = shuffle([...monsters.easy]).slice(0, 4);
         const normal = shuffle([...monsters.normal]).slice(0, 4);
         const hard = shuffle([...monsters.hard]).slice(0, 2);
-        battle.monsterQueue = [...easy, ...normal, ...hard];
+        // v23.2: Shuffle combined queue so difficulty isn't predictable
+        battle.monsterQueue = shuffle([...easy, ...normal, ...hard]);
     } else {
         const easy = shuffle([...monsters.easy]).slice(0, 4);
         const normal = shuffle([...monsters.normal]).slice(0, 4);
         const hard = shuffle([...monsters.hard]).slice(0, 4);
         const boss = shuffle([...monsters.boss]).slice(0, 3);
-        battle.monsterQueue = [...easy, ...normal, ...hard, ...boss];
+        // v23.2: Shuffle non-boss monsters, then append bosses at end
+        var nonBoss = shuffle([...easy, ...normal, ...hard]);
+        battle.monsterQueue = [...nonBoss, ...shuffle(boss)];
     }
 };
 
@@ -723,7 +726,32 @@ BattleMode.showBattleQuestion = function() {
     battle.questionStartTime = Date.now();
 
     if (battle.currentIndex >= battle.questions.length) {
-        battle.questions = shuffle([...battle.questions]);
+        // v23.2: Reload fresh questions from full pool instead of recycling same set
+        var dataKeyMap = { fraction: 'fraction', decimal: 'decimal', unit: 'unit', multiply: 'multiply', times: 'times' };
+        var dataKey = dataKeyMap[battle.module] || 'xiaojiujiu';
+        var moduleData = typeof MathData !== 'undefined' ? MathData[dataKey] : null;
+        var freshPool = [];
+        if (moduleData) {
+            // Chapter mode: reload from all configured question pools
+            if (typeof App.chapter !== 'undefined' && App.chapter.active && typeof ChapterConfig !== 'undefined') {
+                var chConfig = ChapterConfig[battle.module];
+                if (chConfig && chConfig.chapters[App.chapter.chapterIndex]) {
+                    var chPools = chConfig.chapters[App.chapter.chapterIndex].questionPools;
+                    for (var pi = 0; pi < chPools.length; pi++) {
+                        var pd = moduleData[chPools[pi]];
+                        if (pd && pd.length > 0) freshPool = freshPool.concat(pd);
+                    }
+                }
+            }
+            // Regular mode or fallback: reload from difficulty pool
+            if (freshPool.length === 0) {
+                var diff = battle.difficulty || 'easy';
+                freshPool = moduleData[diff] || moduleData.easy || [];
+            }
+            battle.questions = freshPool.length > 0 ? shuffle([].concat(freshPool)) : shuffle([].concat(battle.questions));
+        } else {
+            battle.questions = shuffle([].concat(battle.questions));
+        }
         battle.currentIndex = 0;
     }
 
