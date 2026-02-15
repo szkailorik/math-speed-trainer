@@ -620,44 +620,84 @@ const BattleMode = {
     getAllMonsters(module) {
         const m = module || App.battle.module || 'xiaojiujiu';
         if (m === 'fraction') {
-            return [
+            var frBase = [
                 ...shanhaiFractionEasyMonsters,
                 ...shanhaiFractionNormalMonsters,
                 ...shanhaiFractionHardMonsters,
                 ...shanhaiFractionBossMonsters
             ];
+            // v23.2: Merge chapter BOSS and chapter-exclusive monsters
+            if (typeof chapterBossMonsters !== 'undefined' && chapterBossMonsters.fraction) {
+                frBase = frBase.concat(chapterBossMonsters.fraction);
+            }
+            if (typeof chapterMonsters_sh_ch1 !== 'undefined') frBase = frBase.concat(chapterMonsters_sh_ch1);
+            if (typeof chapterMonsters_sh_ch2 !== 'undefined') frBase = frBase.concat(chapterMonsters_sh_ch2);
+            if (typeof chapterMonsters_sh_ch3 !== 'undefined') frBase = frBase.concat(chapterMonsters_sh_ch3);
+            return frBase;
         }
         if (m === 'decimal') {
-            return [
+            var dcBase = [
                 ...xiyoujiEasyMonsters,
                 ...xiyoujiNormalMonsters,
                 ...xiyoujiHardMonsters,
                 ...xiyoujiBossMonsters
             ];
+            // v23.2: Merge chapter BOSS and chapter-exclusive monsters
+            if (typeof chapterBossMonsters !== 'undefined' && chapterBossMonsters.decimal) {
+                dcBase = dcBase.concat(chapterBossMonsters.decimal);
+            }
+            if (typeof chapterMonsters_xy_ch1 !== 'undefined') dcBase = dcBase.concat(chapterMonsters_xy_ch1);
+            if (typeof chapterMonsters_xy_ch2 !== 'undefined') dcBase = dcBase.concat(chapterMonsters_xy_ch2);
+            if (typeof chapterMonsters_xy_ch3 !== 'undefined') dcBase = dcBase.concat(chapterMonsters_xy_ch3);
+            return dcBase;
         }
         if (m === 'unit') {
-            return [
+            var utBase = [
                 ...fengshenEasyMonsters,
                 ...fengshenNormalMonsters,
                 ...fengshenHardMonsters,
                 ...fengshenBossMonsters
             ];
+            // v23.2: Merge chapter BOSS and chapter-exclusive monsters
+            if (typeof chapterBossMonsters !== 'undefined' && chapterBossMonsters.unit) {
+                utBase = utBase.concat(chapterBossMonsters.unit);
+            }
+            if (typeof chapterMonsters_fs_ch1 !== 'undefined') utBase = utBase.concat(chapterMonsters_fs_ch1);
+            if (typeof chapterMonsters_fs_ch2 !== 'undefined') utBase = utBase.concat(chapterMonsters_fs_ch2);
+            if (typeof chapterMonsters_fs_ch3 !== 'undefined') utBase = utBase.concat(chapterMonsters_fs_ch3);
+            return utBase;
         }
         if (m === 'multiply') {
-            return [
+            var mpBase = [
                 ...liaozhaiEasyMonsters,
                 ...liaozhaiNormalMonsters,
                 ...liaozhaiHardMonsters,
                 ...liaozhaiBossMonsters
             ];
+            // v23.2: Merge chapter BOSS and chapter-exclusive monsters
+            if (typeof chapterBossMonsters !== 'undefined' && chapterBossMonsters.multiply) {
+                mpBase = mpBase.concat(chapterBossMonsters.multiply);
+            }
+            if (typeof chapterMonsters_lz_ch1 !== 'undefined') mpBase = mpBase.concat(chapterMonsters_lz_ch1);
+            if (typeof chapterMonsters_lz_ch2 !== 'undefined') mpBase = mpBase.concat(chapterMonsters_lz_ch2);
+            if (typeof chapterMonsters_lz_ch3 !== 'undefined') mpBase = mpBase.concat(chapterMonsters_lz_ch3);
+            return mpBase;
         }
         if (m === 'times') {
-            return [
+            var tmBase = [
                 ...hpEasyMonsters,
                 ...hpNormalMonsters,
                 ...hpHardMonsters,
                 ...hpBossMonsters
             ];
+            // v23.2: Merge chapter BOSS and chapter-exclusive monsters
+            if (typeof chapterBossMonsters !== 'undefined' && chapterBossMonsters.times) {
+                tmBase = tmBase.concat(chapterBossMonsters.times);
+            }
+            if (typeof chapterMonsters_hp_ch1 !== 'undefined') tmBase = tmBase.concat(chapterMonsters_hp_ch1);
+            if (typeof chapterMonsters_hp_ch2 !== 'undefined') tmBase = tmBase.concat(chapterMonsters_hp_ch2);
+            if (typeof chapterMonsters_hp_ch3 !== 'undefined') tmBase = tmBase.concat(chapterMonsters_hp_ch3);
+            return tmBase;
         }
         var base = [
             ...this.easyMonsters,

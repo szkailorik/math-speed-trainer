@@ -1,9 +1,11 @@
 /**
- * chapter-system.js - v23.1 Chapter system logic
+ * chapter-system.js - v23.2 Chapter system logic
  * Handles chapter battle flow, star calculation, progress tracking,
  * UI rendering, rewards, and achievement checking.
  * v23.1: Added perfectStreak tracking, consecutivePerfects unlock logic,
  *        chapter-exclusive monster queue, new weapon pool, streak UI.
+ * v23.2: Added achievement checking for 5 new modules
+ *        (fraction, decimal, unit, multiply, times).
  */
 
 var ChapterSystem = {
@@ -902,6 +904,121 @@ var ChapterSystem = {
                 data._replayImprovements[module]++;
                 this.saveProgressData(data);
                 if (data._replayImprovements[module] >= 3) grantAch('xjj_replay_master');
+            }
+        }
+
+        // v23.2: Fraction / 山海经 achievements
+        if (module === 'fraction') {
+            if (chapterIndex === 0) grantAch('sh_ch1_clear');
+            if (chapterIndex === 1) grantAch('sh_ch2_clear');
+            if (chapterIndex === 2) {
+                grantAch('sh_ch3_clear');
+                grantAch('sh_phase2_slayer');
+            }
+            var totalStarsSh = this.getModuleTotalStars('fraction');
+            if (totalStarsSh >= 9) grantAch('sh_9stars');
+            if (chapterIndex === 2 && stars >= 3 && result.isFirstClear) {
+                grantAch('sh_ch3_first_3star');
+            }
+            if (result.improved) {
+                var data = this.loadProgress();
+                if (!data._replayImprovements) data._replayImprovements = {};
+                if (!data._replayImprovements[module]) data._replayImprovements[module] = 0;
+                data._replayImprovements[module]++;
+                this.saveProgressData(data);
+                if (data._replayImprovements[module] >= 3) grantAch('sh_replay_master');
+            }
+        }
+
+        // v23.2: Decimal / 西游记 achievements
+        if (module === 'decimal') {
+            if (chapterIndex === 0) grantAch('xy_ch1_clear');
+            if (chapterIndex === 1) grantAch('xy_ch2_clear');
+            if (chapterIndex === 2) {
+                grantAch('xy_ch3_clear');
+                grantAch('xy_phase2_slayer');
+            }
+            var totalStarsXy = this.getModuleTotalStars('decimal');
+            if (totalStarsXy >= 9) grantAch('xy_9stars');
+            if (chapterIndex === 2 && stars >= 3 && result.isFirstClear) {
+                grantAch('xy_ch3_first_3star');
+            }
+            if (result.improved) {
+                var data = this.loadProgress();
+                if (!data._replayImprovements) data._replayImprovements = {};
+                if (!data._replayImprovements[module]) data._replayImprovements[module] = 0;
+                data._replayImprovements[module]++;
+                this.saveProgressData(data);
+                if (data._replayImprovements[module] >= 3) grantAch('xy_replay_master');
+            }
+        }
+
+        // v23.2: Unit / 封神榜 achievements
+        if (module === 'unit') {
+            if (chapterIndex === 0) grantAch('fs_ch1_clear');
+            if (chapterIndex === 1) grantAch('fs_ch2_clear');
+            if (chapterIndex === 2) {
+                grantAch('fs_ch3_clear');
+                grantAch('fs_phase2_slayer');
+            }
+            var totalStarsFs = this.getModuleTotalStars('unit');
+            if (totalStarsFs >= 9) grantAch('fs_9stars');
+            if (chapterIndex === 2 && stars >= 3 && result.isFirstClear) {
+                grantAch('fs_ch3_first_3star');
+            }
+            if (result.improved) {
+                var data = this.loadProgress();
+                if (!data._replayImprovements) data._replayImprovements = {};
+                if (!data._replayImprovements[module]) data._replayImprovements[module] = 0;
+                data._replayImprovements[module]++;
+                this.saveProgressData(data);
+                if (data._replayImprovements[module] >= 3) grantAch('fs_replay_master');
+            }
+        }
+
+        // v23.2: Multiply / 聊斋 achievements
+        if (module === 'multiply') {
+            if (chapterIndex === 0) grantAch('lz_ch1_clear');
+            if (chapterIndex === 1) grantAch('lz_ch2_clear');
+            if (chapterIndex === 2) {
+                grantAch('lz_ch3_clear');
+                grantAch('lz_phase2_slayer');
+            }
+            var totalStarsLz = this.getModuleTotalStars('multiply');
+            if (totalStarsLz >= 9) grantAch('lz_9stars');
+            if (chapterIndex === 2 && stars >= 3 && result.isFirstClear) {
+                grantAch('lz_ch3_first_3star');
+            }
+            if (result.improved) {
+                var data = this.loadProgress();
+                if (!data._replayImprovements) data._replayImprovements = {};
+                if (!data._replayImprovements[module]) data._replayImprovements[module] = 0;
+                data._replayImprovements[module]++;
+                this.saveProgressData(data);
+                if (data._replayImprovements[module] >= 3) grantAch('lz_replay_master');
+            }
+        }
+
+        // v23.2: Times / 哈利波特 achievements
+        if (module === 'times') {
+            if (chapterIndex === 0) grantAch('hp_ch1_clear');
+            if (chapterIndex === 1) grantAch('hp_ch2_clear');
+            if (chapterIndex === 2) {
+                grantAch('hp_ch3_clear');
+                grantAch('hp_phase2_slayer');
+            }
+            var totalStarsHp = this.getModuleTotalStars('times');
+            if (totalStarsHp >= 9) grantAch('hp_9stars');
+            if (chapterIndex === 2 && stars >= 3 && result.isFirstClear) {
+                grantAch('hp_ch3_first_3star');
+            }
+            if (result.improved) {
+                var data = this.loadProgress();
+                if (!data._replayImprovements) data._replayImprovements = {};
+                if (!data._replayImprovements[module]) data._replayImprovements[module] = 0;
+                data._replayImprovements[module]++;
+                this.saveProgressData(data);
+                if (data._replayImprovements[module] >= 3) grantAch('hp_replay_master');
             }
         }
 
