@@ -66,6 +66,7 @@ function updateCurrentUserBadge() {
     const currentUser = UserManager.getCurrentUser();
     if (currentUser) {
         CharacterArt.setAvatar(document.getElementById('current-avatar'), currentUser.avatar, 'badge-avatar-art');
+        CharacterArt.setAvatar(document.getElementById('home-feature-hero'), currentUser.avatar, 'home-feature-hero-art');
         document.getElementById('current-name').textContent = currentUser.name;
     }
 }

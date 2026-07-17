@@ -38,8 +38,8 @@
     <link rel="apple-touch-startup-image" href="icons/splash.png">
 
     <title>数学魔法学院</title>
-    <link rel="stylesheet" href="css/style.css?v=25.0.1">
-    <link rel="stylesheet" href="css/scenes.css?v=25.0.0">
+    <link rel="stylesheet" href="css/style.css?v=25.1.0">
+    <link rel="stylesheet" href="css/scenes.css?v=25.1.0">
     <link rel="stylesheet" href="css/scenes-svg.css?v=23.2.2">
     <link rel="stylesheet" href="css/knowledge.css?v=23.2.2">
 </head>
@@ -49,8 +49,18 @@
         <!-- 用户选择页 -->
         <div id="user-page" class="page active">
             <div class="user-select-container">
-                <h1 class="user-select-title">🧒 选择小朋友</h1>
-                <p class="user-select-subtitle">点击头像开始练习</p>
+                <div class="adventure-gateway" aria-hidden="true">
+                    <div class="gateway-rune gateway-rune-one">×</div>
+                    <div class="gateway-rune gateway-rune-two">⅛</div>
+                    <img class="gateway-hero gateway-hero-left" src="assets/characters/heroes/heroes-02.webp" alt="">
+                    <img class="gateway-hero gateway-hero-main" src="assets/characters/heroes/heroes-00.webp" alt="">
+                    <img class="gateway-hero gateway-hero-right" src="assets/characters/heroes/heroes-01.webp" alt="">
+                    <img class="gateway-monster gateway-monster-left" src="assets/characters/expansion/math/math-08.webp" alt="">
+                    <img class="gateway-monster gateway-monster-right" src="assets/characters/expansion/academy/academy-12.webp" alt="">
+                </div>
+                <div class="gateway-kicker">六境远征 · 角色焕新</div>
+                <h1 class="user-select-title">数学魔法学院</h1>
+                <p class="user-select-subtitle">选择你的冒险者，进入六大数学世界</p>
 
                 <div class="user-list" id="user-list">
                     <!-- 动态填充用户列表 -->
@@ -108,8 +118,19 @@
                     <span class="user-name" id="current-name">小朋友</span>
                     <span class="switch-hint">点击切换</span>
                 </div>
-                <h1>🔮 数学魔法学院</h1>
-                <p class="subtitle">魔法学徒，今天要挑战哪个副本？</p>
+                <div class="home-adventure-hero">
+                    <div class="home-adventure-copy">
+                        <span class="home-adventure-kicker">六境远征</span>
+                        <h1>数学魔法学院</h1>
+                        <p class="subtitle">带上你的角色，挑战六套主题妖怪</p>
+                        <div class="roster-proof"><strong>300</strong> 个新妖怪 · 6 套战斗舞台</div>
+                    </div>
+                    <span class="home-feature-hero" id="home-feature-hero">
+                        <img class="character-art home-feature-hero-art" src="assets/characters/heroes/heroes-00.webp" alt="当前冒险者">
+                    </span>
+                    <img class="home-hero-monster home-hero-monster-left" src="assets/characters/expansion/math/math-03.webp" alt="算术王国妖怪">
+                    <img class="home-hero-monster home-hero-monster-right" src="assets/characters/expansion/shanhai/shanhai-05.webp" alt="山海秘境妖怪">
+                </div>
             </header>
 
             <div class="stats-bar">
@@ -139,40 +160,34 @@
             <div class="menu-section">
                 <div class="menu-section-title">⚔️ 冒险副本</div>
                 <div class="menu-grid">
-                    <button class="menu-btn xiaojiujiu-btn" data-module="xiaojiujiu">
-                        <span class="menu-icon">🔥</span>
-                        <span class="menu-title">小九九速算</span>
-                        <span class="menu-desc">专攻6×7、7×8等难点</span>
+                    <button class="menu-btn adventure-theme-card theme-math xiaojiujiu-btn" data-module="xiaojiujiu">
+                        <span class="theme-card-art" aria-hidden="true"><img src="assets/characters/expansion/math/math-10.webp" alt=""><img src="assets/characters/expansion/math/math-21.webp" alt=""></span>
+                        <span class="theme-card-copy"><span class="theme-card-kicker">算术王国 · 新增50怪</span><span class="menu-title">小九九速算</span><span class="menu-desc">专攻6×7、7×8等难点</span></span>
                     </button>
 
-                    <button class="menu-btn times-btn" data-module="times">
-                        <span class="menu-icon">📊</span>
-                        <span class="menu-title">大九九表</span>
-                        <span class="menu-desc">11-19乘法 + 平方数</span>
+                    <button class="menu-btn adventure-theme-card theme-academy times-btn" data-module="times">
+                        <span class="theme-card-art" aria-hidden="true"><img src="assets/characters/expansion/academy/academy-09.webp" alt=""><img src="assets/characters/expansion/academy/academy-28.webp" alt=""></span>
+                        <span class="theme-card-copy"><span class="theme-card-kicker">星辉学院 · 新增50怪</span><span class="menu-title">大九九表</span><span class="menu-desc">11-19乘法 + 平方数</span></span>
                     </button>
 
-                    <button class="menu-btn" data-module="multiply">
-                        <span class="menu-icon">🔢</span>
-                        <span class="menu-title">乘法速记</span>
-                        <span class="menu-desc">25×4=100 看到4想25</span>
+                    <button class="menu-btn adventure-theme-card theme-liaozhai" data-module="multiply">
+                        <span class="theme-card-art" aria-hidden="true"><img src="assets/characters/expansion/liaozhai/liaozhai-11.webp" alt=""><img src="assets/characters/expansion/liaozhai/liaozhai-31.webp" alt=""></span>
+                        <span class="theme-card-copy"><span class="theme-card-kicker">聊斋幻境 · 新增50怪</span><span class="menu-title">乘法速记</span><span class="menu-desc">25×4=100 看到4想25</span></span>
                     </button>
 
-                    <button class="menu-btn" data-module="fraction">
-                        <span class="menu-icon">🔄</span>
-                        <span class="menu-title">分数小数</span>
-                        <span class="menu-desc">1/8=0.125 必背互换</span>
+                    <button class="menu-btn adventure-theme-card theme-shanhai" data-module="fraction">
+                        <span class="theme-card-art" aria-hidden="true"><img src="assets/characters/expansion/shanhai/shanhai-07.webp" alt=""><img src="assets/characters/expansion/shanhai/shanhai-34.webp" alt=""></span>
+                        <span class="theme-card-copy"><span class="theme-card-kicker">山海秘境 · 新增50怪</span><span class="menu-title">分数小数</span><span class="menu-desc">1/8=0.125 必背互换</span></span>
                     </button>
 
-                    <button class="menu-btn" data-module="decimal">
-                        <span class="menu-icon">➗</span>
-                        <span class="menu-title">小数规律</span>
-                        <span class="menu-desc">乘除10小数点移动</span>
+                    <button class="menu-btn adventure-theme-card theme-xiyou" data-module="decimal">
+                        <span class="theme-card-art" aria-hidden="true"><img src="assets/characters/expansion/xiyou/xiyou-06.webp" alt=""><img src="assets/characters/expansion/xiyou/xiyou-25.webp" alt=""></span>
+                        <span class="theme-card-copy"><span class="theme-card-kicker">西游云路 · 新增50怪</span><span class="menu-title">小数规律</span><span class="menu-desc">乘除10小数点移动</span></span>
                     </button>
 
-                    <button class="menu-btn" data-module="unit">
-                        <span class="menu-icon">📐</span>
-                        <span class="menu-title">单位换算</span>
-                        <span class="menu-desc">长度·质量·面积·容积·时间·人民币</span>
+                    <button class="menu-btn adventure-theme-card theme-fengshen" data-module="unit">
+                        <span class="theme-card-art" aria-hidden="true"><img src="assets/characters/expansion/fengshen/fengshen-13.webp" alt=""><img src="assets/characters/expansion/fengshen/fengshen-37.webp" alt=""></span>
+                        <span class="theme-card-copy"><span class="theme-card-kicker">封神天台 · 新增50怪</span><span class="menu-title">单位换算</span><span class="menu-desc">长度·质量·面积·容积·时间·人民币</span></span>
                     </button>
                 </div>
             </div>
@@ -433,7 +448,7 @@
 
             <div class="settings-footer">
                 <button class="reset-btn" id="reset-progress">重置所有进度</button>
-                <p class="version">版本 18.0</p>
+                <p class="version">版本 25.1 · 六境视觉焕新</p>
             </div>
         </div>
 
@@ -464,6 +479,10 @@
 
             <div class="mode-select-container">
                 <h3 class="mode-select-title">选择训练模式</h3>
+                <div class="mode-theme-banner theme-math">
+                    <div class="mode-theme-copy"><span class="mode-theme-kicker">算术王国远征队</span><strong>口诀竞技场</strong><small>50 位新妖怪已加入图鉴与战斗</small></div>
+                    <div class="mode-theme-roster"><img src="assets/characters/heroes/heroes-00.webp" alt="剑士"><img src="assets/characters/expansion/math/math-10.webp" alt="算术妖怪"><img src="assets/characters/expansion/math/math-21.webp" alt="算术妖怪"></div>
+                </div>
 
                 <!-- v23.0: 冒险闯关 — 主推入口 -->
                 <div class="chapter-section">
@@ -525,6 +544,10 @@
 
             <div class="mode-select-container">
                 <h3 class="mode-select-title">选择训练模式</h3>
+                <div class="mode-theme-banner theme-shanhai">
+                    <div class="mode-theme-copy"><span class="mode-theme-kicker">山海秘境远征队</span><strong>灵兽山谷</strong><small>50 位新灵兽已加入图鉴与战斗</small></div>
+                    <div class="mode-theme-roster"><img src="assets/characters/heroes/heroes-02.webp" alt="弓箭手"><img src="assets/characters/expansion/shanhai/shanhai-07.webp" alt="山海灵兽"><img src="assets/characters/expansion/shanhai/shanhai-34.webp" alt="山海灵兽"></div>
+                </div>
 
                 <!-- v23.2: 冒险闯关 -->
                 <div class="chapter-section">
@@ -587,6 +610,10 @@
 
             <div class="mode-select-container">
                 <h3 class="mode-select-title">选择训练模式</h3>
+                <div class="mode-theme-banner theme-xiyou">
+                    <div class="mode-theme-copy"><span class="mode-theme-kicker">西游云路远征队</span><strong>云海驿站</strong><small>50 位新妖怪已加入图鉴与战斗</small></div>
+                    <div class="mode-theme-roster"><img src="assets/characters/heroes/heroes-04.webp" alt="驯龙师"><img src="assets/characters/expansion/xiyou/xiyou-06.webp" alt="西游妖怪"><img src="assets/characters/expansion/xiyou/xiyou-25.webp" alt="西游妖怪"></div>
+                </div>
 
                 <!-- v23.2: 冒险闯关 -->
                 <div class="chapter-section">
@@ -692,6 +719,10 @@
 
             <div class="mode-select-container">
                 <h3 class="mode-select-title">选择训练模式</h3>
+                <div class="mode-theme-banner theme-fengshen">
+                    <div class="mode-theme-copy"><span class="mode-theme-kicker">封神天台远征队</span><strong>青铜天门</strong><small>50 位新战将已加入图鉴与战斗</small></div>
+                    <div class="mode-theme-roster"><img src="assets/characters/heroes/heroes-03.webp" alt="守护者"><img src="assets/characters/expansion/fengshen/fengshen-13.webp" alt="封神战将"><img src="assets/characters/expansion/fengshen/fengshen-37.webp" alt="封神战将"></div>
+                </div>
 
                 <!-- v23.2: 冒险闯关 -->
                 <div class="chapter-section">
@@ -791,6 +822,10 @@
 
             <div class="mode-select-container">
                 <h3 class="mode-select-title">选择训练模式</h3>
+                <div class="mode-theme-banner theme-liaozhai">
+                    <div class="mode-theme-copy"><span class="mode-theme-kicker">聊斋幻境远征队</span><strong>月夜书斋</strong><small>50 位新精怪已加入图鉴与战斗</small></div>
+                    <div class="mode-theme-roster"><img src="assets/characters/heroes/heroes-05.webp" alt="灵狐"><img src="assets/characters/expansion/liaozhai/liaozhai-11.webp" alt="聊斋精怪"><img src="assets/characters/expansion/liaozhai/liaozhai-31.webp" alt="聊斋精怪"></div>
+                </div>
 
                 <!-- v23.2: 冒险闯关 -->
                 <div class="chapter-section">
@@ -896,6 +931,10 @@
 
             <div class="mode-select-container">
                 <h3 class="mode-select-title">选择训练模式</h3>
+                <div class="mode-theme-banner theme-academy">
+                    <div class="mode-theme-copy"><span class="mode-theme-kicker">星辉学院远征队</span><strong>星光钟楼</strong><small>50 位原创魔法生物已加入图鉴与战斗</small></div>
+                    <div class="mode-theme-roster"><img src="assets/characters/heroes/heroes-01.webp" alt="魔法师"><img src="assets/characters/expansion/academy/academy-09.webp" alt="魔法生物"><img src="assets/characters/expansion/academy/academy-28.webp" alt="魔法生物"></div>
+                </div>
 
                 <!-- v23.2: 冒险闯关 -->
                 <div class="chapter-section">
@@ -928,8 +967,8 @@
 
                 <button class="mode-card battle-mode" id="select-times-battle-mode">
                     <span class="mode-icon">⚔️</span>
-                    <span class="mode-name">霍格沃茨大冒险</span>
-                    <span class="mode-desc">挑战哈利波特魔法生物，征服大九九表！</span>
+                    <span class="mode-name">星辉学院大冒险</span>
+                    <span class="mode-desc">挑战原创魔法生物，征服大九九表！</span>
                     <span class="mode-tag">推荐</span>
                 </button>
 
@@ -942,13 +981,13 @@
                 <button class="mode-card collection-mode" id="open-times-collection">
                     <span class="mode-icon">🧙</span>
                     <span class="mode-name">魔法生物图鉴</span>
-                    <span class="mode-desc">查看收集的哈利波特魔法生物</span>
+                    <span class="mode-desc">查看收集的星辉学院魔法生物</span>
                     <span class="collection-count" id="times-collection-count">0/72</span>
                 </button>
             </div>
         </div>
 
-        <!-- 哈利波特魔法生物图鉴页 -->
+        <!-- 星辉学院魔法生物图鉴页（保留旧 DOM id 兼容存档） -->
         <div id="hp-collection-page" class="page">
             <header class="collection-header hp-header">
                 <button class="back-btn" id="hp-collection-back-btn">← 返回</button>
@@ -1371,7 +1410,7 @@
     <script src="js/knowledge-data.js?v=23.2.2"></script>
     <script src="js/knowledge-tracker.js?v=23.2.2"></script>
     <script src="js/knowledge-ui.js?v=23.2.2"></script>
-    <script src="js/ui-pages.js?v=25.0.0"></script>
+    <script src="js/ui-pages.js?v=25.1.0"></script>
     <script src="js/battle-data.js?v=25.0.0"></script>
     <script src="js/chapter-data.js?v=23.2.2"></script>
     <script src="js/card-data.js?v=23.2.2"></script>

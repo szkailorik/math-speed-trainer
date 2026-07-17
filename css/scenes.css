@@ -2243,3 +2243,66 @@
 @media (prefers-reduced-motion: reduce) {
     .battle-arena.module-theme-decimal .scene-stars { animation: none; }
 }
+
+/* v25.1: realm landmarks that visually connect homepage cards to combat */
+.battle-arena[class*="module-theme-"] .scene-sky {
+    filter: saturate(1.14) contrast(1.04);
+}
+
+.battle-arena[class*="module-theme-"] .scene-far-detail,
+.battle-arena[class*="module-theme-"] .scene-mid-detail {
+    opacity: .78;
+}
+
+.battle-arena[class*="module-theme-"] .scene-atmosphere {
+    opacity: .68;
+    background:
+        linear-gradient(90deg, rgba(5, 8, 22, .32), transparent 24% 76%, rgba(5, 8, 22, .32)),
+        radial-gradient(ellipse at 50% 105%, var(--module-glow), transparent 58%);
+}
+
+.battle-arena.module-theme-xiaojiujiu .scene-far-detail {
+    background:
+        linear-gradient(90deg, transparent 10%, rgba(104, 157, 255, .15) 10.5% 11%, transparent 11.5% 88%, rgba(104, 157, 255, .15) 88.5% 89%, transparent 89.5%),
+        repeating-linear-gradient(90deg, transparent 0 54px, rgba(121, 177, 255, .07) 55px 57px);
+    clip-path: polygon(0 45%, 8% 45%, 8% 25%, 14% 25%, 14% 52%, 27% 52%, 27% 36%, 33% 36%, 33% 58%, 66% 58%, 66% 34%, 72% 34%, 72% 51%, 87% 51%, 87% 24%, 93% 24%, 93% 45%, 100% 45%, 100% 100%, 0 100%);
+}
+
+.battle-arena.module-theme-fraction .scene-far-detail {
+    background:
+        linear-gradient(135deg, transparent 30%, rgba(74, 136, 104, .42) 30.5% 48%, transparent 48.5%),
+        linear-gradient(225deg, transparent 32%, rgba(87, 160, 122, .32) 32.5% 50%, transparent 50.5%);
+    background-size: 52% 100%, 58% 100%;
+    background-position: left bottom, right bottom;
+    background-repeat: no-repeat;
+}
+
+.battle-arena.module-theme-decimal .scene-mid-detail {
+    background:
+        radial-gradient(ellipse at 15% 70%, rgba(255,255,255,.23) 0 28px, transparent 30px),
+        radial-gradient(ellipse at 38% 52%, rgba(255,246,214,.16) 0 38px, transparent 40px),
+        radial-gradient(ellipse at 73% 61%, rgba(255,255,255,.2) 0 32px, transparent 34px),
+        radial-gradient(ellipse at 94% 45%, rgba(255,227,167,.15) 0 42px, transparent 44px);
+    filter: blur(1px);
+}
+
+.battle-arena.module-theme-unit .scene-far-detail {
+    background:
+        linear-gradient(90deg, transparent 7%, rgba(201, 143, 63, .27) 7.5% 10%, transparent 10.5% 90%, rgba(201, 143, 63, .27) 90.5% 93%, transparent 93.5%),
+        linear-gradient(0deg, rgba(44, 119, 108, .2), transparent 55%);
+    border-bottom: 2px solid rgba(220, 162, 76, .18);
+}
+
+.battle-arena.module-theme-multiply .scene-far-detail {
+    background:
+        radial-gradient(circle at 76% 18%, rgba(238, 232, 255, .72) 0 22px, rgba(179, 148, 255, .18) 23px 36px, transparent 38px),
+        linear-gradient(110deg, transparent 20%, rgba(83, 55, 120, .26) 20.5% 22%, transparent 22.5%),
+        linear-gradient(70deg, transparent 74%, rgba(83, 55, 120, .24) 74.5% 76%, transparent 76.5%);
+}
+
+.battle-arena.module-theme-times .scene-far-detail {
+    background:
+        linear-gradient(90deg, transparent 21%, rgba(92, 121, 190, .3) 21.5% 34%, transparent 34.5% 65%, rgba(92, 121, 190, .3) 65.5% 79%, transparent 79.5%),
+        repeating-linear-gradient(90deg, transparent 0 22px, rgba(255, 211, 105, .13) 23px 25px, transparent 26px 44px);
+    clip-path: polygon(0 64%, 20% 64%, 20% 30%, 26% 30%, 26% 15%, 34% 15%, 34% 64%, 65% 64%, 65% 18%, 73% 18%, 73% 34%, 80% 34%, 80% 64%, 100% 64%, 100% 100%, 0 100%);
+}
