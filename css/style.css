@@ -5465,10 +5465,32 @@ body::after {
 #card-collection-page.active {
     display: flex !important;
     flex-direction: column;
+    position: fixed;
+    inset: 0;
+    z-index: 900;
+    width: 100%;
+    max-width: 600px;
+    max-height: 100vh;
+    max-height: 100dvh;
+    margin: 0 auto;
+    overflow: hidden;
     min-height: 100vh;
     min-height: 100dvh;
     padding: 0;
     background: linear-gradient(180deg, #0a0a1a, #1a1a2e);
+}
+
+#card-collection-page > .page-header {
+    flex-shrink: 0;
+    margin: 0;
+}
+
+.card-collection-content {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+    flex-direction: column;
+    overflow: hidden;
 }
 
 .card-collection-header {
@@ -5507,11 +5529,64 @@ body::after {
 
 .card-filter-tabs {
     display: flex;
+    flex-direction: column;
     gap: 6px;
     padding: 10px 20px;
-    overflow-x: auto;
     flex-shrink: 0;
+    overflow: hidden;
     -webkit-overflow-scrolling: touch;
+}
+
+.card-filter-row {
+    display: flex;
+    gap: 6px;
+    min-width: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+}
+
+.card-filter-row::-webkit-scrollbar {
+    display: none;
+}
+
+.module-filter-btn,
+.rarity-filter-btn,
+.status-filter-btn {
+    flex: 0 0 auto;
+    min-height: 30px;
+    padding: 5px 11px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: var(--radius-full);
+    background: rgba(255, 255, 255, 0.05);
+    color: rgba(255, 255, 255, 0.68);
+    font: inherit;
+    font-size: 0.72rem;
+    font-weight: 650;
+    line-height: 1;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.module-filter-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.module-filter-btn.active,
+.rarity-filter-btn.active,
+.status-filter-btn.active {
+    border-color: var(--primary-light);
+    background: rgba(108, 92, 231, 0.25);
+    color: #fff;
+    box-shadow: 0 0 12px rgba(108, 92, 231, 0.2);
+}
+
+.module-filter-count {
+    opacity: 0.78;
+    font-variant-numeric: tabular-nums;
 }
 
 .card-filter-btn {
@@ -5537,10 +5612,13 @@ body::after {
 #card-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    align-content: start;
     gap: 10px;
     padding: 15px 20px;
     overflow-y: auto;
     flex: 1;
+    min-height: 0;
+    -webkit-overflow-scrolling: touch;
 }
 
 .card-grid-item {
