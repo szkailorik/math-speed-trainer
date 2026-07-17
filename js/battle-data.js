@@ -633,6 +633,7 @@ const BattleMode = {
             if (typeof chapterMonsters_sh_ch1 !== 'undefined') frBase = frBase.concat(chapterMonsters_sh_ch1);
             if (typeof chapterMonsters_sh_ch2 !== 'undefined') frBase = frBase.concat(chapterMonsters_sh_ch2);
             if (typeof chapterMonsters_sh_ch3 !== 'undefined') frBase = frBase.concat(chapterMonsters_sh_ch3);
+            if (typeof MonsterExpansion !== 'undefined') frBase = frBase.concat(MonsterExpansion.get('fraction'));
             return frBase;
         }
         if (m === 'decimal') {
@@ -649,6 +650,7 @@ const BattleMode = {
             if (typeof chapterMonsters_xy_ch1 !== 'undefined') dcBase = dcBase.concat(chapterMonsters_xy_ch1);
             if (typeof chapterMonsters_xy_ch2 !== 'undefined') dcBase = dcBase.concat(chapterMonsters_xy_ch2);
             if (typeof chapterMonsters_xy_ch3 !== 'undefined') dcBase = dcBase.concat(chapterMonsters_xy_ch3);
+            if (typeof MonsterExpansion !== 'undefined') dcBase = dcBase.concat(MonsterExpansion.get('decimal'));
             return dcBase;
         }
         if (m === 'unit') {
@@ -665,6 +667,7 @@ const BattleMode = {
             if (typeof chapterMonsters_fs_ch1 !== 'undefined') utBase = utBase.concat(chapterMonsters_fs_ch1);
             if (typeof chapterMonsters_fs_ch2 !== 'undefined') utBase = utBase.concat(chapterMonsters_fs_ch2);
             if (typeof chapterMonsters_fs_ch3 !== 'undefined') utBase = utBase.concat(chapterMonsters_fs_ch3);
+            if (typeof MonsterExpansion !== 'undefined') utBase = utBase.concat(MonsterExpansion.get('unit'));
             return utBase;
         }
         if (m === 'multiply') {
@@ -681,6 +684,7 @@ const BattleMode = {
             if (typeof chapterMonsters_lz_ch1 !== 'undefined') mpBase = mpBase.concat(chapterMonsters_lz_ch1);
             if (typeof chapterMonsters_lz_ch2 !== 'undefined') mpBase = mpBase.concat(chapterMonsters_lz_ch2);
             if (typeof chapterMonsters_lz_ch3 !== 'undefined') mpBase = mpBase.concat(chapterMonsters_lz_ch3);
+            if (typeof MonsterExpansion !== 'undefined') mpBase = mpBase.concat(MonsterExpansion.get('multiply'));
             return mpBase;
         }
         if (m === 'times') {
@@ -697,6 +701,7 @@ const BattleMode = {
             if (typeof chapterMonsters_hp_ch1 !== 'undefined') tmBase = tmBase.concat(chapterMonsters_hp_ch1);
             if (typeof chapterMonsters_hp_ch2 !== 'undefined') tmBase = tmBase.concat(chapterMonsters_hp_ch2);
             if (typeof chapterMonsters_hp_ch3 !== 'undefined') tmBase = tmBase.concat(chapterMonsters_hp_ch3);
+            if (typeof MonsterExpansion !== 'undefined') tmBase = tmBase.concat(MonsterExpansion.get('times'));
             return tmBase;
         }
         var base = [
@@ -719,6 +724,9 @@ const BattleMode = {
         if (typeof chapterMonsters_ch3 !== 'undefined') {
             base = base.concat(chapterMonsters_ch3);
         }
+        if (typeof MonsterExpansion !== 'undefined') {
+            base = base.concat(MonsterExpansion.get('xiaojiujiu'));
+        }
         return base;
     },
 
@@ -726,49 +734,49 @@ const BattleMode = {
     getModuleMonsters(module) {
         if (module === 'fraction') {
             return {
-                easy: shanhaiFractionEasyMonsters,
-                normal: shanhaiFractionNormalMonsters,
-                hard: shanhaiFractionHardMonsters,
-                boss: shanhaiFractionBossMonsters
+                easy: shanhaiFractionEasyMonsters.concat(MonsterExpansion.get('fraction', 'easy')),
+                normal: shanhaiFractionNormalMonsters.concat(MonsterExpansion.get('fraction', 'normal')),
+                hard: shanhaiFractionHardMonsters.concat(MonsterExpansion.get('fraction', 'hard')),
+                boss: shanhaiFractionBossMonsters.concat(MonsterExpansion.get('fraction', 'boss'))
             };
         }
         if (module === 'decimal') {
             return {
-                easy: xiyoujiEasyMonsters,
-                normal: xiyoujiNormalMonsters,
-                hard: xiyoujiHardMonsters,
-                boss: xiyoujiBossMonsters
+                easy: xiyoujiEasyMonsters.concat(MonsterExpansion.get('decimal', 'easy')),
+                normal: xiyoujiNormalMonsters.concat(MonsterExpansion.get('decimal', 'normal')),
+                hard: xiyoujiHardMonsters.concat(MonsterExpansion.get('decimal', 'hard')),
+                boss: xiyoujiBossMonsters.concat(MonsterExpansion.get('decimal', 'boss'))
             };
         }
         if (module === 'unit') {
             return {
-                easy: fengshenEasyMonsters,
-                normal: fengshenNormalMonsters,
-                hard: fengshenHardMonsters,
-                boss: fengshenBossMonsters
+                easy: fengshenEasyMonsters.concat(MonsterExpansion.get('unit', 'easy')),
+                normal: fengshenNormalMonsters.concat(MonsterExpansion.get('unit', 'normal')),
+                hard: fengshenHardMonsters.concat(MonsterExpansion.get('unit', 'hard')),
+                boss: fengshenBossMonsters.concat(MonsterExpansion.get('unit', 'boss'))
             };
         }
         if (module === 'multiply') {
             return {
-                easy: liaozhaiEasyMonsters,
-                normal: liaozhaiNormalMonsters,
-                hard: liaozhaiHardMonsters,
-                boss: liaozhaiBossMonsters
+                easy: liaozhaiEasyMonsters.concat(MonsterExpansion.get('multiply', 'easy')),
+                normal: liaozhaiNormalMonsters.concat(MonsterExpansion.get('multiply', 'normal')),
+                hard: liaozhaiHardMonsters.concat(MonsterExpansion.get('multiply', 'hard')),
+                boss: liaozhaiBossMonsters.concat(MonsterExpansion.get('multiply', 'boss'))
             };
         }
         if (module === 'times') {
             return {
-                easy: hpEasyMonsters,
-                normal: hpNormalMonsters,
-                hard: hpHardMonsters,
-                boss: hpBossMonsters
+                easy: hpEasyMonsters.concat(MonsterExpansion.get('times', 'easy')),
+                normal: hpNormalMonsters.concat(MonsterExpansion.get('times', 'normal')),
+                hard: hpHardMonsters.concat(MonsterExpansion.get('times', 'hard')),
+                boss: hpBossMonsters.concat(MonsterExpansion.get('times', 'boss'))
             };
         }
         return {
-            easy: this.easyMonsters,
-            normal: this.normalMonsters,
-            hard: this.hardMonsters,
-            boss: this.bossMonsters
+            easy: this.easyMonsters.concat(MonsterExpansion.get('xiaojiujiu', 'easy')),
+            normal: this.normalMonsters.concat(MonsterExpansion.get('xiaojiujiu', 'normal')),
+            hard: this.hardMonsters.concat(MonsterExpansion.get('xiaojiujiu', 'hard')),
+            boss: this.bossMonsters.concat(MonsterExpansion.get('xiaojiujiu', 'boss'))
         };
     },
 
@@ -840,7 +848,7 @@ const BattleMode = {
                 <span class="collection-toast-icon">${toastIcon}</span>
                 <span class="collection-toast-text">
                     <strong>${toastTitle}</strong><br>
-                    ${monster.emoji} ${monster.name} 已收录
+                    ${CharacterArt.monsterMarkup(monster, mod, 'toast-monster-art')} ${monster.name} 已收录
                 </span>
             </div>
         `;
@@ -896,14 +904,14 @@ const BattleMode = {
     // ===== 特殊武器系统 =====
     // 武器配置 - 更丰富的攻击方式
     weapons: [
-        { emoji: '🔥', name: '火球术', weight: 20, sound: 'fire', color: '#ff6b35' },
-        { emoji: '🧊', name: '冰冻箭', weight: 15, sound: 'ice', color: '#74b9ff' },
-        { emoji: '⚡', name: '闪电链', weight: 15, sound: 'thunder', color: '#ffeaa7' },
-        { emoji: '⭐', name: '流星雨', weight: 15, sound: 'star', color: '#fdcb6e' },
-        { emoji: '🌈', name: '彩虹光', weight: 10, sound: 'rainbow', color: '#a29bfe' },
-        { emoji: '💣', name: '超级炸弹', weight: 5, sound: 'bomb', color: '#2d3436' },
-        { emoji: '🌟', name: '圣光术', weight: 10, sound: 'holy', color: '#fff9c4' },
-        { emoji: '🌀', name: '龙卷风', weight: 10, sound: 'wind', color: '#81ecec' }
+        { emoji: '🔥', name: '火球术', weight: 20, sound: 'fire', color: '#ff6b35', art: 'fire' },
+        { emoji: '🧊', name: '冰冻箭', weight: 15, sound: 'ice', color: '#74b9ff', art: 'ice' },
+        { emoji: '⚡', name: '闪电链', weight: 15, sound: 'thunder', color: '#ffeaa7', art: 'thunder' },
+        { emoji: '⭐', name: '流星雨', weight: 15, sound: 'star', color: '#fdcb6e', art: 'meteor' },
+        { emoji: '🌈', name: '彩虹光', weight: 10, sound: 'rainbow', color: '#a29bfe', art: 'rainbow' },
+        { emoji: '💣', name: '超级炸弹', weight: 5, sound: 'bomb', color: '#2d3436', art: 'bomb' },
+        { emoji: '🌟', name: '圣光术', weight: 10, sound: 'holy', color: '#fff9c4', art: 'holy' },
+        { emoji: '🌀', name: '龙卷风', weight: 10, sound: 'wind', color: '#81ecec', art: 'holy' }
     ],
 
     // 道具增强武器
@@ -952,28 +960,28 @@ const BattleMode = {
     // ===== v21.0: 模块独占武器 =====
     moduleWeapons: {
         xiaojiujiu: [
-            { emoji: '💊', name: '九转仙丹', weight: 8, sound: 'holy', color: '#ff69b4', module: 'xiaojiujiu' },
-            { emoji: '🧮', name: '算盘珠', weight: 8, sound: 'star', color: '#daa520', module: 'xiaojiujiu' },
+            { emoji: '💊', name: '九转仙丹', weight: 8, sound: 'holy', color: '#ff69b4', module: 'xiaojiujiu', art: 'holy' },
+            { emoji: '🧮', name: '算盘珠', weight: 8, sound: 'star', color: '#daa520', module: 'xiaojiujiu', art: 'math' },
         ],
         times: [
-            { emoji: '🦉', name: '守护神兽', weight: 8, sound: 'wind', color: '#8b4513', module: 'times' },
-            { emoji: '✨', name: '魔咒之光', weight: 8, sound: 'holy', color: '#ffd700', module: 'times' },
+            { emoji: '🦉', name: '守护神兽', weight: 8, sound: 'wind', color: '#8b4513', module: 'times', art: 'academy' },
+            { emoji: '✨', name: '魔咒之光', weight: 8, sound: 'holy', color: '#ffd700', module: 'times', art: 'academy' },
         ],
         multiply: [
-            { emoji: '👻', name: '鬼火', weight: 8, sound: 'fire', color: '#00ff88', module: 'multiply' },
-            { emoji: '🦊', name: '狐狸火', weight: 8, sound: 'fire', color: '#ff4500', module: 'multiply' },
+            { emoji: '👻', name: '鬼火', weight: 8, sound: 'fire', color: '#00ff88', module: 'multiply', art: 'liaozhai' },
+            { emoji: '🦊', name: '狐狸火', weight: 8, sound: 'fire', color: '#ff4500', module: 'multiply', art: 'liaozhai' },
         ],
         fraction: [
-            { emoji: '🐲', name: '神兽咆哮', weight: 8, sound: 'thunder', color: '#8b0000', module: 'fraction' },
-            { emoji: '📛', name: '灵符', weight: 8, sound: 'ice', color: '#ffd700', module: 'fraction' },
+            { emoji: '🐲', name: '神兽咆哮', weight: 8, sound: 'thunder', color: '#8b0000', module: 'fraction', art: 'math' },
+            { emoji: '📛', name: '灵符', weight: 8, sound: 'ice', color: '#ffd700', module: 'fraction', art: 'math' },
         ],
         decimal: [
-            { emoji: '⭕', name: '紧箍咒', weight: 8, sound: 'thunder', color: '#ff1493', module: 'decimal' },
-            { emoji: '🐒', name: '七十二变', weight: 8, sound: 'rainbow', color: '#ff8c00', module: 'decimal' },
+            { emoji: '⭕', name: '紧箍咒', weight: 8, sound: 'thunder', color: '#ff1493', module: 'decimal', art: 'xiyou' },
+            { emoji: '🐒', name: '七十二变', weight: 8, sound: 'rainbow', color: '#ff8c00', module: 'decimal', art: 'xiyou' },
         ],
         unit: [
-            { emoji: '🌩️', name: '天雷', weight: 8, sound: 'thunder', color: '#4169e1', module: 'unit' },
-            { emoji: '🌀', name: '土遁术', weight: 8, sound: 'wind', color: '#8b4513', module: 'unit' },
+            { emoji: '🌩️', name: '天雷', weight: 8, sound: 'thunder', color: '#4169e1', module: 'unit', art: 'fengshen' },
+            { emoji: '🌀', name: '土遁术', weight: 8, sound: 'wind', color: '#8b4513', module: 'unit', art: 'fengshen' },
         ]
     },
 

@@ -26,7 +26,7 @@ function renderUserList() {
         return `
             <div class="user-card" data-user-id="${user.id}">
                 <button class="delete-user" data-user-id="${user.id}" title="\u5220\u9664\u7528\u6237">\u00D7</button>
-                <span class="avatar">${user.avatar}</span>
+                <span class="avatar">${CharacterArt.avatarMarkup(user.avatar, 'user-card-avatar-art')}</span>
                 <span class="name">${user.name}</span>
                 <span class="user-stats">${statsText}</span>
             </div>
@@ -65,7 +65,7 @@ function selectUser(userId) {
 function updateCurrentUserBadge() {
     const currentUser = UserManager.getCurrentUser();
     if (currentUser) {
-        document.getElementById('current-avatar').textContent = currentUser.avatar;
+        CharacterArt.setAvatar(document.getElementById('current-avatar'), currentUser.avatar, 'badge-avatar-art');
         document.getElementById('current-name').textContent = currentUser.name;
     }
 }

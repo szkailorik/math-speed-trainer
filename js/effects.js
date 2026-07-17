@@ -3,13 +3,25 @@
  */
 
 // ===== Sound Effects =====
+var _sharedGameAudioContext = null;
+
+function getGameAudioContext() {
+    var AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContextClass) return null;
+    if (!_sharedGameAudioContext || _sharedGameAudioContext.state === 'closed') {
+        _sharedGameAudioContext = new AudioContextClass();
+    }
+    if (_sharedGameAudioContext.state === 'suspended') {
+        _sharedGameAudioContext.resume().catch(function() {});
+    }
+    return _sharedGameAudioContext;
+}
+
 function playSound(type) {
     if (App.settings.sound !== 'on') return;
 
-    const AudioContext = window.AudioContext || window.webkitAudioContext;
-    if (!AudioContext) return;
-
-    const ctx = new AudioContext();
+    const ctx = getGameAudioContext();
+    if (!ctx) return;
 
     if (type === 'correct') {
         const osc = ctx.createOscillator();
@@ -1718,6 +1730,92 @@ function playSound(type) {
         gainThud.gain.exponentialRampToValueAtTime(0.01, t + 0.05);
         oscThud.start(t);
         oscThud.stop(t + 0.08);
+    }
+}
+
+// ===== v25.0 Layered battle Foley =====
+// Visual attacks are staged as ready -> release -> impact. This sound layer
+// mirrors those exact moments without changing combat callbacks or damage.
+function playBattleSound(phase, meta) {
+    if (App.settings.sound !== 'on') return;
+    var ctx = getGameAudioContext();
+    if (!ctx) return;
+    meta = meta || {};
+
+    var module = meta.module || (typeof App !== 'undefined' && App.battle ? App.battle.module : 'xiaojiujiu');
+    var type = meta.type || (meta.weapon && (meta.weapon.type || meta.weapon.sound)) || 'normal';
+    var palettes = {
+        xiaojiujiu: { base: 620, wave: 'triangle', accent: 930 },
+        fraction: { base: 330, wave: 'sine', accent: 740 },
+        decimal: { base: 540, wave: 'triangle', accent: 1080 },
+        unit: { base: 230, wave: 'square', accent: 1180 },
+        multiply: { base: 410, wave: 'sine', accent: 820 },
+        times: { base: 700, wave: 'triangle', accent: 1400 }
+    };
+    var palette = palettes[module] || palettes.xiaojiujiu;
+    var elementOffsets = {
+        fire: 90, ice: 210, water: -40, thunder: 320, electric: 320,
+        wind: 160, flying: 160, ghost: -110, dark: -150, spirit: -70,
+        rock: -180, earth: -180, ground: -180, steel: 40, fighting: -90,
+        dragon: -30, wizard: 250, psychic: 230, light: 300
+    };
+    var base = Math.max(90, palette.base + (elementOffsets[type] || 0));
+    var now = ctx.currentTime;
+
+    function tone(wave, from, to, duration, volume, delay) {
+        var start = now + (delay || 0);
+        var osc = ctx.createOscillator();
+        var gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.type = wave;
+        osc.frequency.setValueAtTime(Math.max(30, from), start);
+        osc.frequency.exponentialRampToValueAtTime(Math.max(30, to), start + duration);
+        gain.gain.setValueAtTime(0.001, start);
+        gain.gain.linearRampToValueAtTime(volume, start + Math.min(0.018, duration / 3));
+        gain.gain.exponentialRampToValueAtTime(0.001, start + duration);
+        osc.start(start);
+        osc.stop(start + duration + 0.03);
+    }
+
+    function noise(duration, volume, highpass, delay) {
+        var sampleCount = Math.max(1, Math.floor(ctx.sampleRate * duration));
+        var buffer = ctx.createBuffer(1, sampleCount, ctx.sampleRate);
+        var data = buffer.getChannelData(0);
+        for (var i = 0; i < sampleCount; i++) data[i] = Math.random() * 2 - 1;
+        var source = ctx.createBufferSource();
+        var filter = ctx.createBiquadFilter();
+        var gain = ctx.createGain();
+        var start = now + (delay || 0);
+        source.buffer = buffer;
+        filter.type = 'highpass';
+        filter.frequency.setValueAtTime(highpass, start);
+        source.connect(filter);
+        filter.connect(gain);
+        gain.connect(ctx.destination);
+        gain.gain.setValueAtTime(volume, start);
+        gain.gain.exponentialRampToValueAtTime(0.001, start + duration);
+        source.start(start);
+        source.stop(start + duration + 0.02);
+    }
+
+    if (phase === 'scene') {
+        tone('sine', base * 0.5, base * 0.75, 0.42, 0.035, 0);
+        tone(palette.wave, palette.accent, palette.accent * 1.08, 0.22, 0.025, 0.09);
+    } else if (phase === 'ready') {
+        tone(palette.wave, base * 0.72, base * 1.06, 0.14, 0.045, 0);
+    } else if (phase === 'release') {
+        noise(0.12, 0.038, 650, 0);
+        tone(palette.wave, palette.accent, base * 1.1, 0.17, 0.065, 0);
+    } else if (phase === 'impact') {
+        tone('sine', 135, 58, 0.13, 0.095, 0);
+        tone(type === 'steel' ? 'square' : palette.wave, palette.accent * 1.15, base, 0.11, 0.055, 0.012);
+        noise(0.075, 0.03, type === 'rock' || type === 'earth' ? 120 : 900, 0);
+    } else if (phase === 'enemyReady') {
+        tone(['ghost', 'dark', 'spirit'].indexOf(type) !== -1 ? 'sine' : 'sawtooth', base * 0.65, base * 0.92, 0.18, 0.045, 0);
+    } else if (phase === 'enemyImpact') {
+        tone('triangle', 170, 62, 0.15, 0.085, 0);
+        noise(0.09, 0.035, 260, 0);
     }
 }
 

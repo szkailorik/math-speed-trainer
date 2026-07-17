@@ -565,8 +565,8 @@ BattleMode.initStage = function() {
 
     document.getElementById('monster-name').textContent = monster.name;
     const monsterEmoji = document.getElementById('monster-emoji');
-    monsterEmoji.textContent = monster.emoji;
     monsterEmoji.className = 'monster-emoji enemy-idle';
+    CharacterArt.setMonster(monsterEmoji, monster, battle.module);
 
     this.showMonsterType(monster);
     this.showStageTransition(battle.currentStage, monster);
@@ -657,7 +657,7 @@ BattleMode.showStageTransition = function(stage, monster) {
 
     transition.innerHTML = `
         <div class="stage-transition-text">\u5173\u5361 ${stage}</div>
-        <div class="stage-transition-monster">${monster.emoji}</div>
+        <div class="stage-transition-monster">${CharacterArt.monsterMarkup(monster, App.battle.module, 'transition-monster-art')}</div>
         <div class="stage-transition-name">${monster.name}</div>
         <div class="stage-transition-type">${typeNames[monster.type] || '\u666E\u901A\u7CFB'}</div>
         <div class="stage-transition-attack">${monster.attack || '\uD83D\uDCA5'} ${monster.attackName || '\u653B\u51FB'}</div>

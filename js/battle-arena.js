@@ -292,8 +292,8 @@ BattleMode.updateArenaPositions = function() {
     const monsterName = document.getElementById('monster-name');
 
     if (monsterEmoji) {
-        monsterEmoji.textContent = monster.emoji;
         monsterEmoji.className = 'monster-emoji enemy-idle';
+        CharacterArt.setMonster(monsterEmoji, monster, battle.module);
         monsterEmoji.style.fontSize = this.getEnemySize(monster);
     }
 
@@ -345,6 +345,12 @@ BattleMode.applyMonsterTheme = function(monster) {
     var monsterType = monster.type || 'normal';
     var sceneType = _sceneTypeMap[monsterType] || monsterType;
     var sceneClass = sceneType + '-scene';
+    var moduleClass = 'module-theme-' + (App.battle.module || 'xiaojiujiu');
+
+    ['xiaojiujiu', 'fraction', 'decimal', 'unit', 'multiply', 'times'].forEach(function(module) {
+        arena.classList.remove('module-theme-' + module);
+    });
+    arena.classList.add(moduleClass);
 
     // v18.0: Get all 8 scene layers
     var sky = arena.querySelector('.scene-sky');
@@ -733,8 +739,15 @@ BattleMode.heroAttackAnimation = function(weapon, callback) {
     }
 
     // Phase 1: Raise weapon (0.2s)
+    if (typeof playBattleSound === 'function') {
+        playBattleSound('ready', { weapon: weapon, type: weapon && (weapon.type || weapon.sound), module: App.battle.module });
+    }
     if (weaponLayer) {
-        weaponLayer.textContent = weapon.emoji;
+        WeaponArt.setHeld(
+            weaponLayer,
+            App.battle.comboStage || 'normal',
+            App.battle.module
+        );
         weaponLayer.classList.add('weapon-raise');
     }
     this.setHeroState('cast_spell');
@@ -784,7 +797,10 @@ BattleMode.enemyEnterAnimation = function(monster, callback) {
 
     // Start offscreen
     enemySide.classList.add('entering');
-    enemyEmoji.textContent = monster.emoji;
+    if (typeof playBattleSound === 'function') {
+        playBattleSound('scene', { type: monster.type, module: App.battle.module });
+    }
+    CharacterArt.setMonster(enemyEmoji, monster, App.battle.module);
     enemyEmoji.style.fontSize = this.getEnemySize(monster);
 
     // Slide in
@@ -829,6 +845,9 @@ BattleMode.enemyAttackAnimation = function(monster, callback) {
     }
 
     this.setEnemyState('attack');
+    if (typeof playBattleSound === 'function') {
+        playBattleSound('enemyReady', { type: monster && monster.type, module: App.battle.module });
+    }
 
     // Create attack projectile flying right to left
     const enemySide = document.querySelector('.enemy-side');
@@ -837,7 +856,13 @@ BattleMode.enemyAttackAnimation = function(monster, callback) {
     if (enemySide && heroSide) {
         const attackEl = document.createElement('div');
         attackEl.className = 'arena-attack-projectile enemy-projectile';
-        attackEl.textContent = monster?.attack || '💥';
+        var monsterWeapon = {
+            emoji: monster?.attack || '💥',
+            name: (monster?.name || '妖怪') + '的攻击',
+            type: monster?.type || 'normal',
+            module: App.battle.module
+        };
+        WeaponArt.setProjectile(attackEl, monsterWeapon, App.battle.module, 'enemy-weapon-art');
 
         const arena = document.querySelector('.battle-arena');
         if (arena) {
@@ -849,8 +874,12 @@ BattleMode.enemyAttackAnimation = function(monster, callback) {
             });
 
             setTimeout(() => {
+                WeaponArt.spawnImpact(document.querySelector('.hero-char-layer'), monsterWeapon, App.battle.module, 0.8);
+                if (typeof playBattleSound === 'function') {
+                    playBattleSound('enemyImpact', { type: monsterWeapon.type, module: App.battle.module });
+                }
                 attackEl.remove();
-            }, 400);
+            }, 320);
         }
     }
 
@@ -894,6 +923,14 @@ BattleMode.setHeroState = function(state) {
     // v16.2: Apply state to hero-char-layer (primary) when hero-layers exists,
     // and also to hero-emoji (fallback)
     const stateClasses = ['hero-idle', 'hero-attack', 'hero-cast_spell', 'hero-hit', 'hero-heal', 'hero-victory', 'hero-defeat'];
+    const actionClasses = stateClasses.map(function(name) { return 'hero-action-' + name.replace('hero-', ''); });
+
+    const heroLayers = document.querySelector('.hero-layers');
+    if (heroLayers) {
+        heroLayers.classList.remove(...actionClasses);
+        heroLayers.classList.add('hero-action-' + state);
+        heroLayers.dataset.action = state;
+    }
 
     const charLayer = document.querySelector('.hero-char-layer');
     if (charLayer) {
@@ -906,6 +943,11 @@ BattleMode.setHeroState = function(state) {
         heroEmoji.classList.remove(...stateClasses);
         heroEmoji.classList.add('hero-' + state);
     }
+
+    const weaponLayer = document.querySelector('.hero-weapon-layer');
+    if (weaponLayer) {
+        weaponLayer.dataset.action = state;
+    }
 };
 
 // ===== Enemy State Management =====
@@ -916,6 +958,16 @@ BattleMode.setEnemyState = function(state) {
 
     // Remove all state classes
     enemyEmoji.classList.remove('enemy-idle', 'enemy-hit', 'enemy-attack', 'enemy-threaten', 'enemy-weak', 'enemy-enrage', 'enemy-death', 'enemy-dodge', 'enemy-defend', 'enemy-fear', 'enemy-charge');
+
+    enemyEmoji.classList.remove('enemy-archetype-melee', 'enemy-archetype-caster', 'enemy-archetype-heavy', 'enemy-archetype-flying');
+    var monster = App.battle && App.battle.currentMonster;
+    var type = monster && monster.type ? monster.type : 'normal';
+    var archetype = 'caster';
+    if (['fighting', 'beast', 'bug', 'poison', 'normal'].indexOf(type) !== -1) archetype = 'melee';
+    if (['rock', 'ground', 'earth', 'steel', 'ancient', 'dragon'].indexOf(type) !== -1) archetype = 'heavy';
+    if (['flying', 'wind'].indexOf(type) !== -1) archetype = 'flying';
+    enemyEmoji.classList.add('enemy-archetype-' + archetype);
+    enemyEmoji.dataset.action = state;
 
     // Add new state
     enemyEmoji.classList.add('enemy-' + state);
@@ -940,13 +992,16 @@ BattleMode.fireWeaponHorizontal = function(weapon) {
 
     const weaponEl = document.createElement('div');
     weaponEl.className = 'arena-attack-projectile hero-projectile';
-    weaponEl.textContent = weapon.emoji;
+    WeaponArt.setProjectile(weaponEl, weapon, App.battle.module);
 
     if (weapon.color) {
         weaponEl.style.filter = `drop-shadow(0 0 8px ${weapon.color})`;
     }
 
     arena.appendChild(weaponEl);
+    if (typeof playBattleSound === 'function') {
+        playBattleSound('release', { weapon: weapon, type: weapon && (weapon.type || weapon.sound), module: App.battle.module });
+    }
 
     requestAnimationFrame(() => {
         weaponEl.classList.add('fly');
@@ -956,6 +1011,13 @@ BattleMode.fireWeaponHorizontal = function(weapon) {
     if (typeof createWeaponTrail === 'function') {
         createWeaponTrail(weapon.color || '#ffaa00');
     }
+
+    setTimeout(() => {
+        WeaponArt.spawnImpact(document.getElementById('monster-emoji'), weapon, App.battle.module, 0.85);
+        if (typeof playBattleSound === 'function') {
+            playBattleSound('impact', { weapon: weapon, type: weapon && (weapon.type || weapon.sound), module: App.battle.module });
+        }
+    }, 320);
 
     setTimeout(() => weaponEl.remove(), 600);
 };

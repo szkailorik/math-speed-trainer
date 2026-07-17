@@ -315,8 +315,8 @@ BattleMode.startTowerFloor = function(floorNum) {
 
     document.getElementById('monster-name').textContent = monster.name;
     var monsterEmoji = document.getElementById('monster-emoji');
-    monsterEmoji.textContent = monster.emoji;
     monsterEmoji.className = 'monster-emoji enemy-idle';
+    CharacterArt.setMonster(monsterEmoji, monster, 'mixed');
 
     this.showMonsterType(monster);
     this.showTowerFloorTransition(floorNum, floorConfig, monster);
@@ -442,14 +442,14 @@ BattleMode.showTowerFloorTransition = function(floorNum, floorConfig, monster) {
     if (isBoss) {
         transition.innerHTML =
             '<div class="stage-transition-text tower-boss-announce">⚠️ BOSS</div>' +
-            '<div class="stage-transition-monster" style="font-size:4rem">' + monster.emoji + '</div>' +
+            '<div class="stage-transition-monster tower-boss-art">' + CharacterArt.monsterMarkup(monster, 'mixed', 'transition-monster-art') + '</div>' +
             '<div class="stage-transition-name">' + monster.name + '</div>' +
             '<div class="stage-transition-type">' + zoneName + ' · 第' + floorNum + '层</div>';
         playSound('towerBossGate');
     } else {
         transition.innerHTML =
             '<div class="stage-transition-text">第 ' + floorNum + ' 层</div>' +
-            '<div class="stage-transition-monster">' + monster.emoji + '</div>' +
+            '<div class="stage-transition-monster">' + CharacterArt.monsterMarkup(monster, 'mixed', 'transition-monster-art') + '</div>' +
             '<div class="stage-transition-name">' + monster.name + '</div>' +
             '<div class="stage-transition-type">' + zoneName + '</div>';
         playSound('towerFloorUp');

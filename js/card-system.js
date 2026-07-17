@@ -271,7 +271,7 @@ BattleMode._showCrystalDropAnimation = function(card, crystalAmount) {
                 '</div>' +
                 '<div class="card-face card-front">' +
                     '<div class="card-rarity-badge" style="background: ' + rarityConfig.color + '">' + rarityConfig.name + '</div>' +
-                    '<div class="card-drop-emoji">' + card.emoji + '</div>' +
+                    '<div class="card-drop-emoji">' + CharacterArt.cardMarkup(card, 'card-drop-character-art') + '</div>' +
                     '<div class="card-drop-name">' + card.name + '</div>' +
                     '<div class="card-drop-flavor" style="color: #aaa; font-size: 0.85em;">已拥有 - 转化为水晶</div>' +
                 '</div>' +
@@ -337,7 +337,7 @@ BattleMode.showCardDropAnimation = function(card) {
                 '</div>' +
                 '<div class="card-face card-front">' +
                     '<div class="card-rarity-badge" style="background: ' + rarityConfig.color + '">' + rarityConfig.name + '</div>' +
-                    '<div class="card-drop-emoji">' + card.emoji + '</div>' +
+                    '<div class="card-drop-emoji">' + CharacterArt.cardMarkup(card, 'card-drop-character-art') + '</div>' +
                     '<div class="card-drop-name">' + card.name + '</div>' +
                     '<div class="card-drop-flavor">' + (card.flavor || '') + '</div>' +
                 '</div>' +
@@ -676,7 +676,7 @@ BattleMode.renderCardGrid = function(filterOverride) {
         return '<div class="card-grid-item ' + (isCollected ? 'collected' : 'locked') + ' rarity-' + card.rarity + ' module-' + card.module + '" ' +
                 'data-card-id="' + card.id + '">' +
             (isNew ? '<div class="card-grid-new">NEW</div>' : '') +
-            '<div class="card-grid-emoji">' + (isCollected ? card.emoji : '❓') + '</div>' +
+            '<div class="card-grid-emoji">' + (isCollected ? CharacterArt.cardMarkup(card, 'card-grid-character-art') : '❓') + '</div>' +
             '<div class="card-grid-name">' + (isCollected ? card.name : '???') + '</div>' +
             '<div class="card-grid-rarity" style="color: ' + rarityConfig.color + '">' + rarityConfig.name + '</div>' +
             '<div class="card-grid-module">' + moduleInfo.icon + '</div>' +
@@ -814,7 +814,7 @@ BattleMode.showCardDetail = function(cardId) {
             var rcRarity = CardData.rarityConfig[rc.rarity] || CardData.rarityConfig.N;
             return '<div class="related-card-item ' + (rcCollected ? 'collected' : 'locked') + ' rarity-' + rc.rarity + '" ' +
                 'data-related-id="' + rc.id + '">' +
-                '<div class="related-card-emoji">' + (rcCollected ? rc.emoji : '❓') + '</div>' +
+                '<div class="related-card-emoji">' + (rcCollected ? CharacterArt.cardMarkup(rc, 'related-card-character-art') : '❓') + '</div>' +
                 '<div class="related-card-name">' + (rcCollected ? rc.name : '???') + '</div>' +
                 '<div class="related-card-rarity" style="color:' + rcRarity.color + '">' + rcRarity.name + '</div>' +
             '</div>';
@@ -849,7 +849,7 @@ BattleMode.showCardDetail = function(cardId) {
 
             '<div class="card-detail-preview">' +
                 '<div class="card-preview rarity-' + card.rarity + ' module-' + card.module + '" style="box-shadow: ' + rarityConfig.glow + '">' +
-                    '<div class="card-preview-emoji">' + card.emoji + '</div>' +
+                    '<div class="card-preview-emoji">' + CharacterArt.cardMarkup(card, 'card-preview-character-art') + '</div>' +
                 '</div>' +
             '</div>' +
 

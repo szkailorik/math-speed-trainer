@@ -22,12 +22,15 @@ BattleMode.initHeroLayers = function() {
 
     var layers = document.createElement('div');
     layers.className = 'hero-layers';
+    var currentUser = UserManager.getCurrentUser();
+    var currentAvatar = currentUser ? currentUser.avatar : '🧙';
     layers.innerHTML =
         '<div class="hero-effect-layer"></div>' +
-        '<div class="hero-char-layer">🧙</div>' +
-        '<div class="hero-weapon-layer">⚔️</div>';
+        '<div class="hero-char-layer">' + CharacterArt.avatarMarkup(currentAvatar, 'battle-hero-art') + '</div>' +
+        '<div class="hero-weapon-layer"></div>';
 
     heroSide.appendChild(layers);
+    WeaponArt.setHeld(layers.querySelector('.hero-weapon-layer'), 'normal', App.battle.module, currentAvatar);
 
     // Initialize combo stage tracking
     if (!App.battle.comboStage) {
@@ -133,8 +136,8 @@ BattleMode.updateHeroVisuals = function(stage) {
     // Clear effect layer
     effectLayer.innerHTML = '';
 
-    // Get new weapon emoji
-    weaponLayer.textContent = this.getComboWeapon(stage);
+    // Keep the held prop aligned with the combo tier and current story theme.
+    WeaponArt.setHeld(weaponLayer, stage, App.battle.module);
 
     if (stage === 'normal') {
         // No glow, no effects
@@ -223,7 +226,7 @@ BattleMode._spawnRainbowStarfield = function(container) {
 
 BattleMode.attackNormal = function(targetEl, cb) {
     var self = this;
-    var heroEmoji = document.querySelector('.hero-emoji');
+    var heroEmoji = document.querySelector('.hero-char-layer') || document.querySelector('.hero-emoji');
     if (!heroEmoji) { if (cb) cb(); return; }
 
     playSound('attackNormal');
@@ -256,7 +259,7 @@ BattleMode.attackNormal = function(targetEl, cb) {
 BattleMode.attackDouble = function(targetEl, cb) {
     var self = this;
     var arena = document.querySelector('.battle-arena');
-    var heroEmoji = document.querySelector('.hero-emoji');
+    var heroEmoji = document.querySelector('.hero-char-layer') || document.querySelector('.hero-emoji');
     if (!heroEmoji || !arena) { if (cb) cb(); return; }
 
     playSound('attackDouble');
@@ -268,7 +271,8 @@ BattleMode.attackDouble = function(targetEl, cb) {
         // Weapon1 flies (0.15s)
         var w1 = document.createElement('div');
         w1.className = 'arena-attack-projectile hero-projectile combo-projectile';
-        w1.textContent = '🔥';
+        var doubleWeapon = { emoji: '🔥', name: '觉醒双击', color: '#ff6b35' };
+        WeaponArt.setProjectile(w1, doubleWeapon, App.battle.module, 'combo-weapon-art');
         arena.appendChild(w1);
         requestAnimationFrame(function() { w1.classList.add('fly'); });
 
@@ -277,13 +281,14 @@ BattleMode.attackDouble = function(targetEl, cb) {
             // Hit "-1"
             if (targetEl) {
                 targetEl.classList.add('enemy-hit-flash');
+                WeaponArt.spawnImpact(targetEl, doubleWeapon, App.battle.module, 0.75);
                 setTimeout(function() { targetEl.classList.remove('enemy-hit-flash'); }, 100);
             }
 
             // Weapon2 flies (0.1s)
             var w2 = document.createElement('div');
             w2.className = 'arena-attack-projectile hero-projectile combo-projectile';
-            w2.textContent = '🔥';
+            WeaponArt.setProjectile(w2, doubleWeapon, App.battle.module, 'combo-weapon-art');
             arena.appendChild(w2);
             requestAnimationFrame(function() { w2.classList.add('fly'); });
 
@@ -292,6 +297,7 @@ BattleMode.attackDouble = function(targetEl, cb) {
                 // Hit "-1"
                 if (targetEl) {
                     targetEl.classList.add('enemy-hit-flash');
+                    WeaponArt.spawnImpact(targetEl, doubleWeapon, App.battle.module, 0.75);
                     setTimeout(function() { targetEl.classList.remove('enemy-hit-flash'); }, 100);
                 }
 
@@ -312,7 +318,7 @@ BattleMode.attackDouble = function(targetEl, cb) {
 BattleMode.attackTriple = function(targetEl, cb) {
     var self = this;
     var arena = document.querySelector('.battle-arena');
-    var heroEmoji = document.querySelector('.hero-emoji');
+    var heroEmoji = document.querySelector('.hero-char-layer') || document.querySelector('.hero-emoji');
     if (!heroEmoji || !arena) { if (cb) cb(); return; }
 
     playSound('attackTriple');
@@ -372,7 +378,7 @@ BattleMode.attackTriple = function(targetEl, cb) {
 BattleMode.attackCharged = function(targetEl, cb) {
     var self = this;
     var arena = document.querySelector('.battle-arena');
-    var heroEmoji = document.querySelector('.hero-emoji');
+    var heroEmoji = document.querySelector('.hero-char-layer') || document.querySelector('.hero-emoji');
     if (!heroEmoji || !arena) { if (cb) cb(); return; }
 
     playSound('attackCharged');
@@ -409,7 +415,8 @@ BattleMode.attackCharged = function(targetEl, cb) {
             // Release giant weapon (40% stage width) (0.25s)
             var giantWeapon = document.createElement('div');
             giantWeapon.className = 'giant-weapon-projectile';
-            giantWeapon.textContent = '💎';
+            var chargedWeapon = { emoji: '💎', name: '棱镜蓄力击', color: '#a29bfe' };
+            WeaponArt.setProjectile(giantWeapon, chargedWeapon, App.battle.module, 'giant-projectile-art');
             giantWeapon.style.fontSize = (arena.offsetWidth * 0.15) + 'px';
             arena.appendChild(giantWeapon);
             requestAnimationFrame(function() {
@@ -424,6 +431,7 @@ BattleMode.attackCharged = function(targetEl, cb) {
 
                 if (targetEl) {
                     targetEl.classList.add('enemy-hit-explosion');
+                    WeaponArt.spawnImpact(targetEl, chargedWeapon, App.battle.module, 1.45);
                     setTimeout(function() {
                         targetEl.classList.remove('enemy-hit-explosion');
                     }, 200);
@@ -463,7 +471,7 @@ BattleMode.attackCharged = function(targetEl, cb) {
 BattleMode.attackUltimate = function(targetEl, cb) {
     var self = this;
     var arena = document.querySelector('.battle-arena');
-    var heroEmoji = document.querySelector('.hero-emoji');
+    var heroEmoji = document.querySelector('.hero-char-layer') || document.querySelector('.hero-emoji');
     if (!heroEmoji || !arena) { if (cb) cb(); return; }
 
     playSound('attackUltimate');

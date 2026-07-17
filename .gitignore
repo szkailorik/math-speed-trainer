@@ -17,6 +17,9 @@ build/
 # Dependencies
 node_modules/
 
+# Local Cloudflare/Wrangler state
+.wrangler/
+
 # Logs
 *.log
 npm-debug.log*

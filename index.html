@@ -38,8 +38,8 @@
     <link rel="apple-touch-startup-image" href="icons/splash.png">
 
     <title>数学魔法学院</title>
-    <link rel="stylesheet" href="css/style.css?v=23.2.2">
-    <link rel="stylesheet" href="css/scenes.css?v=23.2.2">
+    <link rel="stylesheet" href="css/style.css?v=25.0.0">
+    <link rel="stylesheet" href="css/scenes.css?v=25.0.0">
     <link rel="stylesheet" href="css/scenes-svg.css?v=23.2.2">
     <link rel="stylesheet" href="css/knowledge.css?v=23.2.2">
 </head>
@@ -68,28 +68,28 @@
                     <input type="text" class="user-name-input" id="user-name-input" placeholder="输入名字" maxlength="10">
                     <div class="avatar-picker" id="avatar-picker">
                         <div class="avatar-option selected" data-avatar="⚔️">
-                            <span class="avatar-emoji">⚔️</span><span class="avatar-role">剑士</span>
+                            <span class="avatar-emoji"><img class="character-art avatar-picker-art" src="assets/characters/heroes/heroes-00.webp" alt="剑士"></span><span class="avatar-role">剑士</span>
                         </div>
                         <div class="avatar-option" data-avatar="🧙">
-                            <span class="avatar-emoji">🧙</span><span class="avatar-role">魔法师</span>
+                            <span class="avatar-emoji"><img class="character-art avatar-picker-art" src="assets/characters/heroes/heroes-01.webp" alt="魔法师"></span><span class="avatar-role">魔法师</span>
                         </div>
                         <div class="avatar-option" data-avatar="🏹">
-                            <span class="avatar-emoji">🏹</span><span class="avatar-role">弓箭手</span>
+                            <span class="avatar-emoji"><img class="character-art avatar-picker-art" src="assets/characters/heroes/heroes-02.webp" alt="弓箭手"></span><span class="avatar-role">弓箭手</span>
                         </div>
                         <div class="avatar-option" data-avatar="🛡️">
-                            <span class="avatar-emoji">🛡️</span><span class="avatar-role">守护者</span>
+                            <span class="avatar-emoji"><img class="character-art avatar-picker-art" src="assets/characters/heroes/heroes-03.webp" alt="守护者"></span><span class="avatar-role">守护者</span>
                         </div>
                         <div class="avatar-option" data-avatar="🐉">
-                            <span class="avatar-emoji">🐉</span><span class="avatar-role">驯龙师</span>
+                            <span class="avatar-emoji"><img class="character-art avatar-picker-art" src="assets/characters/heroes/heroes-04.webp" alt="驯龙师"></span><span class="avatar-role">驯龙师</span>
                         </div>
                         <div class="avatar-option" data-avatar="🦊">
-                            <span class="avatar-emoji">🦊</span><span class="avatar-role">灵狐</span>
+                            <span class="avatar-emoji"><img class="character-art avatar-picker-art" src="assets/characters/heroes/heroes-05.webp" alt="灵狐"></span><span class="avatar-role">灵狐</span>
                         </div>
                         <div class="avatar-option" data-avatar="🌟">
-                            <span class="avatar-emoji">🌟</span><span class="avatar-role">星术士</span>
+                            <span class="avatar-emoji"><img class="character-art avatar-picker-art" src="assets/characters/heroes/heroes-06.webp" alt="星术士"></span><span class="avatar-role">星术士</span>
                         </div>
                         <div class="avatar-option" data-avatar="🔮">
-                            <span class="avatar-emoji">🔮</span><span class="avatar-role">预言家</span>
+                            <span class="avatar-emoji"><img class="character-art avatar-picker-art" src="assets/characters/heroes/heroes-07.webp" alt="预言家"></span><span class="avatar-role">预言家</span>
                         </div>
                     </div>
                     <div class="form-buttons">
@@ -104,7 +104,7 @@
         <div id="home-page" class="page">
             <header class="home-header">
                 <div class="user-badge" id="current-user-badge">
-                    <span class="user-avatar" id="current-avatar">⚔️</span>
+                    <span class="user-avatar" id="current-avatar"><img class="character-art badge-avatar-art" src="assets/characters/heroes/heroes-00.webp" alt="冒险者头像"></span>
                     <span class="user-name" id="current-name">小朋友</span>
                     <span class="switch-hint">点击切换</span>
                 </div>
@@ -1360,31 +1360,34 @@
     <script src="js/fengshen-monsters.js?v=23.2.2"></script>
     <script src="js/liaozhai-monsters.js?v=23.2.2"></script>
     <script src="js/hp-monsters.js?v=23.2.2"></script>
+    <script src="js/monster-expansion.js?v=25.0.0"></script>
+    <script src="js/character-art.js?v=25.0.0"></script>
+    <script src="js/weapon-art.js?v=24.1.0"></script>
     <script src="js/core.js?v=23.2.2"></script>
     <script src="js/question-engine.js?v=23.2.2"></script>
-    <script src="js/effects.js?v=23.2.2"></script>
+    <script src="js/effects.js?v=25.0.0"></script>
     <script src="js/practice.js?v=23.2.2.1"></script>
     <script src="js/daily.js?v=23.2.2"></script>
     <script src="js/knowledge-data.js?v=23.2.2"></script>
     <script src="js/knowledge-tracker.js?v=23.2.2"></script>
     <script src="js/knowledge-ui.js?v=23.2.2"></script>
-    <script src="js/ui-pages.js?v=23.2.2"></script>
-    <script src="js/battle-data.js?v=23.2.2"></script>
+    <script src="js/ui-pages.js?v=25.0.0"></script>
+    <script src="js/battle-data.js?v=25.0.0"></script>
     <script src="js/chapter-data.js?v=23.2.2"></script>
     <script src="js/card-data.js?v=23.2.2"></script>
-    <script src="js/battle-arena.js?v=23.2.2"></script>
+    <script src="js/battle-arena.js?v=25.0.0"></script>
     <script src="js/monster-behavior.js?v=23.2.2"></script>
-    <script src="js/card-system.js?v=23.2.2"></script>
-    <script src="js/battle-collection.js?v=23.2.2"></script>
+    <script src="js/card-system.js?v=25.0.0"></script>
+    <script src="js/battle-collection.js?v=25.0.0"></script>
     <script src="js/tower-data.js?v=23.2.2"></script>
-    <script src="js/hero-system.js?v=23.2.2"></script>
+    <script src="js/hero-system.js?v=25.0.0"></script>
     <script src="js/combo-engine.js?v=23.2.2"></script>
-    <script src="js/behavior-v2.js?v=23.2.2"></script>
-    <script src="js/move-system.js?v=23.2.2"></script>
-    <script src="js/tower-mode.js?v=23.2.2"></script>
+    <script src="js/behavior-v2.js?v=25.0.0"></script>
+    <script src="js/move-system.js?v=25.0.0"></script>
+    <script src="js/tower-mode.js?v=25.0.0"></script>
     <script src="js/momentum-system.js?v=23.2.2"></script>
     <script src="js/chapter-system.js?v=23.2.2.1"></script>
-    <script src="js/battle-combat.js?v=23.2.2.1"></script>
+    <script src="js/battle-combat.js?v=25.0.0"></script>
     <script src="js/app.js?v=23.2.2"></script>
 </body>
 </html>

@@ -63,7 +63,7 @@ BattleMode.renderCollection = function(filter) {
         if (isCollected) {
             html += `
                 <div class="collection-card collected" data-id="${monster.id}">
-                    <span class="collection-card-emoji">${monster.emoji}</span>
+                    <span class="collection-card-emoji">${CharacterArt.monsterMarkup(monster, 'xiaojiujiu', 'collection-monster-art')}</span>
                     <span class="collection-card-name">${monster.name}</span>
                     <span class="collection-card-type type-${monster.type}">${typeNames[monster.type] || '\u666E\u901A'}</span>
                 </div>
@@ -104,7 +104,7 @@ BattleMode.renderCollection = function(filter) {
             const id = card.dataset.id;
             const monster = allMonsters.find(m => m.id === id);
             if (monster) {
-                this.showMonsterDetail(monster);
+                this.showMonsterDetail(monster, 'xiaojiujiu');
             }
         });
     });
@@ -121,7 +121,7 @@ BattleMode.renderCollection = function(filter) {
 
 // ===== Monster Detail =====
 
-BattleMode.showMonsterDetail = function(monster) {
+BattleMode.showMonsterDetail = function(monster, module) {
     const typeNames = {
         ghost: '\u5E7D\u7075\u7CFB', psychic: '\u8D85\u80FD\u7CFB', dark: '\u6697\u7CFB', poison: '\u6BD2\u7CFB',
         fire: '\u706B\u7CFB', water: '\u6C34\u7CFB', flying: '\u98DE\u884C\u7CFB', normal: '\u666E\u901A\u7CFB',
@@ -142,7 +142,7 @@ BattleMode.showMonsterDetail = function(monster) {
         demon: '#e53935', creature: '#43a047', wizard: '#5c6bc0'
     };
 
-    document.getElementById('detail-emoji').textContent = monster.emoji;
+    CharacterArt.setMonster(document.getElementById('detail-emoji'), monster, module);
     document.getElementById('detail-name').textContent = monster.name;
     document.getElementById('detail-name-en').textContent = monster.nameEn;
     document.getElementById('detail-type').innerHTML = `<span class="type-badge ${monster.type}">${typeNames[monster.type] || '\u666E\u901A\u7CFB'}</span>`;
@@ -222,7 +222,7 @@ BattleMode.renderShanhaiCollection = function(filter) {
         if (isCollected) {
             html += `
                 <div class="collection-card collected shanhai-card" data-id="${monster.id}" data-module="fraction">
-                    <span class="collection-card-emoji">${monster.emoji}</span>
+                    <span class="collection-card-emoji">${CharacterArt.monsterMarkup(monster, 'fraction', 'collection-monster-art')}</span>
                     <span class="collection-card-name">${monster.name}</span>
                     <span class="collection-card-type type-${monster.type}">${typeNames[monster.type] || '\u666E\u901A'}</span>
                 </div>
@@ -253,7 +253,7 @@ BattleMode.renderShanhaiCollection = function(filter) {
             const id = card.dataset.id;
             const monster = allMonsters.find(m => m.id === id);
             if (monster) {
-                this.showMonsterDetail(monster);
+                this.showMonsterDetail(monster, 'fraction');
             }
         });
     });
@@ -320,7 +320,7 @@ BattleMode.renderXiyoujiCollection = function(filter) {
         if (isCollected) {
             html += `
                 <div class="collection-card collected xiyouji-card" data-id="${monster.id}" data-module="decimal">
-                    <span class="collection-card-emoji">${monster.emoji}</span>
+                    <span class="collection-card-emoji">${CharacterArt.monsterMarkup(monster, 'decimal', 'collection-monster-art')}</span>
                     <span class="collection-card-name">${monster.name}</span>
                     <span class="collection-card-type type-${monster.type}">${typeNames[monster.type] || '\u666E\u901A'}</span>
                 </div>
@@ -351,7 +351,7 @@ BattleMode.renderXiyoujiCollection = function(filter) {
             const id = card.dataset.id;
             const monster = allMonsters.find(m => m.id === id);
             if (monster) {
-                this.showMonsterDetail(monster);
+                this.showMonsterDetail(monster, 'decimal');
             }
         });
     });
@@ -418,7 +418,7 @@ BattleMode.renderFengshenCollection = function(filter) {
         if (isCollected) {
             html += `
                 <div class="collection-card collected fengshen-card" data-id="${monster.id}" data-module="unit">
-                    <span class="collection-card-emoji">${monster.emoji}</span>
+                    <span class="collection-card-emoji">${CharacterArt.monsterMarkup(monster, 'unit', 'collection-monster-art')}</span>
                     <span class="collection-card-name">${monster.name}</span>
                     <span class="collection-card-type type-${monster.type}">${typeNames[monster.type] || '\u666E\u901A'}</span>
                 </div>
@@ -449,7 +449,7 @@ BattleMode.renderFengshenCollection = function(filter) {
             const id = card.dataset.id;
             const monster = allMonsters.find(m => m.id === id);
             if (monster) {
-                this.showMonsterDetail(monster);
+                this.showMonsterDetail(monster, 'unit');
             }
         });
     });
@@ -514,7 +514,7 @@ BattleMode.renderLiaozhaiCollection = function(filter) {
         if (isCollected) {
             html += `
                 <div class="collection-card collected liaozhai-card" data-id="${monster.id}" data-module="multiply">
-                    <span class="collection-card-emoji">${monster.emoji}</span>
+                    <span class="collection-card-emoji">${CharacterArt.monsterMarkup(monster, 'multiply', 'collection-monster-art')}</span>
                     <span class="collection-card-name">${monster.name}</span>
                     <span class="collection-card-type type-${monster.type}">${typeNames[monster.type] || '\u5996'}</span>
                 </div>
@@ -545,7 +545,7 @@ BattleMode.renderLiaozhaiCollection = function(filter) {
             const id = card.dataset.id;
             const monster = allMonsters.find(m => m.id === id);
             if (monster) {
-                this.showMonsterDetail(monster);
+                this.showMonsterDetail(monster, 'multiply');
             }
         });
     });
@@ -610,7 +610,7 @@ BattleMode.renderHpCollection = function(filter) {
         if (isCollected) {
             html += `
                 <div class="collection-card collected hp-card" data-id="${monster.id}" data-module="times">
-                    <span class="collection-card-emoji">${monster.emoji}</span>
+                    <span class="collection-card-emoji">${CharacterArt.monsterMarkup(monster, 'times', 'collection-monster-art')}</span>
                     <span class="collection-card-name">${monster.name}</span>
                     <span class="collection-card-type type-${monster.type}">${typeNames[monster.type] || '\u9B54\u6CD5'}</span>
                 </div>
@@ -641,7 +641,7 @@ BattleMode.renderHpCollection = function(filter) {
             const id = card.dataset.id;
             const monster = allMonsters.find(m => m.id === id);
             if (monster) {
-                this.showMonsterDetail(monster);
+                this.showMonsterDetail(monster, 'times');
             }
         });
     });

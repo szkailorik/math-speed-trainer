@@ -1078,7 +1078,7 @@ BattleMode._fireSmallProjectile = function(emoji, targetEl) {
 
     var projectile = document.createElement('div');
     projectile.className = 'arena-attack-projectile hero-projectile move-projectile-small';
-    projectile.textContent = emoji;
+    WeaponArt.setProjectile(projectile, { emoji: emoji, name: '轻型招式' }, App.battle.module, 'move-weapon-small');
     projectile.style.fontSize = '1.2rem';
 
     arena.appendChild(projectile);
@@ -1088,6 +1088,7 @@ BattleMode._fireSmallProjectile = function(emoji, targetEl) {
     });
 
     setTimeout(function() {
+        WeaponArt.spawnImpact(targetEl, { emoji: emoji, name: '轻型招式' }, App.battle.module, 0.65);
         if (projectile.parentNode) projectile.parentNode.removeChild(projectile);
     }, 500);
 };
@@ -1101,7 +1102,7 @@ BattleMode._fireLargeProjectile = function(emoji, targetEl, color) {
 
     var projectile = document.createElement('div');
     projectile.className = 'arena-attack-projectile hero-projectile move-projectile-large';
-    projectile.textContent = emoji;
+    WeaponArt.setProjectile(projectile, { emoji: emoji, name: '强化招式' }, App.battle.module, 'move-weapon-large');
     projectile.style.fontSize = '2rem';
 
     if (color) {
@@ -1115,6 +1116,7 @@ BattleMode._fireLargeProjectile = function(emoji, targetEl, color) {
     });
 
     setTimeout(function() {
+        WeaponArt.spawnImpact(targetEl, { emoji: emoji, name: '强化招式' }, App.battle.module, 1);
         if (projectile.parentNode) projectile.parentNode.removeChild(projectile);
     }, 600);
 };
@@ -1128,7 +1130,7 @@ BattleMode._fireGiantProjectile = function(emoji, targetEl, color) {
 
     var projectile = document.createElement('div');
     projectile.className = 'arena-attack-projectile hero-projectile move-projectile-giant';
-    projectile.textContent = emoji;
+    WeaponArt.setProjectile(projectile, { emoji: emoji, name: '终结招式' }, App.battle.module, 'move-weapon-giant');
     projectile.style.fontSize = '3.5rem';
 
     if (color) {
@@ -1142,6 +1144,7 @@ BattleMode._fireGiantProjectile = function(emoji, targetEl, color) {
     });
 
     setTimeout(function() {
+        WeaponArt.spawnImpact(targetEl, { emoji: emoji, name: '终结招式' }, App.battle.module, 1.35);
         if (projectile.parentNode) projectile.parentNode.removeChild(projectile);
     }, 700);
 };

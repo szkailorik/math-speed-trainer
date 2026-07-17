@@ -141,7 +141,7 @@ BattleMode.executeSplit = function(cb) {
     var quip = quips[Math.floor(Math.random() * quips.length)];
     var enemyEmoji = document.getElementById('monster-emoji');
     var arena = document.querySelector('.battle-arena');
-    var monsterChar = monster ? (monster.emoji || '👾') : '👾';
+    var monsterChar = monster ? CharacterArt.monsterMarkup(monster, App.battle.module, 'split-monster-art') : '👾';
 
     // Step 1: Monster death animation starts (midpoint preparation)
     if (enemyEmoji) {
@@ -156,8 +156,8 @@ BattleMode.executeSplit = function(cb) {
         var splitRight = document.createElement('div');
         splitLeft.className = 'behavior-effect split-fragment split-left';
         splitRight.className = 'behavior-effect split-fragment split-right';
-        splitLeft.textContent = monsterChar;
-        splitRight.textContent = monsterChar;
+        splitLeft.innerHTML = monsterChar;
+        splitRight.innerHTML = monsterChar;
         var splitStyle = 'position:absolute;font-size:1rem;z-index:100;transition:transform 0.2s ease-out,opacity 0.2s;';
         splitLeft.style.cssText = splitStyle + 'right:25%;top:30%;';
         splitRight.style.cssText = splitStyle + 'right:15%;top:30%;';
@@ -422,7 +422,7 @@ BattleMode.executeTransform = function(cb) {
 
                 // Change monster appearance
                 if (enemyEmoji) {
-                    enemyEmoji.textContent = phase2Emoji;
+                    CharacterArt.setMonster(enemyEmoji, monster, App.battle.module);
                     enemyEmoji.style.transition = 'transform 0.2s ease-out, filter 0.2s';
                     enemyEmoji.style.transform = 'scale(1.2)';
                     enemyEmoji.style.filter = 'brightness(1.2)';

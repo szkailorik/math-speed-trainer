@@ -3592,6 +3592,32 @@ body.keyboard-active #battle-page .battle-answer-area {
     }
 }
 
+/* v25.0: subtle whole-app depth so illustrated characters do not sit on a flat canvas. */
+body::before,
+body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: -1;
+}
+body::before {
+    background:
+        radial-gradient(circle at 16% 8%, rgba(90, 114, 255, .12), transparent 28%),
+        radial-gradient(circle at 84% 22%, rgba(166, 94, 255, .09), transparent 30%),
+        radial-gradient(circle at 50% 100%, rgba(35, 156, 177, .07), transparent 42%);
+}
+body::after {
+    opacity: .32;
+    background-image:
+        radial-gradient(circle, rgba(255,255,255,.26) 0 1px, transparent 1.5px),
+        radial-gradient(circle, rgba(125,170,255,.18) 0 1px, transparent 1.5px);
+    background-position: 0 0, 31px 27px;
+    background-size: 74px 74px, 91px 91px;
+    mask-image: linear-gradient(to bottom, #000, transparent 78%);
+    -webkit-mask-image: linear-gradient(to bottom, #000, transparent 78%);
+}
+
 
 /* ===== 妖怪图鉴页面 v8.3 ===== */
 
@@ -4468,6 +4494,153 @@ body.keyboard-active #battle-page .battle-answer-area {
     color: var(--primary);
 }
 
+/* ===== v24.0 Generated character artwork ===== */
+.character-art {
+    display: block;
+    max-width: 100%;
+    object-fit: contain;
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+.avatar-picker-art {
+    width: 64px;
+    height: 64px;
+    filter: drop-shadow(0 5px 8px rgba(0, 0, 0, 0.35));
+}
+
+.user-card-avatar-art {
+    width: 92px;
+    height: 92px;
+    filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.4));
+}
+
+.badge-avatar-art {
+    width: 36px;
+    height: 36px;
+    filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.35));
+}
+
+.user-card .avatar,
+.user-badge .user-avatar,
+.avatar-emoji {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.monster-emoji {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 128px;
+    height: 128px;
+}
+
+.monster-emoji .monster-art {
+    width: 128px;
+    height: 128px;
+}
+
+.monster-emoji.boss-art,
+.monster-emoji.boss-art .monster-art {
+    width: 146px;
+    height: 146px;
+}
+
+.hero-char-layer {
+    width: 116px;
+    height: 116px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.battle-hero-art {
+    width: 116px;
+    height: 116px;
+}
+
+.collection-card-emoji {
+    min-height: 86px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.collection-monster-art {
+    width: 86px;
+    height: 86px;
+    filter: drop-shadow(0 6px 9px rgba(0, 0, 0, 0.35));
+}
+
+.monster-detail-emoji {
+    width: 180px;
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.monster-detail-emoji .monster-art {
+    width: 180px;
+    height: 180px;
+    filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.35));
+}
+
+.stage-transition-monster {
+    width: 150px;
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.transition-monster-art {
+    width: 150px;
+    height: 150px;
+    filter: drop-shadow(0 12px 20px rgba(0, 0, 0, 0.5));
+}
+
+.split-monster-art {
+    width: 34px;
+    height: 34px;
+}
+
+.toast-monster-art {
+    display: inline-block;
+    width: 38px;
+    height: 38px;
+    vertical-align: middle;
+    margin-right: 4px;
+}
+
+@media (max-width: 480px) {
+    .avatar-picker-art {
+        width: 54px;
+        height: 54px;
+    }
+
+    .monster-emoji,
+    .monster-emoji .monster-art {
+        width: 108px;
+        height: 108px;
+    }
+
+    .monster-emoji.boss-art,
+    .monster-emoji.boss-art .monster-art {
+        width: 124px;
+        height: 124px;
+    }
+
+    .hero-char-layer,
+    .battle-hero-art {
+        width: 98px;
+        height: 98px;
+    }
+}
+
 /* 成就摘要 */
 .achievements-summary {
     display: flex;
@@ -4726,6 +4899,80 @@ body.keyboard-active #battle-page .battle-answer-area {
     100% { transform: translateX(0) scale(1); }
 }
 
+/* v25.0: body, held prop and projectile now read as one staged action. */
+.hero-layers.hero-action-idle {
+    animation: hero-action-idle 2s ease-in-out infinite;
+    transform-origin: 50% 88%;
+}
+.hero-layers.hero-action-cast_spell,
+.hero-layers.hero-action-attack {
+    animation: hero-action-strike 0.35s cubic-bezier(.22,.72,.28,1);
+    transform-origin: 50% 88%;
+}
+.hero-layers.hero-action-hit { animation: hero-action-recoil 0.3s ease-out; }
+.hero-layers.hero-action-victory { animation: hero-action-victory 1s ease-out both; }
+.hero-layers.hero-action-defeat { animation: hero-action-defeat 1s ease-in both; }
+
+@keyframes hero-action-idle {
+    0%, 100% { transform: translateY(0) rotate(0); }
+    50% { transform: translateY(-5px) rotate(-1deg); }
+}
+@keyframes hero-action-strike {
+    0% { transform: translateX(0) rotate(0) scale(1); }
+    24% { transform: translateX(-7px) rotate(-3deg) scale(.96, 1.04); }
+    58% { transform: translateX(22px) rotate(3deg) scale(1.05, .97); }
+    100% { transform: translateX(0) rotate(0) scale(1); }
+}
+@keyframes hero-action-recoil {
+    0%, 100% { transform: translateX(0) rotate(0); }
+    28% { transform: translateX(-18px) rotate(-7deg) scale(.94); }
+    62% { transform: translateX(4px) rotate(2deg); }
+}
+@keyframes hero-action-victory {
+    0% { transform: translateY(0) rotate(0); }
+    42% { transform: translateY(-20px) rotate(8deg) scale(1.08); }
+    100% { transform: translateY(0) rotate(-2deg) scale(1.05); }
+}
+@keyframes hero-action-defeat {
+    to { transform: translate(-18px, 12px) rotate(-24deg) scale(.9); opacity: .42; }
+}
+
+.hero-layers[data-action="cast_spell"] .hero-weapon-layer,
+.hero-layers[data-action="attack"] .hero-weapon-layer {
+    filter: drop-shadow(0 0 9px rgba(255, 221, 128, .92));
+}
+.hero-layers[data-action="hit"] .hero-weapon-layer {
+    transform: translate(-8px, 5px) rotate(-22deg);
+}
+
+.monster-emoji.enemy-archetype-caster.enemy-attack {
+    animation: enemy-cast-arena .35s ease-out !important;
+}
+.monster-emoji.enemy-archetype-heavy.enemy-attack {
+    animation: enemy-heavy-arena .35s ease-out !important;
+}
+.monster-emoji.enemy-archetype-flying.enemy-attack {
+    animation: enemy-flying-arena .35s ease-out !important;
+}
+@keyframes enemy-cast-arena {
+    0% { transform: translateY(0) scale(1); }
+    32% { transform: translateY(-12px) scale(.94); filter: brightness(1.45); }
+    62% { transform: translate(-10px, -4px) scale(1.12); }
+    100% { transform: translateY(0) scale(1); }
+}
+@keyframes enemy-heavy-arena {
+    0% { transform: translateX(0) scale(1); }
+    28% { transform: translate(7px, -5px) scale(1.08, .92); }
+    60% { transform: translate(-28px, 5px) scale(1.13, .96); }
+    100% { transform: translateX(0) scale(1); }
+}
+@keyframes enemy-flying-arena {
+    0% { transform: translate(0, 0) rotate(0); }
+    35% { transform: translate(12px, -18px) rotate(8deg) scale(.95); }
+    68% { transform: translate(-32px, 8px) rotate(-7deg) scale(1.1); }
+    100% { transform: translate(0, 0) rotate(0); }
+}
+
 .enemy-threaten {
     animation: enemy-threaten-arena 0.6s ease !important;
 }
@@ -4945,7 +5192,8 @@ body.keyboard-active #battle-page .battle-answer-area {
 }
 
 @keyframes projectile-fly-left {
-    0% { transform: translateX(0) scale(1); opacity: 1; }
+    0% { transform: translateX(0) scale(.82); opacity: .55; }
+    18% { transform: translateX(10px) scale(1.08); opacity: 1; }
     80% { transform: translateX(calc(-56vw + 44%)) scale(1.1); opacity: 1; }
     100% { transform: translateX(calc(-56vw + 44%)) scale(1.3); opacity: 0; }
 }
@@ -6266,6 +6514,45 @@ body.keyboard-active #battle-page .battle-answer-area {
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
 }
 .card-preview-emoji { font-size: 4rem; }
+.card-drop-character-art,
+.card-preview-character-art,
+.card-grid-character-art,
+.related-card-character-art {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 7px 10px rgba(0, 0, 0, .42));
+}
+.card-drop-emoji:has(.card-drop-character-art) {
+    width: 104px;
+    height: 104px;
+    margin: 4px auto;
+}
+.card-grid-emoji:has(.card-grid-character-art) {
+    width: 52px;
+    height: 52px;
+    margin: 0 auto;
+}
+.related-card-emoji:has(.related-card-character-art) {
+    width: 48px;
+    height: 48px;
+    margin: 0 auto;
+}
+.card-preview-emoji:has(.card-preview-character-art) {
+    width: 120px;
+    height: 154px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hero-layers,
+    .hero-char-layer,
+    .hero-weapon-layer,
+    .monster-emoji,
+    .arena-attack-projectile {
+        animation-duration: .001ms !important;
+        animation-iteration-count: 1 !important;
+    }
+}
 .card-preview.rarity-R { border-color: rgba(74, 144, 217, 0.5); box-shadow: 0 0 15px rgba(74, 144, 217, 0.3); }
 .card-preview.rarity-SR { border-color: rgba(155, 89, 182, 0.5); box-shadow: 0 0 20px rgba(155, 89, 182, 0.4); animation: sr-card-glow 2s ease-in-out infinite; }
 .card-preview.rarity-SSR { border-color: rgba(243, 156, 18, 0.6); box-shadow: 0 0 30px rgba(243, 156, 18, 0.5); animation: ssr-pulse 1.5s ease-in-out infinite; }
@@ -7023,6 +7310,191 @@ body.keyboard-active #battle-page .battle-answer-area {
     100% { transform: translateX(260px) scale(0.7); opacity: 0.2; }
 }
 
+/* ===== v24.1: Illustrated weapons and role-aware attack language ===== */
+.weapon-art {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    user-select: none;
+    pointer-events: none;
+}
+
+.hero-layers .hero-weapon-layer {
+    inset: auto -18px -3px auto;
+    width: 40px;
+    height: 40px;
+    z-index: 4;
+    opacity: 0.94;
+    filter: drop-shadow(0 4px 5px rgba(0, 0, 0, 0.55));
+    transform-origin: 34% 72%;
+}
+
+.held-weapon-art {
+    transform: rotate(-9deg);
+}
+
+.arena-attack-projectile:has(.weapon-art) {
+    width: clamp(42px, 7vw, 72px);
+    height: clamp(42px, 7vw, 72px);
+    font-size: 0 !important;
+    filter: drop-shadow(0 0 6px rgba(255, 225, 150, 0.5));
+}
+
+.arena-attack-projectile .projectile-weapon-art {
+    transform-origin: 50% 50%;
+}
+
+.move-projectile-small:has(.weapon-art) { width: 42px; height: 42px; }
+.move-projectile-large:has(.weapon-art) { width: 72px; height: 72px; }
+.move-projectile-giant:has(.weapon-art) { width: 104px; height: 104px; }
+.enemy-projectile:has(.weapon-art) { width: 54px; height: 54px; }
+
+/* All visual paths retain the original 0.35s strike cadence. */
+.hero-projectile.weapon-zigzag.fly {
+    animation: weapon-art-zigzag 0.35s ease-out forwards;
+}
+@keyframes weapon-art-zigzag {
+    0% { transform: translate(0, 0) rotate(-12deg) scale(0.86); opacity: 1; }
+    24% { transform: translate(calc((56vw - 44%) * .25), -14px) rotate(7deg); }
+    48% { transform: translate(calc((56vw - 44%) * .5), 10px) rotate(-8deg); }
+    72% { transform: translate(calc((56vw - 44%) * .75), -8px) rotate(5deg); }
+    100% { transform: translate(calc(56vw - 44%), 0) rotate(0) scale(1.18); opacity: 0; }
+}
+
+.hero-projectile.weapon-wave.fly {
+    animation: weapon-art-wave 0.35s ease-out forwards;
+}
+@keyframes weapon-art-wave {
+    0% { transform: translate(0, 0) rotate(-15deg) scale(0.9); opacity: 1; }
+    30% { transform: translate(calc((56vw - 44%) * .3), -20px) rotate(3deg) scale(1.04); }
+    65% { transform: translate(calc((56vw - 44%) * .65), 15px) rotate(14deg) scale(1.08); }
+    100% { transform: translate(calc(56vw - 44%), 0) rotate(25deg) scale(1.2); opacity: 0; }
+}
+
+.hero-projectile.weapon-arc.fly {
+    animation: weapon-art-arc 0.35s cubic-bezier(.2,.7,.25,1) forwards;
+}
+@keyframes weapon-art-arc {
+    0% { transform: translate(0, 0) rotate(-20deg) scale(0.82); opacity: 1; }
+    48% { transform: translate(calc((56vw - 44%) * .5), -48px) rotate(15deg) scale(1.05); }
+    100% { transform: translate(calc(56vw - 44%), 8px) rotate(48deg) scale(1.22); opacity: 0; }
+}
+
+.hero-projectile.weapon-lob.fly {
+    animation: weapon-art-lob 0.35s cubic-bezier(.25,.65,.35,1) forwards;
+}
+@keyframes weapon-art-lob {
+    0% { transform: translate(0, 0) rotate(0deg) scale(0.92); opacity: 1; }
+    52% { transform: translate(calc((56vw - 44%) * .52), -54px) rotate(210deg) scale(1.08); }
+    100% { transform: translate(calc(56vw - 44%), 12px) rotate(430deg) scale(1.26); opacity: 0; }
+}
+
+.hero-projectile.weapon-fast.fly {
+    animation: weapon-art-fast 0.35s cubic-bezier(.05,.85,.2,1) forwards;
+}
+@keyframes weapon-art-fast {
+    0% { transform: translateX(0) rotate(-9deg) scaleX(1.12); opacity: 1; }
+    100% { transform: translateX(calc(56vw - 44%)) rotate(-4deg) scale(1.2); opacity: 0; }
+}
+
+.hero-projectile.weapon-slash.fly {
+    animation: weapon-art-slash 0.35s ease-out forwards;
+}
+@keyframes weapon-art-slash {
+    0% { transform: translate(0, 6px) rotate(-48deg) scale(0.9); opacity: 1; }
+    45% { transform: translate(calc((56vw - 44%) * .48), -16px) rotate(22deg) scale(1.1); opacity: 1; }
+    100% { transform: translate(calc(56vw - 44%), 5px) rotate(112deg) scale(1.24); opacity: 0; }
+}
+
+.hero-projectile.weapon-spin.fly,
+.hero-projectile.weapon-spiral.fly {
+    animation: weapon-art-spin 0.35s ease-out forwards;
+}
+@keyframes weapon-art-spin {
+    0% { transform: translate(0, 0) rotate(0deg) scale(0.86); opacity: 1; }
+    50% { transform: translate(calc((56vw - 44%) * .5), -11px) rotate(360deg) scale(1.16); }
+    100% { transform: translate(calc(56vw - 44%), 0) rotate(720deg) scale(1.25); opacity: 0; }
+}
+
+.giant-weapon-projectile {
+    position: absolute;
+    left: 18%;
+    top: 25%;
+    width: clamp(92px, 15vw, 150px);
+    height: clamp(92px, 15vw, 150px);
+    z-index: 48;
+    pointer-events: none;
+    filter: drop-shadow(0 0 16px rgba(194, 142, 255, 0.92));
+}
+.giant-weapon-projectile.fly {
+    animation: giant-weapon-art-flight 0.2s ease-in forwards;
+}
+@keyframes giant-weapon-art-flight {
+    0% { transform: translateX(0) rotate(-18deg) scale(0.75); opacity: 1; }
+    100% { transform: translateX(calc(56vw - 44%)) rotate(42deg) scale(1.34); opacity: 0.12; }
+}
+
+.weapon-impact {
+    --impact-color: #d9e5f5;
+    position: absolute;
+    width: calc(76px * var(--impact-scale));
+    height: calc(76px * var(--impact-scale));
+    transform: translate(-50%, -50%);
+    z-index: 55;
+    pointer-events: none;
+    border-radius: 50%;
+    animation: weapon-impact-pop 0.4s ease-out forwards;
+}
+.weapon-impact::before,
+.weapon-impact::after,
+.weapon-impact b {
+    content: '';
+    position: absolute;
+    inset: 22%;
+    border-radius: 50%;
+}
+.weapon-impact::before {
+    border: 3px solid var(--impact-color);
+    box-shadow: 0 0 18px var(--impact-color), inset 0 0 10px var(--impact-color);
+}
+.weapon-impact::after {
+    inset: 35%;
+    background: #fff;
+    box-shadow: 0 0 22px 9px var(--impact-color);
+}
+.weapon-impact b {
+    inset: 4%;
+    border: 2px dashed color-mix(in srgb, var(--impact-color), transparent 28%);
+}
+.weapon-impact i {
+    position: absolute;
+    left: 47%;
+    top: 0;
+    width: 6%;
+    height: 36%;
+    border-radius: 999px;
+    background: linear-gradient(to top, transparent, var(--impact-color));
+    transform-origin: 50% 138%;
+}
+.weapon-impact i:nth-child(2) { transform: rotate(90deg); }
+.weapon-impact i:nth-child(3) { transform: rotate(180deg); }
+.weapon-impact i:nth-child(4) { transform: rotate(270deg); }
+.impact-fire { --impact-color: #ff6b35; }
+.impact-ice { --impact-color: #78d9ff; }
+.impact-thunder { --impact-color: #ffe66d; }
+.impact-star { --impact-color: #ffc75f; }
+.impact-prism { --impact-color: #d99cff; }
+.impact-bomb { --impact-color: #ff784f; }
+.impact-holy { --impact-color: #fff1a6; }
+.impact-spirit { --impact-color: #75d9ff; }
+.impact-gold { --impact-color: #f6c85f; }
+@keyframes weapon-impact-pop {
+    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.2) rotate(-25deg); }
+    28% { opacity: 1; transform: translate(-50%, -50%) scale(1.08) rotate(4deg); }
+    100% { opacity: 0; transform: translate(-50%, -50%) scale(1.65) rotate(25deg); }
+}
+
 /* Weapon hit effects */
 .weapon-hit-fire { animation: hit-fire 0.4s ease-out; }
 @keyframes hit-fire {
@@ -7349,4 +7821,3 @@ body.keyboard-active #battle-page .battle-answer-area {
 .chapter-card.just-unlocked {
     animation: chapter-unlock 0.8s ease forwards;
 }
-
