@@ -1,15 +1,27 @@
 /**
- * adventure-system.js - v26.0 player profile, equipment shop, story and map.
+ * adventure-system.js - v26.1 player profile, equipment shop, story and map.
  * All state lives inside the existing per-user save object (App.adventure).
  */
 (function () {
     'use strict';
 
+    // Keep the original art, but classify it by the character that is actually
+    // drawn. The previous four/four split put two girl characters in the boy
+    // list, which made a saved "male" profile visibly female.
     var HEROES = {
-        male: ['heroes-00.webp', 'heroes-02.webp', 'heroes-03.webp', 'heroes-04.webp'],
-        female: ['heroes-01.webp', 'heroes-05.webp', 'heroes-06.webp', 'heroes-07.webp']
+        male: [
+            { file: 'heroes-00.webp', name: '守护骑士', note: '近战与盾牌' },
+            { file: 'heroes-02.webp', name: '森林射手', note: '弓箭与探索' }
+        ],
+        female: [
+            { file: 'heroes-01.webp', name: '星辉魔法师', note: '星光魔法' },
+            { file: 'heroes-03.webp', name: '日耀骑士', note: '剑盾守护' },
+            { file: 'heroes-04.webp', name: '驭龙探险家', note: '伙伴协作' },
+            { file: 'heroes-05.webp', name: '灵狐游侠', note: '敏捷双刃' },
+            { file: 'heroes-06.webp', name: '星象术士', note: '星球法术' },
+            { file: 'heroes-07.webp', name: '水晶女王', note: '水晶魔法' }
+        ]
     };
-    var FACE_NAMES = ['勇敢', '机敏', '沉着', '神秘'];
     var HAIRS = { short: '利落短发', wave: '冒险卷发', braid: '守护长辫', crest: '星辉发冠' };
     var OUTFITS = { azure: '苍蓝学徒服', crimson: '赤焰勇者服', forest: '森林游侠服', royal: '皇家守护服' };
     var HATS = { none: '不戴帽子', cap: '探险帽', crown: '星辉冠', hood: '夜行兜帽' };
@@ -86,6 +98,10 @@
             var base = defaultState();
             App.adventure = Object.assign(base, App.adventure || {});
             App.adventure.profile = Object.assign(base.profile, App.adventure.profile || {});
+            App.adventure.profile.gender = App.adventure.profile.gender === 'female' ? 'female' : 'male';
+            var availableRoles = HEROES[App.adventure.profile.gender];
+            var savedRole = Number(App.adventure.profile.face);
+            App.adventure.profile.face = Number.isInteger(savedRole) && savedRole >= 0 && savedRole < availableRoles.length ? savedRole : 0;
             App.adventure.keys = Object.assign(base.keys, App.adventure.keys || {});
             App.adventure.towerGates = Object.assign(base.towerGates, App.adventure.towerGates || {});
             App.adventure.owned = Array.isArray(App.adventure.owned) ? App.adventure.owned : base.owned;
@@ -111,14 +127,16 @@
         heroMarkup: function (profile, className) {
             profile = profile || this.getProfile();
             var gender = profile.gender === 'female' ? 'female' : 'male';
-            var face = Math.max(0, Math.min(3, Number(profile.face) || 0));
-            var base = HEROES[gender][face];
+            var roles = HEROES[gender];
+            var requestedFace = Number(profile.face);
+            var face = Number.isInteger(requestedFace) && requestedFace >= 0 && requestedFace < roles.length ? requestedFace : 0;
+            var role = roles[face];
             var weapon = CATALOG.find(function (item) { return item.type === 'weapon' && item.value === profile.weapon; }) || CATALOG[12];
             var hatIcon = { none: '', cap: '🧢', crown: '👑', hood: '◾' }[profile.hat] || '';
             var hairIcon = { short: '✦', wave: '〰', braid: '❧', crest: '✧' }[profile.hair] || '✦';
             var shieldIcon = { blue: '🛡️', sun: '🔆', dragon: '🐲' }[profile.shield] || '🛡️';
             return '<span class="adventure-hero-composite outfit-' + escapeHtml(profile.outfit) + ' shoes-' + escapeHtml(profile.shoes) + ' ' + (className || '') + '">' +
-                '<img class="adventure-hero-base" src="assets/characters/heroes/' + base + '" alt="' + escapeHtml(profile.name) + '">' +
+                '<img class="adventure-hero-base" src="assets/characters/heroes/' + role.file + '" alt="' + escapeHtml(profile.name) + '，' + escapeHtml(role.name) + '">' +
                 '<span class="adventure-hair hair-' + escapeHtml(profile.hair) + '">' + hairIcon + '</span>' +
                 (hatIcon ? '<span class="adventure-hat hat-' + escapeHtml(profile.hat) + '">' + hatIcon + '</span>' : '') +
                 '<span class="adventure-shield shield-' + escapeHtml(profile.shield) + '">' + shieldIcon + '</span>' +
@@ -156,15 +174,16 @@
         openCharacter: function () { this.renderCharacter(); showPage('character'); },
         renderCharacter: function () {
             var state = this.ensureState(), p = state.profile;
+            var selectedRole = HEROES[p.gender][p.face] || HEROES[p.gender][0];
             var content = document.getElementById('character-editor-content');
             if (!content) return;
             content.innerHTML = '<div class="character-studio">' +
                 '<section class="character-preview-panel"><div id="character-live-preview" class="character-live-preview">' + this.heroMarkup(p, 'editor-hero') + '</div>' +
-                '<strong id="character-preview-name">' + escapeHtml(p.name) + '</strong><span>战斗形象会同步更新</span></section>' +
+                '<strong id="character-preview-name">' + escapeHtml(p.name) + '</strong><span id="character-preview-role">' + escapeHtml(selectedRole.name) + ' · 战斗形象会同步更新</span></section>' +
                 '<form id="character-form" class="character-form">' +
                 '<label class="character-field"><span>玩家名字</span><input id="profile-name" maxlength="16" value="' + escapeHtml(p.name) + '" required></label>' +
-                this.choiceGroup('gender', '角色', { male: '男孩勇士', female: '女孩勇士' }, p.gender) +
-                this.choiceGroup('face', '脸型 / 基础外貌', { 0: FACE_NAMES[0], 1: FACE_NAMES[1], 2: FACE_NAMES[2], 3: FACE_NAMES[3] }, String(p.face)) +
+                this.genderChoiceGroup(p.gender) +
+                '<div id="character-role-step">' + this.roleChoiceGroup(p.gender, p.face) + '</div>' +
                 this.choiceGroup('hair', '发型', HAIRS, p.hair) +
                 this.ownedChoiceGroup('outfit', '衣服', OUTFITS, p.outfit) +
                 this.ownedChoiceGroup('hat', '帽子', HATS, p.hat) +
@@ -174,7 +193,10 @@
                 '<div class="character-actions"><button type="submit" class="adventure-primary-btn">保存并装备</button><button type="button" id="character-go-shop" class="adventure-secondary-btn">去商店解锁更多</button></div>' +
                 '</form></div>';
             var self = this;
-            content.querySelector('#character-form').addEventListener('change', function () { self.previewCharacter(); });
+            content.querySelector('#character-form').addEventListener('change', function (event) {
+                if (event.target && event.target.name === 'gender') self.renderRoleChoices(event.target.value);
+                self.previewCharacter();
+            });
             content.querySelector('#profile-name').addEventListener('input', function () { self.previewCharacter(); });
             content.querySelector('#character-form').addEventListener('submit', function (event) { event.preventDefault(); self.saveCharacter(); });
             content.querySelector('#character-go-shop').onclick = function () { self.openShop(); };
@@ -184,6 +206,32 @@
             return '<fieldset class="character-field"><legend>' + title + '</legend><div class="appearance-options">' + Object.keys(options).map(function (value) {
                 return '<label><input type="radio" name="' + name + '" value="' + value + '" ' + (String(value) === String(selected) ? 'checked' : '') + '><span>' + options[value] + '</span></label>';
             }).join('') + '</div></fieldset>';
+        },
+
+        genderChoiceGroup: function (selected) {
+            var genders = [
+                { value: 'male', icon: '👦', english: 'Boy', chinese: '男孩', note: '显示男孩角色' },
+                { value: 'female', icon: '👧', english: 'Girl', chinese: '女孩', note: '显示女孩角色' }
+            ];
+            return '<fieldset class="character-field character-gender-step"><legend><b>第 1 步</b> 选择 Boy / Girl</legend><div class="gender-options">' + genders.map(function (gender) {
+                return '<label><input type="radio" name="gender" value="' + gender.value + '" ' + (gender.value === selected ? 'checked' : '') + '><span><i>' + gender.icon + '</i><strong>' + gender.english + ' · ' + gender.chinese + '</strong><small>' + gender.note + '</small></span></label>';
+            }).join('') + '</div></fieldset>';
+        },
+
+        roleChoiceGroup: function (gender, selected) {
+            gender = gender === 'female' ? 'female' : 'male';
+            var roles = HEROES[gender];
+            var chosen = Number(selected);
+            if (!Number.isInteger(chosen) || chosen < 0 || chosen >= roles.length) chosen = 0;
+            return '<fieldset class="character-field character-role-field"><legend><b>第 2 步</b> 选择具体的' + (gender === 'female' ? '女孩' : '男孩') + '角色</legend><p class="role-step-hint">选择角色基础形象，之后还可以继续更换发型和装备。</p><div class="role-options">' + roles.map(function (role, index) {
+                return '<label><input type="radio" name="face" value="' + index + '" ' + (index === chosen ? 'checked' : '') + '><span class="role-option-card"><img src="assets/characters/heroes/' + role.file + '" alt="' + escapeHtml(role.name) + '"><strong>' + escapeHtml(role.name) + '</strong><small>' + escapeHtml(role.note) + '</small></span></label>';
+            }).join('') + '</div></fieldset>';
+        },
+
+        renderRoleChoices: function (gender) {
+            var target = document.getElementById('character-role-step');
+            if (!target) return;
+            target.innerHTML = this.roleChoiceGroup(gender, 0);
         },
 
         ownedChoiceGroup: function (type, title, labels, selected) {
@@ -213,6 +261,9 @@
             var profile = this.formProfile(), preview = document.getElementById('character-live-preview');
             if (preview) preview.innerHTML = this.heroMarkup(profile, 'editor-hero');
             var name = document.getElementById('character-preview-name'); if (name) name.textContent = profile.name || '小勇士';
+            var role = HEROES[profile.gender][profile.face] || HEROES[profile.gender][0];
+            var roleName = document.getElementById('character-preview-role');
+            if (roleName) roleName.textContent = role.name + ' · 战斗形象会同步更新';
         },
 
         saveCharacter: function () {
