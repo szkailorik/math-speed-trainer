@@ -276,6 +276,10 @@ function showPage(pageId) {
     if (targetPage) {
         targetPage.classList.add('active');
         App.currentPage = pageId;
+        // Pages have very different heights. Keeping the previous page's
+        // scroll offset can land a short story/profile page below its content
+        // and make it look blank, especially after leaving the long home page.
+        window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
     }
 }
 
