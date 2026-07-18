@@ -38,7 +38,7 @@
     <link rel="apple-touch-startup-image" href="icons/splash.png">
 
     <title>数学魔法学院</title>
-    <link rel="stylesheet" href="css/style.css?v=26.1.0">
+    <link rel="stylesheet" href="css/style.css?v=26.1.1">
     <link rel="stylesheet" href="css/scenes.css?v=25.1.0">
     <link rel="stylesheet" href="css/scenes-svg.css?v=23.2.2">
     <link rel="stylesheet" href="css/knowledge.css?v=23.2.2">
@@ -76,30 +76,36 @@
                 <!-- 新建用户表单 -->
                 <div class="new-user-form hidden" id="new-user-form">
                     <input type="text" class="user-name-input" id="user-name-input" placeholder="输入名字" maxlength="10">
+                    <div class="new-user-step-label"><b>第 1 步</b> 选择 Boy / Girl</div>
+                    <div class="new-user-gender-options" id="new-user-gender-options">
+                        <button type="button" class="new-user-gender selected" data-gender="male" aria-pressed="true"><span>👦</span><strong>Boy · 男孩</strong></button>
+                        <button type="button" class="new-user-gender" data-gender="female" aria-pressed="false"><span>👧</span><strong>Girl · 女孩</strong></button>
+                    </div>
+                    <div class="new-user-step-label"><b>第 2 步</b> 选择具体角色</div>
                     <div class="avatar-picker" id="avatar-picker">
-                        <div class="avatar-option selected" data-avatar="⚔️">
-                            <span class="avatar-emoji"><img class="character-art avatar-picker-art" src="assets/characters/heroes/heroes-00.webp" alt="剑士"></span><span class="avatar-role">剑士</span>
+                        <div class="avatar-option selected" data-avatar="⚔️" data-gender="male" data-role-index="0">
+                            <span class="avatar-emoji"><img class="character-art avatar-picker-art" src="assets/characters/heroes/heroes-00.webp" alt="守护骑士"></span><span class="avatar-role">守护骑士</span>
                         </div>
-                        <div class="avatar-option" data-avatar="🧙">
-                            <span class="avatar-emoji"><img class="character-art avatar-picker-art" src="assets/characters/heroes/heroes-01.webp" alt="魔法师"></span><span class="avatar-role">魔法师</span>
+                        <div class="avatar-option" data-avatar="🏹" data-gender="male" data-role-index="1">
+                            <span class="avatar-emoji"><img class="character-art avatar-picker-art" src="assets/characters/heroes/heroes-02.webp" alt="森林射手"></span><span class="avatar-role">森林射手</span>
                         </div>
-                        <div class="avatar-option" data-avatar="🏹">
-                            <span class="avatar-emoji"><img class="character-art avatar-picker-art" src="assets/characters/heroes/heroes-02.webp" alt="弓箭手"></span><span class="avatar-role">弓箭手</span>
+                        <div class="avatar-option" data-avatar="🧙" data-gender="female" data-role-index="0" hidden>
+                            <span class="avatar-emoji"><img class="character-art avatar-picker-art" src="assets/characters/heroes/heroes-01.webp" alt="星辉魔法师"></span><span class="avatar-role">星辉魔法师</span>
                         </div>
-                        <div class="avatar-option" data-avatar="🛡️">
-                            <span class="avatar-emoji"><img class="character-art avatar-picker-art" src="assets/characters/heroes/heroes-03.webp" alt="守护者"></span><span class="avatar-role">守护者</span>
+                        <div class="avatar-option" data-avatar="🛡️" data-gender="female" data-role-index="1" hidden>
+                            <span class="avatar-emoji"><img class="character-art avatar-picker-art" src="assets/characters/heroes/heroes-03.webp" alt="日耀骑士"></span><span class="avatar-role">日耀骑士</span>
                         </div>
-                        <div class="avatar-option" data-avatar="🐉">
-                            <span class="avatar-emoji"><img class="character-art avatar-picker-art" src="assets/characters/heroes/heroes-04.webp" alt="驯龙师"></span><span class="avatar-role">驯龙师</span>
+                        <div class="avatar-option" data-avatar="🐉" data-gender="female" data-role-index="2" hidden>
+                            <span class="avatar-emoji"><img class="character-art avatar-picker-art" src="assets/characters/heroes/heroes-04.webp" alt="驭龙探险家"></span><span class="avatar-role">驭龙探险家</span>
                         </div>
-                        <div class="avatar-option" data-avatar="🦊">
-                            <span class="avatar-emoji"><img class="character-art avatar-picker-art" src="assets/characters/heroes/heroes-05.webp" alt="灵狐"></span><span class="avatar-role">灵狐</span>
+                        <div class="avatar-option" data-avatar="🦊" data-gender="female" data-role-index="3" hidden>
+                            <span class="avatar-emoji"><img class="character-art avatar-picker-art" src="assets/characters/heroes/heroes-05.webp" alt="灵狐游侠"></span><span class="avatar-role">灵狐游侠</span>
                         </div>
-                        <div class="avatar-option" data-avatar="🌟">
-                            <span class="avatar-emoji"><img class="character-art avatar-picker-art" src="assets/characters/heroes/heroes-06.webp" alt="星术士"></span><span class="avatar-role">星术士</span>
+                        <div class="avatar-option" data-avatar="🌟" data-gender="female" data-role-index="4" hidden>
+                            <span class="avatar-emoji"><img class="character-art avatar-picker-art" src="assets/characters/heroes/heroes-06.webp" alt="星象术士"></span><span class="avatar-role">星象术士</span>
                         </div>
-                        <div class="avatar-option" data-avatar="🔮">
-                            <span class="avatar-emoji"><img class="character-art avatar-picker-art" src="assets/characters/heroes/heroes-07.webp" alt="预言家"></span><span class="avatar-role">预言家</span>
+                        <div class="avatar-option" data-avatar="🔮" data-gender="female" data-role-index="5" hidden>
+                            <span class="avatar-emoji"><img class="character-art avatar-picker-art" src="assets/characters/heroes/heroes-07.webp" alt="水晶女王"></span><span class="avatar-role">水晶女王</span>
                         </div>
                     </div>
                     <div class="form-buttons">
@@ -1447,32 +1453,32 @@
     <script src="js/monster-expansion.js?v=25.0.0"></script>
     <script src="js/character-art.js?v=25.0.0"></script>
     <script src="js/weapon-art.js?v=24.1.0"></script>
-    <script src="js/core.js?v=26.1.0"></script>
+    <script src="js/core.js?v=26.1.1"></script>
     <script src="js/question-engine.js?v=23.2.2"></script>
-    <script src="js/effects.js?v=26.1.0"></script>
-    <script src="js/practice.js?v=26.1.0"></script>
-    <script src="js/daily.js?v=26.1.0"></script>
+    <script src="js/effects.js?v=26.1.1"></script>
+    <script src="js/practice.js?v=26.1.1"></script>
+    <script src="js/daily.js?v=26.1.1"></script>
     <script src="js/knowledge-data.js?v=23.2.2"></script>
     <script src="js/knowledge-tracker.js?v=23.2.2"></script>
     <script src="js/knowledge-ui.js?v=23.2.2"></script>
-    <script src="js/ui-pages.js?v=26.1.0"></script>
+    <script src="js/ui-pages.js?v=26.1.1"></script>
     <script src="js/battle-data.js?v=25.0.0"></script>
     <script src="js/chapter-data.js?v=23.2.2"></script>
     <script src="js/card-data.js?v=23.2.2"></script>
-    <script src="js/battle-arena.js?v=26.1.0"></script>
+    <script src="js/battle-arena.js?v=26.1.1"></script>
     <script src="js/monster-behavior.js?v=23.2.2"></script>
     <script src="js/card-system.js?v=25.0.0"></script>
     <script src="js/battle-collection.js?v=25.0.0"></script>
     <script src="js/tower-data.js?v=23.2.2"></script>
-    <script src="js/hero-system.js?v=26.1.0"></script>
+    <script src="js/hero-system.js?v=26.1.1"></script>
     <script src="js/combo-engine.js?v=23.2.2"></script>
     <script src="js/behavior-v2.js?v=25.0.0"></script>
-    <script src="js/move-system.js?v=26.1.0"></script>
-    <script src="js/tower-mode.js?v=26.1.0"></script>
-    <script src="js/adventure-system.js?v=26.1.0"></script>
+    <script src="js/move-system.js?v=26.1.1"></script>
+    <script src="js/tower-mode.js?v=26.1.1"></script>
+    <script src="js/adventure-system.js?v=26.1.1"></script>
     <script src="js/momentum-system.js?v=23.2.2"></script>
-    <script src="js/chapter-system.js?v=26.1.0"></script>
-    <script src="js/battle-combat.js?v=26.1.0"></script>
-    <script src="js/app.js?v=26.1.0"></script>
+    <script src="js/chapter-system.js?v=26.1.1"></script>
+    <script src="js/battle-combat.js?v=26.1.1"></script>
+    <script src="js/app.js?v=26.1.1"></script>
 </body>
 </html>

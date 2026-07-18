@@ -63,14 +63,15 @@
 
     function defaultState() {
         var user = UserManager.getCurrentUser();
+        var initialProfile = user && user.profile ? user.profile : {};
         var legacyTowerEligible = (Number(App.stats.totalScore) || 0) >= 500;
         return {
             version: 1,
-            profile: {
+            profile: Object.assign({
                 name: user ? user.name : '小勇士', gender: 'male', face: 0,
                 hair: 'short', outfit: 'azure', hat: 'none', shoes: 'traveler',
                 weapon: 'sword', shield: 'blue', effect: 'none'
-            },
+            }, initialProfile, { name: user ? user.name : (initialProfile.name || '小勇士') }),
             coins: Math.max(0, Number(App.stats.totalScore) || 0),
             owned: ['outfit_azure', 'hat_none', 'shoes_traveler', 'weapon_sword', 'shield_blue'],
             storySeen: false,

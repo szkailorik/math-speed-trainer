@@ -82,6 +82,7 @@ function updateCurrentUserBadge() {
 }
 
 function showAddUserForm() {
+    setNewUserGender('male');
     document.getElementById('new-user-form').classList.remove('hidden');
     document.getElementById('add-user-btn').style.display = 'none';
     document.getElementById('user-name-input').focus();
@@ -91,8 +92,23 @@ function hideAddUserForm() {
     document.getElementById('new-user-form').classList.add('hidden');
     document.getElementById('add-user-btn').style.display = 'flex';
     document.getElementById('user-name-input').value = '';
-    document.querySelectorAll('.avatar-option').forEach(opt => opt.classList.remove('selected'));
-    document.querySelector('.avatar-option[data-avatar="\u2694\uFE0F"]').classList.add('selected');
+    setNewUserGender('male');
+}
+
+function setNewUserGender(gender) {
+    gender = gender === 'female' ? 'female' : 'male';
+    document.querySelectorAll('.new-user-gender').forEach(button => {
+        const selected = button.dataset.gender === gender;
+        button.classList.toggle('selected', selected);
+        button.setAttribute('aria-pressed', selected ? 'true' : 'false');
+    });
+    const choices = Array.from(document.querySelectorAll('#avatar-picker .avatar-option'));
+    choices.forEach(option => {
+        option.hidden = option.dataset.gender !== gender;
+        option.classList.remove('selected');
+    });
+    const firstChoice = choices.find(option => option.dataset.gender === gender);
+    if (firstChoice) firstChoice.classList.add('selected');
 }
 
 function createNewUser() {
@@ -107,8 +123,19 @@ function createNewUser() {
 
     const selectedAvatar = document.querySelector('.avatar-option.selected');
     const avatar = selectedAvatar ? selectedAvatar.dataset.avatar : '\u2694\uFE0F';
+    const gender = selectedAvatar && selectedAvatar.dataset.gender === 'female' ? 'female' : 'male';
+    const face = selectedAvatar ? Number(selectedAvatar.dataset.roleIndex) || 0 : 0;
 
     const newUser = UserManager.addUser(name, avatar);
+    const users = UserManager.getUsers();
+    const storedUser = users.find(user => user.id === newUser.id);
+    if (storedUser) {
+        storedUser.profile = {
+            name: name, gender: gender, face: face, hair: 'short', outfit: 'azure',
+            hat: 'none', shoes: 'traveler', weapon: 'sword', shield: 'blue', effect: 'none'
+        };
+        UserManager.saveUsers(users);
+    }
     hideAddUserForm();
     renderUserList();
 
@@ -121,6 +148,9 @@ function initUserPage() {
     document.getElementById('add-user-btn').addEventListener('click', showAddUserForm);
     document.getElementById('cancel-add-user').addEventListener('click', hideAddUserForm);
     document.getElementById('confirm-add-user').addEventListener('click', createNewUser);
+    document.querySelectorAll('.new-user-gender').forEach(button => {
+        button.addEventListener('click', () => setNewUserGender(button.dataset.gender));
+    });
 
     document.getElementById('user-name-input').addEventListener('keypress', (e) => {
         if (e.key === 'Enter') createNewUser();
