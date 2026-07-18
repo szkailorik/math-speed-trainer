@@ -1439,11 +1439,13 @@ BattleMode.useItem = function(index) {
         }
         if (item.effect.scoreBonus) {
             App.stats.totalScore += item.effect.scoreBonus;
+            if (typeof AdventureSystem !== 'undefined') AdventureSystem.creditCoins(item.effect.scoreBonus);
             battle.inventory.splice(index, 1);
             battle.itemsUsed++;
             this.showBattleFeedback(true, `\u2B50 +${item.effect.scoreBonus}\u5206!`);
             this.updateInventoryUI();
             playSound('correct');
+            saveProgress();
             return;
         }
     }
@@ -1698,82 +1700,69 @@ BattleMode.monsterAttack = function() {
 
     this.showAttackName(monster);
 
-    // v15.0: Use arena-based enemy attack animation
-    this.enemyAttackAnimation(monster, () => {});
+    // v26.0: Resolve shield/HP only on the projectile's impact callback.
+    // This keeps visible contact, sound and health changes on the same frame.
+    this.enemyAttackAnimation(monster, () => {
+        if (!battle.active || battle.monsterHP <= 0) return;
 
-    if (battle.shield > 0) {
-        battle.shield--;
-        this.showBattleFeedback(true, '\uD83D\uDEE1\uFE0F \u62A4\u76FE\u62B5\u6321!');
-        playSound('correct');
-        battle.currentIndex++;
-        // v20.0: Compressed (1000→700ms)
-        setTimeout(() => this.showBattleQuestion(), 700);
-        return;
-    }
-
-    // v20.0: Monster miss protection (HP=1 + low momentum)
-    if (typeof MomentumSystem !== 'undefined' && MomentumSystem.shouldMonsterMiss(battle.playerHP)) {
-        this.showBattleFeedback(true, '\uD83D\uDCA8 \u602A\u517D\u7684\u653B\u51FB\u88AB\u4F60\u7684\u52C7\u6C14\u5F39\u5F00\u4E86\uFF01');
-        playSound('correct');
-        battle.currentIndex++;
-        setTimeout(() => this.showBattleQuestion(), 700);
-        return;
-    }
-
-    // v15.0: Hero hit animation
-    this.heroHitAnimation(() => {});
-
-    const screenFlash = document.getElementById('screen-flash');
-    if (screenFlash) {
-        screenFlash.classList.add('show');
-        // v20.0: Compressed (300→200ms)
-        setTimeout(() => screenFlash.classList.remove('show'), 200);
-    }
-
-    // v15.0: Enraged monsters deal extra damage
-    const hpLoss = 1 + enrageDamage;
-    battle.playerHP = Math.max(0, battle.playerHP - hpLoss);
-    this.updateUI();
-
-    // v23.0: Track chapter damage
-    if (typeof ChapterSystem !== 'undefined') {
-        ChapterSystem.onPlayerDamaged();
-    }
-
-    if (battle.playerHP <= 0) {
-        // v23.0: Track player death for chapter star calculation
-        if (typeof ChapterSystem !== 'undefined') {
-            ChapterSystem.onPlayerDied();
-        }
-        if (battle.hasRevive) {
-            battle.hasRevive = false;
-            battle.playerHP = 1;
-            this.showBattleFeedback(true, '\uD83C\uDF3F \u590D\u6D3B\u8349\u6551\u4E86\u4F60!');
-            playSound('achievement');
-            createConfetti(20);
-            this.updateUI();
+        if (battle.shield > 0) {
+            battle.shield--;
+            if (typeof this.performEquippedDefense === 'function') this.performEquippedDefense();
+            this.showBattleFeedback(true, '\uD83D\uDEE1\uFE0F \u4E3E\u76FE\u683C\u6321!');
+            playSound('correct');
             battle.currentIndex++;
-
-            const achievements = App.stats.achievements;
-            if (!achievements.includes('revive_hero')) {
-                achievements.push('revive_hero');
-                saveProgress();
-                setTimeout(() => {
-                    const ach = MathData.achievements.find(a => a.id === 'revive_hero');
-                    if (ach) showAchievement(ach);
-                }, 2000);
-            }
-
-            // v20.0: Compressed (1500→1000ms)
-            setTimeout(() => this.showBattleQuestion(), 1000);
-        } else {
-            setTimeout(() => this.gameOver(false), 800);
+            setTimeout(() => this.showBattleQuestion(), 700);
+            return;
         }
-    } else {
-        battle.currentIndex++;
-        // v20.0: Compressed (1000→600ms)
-        setTimeout(() => this.showBattleQuestion(), 600);
-    }
+
+        if (typeof MomentumSystem !== 'undefined' && MomentumSystem.shouldMonsterMiss(battle.playerHP)) {
+            this.showBattleFeedback(true, '\uD83D\uDCA8 \u602A\u517D\u7684\u653B\u51FB\u88AB\u4F60\u7684\u52C7\u6C14\u5F39\u5F00\u4E86\uFF01');
+            playSound('correct');
+            battle.currentIndex++;
+            setTimeout(() => this.showBattleQuestion(), 700);
+            return;
+        }
+
+        this.heroHitAnimation(() => {});
+        const screenFlash = document.getElementById('screen-flash');
+        if (screenFlash) {
+            screenFlash.classList.add('show');
+            setTimeout(() => screenFlash.classList.remove('show'), 200);
+        }
+
+        const hpLoss = 1 + enrageDamage;
+        battle.playerHP = Math.max(0, battle.playerHP - hpLoss);
+        this.updateUI();
+        if (typeof ChapterSystem !== 'undefined') ChapterSystem.onPlayerDamaged();
+
+        if (battle.playerHP <= 0) {
+            if (typeof ChapterSystem !== 'undefined') ChapterSystem.onPlayerDied();
+            if (battle.hasRevive) {
+                battle.hasRevive = false;
+                battle.playerHP = 1;
+                this.showBattleFeedback(true, '\uD83C\uDF3F \u590D\u6D3B\u8349\u6551\u4E86\u4F60!');
+                playSound('achievement');
+                createConfetti(20);
+                this.updateUI();
+                battle.currentIndex++;
+                const achievements = App.stats.achievements;
+                if (!achievements.includes('revive_hero')) {
+                    achievements.push('revive_hero');
+                    saveProgress();
+                    setTimeout(() => {
+                        const ach = MathData.achievements.find(a => a.id === 'revive_hero');
+                        if (ach) showAchievement(ach);
+                    }, 2000);
+                }
+                setTimeout(() => this.showBattleQuestion(), 1000);
+            } else {
+                setTimeout(() => this.gameOver(false), 800);
+            }
+        } else {
+            battle.currentIndex++;
+            setTimeout(() => this.showBattleQuestion(), 600);
+        }
+    });
 };
 
 BattleMode.showAttackName = function(monster) {
@@ -1893,6 +1882,8 @@ BattleMode.gameOver = function(isVictory) {
         if (battle.maxCombo >= 10) score += 50;
 
         App.stats.totalScore += score;
+        if (typeof AdventureSystem !== 'undefined') AdventureSystem.creditCoins(score);
+        if (typeof AdventureSystem !== 'undefined') AdventureSystem.completeModuleMission(battle.module);
         App.stats.totalCorrect += battle.correctCount;
         if (battle.maxCombo > App.stats.maxStreak) {
             App.stats.maxStreak = battle.maxCombo;

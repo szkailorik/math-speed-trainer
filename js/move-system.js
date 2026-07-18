@@ -599,6 +599,12 @@ function _getMoveRank(move) {
 BattleMode.executeMoveAnimation = function(move, weapon, targetEl, callback) {
     var self = this;
     var rank = _getMoveRank(move);
+    // v26.0: the equipped weapon now owns the physical attack sequence. The
+    // callback fires at the visible impact frame, so HP changes match contact.
+    if (typeof AdventureSystem !== 'undefined' && typeof self.performEquippedAttack === 'function') {
+        self.performEquippedAttack(move, rank, targetEl, callback);
+        return;
+    }
     var arena = document.querySelector('.battle-arena');
     var heroEmoji = document.querySelector('.hero-emoji');
 

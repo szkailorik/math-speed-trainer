@@ -149,7 +149,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (BattleMode.isTowerUnlocked()) {
             BattleMode.showTowerLobby();
         } else {
-            alert('试炼之塔尚未解锁！\n需要总分达到500分才能开启。');
+            alert('试炼之塔需要铜钥匙。\n请先在冒险地图完成“晨光村”任务。');
+            if (typeof AdventureSystem !== 'undefined') AdventureSystem.openMap();
         }
     });
 

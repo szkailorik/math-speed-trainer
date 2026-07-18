@@ -1,0 +1,432 @@
+/**
+ * adventure-system.js - v26.0 player profile, equipment shop, story and map.
+ * All state lives inside the existing per-user save object (App.adventure).
+ */
+(function () {
+    'use strict';
+
+    var HEROES = {
+        male: ['heroes-00.webp', 'heroes-02.webp', 'heroes-03.webp', 'heroes-04.webp'],
+        female: ['heroes-01.webp', 'heroes-05.webp', 'heroes-06.webp', 'heroes-07.webp']
+    };
+    var FACE_NAMES = ['勇敢', '机敏', '沉着', '神秘'];
+    var HAIRS = { short: '利落短发', wave: '冒险卷发', braid: '守护长辫', crest: '星辉发冠' };
+    var OUTFITS = { azure: '苍蓝学徒服', crimson: '赤焰勇者服', forest: '森林游侠服', royal: '皇家守护服' };
+    var HATS = { none: '不戴帽子', cap: '探险帽', crown: '星辉冠', hood: '夜行兜帽' };
+    var SHOES = { traveler: '轻便旅靴', iron: '精铁战靴', wind: '疾风鞋', snow: '雪原长靴' };
+
+    var CATALOG = [
+        { id: 'outfit_azure', type: 'outfit', value: 'azure', name: '苍蓝学徒服', price: 0, rarity: '普通', icon: '🧥' },
+        { id: 'outfit_forest', type: 'outfit', value: 'forest', name: '森林游侠服', price: 240, rarity: '普通', icon: '🥋' },
+        { id: 'outfit_crimson', type: 'outfit', value: 'crimson', name: '赤焰勇者服', price: 520, rarity: '稀有', icon: '🦺' },
+        { id: 'outfit_royal', type: 'outfit', value: 'royal', name: '皇家守护服', price: 900, rarity: '史诗', icon: '👘' },
+        { id: 'hat_none', type: 'hat', value: 'none', name: '不戴帽子', price: 0, rarity: '普通', icon: '✨' },
+        { id: 'hat_cap', type: 'hat', value: 'cap', name: '探险帽', price: 180, rarity: '普通', icon: '🧢' },
+        { id: 'hat_hood', type: 'hat', value: 'hood', name: '夜行兜帽', price: 420, rarity: '稀有', icon: '🕶️' },
+        { id: 'hat_crown', type: 'hat', value: 'crown', name: '星辉冠', price: 780, rarity: '史诗', icon: '👑' },
+        { id: 'shoes_traveler', type: 'shoes', value: 'traveler', name: '轻便旅靴', price: 0, rarity: '普通', icon: '🥾' },
+        { id: 'shoes_iron', type: 'shoes', value: 'iron', name: '精铁战靴', price: 220, rarity: '普通', icon: '👢' },
+        { id: 'shoes_wind', type: 'shoes', value: 'wind', name: '疾风鞋', price: 480, rarity: '稀有', icon: '💨' },
+        { id: 'shoes_snow', type: 'shoes', value: 'snow', name: '雪原长靴', price: 620, rarity: '稀有', icon: '❄️' },
+        { id: 'weapon_sword', type: 'weapon', value: 'sword', name: '守护者长剑', price: 0, rarity: '普通', icon: '⚔️', sprite: 'knight-sword.webp' },
+        { id: 'weapon_bow', type: 'weapon', value: 'bow', name: '精准连弩', price: 360, rarity: '普通', icon: '🏹', sprite: 'precision-crossbow.webp' },
+        { id: 'weapon_staff', type: 'weapon', value: 'staff', name: '星辉法杖', price: 560, rarity: '稀有', icon: '🪄', sprite: 'star-staff.webp' },
+        { id: 'weapon_hammer', type: 'weapon', value: 'hammer', name: '守护战锤', price: 820, rarity: '史诗', icon: '🔨', sprite: 'guardian-hammer.webp' },
+        { id: 'shield_blue', type: 'shield', value: 'blue', name: '学徒盾', price: 0, rarity: '普通', icon: '🛡️' },
+        { id: 'shield_sun', type: 'shield', value: 'sun', name: '日耀盾', price: 440, rarity: '稀有', icon: '🌞' },
+        { id: 'shield_dragon', type: 'shield', value: 'dragon', name: '龙纹盾', price: 760, rarity: '史诗', icon: '🐉' },
+        { id: 'effect_stars', type: 'effect', value: 'stars', name: '星光命中特效', price: 300, rarity: '稀有', icon: '🌟' },
+        { id: 'effect_lightning', type: 'effect', value: 'lightning', name: '雷鸣命中特效', price: 680, rarity: '史诗', icon: '⚡' }
+    ];
+
+    var LOCATIONS = [
+        { id: 'village', name: '晨光村', icon: '🏡', module: 'xiaojiujiu', mission: '帮助村民修复九九能量灯', reward: '铜钥匙', enemies: '数字史莱姆、符号蝙蝠', difficulty: '入门' },
+        { id: 'forest', name: '低语森林', icon: '🌲', module: 'times', mission: '找回被偷走的乘法路标', reward: '1颗宝石', enemies: '藤蔓精、时钟灵', difficulty: '简单' },
+        { id: 'cave', name: '水晶洞穴', icon: '💎', module: 'fraction', mission: '拼合破碎的分数水晶', reward: '银钥匙', enemies: '岩甲兽、分数幽灵', difficulty: '普通' },
+        { id: 'desert', name: '流沙荒漠', icon: '🏜️', module: 'decimal', mission: '追回装着小数星尘的商队', reward: '1颗宝石', enemies: '沙尘妖、云路怪', difficulty: '普通' },
+        { id: 'castle', name: '封印城堡', icon: '🏰', module: 'unit', mission: '用正确单位开启城门机关', reward: '金钥匙', enemies: '机关守卫、雷纹怪', difficulty: '困难' },
+        { id: 'snowpeak', name: '星辉雪峰', icon: '🏔️', module: 'multiply', mission: '点亮通往塔顶的最后信标', reward: '1颗宝石', enemies: '雪影精、幻境妖', difficulty: '困难' },
+        { id: 'tower', name: '怪物塔', icon: '🗼', module: 'tower', mission: '逐层救出居民并夺回能量宝石', reward: '塔层宝箱与卡牌', enemies: '塔卫、首领与暗影王', difficulty: '递增' }
+    ];
+
+    function defaultState() {
+        var user = UserManager.getCurrentUser();
+        var legacyTowerEligible = (Number(App.stats.totalScore) || 0) >= 500;
+        return {
+            version: 1,
+            profile: {
+                name: user ? user.name : '小勇士', gender: 'male', face: 0,
+                hair: 'short', outfit: 'azure', hat: 'none', shoes: 'traveler',
+                weapon: 'sword', shield: 'blue', effect: 'none'
+            },
+            coins: Math.max(0, Number(App.stats.totalScore) || 0),
+            owned: ['outfit_azure', 'hat_none', 'shoes_traveler', 'weapon_sword', 'shield_blue'],
+            storySeen: false,
+            currentLocation: 'village',
+            unlocked: legacyTowerEligible ? ['village', 'tower'] : ['village'], completed: [],
+            // Preserve the old 500-point tower entitlement during migration by
+            // converting it to one bronze key; new players earn it on the map.
+            keys: { bronze: legacyTowerEligible ? 1 : 0, silver: 0, gold: 0 }, gems: 0,
+            towerGates: { floor1: false, floor11: false, floor21: false, floor30: false }
+        };
+    }
+
+    function escapeHtml(text) {
+        return String(text == null ? '' : text).replace(/[&<>'"]/g, function (c) {
+            return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' })[c];
+        });
+    }
+
+    var AdventureSystem = {
+        catalog: CATALOG,
+        locations: LOCATIONS,
+
+        ensureState: function (reset) {
+            if (reset || !App.adventure) App.adventure = defaultState();
+            var base = defaultState();
+            App.adventure = Object.assign(base, App.adventure || {});
+            App.adventure.profile = Object.assign(base.profile, App.adventure.profile || {});
+            App.adventure.keys = Object.assign(base.keys, App.adventure.keys || {});
+            App.adventure.towerGates = Object.assign(base.towerGates, App.adventure.towerGates || {});
+            App.adventure.owned = Array.isArray(App.adventure.owned) ? App.adventure.owned : base.owned;
+            App.adventure.unlocked = Array.isArray(App.adventure.unlocked) ? App.adventure.unlocked : ['village'];
+            App.adventure.completed = Array.isArray(App.adventure.completed) ? App.adventure.completed : [];
+            if (!Number.isFinite(Number(App.adventure.coins))) App.adventure.coins = Number(App.stats.totalScore) || 0;
+            return App.adventure;
+        },
+
+        creditCoins: function (amount) {
+            this.ensureState();
+            App.adventure.coins += Math.max(0, Number(amount) || 0);
+            this.updateBalances();
+        },
+
+        getProfile: function () { return this.ensureState().profile; },
+        getItem: function (id) { return CATALOG.find(function (item) { return item.id === id; }); },
+        getEquippedItem: function (type) {
+            var value = this.getProfile()[type];
+            return CATALOG.find(function (item) { return item.type === type && item.value === value; });
+        },
+
+        heroMarkup: function (profile, className) {
+            profile = profile || this.getProfile();
+            var gender = profile.gender === 'female' ? 'female' : 'male';
+            var face = Math.max(0, Math.min(3, Number(profile.face) || 0));
+            var base = HEROES[gender][face];
+            var weapon = CATALOG.find(function (item) { return item.type === 'weapon' && item.value === profile.weapon; }) || CATALOG[12];
+            var hatIcon = { none: '', cap: '🧢', crown: '👑', hood: '◾' }[profile.hat] || '';
+            var hairIcon = { short: '✦', wave: '〰', braid: '❧', crest: '✧' }[profile.hair] || '✦';
+            var shieldIcon = { blue: '🛡️', sun: '🔆', dragon: '🐲' }[profile.shield] || '🛡️';
+            return '<span class="adventure-hero-composite outfit-' + escapeHtml(profile.outfit) + ' shoes-' + escapeHtml(profile.shoes) + ' ' + (className || '') + '">' +
+                '<img class="adventure-hero-base" src="assets/characters/heroes/' + base + '" alt="' + escapeHtml(profile.name) + '">' +
+                '<span class="adventure-hair hair-' + escapeHtml(profile.hair) + '">' + hairIcon + '</span>' +
+                (hatIcon ? '<span class="adventure-hat hat-' + escapeHtml(profile.hat) + '">' + hatIcon + '</span>' : '') +
+                '<span class="adventure-shield shield-' + escapeHtml(profile.shield) + '">' + shieldIcon + '</span>' +
+                '<img class="adventure-equipped-weapon weapon-' + escapeHtml(profile.weapon) + '" src="assets/weapons/sprites/' + weapon.sprite + '" alt="' + escapeHtml(weapon.name) + '">' +
+                '<span class="adventure-shoes-mark">◆</span></span>';
+        },
+
+        renderCurrentHero: function (target, className) {
+            if (!target) return;
+            target.innerHTML = this.heroMarkup(this.getProfile(), className);
+        },
+
+        updateBalances: function () {
+            this.ensureState();
+            var nodes = [document.getElementById('total-score'), document.getElementById('shop-balance')];
+            nodes.forEach(function (node) { if (node) node.textContent = App.adventure.coins; });
+        },
+
+        syncUser: function () {
+            var current = UserManager.getCurrentUser();
+            if (!current) return;
+            var profile = this.getProfile();
+            var users = UserManager.getUsers();
+            var user = users.find(function (entry) { return entry.id === current.id; });
+            if (user) {
+                user.name = profile.name;
+                user.profile = Object.assign({}, profile);
+                user.avatar = profile.gender === 'female' ? '🏹' : '⚔️';
+                UserManager.saveUsers(users);
+            }
+            saveProgress();
+            if (typeof updateCurrentUserBadge === 'function') updateCurrentUserBadge();
+        },
+
+        openCharacter: function () { this.renderCharacter(); showPage('character'); },
+        renderCharacter: function () {
+            var state = this.ensureState(), p = state.profile;
+            var content = document.getElementById('character-editor-content');
+            if (!content) return;
+            content.innerHTML = '<div class="character-studio">' +
+                '<section class="character-preview-panel"><div id="character-live-preview" class="character-live-preview">' + this.heroMarkup(p, 'editor-hero') + '</div>' +
+                '<strong id="character-preview-name">' + escapeHtml(p.name) + '</strong><span>战斗形象会同步更新</span></section>' +
+                '<form id="character-form" class="character-form">' +
+                '<label class="character-field"><span>玩家名字</span><input id="profile-name" maxlength="16" value="' + escapeHtml(p.name) + '" required></label>' +
+                this.choiceGroup('gender', '角色', { male: '男孩勇士', female: '女孩勇士' }, p.gender) +
+                this.choiceGroup('face', '脸型 / 基础外貌', { 0: FACE_NAMES[0], 1: FACE_NAMES[1], 2: FACE_NAMES[2], 3: FACE_NAMES[3] }, String(p.face)) +
+                this.choiceGroup('hair', '发型', HAIRS, p.hair) +
+                this.ownedChoiceGroup('outfit', '衣服', OUTFITS, p.outfit) +
+                this.ownedChoiceGroup('hat', '帽子', HATS, p.hat) +
+                this.ownedChoiceGroup('shoes', '鞋子', SHOES, p.shoes) +
+                this.ownedItemGroup('weapon', '武器', p.weapon) +
+                this.ownedItemGroup('shield', '盾牌', p.shield) +
+                '<div class="character-actions"><button type="submit" class="adventure-primary-btn">保存并装备</button><button type="button" id="character-go-shop" class="adventure-secondary-btn">去商店解锁更多</button></div>' +
+                '</form></div>';
+            var self = this;
+            content.querySelector('#character-form').addEventListener('change', function () { self.previewCharacter(); });
+            content.querySelector('#profile-name').addEventListener('input', function () { self.previewCharacter(); });
+            content.querySelector('#character-form').addEventListener('submit', function (event) { event.preventDefault(); self.saveCharacter(); });
+            content.querySelector('#character-go-shop').onclick = function () { self.openShop(); };
+        },
+
+        choiceGroup: function (name, title, options, selected) {
+            return '<fieldset class="character-field"><legend>' + title + '</legend><div class="appearance-options">' + Object.keys(options).map(function (value) {
+                return '<label><input type="radio" name="' + name + '" value="' + value + '" ' + (String(value) === String(selected) ? 'checked' : '') + '><span>' + options[value] + '</span></label>';
+            }).join('') + '</div></fieldset>';
+        },
+
+        ownedChoiceGroup: function (type, title, labels, selected) {
+            var ownedValues = CATALOG.filter(function (item) { return item.type === type && App.adventure.owned.includes(item.id); }).map(function (item) { return item.value; });
+            var choices = {};
+            Object.keys(labels).forEach(function (value) { if (ownedValues.includes(value)) choices[value] = labels[value]; });
+            return this.choiceGroup(type, title, choices, selected);
+        },
+
+        ownedItemGroup: function (type, title, selected) {
+            var options = {};
+            CATALOG.forEach(function (item) { if (item.type === type && App.adventure.owned.includes(item.id)) options[item.value] = item.icon + ' ' + item.name; });
+            return this.choiceGroup(type, title, options, selected);
+        },
+
+        formProfile: function () {
+            var form = document.getElementById('character-form'), old = this.getProfile();
+            function val(name) { var n = form && form.querySelector('[name="' + name + '"]:checked'); return n ? n.value : old[name]; }
+            return Object.assign({}, old, {
+                name: ((document.getElementById('profile-name') || {}).value || old.name).trim().slice(0, 16),
+                gender: val('gender'), face: Number(val('face')), hair: val('hair'), outfit: val('outfit'),
+                hat: val('hat'), shoes: val('shoes'), weapon: val('weapon'), shield: val('shield')
+            });
+        },
+
+        previewCharacter: function () {
+            var profile = this.formProfile(), preview = document.getElementById('character-live-preview');
+            if (preview) preview.innerHTML = this.heroMarkup(profile, 'editor-hero');
+            var name = document.getElementById('character-preview-name'); if (name) name.textContent = profile.name || '小勇士';
+        },
+
+        saveCharacter: function () {
+            var profile = this.formProfile();
+            if (!profile.name) { alert('请先输入玩家名字'); return; }
+            App.adventure.profile = profile;
+            this.syncUser();
+            this.updateBattleHero();
+            this.renderCharacter();
+            this.toast('✅ ' + profile.name + ' 的角色和装备已经保存');
+        },
+
+        openShop: function () { this.renderShop(); showPage('shop'); },
+        renderShop: function () {
+            this.updateBalances();
+            var content = document.getElementById('shop-content'); if (!content) return;
+            var p = this.getProfile(), state = App.adventure;
+            content.innerHTML = '<div class="shop-intro"><strong>可用积分：⭐ ' + state.coins + '</strong><span>闯关获得积分；购买不会减少你的终身总分 ' + App.stats.totalScore + '</span></div><div class="shop-grid">' + CATALOG.filter(function (item) { return item.price > 0; }).map(function (item) {
+                var owned = state.owned.includes(item.id), equipped = p[item.type] === item.value;
+                return '<article class="shop-item rarity-' + item.rarity + '"><div class="shop-item-icon">' + (item.sprite ? '<img src="assets/weapons/sprites/' + item.sprite + '" alt="">' : item.icon) + '</div><div><span class="shop-rarity">' + item.rarity + '</span><h3>' + item.name + '</h3><p>' + ({ outfit: '衣服', shoes: '鞋子', hat: '帽子', weapon: '武器', shield: '盾牌', effect: '命中特效' }[item.type] || '装备') + '</p></div>' +
+                    '<button class="shop-action-btn" data-item="' + item.id + '" ' + (equipped ? 'disabled' : '') + '>' + (equipped ? '已装备' : owned ? '装备' : '⭐ ' + item.price + ' 购买') + '</button></article>';
+            }).join('') + '</div>';
+            var self = this;
+            content.querySelectorAll('.shop-action-btn[data-item]').forEach(function (button) { button.onclick = function () { self.buyOrEquip(button.dataset.item); }; });
+        },
+
+        buyOrEquip: function (id) {
+            var item = this.getItem(id), state = this.ensureState(); if (!item) return;
+            if (!state.owned.includes(id)) {
+                if (state.coins < item.price) { this.toast('积分不足，还差 ' + (item.price - state.coins) + ' 分'); return; }
+                state.coins -= item.price; state.owned.push(id);
+                this.toast('🎉 已购买 ' + item.name);
+            }
+            state.profile[item.type] = item.value;
+            this.syncUser(); this.updateBattleHero(); this.renderShop(); this.updateBalances();
+        },
+
+        openStory: function (firstVisit) {
+            this.renderStory(firstVisit); showPage('story');
+        },
+        renderStory: function (firstVisit) {
+            var content = document.getElementById('story-content'); if (!content) return;
+            var panels = [
+                ['🌟', '能量宝石守护着六境', '晨光村、森林和雪峰原本充满光明，孩子们用数学魔法让机关运转。'],
+                ['🌑', '暗影王偷走了宝石', '怪物占领了高塔，路标熄灭，居民被困。它们不是普通小动物，而是暗影王制造的魔法守卫。'],
+                ['🗝️', '你的任务', '完成各地数学任务，找回三把钥匙与三颗宝石，逐层打开怪物塔，救出居民并让六境重现光明。']
+            ];
+            content.innerHTML = '<div class="story-comic">' + panels.map(function (panel, i) { return '<article class="story-panel"><span class="story-number">' + (i + 1) + '</span><div class="story-panel-art">' + panel[0] + '</div><h3>' + panel[1] + '</h3><p>' + panel[2] + '</p></article>'; }).join('') + '</div><div class="story-actions"><button id="story-start-map" class="adventure-primary-btn">' + (firstVisit ? '接受任务，创建我的角色' : '查看冒险地图') + '</button></div>';
+            var self = this;
+            document.getElementById('story-start-map').onclick = function () { self.markStorySeen(); if (firstVisit) self.openCharacter(); else self.openMap(); };
+            document.getElementById('story-skip').onclick = function () { self.markStorySeen(); showPage('home'); };
+        },
+        markStorySeen: function () { this.ensureState().storySeen = true; saveProgress(); },
+
+        openMap: function () { this.renderMap(); showPage('map'); },
+        renderMap: function () {
+            var content = document.getElementById('map-content'), state = this.ensureState(); if (!content) return;
+            content.innerHTML = '<div class="map-inventory"><span>🗝️ 铜 ' + state.keys.bronze + '</span><span>🗝️ 银 ' + state.keys.silver + '</span><span>🗝️ 金 ' + state.keys.gold + '</span><span>💎 宝石 ' + state.gems + '/3</span></div>' +
+                '<div class="adventure-map" aria-label="冒险关卡地图">' + LOCATIONS.map(function (loc, index) {
+                    var done = state.completed.includes(loc.id), open = state.unlocked.includes(loc.id) || loc.id === 'tower' && state.keys.bronze > 0;
+                    var status = done ? '已完成' : open ? '可以进入' : '尚未解锁';
+                    return '<button class="map-node ' + (done ? 'completed' : open ? 'available' : 'locked') + ' map-node-' + index + '" data-location="' + loc.id + '" ' + (!open ? 'disabled' : '') + '><span class="map-node-icon">' + loc.icon + '</span><strong>' + loc.name + '</strong><small>' + status + '</small></button>';
+                }).join('') + '<div class="map-route" aria-hidden="true"></div></div><div id="map-mission-detail" class="map-mission-detail"><p>点击一个已解锁地点查看任务。</p></div>';
+            var self = this;
+            content.querySelectorAll('.map-node:not(:disabled)').forEach(function (node) { node.onclick = function () { self.showLocation(node.dataset.location); }; });
+            var current = LOCATIONS.find(function (loc) { return loc.id === state.currentLocation && (state.unlocked.includes(loc.id) || loc.id === 'tower'); }) || LOCATIONS[0];
+            this.showLocation(current.id);
+        },
+
+        showLocation: function (id) {
+            var loc = LOCATIONS.find(function (entry) { return entry.id === id; }); if (!loc) return;
+            App.adventure.currentLocation = id; saveProgress();
+            document.querySelectorAll('.map-node').forEach(function (node) { node.classList.toggle('current', node.dataset.location === id); });
+            var detail = document.getElementById('map-mission-detail'); if (!detail) return;
+            var requirement = id === 'tower' ? '需要：铜钥匙打开第1层；更高区域需要银钥匙、金钥匙和宝石。' : '完成本任务后自动解锁下一地区。';
+            detail.innerHTML = '<div class="mission-location-icon">' + loc.icon + '</div><div><span class="mission-difficulty">' + loc.difficulty + '</span><h3>' + loc.name + '：' + loc.mission + '</h3><p>可能遇到：' + loc.enemies + '</p><p>奖励：' + loc.reward + '</p><p class="mission-requirement">' + requirement + '</p></div><button id="start-map-mission" class="adventure-primary-btn">' + (id === 'tower' ? '进入怪物塔' : '开始任务') + '</button>';
+            document.getElementById('start-map-mission').onclick = function () {
+                if (id === 'tower') { if (typeof BattleMode !== 'undefined') BattleMode.showTowerLobby(); }
+                else { App.currentModule = loc.module; startPractice(loc.module); }
+            };
+        },
+
+        completeModuleMission: function (module) {
+            var state = this.ensureState(), index = LOCATIONS.findIndex(function (loc) { return loc.module === module; });
+            if (index < 0 || LOCATIONS[index].id === 'tower') return;
+            var loc = LOCATIONS[index];
+            if (!state.completed.includes(loc.id)) {
+                state.completed.push(loc.id);
+                var next = LOCATIONS[index + 1]; if (next && !state.unlocked.includes(next.id)) state.unlocked.push(next.id);
+                if (loc.id === 'village') state.keys.bronze++;
+                if (loc.id === 'cave') state.keys.silver++;
+                if (loc.id === 'castle') state.keys.gold++;
+                if (['forest', 'desert', 'snowpeak'].includes(loc.id)) state.gems++;
+                this.toast('🗺️ 地图任务完成：获得' + loc.reward + '，新地区已解锁！');
+                saveProgress();
+            }
+        },
+
+        towerGateRequirement: function (floor) {
+            if (floor === 1) return { gate: 'floor1', type: 'key', key: 'bronze', amount: 1, label: '铜钥匙' };
+            if (floor === 11) return { gate: 'floor11', type: 'key', key: 'silver', amount: 1, label: '银钥匙' };
+            if (floor === 21) return { gate: 'floor21', type: 'key', key: 'gold', amount: 1, label: '金钥匙' };
+            if (floor === 30) return { gate: 'floor30', type: 'gems', amount: 3, label: '3颗宝石' };
+            return null;
+        },
+        canOpenTowerFloor: function (floor) {
+            var req = this.towerGateRequirement(floor), state = this.ensureState();
+            if (!req || state.towerGates[req.gate]) return true;
+            return req.type === 'gems' ? state.gems >= req.amount : state.keys[req.key] >= req.amount;
+        },
+        unlockTowerFloor: function (floor) {
+            var req = this.towerGateRequirement(floor), state = this.ensureState();
+            if (!req || state.towerGates[req.gate]) return true;
+            if (!this.canOpenTowerFloor(floor)) { this.toast('还需要 ' + req.label + '，先去地图完成任务吧'); return false; }
+            if (req.type === 'gems') state.gems -= req.amount; else state.keys[req.key] -= req.amount;
+            state.towerGates[req.gate] = true; saveProgress(); this.toast('🔓 ' + req.label + ' 已开启第' + floor + '层区域'); return true;
+        },
+        rewardTowerFloor: function (floor) {
+            var reward = 20 + floor * 5; this.creditCoins(reward);
+            if ([10, 20, 29].includes(floor)) App.adventure.gems++;
+            saveProgress();
+            return reward;
+        },
+
+        updateBattleHero: function () {
+            var layer = document.querySelector('.hero-char-layer'); if (layer) layer.innerHTML = this.heroMarkup(this.getProfile(), 'battle-profile-hero');
+            var weaponLayer = document.querySelector('.hero-weapon-layer'); if (weaponLayer) {
+                var item = this.getEquippedItem('weapon');
+                weaponLayer.innerHTML = item && item.sprite ? '<img class="equipped-battle-weapon" src="assets/weapons/sprites/' + item.sprite + '" alt="' + item.name + '">' : '';
+            }
+        },
+
+        init: function () {
+            this.ensureState(); this.updateBalances();
+            var self = this;
+            var map = document.getElementById('open-adventure-map'); if (map) map.onclick = function (e) { e.stopPropagation(); self.openMap(); };
+            var character = document.getElementById('open-character-editor'); if (character) character.onclick = function (e) { e.stopPropagation(); self.openCharacter(); };
+            var shop = document.getElementById('open-adventure-shop'); if (shop) shop.onclick = function (e) { e.stopPropagation(); self.openShop(); };
+            var story = document.getElementById('open-story-book'); if (story) story.onclick = function (e) { e.stopPropagation(); self.openStory(false); };
+        },
+
+        toast: function (text) {
+            var old = document.querySelector('.adventure-toast'); if (old) old.remove();
+            var node = document.createElement('div'); node.className = 'adventure-toast'; node.textContent = text; document.body.appendChild(node);
+            requestAnimationFrame(function () { node.classList.add('show'); });
+            setTimeout(function () { node.classList.remove('show'); setTimeout(function () { node.remove(); }, 250); }, 2400);
+        }
+    };
+
+    // Physical weapon choreography. All projectiles originate at the held
+    // weapon layer; melee weapons make the hero close distance before impact.
+    if (typeof BattleMode !== 'undefined') {
+        BattleMode.performEquippedAttack = function (move, rank, targetEl, callback) {
+            var type = AdventureSystem.getProfile().weapon || 'sword';
+            var heroSide = document.querySelector('.hero-side');
+            var weaponLayer = document.querySelector('.hero-weapon-layer');
+            var arena = document.querySelector('.battle-arena');
+            var strength = { C: 'light', B: 'normal', A: 'strong', S: 'critical' }[rank] || 'strong';
+            if (typeof playBattleSound === 'function') playBattleSound('ready', { type: type, rank: rank, module: App.battle.module });
+            this.setHeroState(type === 'staff' || type === 'bow' ? 'cast_spell' : 'attack');
+            if (heroSide) {
+                heroSide.classList.remove('equipped-attack-sword', 'equipped-attack-bow', 'equipped-attack-staff', 'equipped-attack-hammer');
+                void heroSide.offsetWidth;
+                heroSide.classList.add('equipped-attack-' + type, 'attack-strength-' + strength);
+            }
+            if (weaponLayer) weaponLayer.classList.add(type === 'bow' ? 'weapon-draw' : type === 'staff' ? 'weapon-cast' : 'weapon-swing-real');
+
+            var impactAt = type === 'sword' ? 430 : type === 'hammer' ? 560 : 600;
+            var projectile = null;
+            if ((type === 'bow' || type === 'staff') && arena) {
+                projectile = document.createElement('div');
+                projectile.className = 'equipped-projectile projectile-' + type + ' projectile-' + strength;
+                projectile.innerHTML = type === 'bow' ? '<span>➶</span>' : '<span>✦</span>';
+                arena.appendChild(projectile);
+                setTimeout(function () { projectile.classList.add('fly'); }, 180);
+            }
+            setTimeout(function () {
+                if (typeof playBattleSound === 'function') playBattleSound('release', { type: type, rank: rank, module: App.battle.module });
+            }, type === 'sword' ? 150 : type === 'hammer' ? 230 : 180);
+
+            setTimeout(function () {
+                if (targetEl) {
+                    targetEl.classList.add('equipped-impact-target');
+                    setTimeout(function () { targetEl.classList.remove('equipped-impact-target'); }, 260);
+                }
+                var hit = document.createElement('span');
+                hit.className = 'equipped-hit-effect hit-' + type + ' effect-' + AdventureSystem.getProfile().effect;
+                hit.textContent = type === 'sword' ? '╳' : type === 'hammer' ? '💥' : type === 'bow' ? '✹' : '✦';
+                if (targetEl) targetEl.appendChild(hit);
+                setTimeout(function () { hit.remove(); }, 520);
+                if (projectile) projectile.remove();
+                if (typeof playBattleSound === 'function') playBattleSound('impact', { type: type, rank: rank, module: App.battle.module });
+                if (callback) callback();
+            }, impactAt);
+
+            setTimeout(function () {
+                if (heroSide) heroSide.classList.remove('equipped-attack-' + type, 'attack-strength-' + strength);
+                if (weaponLayer) weaponLayer.classList.remove('weapon-draw', 'weapon-cast', 'weapon-swing-real');
+                BattleMode.setHeroState('idle');
+            }, impactAt + 300);
+        };
+
+        BattleMode.performEquippedDefense = function (callback) {
+            var heroSide = document.querySelector('.hero-side');
+            if (heroSide) { heroSide.classList.add('equipped-shield-block'); setTimeout(function () { heroSide.classList.remove('equipped-shield-block'); }, 520); }
+            var layer = document.querySelector('.hero-char-layer');
+            if (layer) {
+                var shield = document.createElement('span'); shield.className = 'active-shield-impact'; shield.textContent = '🛡️'; layer.appendChild(shield);
+                setTimeout(function () { shield.remove(); }, 520);
+            }
+            setTimeout(function () { if (callback) callback(); }, 180);
+        };
+    }
+
+    window.AdventureSystem = AdventureSystem;
+    document.addEventListener('DOMContentLoaded', function () { AdventureSystem.init(); });
+}());

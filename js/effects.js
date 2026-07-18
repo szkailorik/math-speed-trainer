@@ -1757,7 +1757,8 @@ function playBattleSound(phase, meta) {
         fire: 90, ice: 210, water: -40, thunder: 320, electric: 320,
         wind: 160, flying: 160, ghost: -110, dark: -150, spirit: -70,
         rock: -180, earth: -180, ground: -180, steel: 40, fighting: -90,
-        dragon: -30, wizard: 250, psychic: 230, light: 300
+        dragon: -30, wizard: 250, psychic: 230, light: 300,
+        sword: 40, bow: 160, staff: 250, hammer: -180
     };
     var base = Math.max(90, palette.base + (elementOffsets[type] || 0));
     var now = ctx.currentTime;
@@ -1809,8 +1810,8 @@ function playBattleSound(phase, meta) {
         tone(palette.wave, palette.accent, base * 1.1, 0.17, 0.065, 0);
     } else if (phase === 'impact') {
         tone('sine', 135, 58, 0.13, 0.095, 0);
-        tone(type === 'steel' ? 'square' : palette.wave, palette.accent * 1.15, base, 0.11, 0.055, 0.012);
-        noise(0.075, 0.03, type === 'rock' || type === 'earth' ? 120 : 900, 0);
+        tone(type === 'steel' || type === 'sword' ? 'square' : palette.wave, palette.accent * 1.15, base, type === 'hammer' ? 0.18 : 0.11, type === 'hammer' ? 0.075 : 0.055, 0.012);
+        noise(type === 'hammer' ? 0.12 : 0.075, type === 'hammer' ? 0.048 : 0.03, type === 'rock' || type === 'earth' || type === 'hammer' ? 120 : 900, 0);
     } else if (phase === 'enemyReady') {
         tone(['ghost', 'dark', 'spirit'].indexOf(type) !== -1 ? 'sine' : 'sawtooth', base * 0.65, base * 0.92, 0.18, 0.045, 0);
     } else if (phase === 'enemyImpact') {

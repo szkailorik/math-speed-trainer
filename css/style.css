@@ -8357,3 +8357,145 @@ body::after {
 @media (prefers-reduced-motion: reduce) {
     .theme-card-art img { transition: none; }
 }
+
+/* ========================================================================== */
+/* v26.0 Adventure profile, shop, story, functional map and physical combat   */
+/* ========================================================================== */
+.adventure-page { background: radial-gradient(circle at 50% 0, #26345a 0, #11162a 42%, #090d18 100%); color: #f8f4e8; }
+.adventure-page .page-header { background: rgba(8, 12, 27, .92); border-bottom: 1px solid rgba(255, 218, 128, .2); }
+.adventure-page-content { width: min(1080px, 100%); margin: 0 auto; padding: 24px 20px 48px; }
+.adventure-primary-btn, .adventure-secondary-btn, .shop-action-btn { border: 0; border-radius: 12px; padding: 12px 18px; font-weight: 800; cursor: pointer; }
+.adventure-primary-btn { color: #17203a; background: linear-gradient(135deg, #ffe593, #ffb944); box-shadow: 0 6px 18px rgba(255, 184, 62, .24); }
+.adventure-secondary-btn { color: #eef4ff; background: #34446d; }
+.shop-action-btn:disabled { cursor: default; opacity: .64; }
+.shop-balance { color: #ffe187; font-weight: 800; padding-right: 18px; white-space: nowrap; }
+
+/* Composite paper-doll: the original polished hero remains the body while
+   independently saved layers make equipment visibly different everywhere. */
+.adventure-hero-composite { position: relative; display: inline-block; width: 100%; height: 100%; isolation: isolate; filter: drop-shadow(0 8px 8px rgba(0,0,0,.32)); }
+.adventure-hero-base { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; z-index: 2; }
+.outfit-forest .adventure-hero-base { filter: hue-rotate(82deg) saturate(.86); }
+.outfit-crimson .adventure-hero-base { filter: hue-rotate(320deg) saturate(1.3); }
+.outfit-royal .adventure-hero-base { filter: hue-rotate(172deg) saturate(1.15) brightness(1.12); }
+.adventure-hair { position: absolute; z-index: 5; top: 5%; left: 49%; color: #ffd76b; font-size: .21em; transform: translateX(-50%); text-shadow: 0 1px 2px #160d08; }
+.hair-wave { font-size: .28em; transform: translateX(-50%) rotate(-9deg); }
+.hair-braid { left: 38%; top: 18%; font-size: .26em; }
+.hair-crest { top: 2%; color: #b8e9ff; font-size: .3em; }
+.adventure-hat { position: absolute; z-index: 7; top: -8%; left: 50%; transform: translateX(-50%); font-size: .34em; line-height: 1; filter: drop-shadow(0 2px 2px #000); }
+.hat-hood { top: 4%; width: 30%; height: 27%; border-radius: 50% 50% 35% 35%; background: #22223c; color: transparent; z-index: 1; }
+.adventure-shield { position: absolute; z-index: 6; left: 18%; bottom: 22%; font-size: .27em; filter: drop-shadow(0 2px 2px #000); }
+.shield-sun { color: #ffd95e; }.shield-dragon { font-size: .3em; }
+.adventure-equipped-weapon { position: absolute; z-index: 7; width: 34%; height: 34%; object-fit: contain; right: 7%; bottom: 24%; transform: rotate(-20deg); filter: drop-shadow(0 2px 2px #000); }
+.weapon-bow { transform: rotate(-7deg); }.weapon-staff { transform: rotate(-16deg) scale(1.08); }.weapon-hammer { transform: rotate(-27deg) scale(1.08); }
+.adventure-shoes-mark { position: absolute; z-index: 7; bottom: 7%; left: 48%; font-size: .1em; color: #d7e9ff; text-shadow: -16px 0 currentColor, 0 1px 2px #000; }
+.shoes-iron .adventure-shoes-mark { color: #c3c9d4; }.shoes-wind .adventure-shoes-mark { color: #8deeff; }.shoes-snow .adventure-shoes-mark { color: #fff; }
+#current-avatar .adventure-hero-composite { width: 50px; height: 50px; font-size: 50px; }
+#home-feature-hero .adventure-hero-composite { width: 210px; height: 240px; font-size: 210px; }
+.user-card .adventure-hero-composite { width: 105px; height: 105px; font-size: 105px; }
+.battle-profile-hero { font-size: 154px; }
+.battle-profile-hero .adventure-equipped-weapon, .battle-profile-hero .adventure-shield { opacity: 0; }
+
+.character-studio { display: grid; grid-template-columns: minmax(230px, .72fr) minmax(360px, 1.6fr); gap: 24px; align-items: start; }
+.character-preview-panel { position: sticky; top: 84px; display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 28px; border: 1px solid rgba(255,220,145,.25); border-radius: 22px; background: linear-gradient(160deg, rgba(70,87,138,.8), rgba(18,24,47,.9)); }
+.character-preview-panel strong { color: #ffe29b; font-size: 1.25rem; }.character-preview-panel span { color: #b9c7e5; font-size: .84rem; }
+.character-live-preview { width: 230px; height: 270px; font-size: 230px; background: radial-gradient(circle, rgba(255,255,255,.13), transparent 66%); }
+.character-form { display: grid; gap: 14px; }
+.character-field { margin: 0; padding: 14px; border: 1px solid rgba(159,180,230,.2); border-radius: 15px; background: rgba(20,27,54,.78); }
+.character-field > span, .character-field legend { display: block; color: #ffe29b; font-weight: 800; margin-bottom: 9px; padding: 0 4px; }
+.character-field input[type="text"], .character-field > input { width: 100%; box-sizing: border-box; padding: 12px; border-radius: 10px; border: 1px solid #63739e; background: #0d1429; color: white; font-size: 1rem; }
+.appearance-options { display: flex; flex-wrap: wrap; gap: 8px; }
+.appearance-options label { cursor: pointer; }.appearance-options input { position: absolute; opacity: 0; }
+.appearance-options span { display: block; padding: 9px 12px; border-radius: 10px; background: #283557; color: #dbe5fb; border: 1px solid transparent; }
+.appearance-options input:checked + span { color: #192039; background: #ffd978; border-color: #fff0bd; box-shadow: 0 0 0 2px rgba(255,217,120,.18); }
+.character-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+
+.shop-intro { display: flex; justify-content: space-between; gap: 12px; padding: 15px 18px; margin-bottom: 18px; border-radius: 14px; color: #dce7ff; background: rgba(41,54,92,.72); }.shop-intro strong { color: #ffe38e; }.shop-intro span { font-size: .85rem; }
+.shop-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(235px, 1fr)); gap: 14px; }
+.shop-item { display: grid; grid-template-columns: 72px 1fr; gap: 12px; padding: 14px; border-radius: 17px; border: 1px solid rgba(154,177,226,.2); background: rgba(20,28,55,.86); }
+.shop-item-icon { display: grid; place-items: center; width: 72px; height: 72px; border-radius: 15px; background: radial-gradient(circle, #435581, #202b4b); font-size: 2rem; }.shop-item-icon img { width: 62px; height: 62px; object-fit: contain; }
+.shop-item h3 { margin: 4px 0; font-size: 1rem; }.shop-item p { margin: 0; color: #9eafd3; font-size: .78rem; }.shop-rarity { color: #a9b9da; font-size: .67rem; }
+.rarity-稀有 { border-color: rgba(98,190,255,.42); }.rarity-稀有 .shop-rarity { color: #73caff; }.rarity-史诗 { border-color: rgba(203,124,255,.5); }.rarity-史诗 .shop-rarity { color: #da9aff; }
+.shop-item .shop-action-btn { grid-column: 1 / -1; color: #17203a; background: #ffd66c; }
+
+.story-skip-btn { border: 1px solid #66769e; border-radius: 9px; color: #dbe5fb; background: #273452; padding: 7px 12px; cursor: pointer; }
+.story-comic { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.story-panel { position: relative; overflow: hidden; min-height: 330px; padding: 24px; border-radius: 20px; text-align: center; background: linear-gradient(160deg, #35446e, #151c38); border: 1px solid rgba(255,225,149,.23); box-shadow: 0 18px 38px rgba(0,0,0,.25); }
+.story-number { position: absolute; top: 12px; left: 14px; display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; color: #17203a; background: #ffe18d; font-weight: 900; }
+.story-panel-art { display: grid; place-items: center; height: 170px; font-size: 5rem; background: radial-gradient(circle, rgba(255,240,180,.17), transparent 64%); animation: story-art-float 4s ease-in-out infinite; }
+.story-panel:nth-child(2) .story-panel-art { animation-delay: -1.2s; }.story-panel:nth-child(3) .story-panel-art { animation-delay: -2.1s; }
+.story-panel h3 { color: #ffe397; }.story-panel p { color: #c6d2ea; line-height: 1.7; font-size: .9rem; }
+.story-actions { display: flex; justify-content: center; padding: 24px; }
+@keyframes story-art-float { 50% { transform: translateY(-8px) scale(1.04); } }
+
+.map-inventory, .tower-key-inventory { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; }
+.map-inventory span, .tower-key-inventory span { padding: 8px 13px; border-radius: 999px; color: #ffe7a5; background: rgba(31,41,73,.88); border: 1px solid rgba(255,223,144,.24); font-weight: 800; }
+.adventure-map { position: relative; display: grid; grid-template-columns: repeat(4, 1fr); gap: 52px 28px; min-height: 420px; padding: 48px 30px; border-radius: 26px; overflow: hidden; background: linear-gradient(150deg, rgba(23,65,65,.84), rgba(44,40,79,.9)), radial-gradient(circle at 20% 40%, #467d51, transparent 28%); border: 1px solid rgba(189,217,176,.25); }
+.adventure-map::before { content: ''; position: absolute; inset: 0; opacity: .24; background: repeating-radial-gradient(ellipse at 20% 50%, transparent 0 22px, rgba(255,255,255,.15) 23px 25px, transparent 26px 45px); }
+.map-route { position: absolute; left: 10%; right: 10%; top: 50%; border-top: 5px dotted rgba(255,220,138,.38); transform: rotate(5deg); }
+.map-node { position: relative; z-index: 2; display: flex; min-height: 112px; flex-direction: column; align-items: center; justify-content: center; gap: 3px; border-radius: 50% 50% 46% 46%; border: 3px solid rgba(255,255,255,.26); color: #eef5ff; background: #374d55; box-shadow: 0 10px 22px rgba(0,0,0,.3); cursor: pointer; transition: transform .2s, box-shadow .2s; }
+.map-node:nth-child(even) { transform: translateY(42px); }.map-node:hover:not(:disabled), .map-node.current { transform: translateY(-5px) scale(1.06); box-shadow: 0 0 0 5px rgba(255,220,126,.2), 0 12px 28px #0008; }
+.map-node:nth-child(even):hover:not(:disabled), .map-node:nth-child(even).current { transform: translateY(37px) scale(1.06); }
+.map-node.completed { border-color: #7ef0a5; background: #2b6a4d; }.map-node.available { border-color: #ffe18e; background: #5d4a73; }.map-node.locked { filter: grayscale(1); opacity: .55; cursor: not-allowed; }
+.map-node-icon { font-size: 2.3rem; }.map-node small { color: #c3cee3; }
+.map-mission-detail { display: grid; grid-template-columns: 70px 1fr auto; gap: 16px; align-items: center; min-height: 116px; margin-top: 18px; padding: 18px; border-radius: 18px; background: rgba(22,30,58,.9); border: 1px solid rgba(255,223,142,.22); }
+.map-mission-detail h3 { margin: 5px 0; color: #ffe298; }.map-mission-detail p { margin: 4px 0; color: #c5d1e8; font-size: .86rem; }.mission-location-icon { font-size: 3.2rem; text-align: center; }.mission-difficulty { color: #8fd6ff; font-size: .72rem; font-weight: 800; }.mission-requirement { color: #ffd782 !important; }
+
+.adventure-toast { position: fixed; z-index: 99999; left: 50%; bottom: 28px; max-width: min(90vw, 520px); transform: translate(-50%, 28px); opacity: 0; padding: 13px 20px; border-radius: 14px; color: #142038; background: #ffe18a; box-shadow: 0 12px 38px #0008; font-weight: 850; transition: .24s ease; pointer-events: none; }.adventure-toast.show { transform: translate(-50%, 0); opacity: 1; }
+
+/* Equipped weapon actions. Melee closes the gap; ranged shots start at the
+   right-hand weapon coordinate and cross the arena to the monster. */
+.hero-side.equipped-attack-sword { animation: equipped-sword-lunge .76s cubic-bezier(.2,.8,.25,1); }
+.hero-side.equipped-attack-hammer { animation: equipped-hammer-slam .92s cubic-bezier(.2,.7,.2,1); }
+.hero-side.equipped-attack-bow .hero-layers { animation: equipped-bow-draw .82s ease; }
+.hero-side.equipped-attack-staff .hero-layers { animation: equipped-staff-cast .86s ease; }
+.hero-weapon-layer.weapon-swing-real { transform-origin: 30% 78%; animation: real-weapon-swing .58s cubic-bezier(.2,.9,.25,1); }
+.hero-weapon-layer.weapon-draw { animation: real-bow-draw .7s ease; }.hero-weapon-layer.weapon-cast { animation: real-staff-cast .7s ease; }
+.equipped-battle-weapon { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 3px 3px #000); }
+#battle-page .hero-layers .hero-weapon-layer { width: 72px; height: 72px; right: 2px; bottom: 28px; z-index: 9; }
+.equipped-projectile { position: absolute; z-index: 35; left: 25%; bottom: 37%; opacity: 0; font-size: 38px; color: #fff4a0; text-shadow: 0 0 12px currentColor; pointer-events: none; transition: left .42s cubic-bezier(.1,.7,.3,1), opacity .08s, transform .42s; }
+.equipped-projectile.fly { left: 76%; opacity: 1; transform: rotate(-4deg) scale(1.3); }.projectile-staff { color: #bda2ff; }.projectile-critical { filter: drop-shadow(0 0 12px #fff); font-size: 48px; }
+.equipped-hit-effect { position: absolute; z-index: 45; left: 50%; top: 42%; transform: translate(-50%,-50%); font-size: 52px; color: #fff2a3; text-shadow: 0 0 10px #ff7a18, 0 0 22px #ffcf55; animation: equipped-hit-burst .5s ease-out both; pointer-events: none; }.effect-lightning { color: #e9f7ff; text-shadow: 0 0 8px #55c8ff, 0 0 24px #8a64ff; }.effect-stars { color: #fff4a0; }
+.equipped-impact-target { animation: equipped-target-recoil .28s ease-out; filter: brightness(1.7) saturate(.4); }
+.enemy-side.enemy-lunge-attack { animation: enemy-real-lunge .38s ease-in-out; }
+.hero-side.equipped-shield-block { animation: shield-block-recoil .48s ease-out; }.active-shield-impact { position: absolute; z-index: 50; left: 11%; top: 25%; font-size: 62px; animation: active-shield-block .5s ease-out both; }
+@keyframes equipped-sword-lunge { 0%,100% { transform: translateX(0); } 35% { transform: translateX(48%) scale(1.05); } 54% { transform: translateX(56%) rotate(3deg); } }
+@keyframes equipped-hammer-slam { 0%,100% { transform: translate(0,0); } 25% { transform: translate(18%,-14%) rotate(-5deg); } 58% { transform: translate(43%,5%) rotate(4deg); } 66% { transform: translate(41%,0); } }
+@keyframes equipped-bow-draw { 30% { transform: translateX(-7%) rotate(-3deg); } 55% { transform: translateX(-10%) rotate(-5deg); } }
+@keyframes equipped-staff-cast { 30% { transform: translateY(-7%) rotate(-4deg); filter: drop-shadow(0 0 16px #b99cff); } }
+@keyframes real-weapon-swing { 0% { transform: rotate(-55deg); } 48% { transform: rotate(48deg) scale(1.22); } 70% { transform: rotate(86deg) scale(1.1); } 100% { transform: rotate(12deg); } }
+@keyframes real-bow-draw { 50% { transform: translateX(-9px) scaleX(.86); } }
+@keyframes real-staff-cast { 35% { transform: translateY(-10px) rotate(-15deg) scale(1.12); } 65% { transform: translateY(-4px) rotate(8deg); } }
+.hero-weapon-layer.weapon-cast { filter: drop-shadow(0 0 12px #c1a7ff); }
+@keyframes equipped-hit-burst { 0% { opacity: 0; transform: translate(-50%,-50%) scale(.2) rotate(-25deg); } 35% { opacity: 1; transform: translate(-50%,-50%) scale(1.5) rotate(8deg); } 100% { opacity: 0; transform: translate(-50%,-50%) scale(2) rotate(18deg); } }
+@keyframes equipped-target-recoil { 40% { transform: translateX(18px) rotate(4deg); } 70% { transform: translateX(-6px) rotate(-2deg); } }
+@keyframes enemy-real-lunge { 45% { transform: translateX(-42%) scale(1.06); } 68% { transform: translateX(-47%) rotate(-3deg); } }
+@keyframes shield-block-recoil { 35% { transform: translateX(-8px) rotate(-3deg); } 60% { transform: translateX(4px); } }
+@keyframes active-shield-block { 0% { opacity: 0; transform: scale(.5); } 30% { opacity: 1; transform: scale(1.3); filter: drop-shadow(0 0 14px #8de7ff); } 100% { opacity: 0; transform: scale(1); } }
+
+/* Extra story-readable scene silhouettes while preserving the existing rich
+   per-monster themes. These live behind characters and use only transforms. */
+.battle-arena::before, .battle-arena::after { content: ''; position: absolute; z-index: 1; pointer-events: none; }
+.battle-arena::before { inset: auto 0 18% 0; height: 42%; opacity: .32; background-repeat: repeat-x; background-size: 220px 100%; }
+.adventure-scene-fraction::before { background-image: radial-gradient(ellipse at 30% 100%, #163e2d 0 48%, transparent 50%), radial-gradient(ellipse at 72% 100%, #245a36 0 42%, transparent 44%); animation: scene-tree-sway 7s ease-in-out infinite; }
+.adventure-scene-decimal::before { opacity: .34; background-image: radial-gradient(ellipse, #e9f4ff 0 28%, transparent 31%); background-size: 280px 90px; animation: scene-cloud-drift 18s linear infinite; }
+.adventure-scene-unit::before { height: 36%; background: linear-gradient(90deg, transparent 4%, #5b2c18 4% 8%, transparent 8% 24%, #5b2c18 24% 28%, transparent 28% 72%, #5b2c18 72% 76%, transparent 76% 92%, #5b2c18 92% 96%, transparent 96%); }
+.adventure-scene-unit::after, .adventure-scene-tower::after { right: 8%; bottom: 20%; width: 16px; height: 44px; border-radius: 50% 50% 45% 45%; background: radial-gradient(circle at 50% 20%, #fff7a4, #ff7b18 35%, transparent 38%); animation: scene-flame 1s ease-in-out infinite alternate; filter: drop-shadow(0 0 9px #ff8b23); }
+.adventure-scene-multiply::before { opacity: .2; background-image: radial-gradient(circle, #e8f4ff 0 2px, transparent 3px); background-size: 44px 37px; animation: scene-stars 8s linear infinite; }
+.adventure-scene-times::before { background: repeating-linear-gradient(90deg, transparent 0 16%, rgba(111,81,154,.4) 16% 20%); }
+@keyframes scene-tree-sway { 50% { transform: skewX(2deg) translateX(4px); } } @keyframes scene-cloud-drift { to { background-position: 280px 0; } } @keyframes scene-flame { to { transform: scale(.78,1.16) rotate(3deg); } } @keyframes scene-stars { to { background-position: 44px 37px; } }
+
+@media (max-width: 720px) {
+    .character-studio { grid-template-columns: 1fr; }.character-preview-panel { position: static; }.character-live-preview { width: 190px; height: 220px; font-size: 190px; }
+    .story-comic { grid-template-columns: 1fr; }.story-panel { min-height: 260px; }.story-panel-art { height: 120px; }
+    .adventure-map { grid-template-columns: repeat(2, 1fr); gap: 34px 16px; padding: 30px 16px; }.map-node:nth-child(even) { transform: none; }.map-node:nth-child(even):hover:not(:disabled), .map-node:nth-child(even).current { transform: scale(1.04); }
+    .map-mission-detail { grid-template-columns: 54px 1fr; }.map-mission-detail .adventure-primary-btn { grid-column: 1 / -1; }.mission-location-icon { font-size: 2.5rem; }
+    .shop-intro { flex-direction: column; }.equipped-projectile { left: 26%; }.equipped-projectile.fly { left: 72%; }
+    #home-feature-hero .adventure-hero-composite { width: 150px; height: 190px; font-size: 150px; }
+    .battle-profile-hero { font-size: 130px; }
+    #battle-page .hero-layers .hero-weapon-layer { width: 58px; height: 58px; bottom: 25px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .story-panel-art, .battle-arena::before, .battle-arena::after { animation: none !important; }
+    .hero-side.equipped-attack-sword, .hero-side.equipped-attack-hammer, .hero-side.equipped-attack-bow .hero-layers, .hero-side.equipped-attack-staff .hero-layers, .enemy-side.enemy-lunge-attack { animation-duration: .12s; }
+}

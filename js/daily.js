@@ -185,6 +185,7 @@ function endDailyChallenge() {
     }
 
     App.stats.totalScore += correctCount * 15;
+    if (typeof AdventureSystem !== 'undefined') AdventureSystem.creditCoins(correctCount * 15);
     App.stats.totalCorrect += correctCount;
     App.stats.todayCount += 10;
     saveProgress();

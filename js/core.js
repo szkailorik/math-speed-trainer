@@ -114,6 +114,10 @@ const App = {
 
     wrongBook: [],
 
+    // v26.0: per-player adventure/profile state. Kept inside the existing
+    // per-user save object so older saves continue to load without a new key.
+    adventure: null,
+
     practice: {
         questions: [],
         currentIndex: 0,
@@ -285,7 +289,8 @@ function saveProgress() {
     const data = {
         stats: App.stats,
         wrongBook: App.wrongBook,
-        settings: App.settings
+        settings: App.settings,
+        adventure: App.adventure
     };
     try {
         localStorage.setItem(UserManager.getDataKey(currentUser.id), JSON.stringify(data));
@@ -305,6 +310,7 @@ function loadProgress() {
             App.stats = { ...App.stats, ...data.stats };
             App.wrongBook = data.wrongBook || [];
             App.settings = { ...App.settings, ...data.settings };
+            App.adventure = data.adventure || null;
         } else {
             App.stats = {
                 totalScore: 0,
@@ -315,9 +321,13 @@ function loadProgress() {
                 todayDate: null
             };
             App.wrongBook = [];
+            App.adventure = null;
         }
     } catch (e) {
         console.error('Failed to load progress', e);
+    }
+    if (typeof AdventureSystem !== 'undefined') {
+        AdventureSystem.ensureState();
     }
     updateHomeStats();
     applySettings();
@@ -336,8 +346,14 @@ function resetProgress() {
             todayDate: null
         };
         App.wrongBook = [];
+        App.adventure = null;
+        if (typeof AdventureSystem !== 'undefined') {
+            AdventureSystem.ensureState(true);
+            AdventureSystem.syncUser();
+        }
         saveProgress();
         updateHomeStats();
+        if (typeof updateCurrentUserBadge === 'function') updateCurrentUserBadge();
         alert('\u5DF2\u91CD\u7F6E\u6240\u6709\u8FDB\u5EA6');
     }
 }

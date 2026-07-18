@@ -46,13 +46,15 @@ BattleMode.loadTowerProgress = function() {
 // ===== Tower Unlock Check =====
 
 BattleMode.isTowerUnlocked = function() {
-    return App.stats.totalScore >= 500;
+    if (App.tower.maxFloorReached > 0) return true;
+    return typeof AdventureSystem !== 'undefined' &&
+        (AdventureSystem.ensureState().keys.bronze > 0 || AdventureSystem.ensureState().towerGates.floor1);
 };
 
 // ===== Tower Lobby =====
 
 // v16.2: 10-minute cooldown constant (ms)
-var TOWER_COOLDOWN_MS = 10 * 60 * 1000;
+var TOWER_COOLDOWN_MS = 0;
 
 BattleMode.getTowerCooldownRemaining = function() {
     var tower = App.tower;
@@ -75,6 +77,7 @@ BattleMode.renderTowerLobby = function() {
     if (!lobbyContent) return;
 
     var progressPercent = Math.round((maxFloor / 30) * 100);
+    var adventure = typeof AdventureSystem !== 'undefined' ? AdventureSystem.ensureState() : null;
 
     var zones = [
         { name: '入门区', range: '1-9', icon: '📖', start: 1, end: 9 },
@@ -105,14 +108,10 @@ BattleMode.renderTowerLobby = function() {
     }).join('');
 
     var continueFloor = Math.min(maxFloor + 1, 30);
-    var cooldownRemaining = this.getTowerCooldownRemaining();
-    var inCooldown = cooldownRemaining > 0;
-    var continueDisabled = inCooldown ? ' disabled' : '';
-    var cooldownText = '';
-    if (inCooldown) {
-        var mins = Math.ceil(cooldownRemaining / 60000);
-        cooldownText = '冷却中，' + mins + '分钟后可再次挑战';
-    }
+    var canContinue = typeof AdventureSystem === 'undefined' || AdventureSystem.canOpenTowerFloor(continueFloor);
+    var continueDisabled = canContinue ? '' : ' disabled';
+    var gateReq = typeof AdventureSystem !== 'undefined' ? AdventureSystem.towerGateRequirement(continueFloor) : null;
+    var cooldownText = !canContinue && gateReq ? '下一道门需要 ' + gateReq.label + '，可以回地图继续完成任务。' : '';
 
     lobbyContent.innerHTML =
         '<div class="tower-progress-section">' +
@@ -121,15 +120,17 @@ BattleMode.renderTowerLobby = function() {
                 '<div class="tower-progress-fill" style="width:' + progressPercent + '%"></div>' +
             '</div>' +
         '</div>' +
+        (adventure ? '<div class="tower-key-inventory"><span>🗝️铜 ' + adventure.keys.bronze + '</span><span>🗝️银 ' + adventure.keys.silver + '</span><span>🗝️金 ' + adventure.keys.gold + '</span><span>💎 ' + adventure.gems + '</span></div>' : '') +
         '<div class="tower-zones-list">' + zonesHtml + '</div>' +
         '<div class="tower-lobby-actions">' +
             '<button class="tower-action-btn primary" id="tower-continue-btn"' + continueDisabled + '>' +
                 '继续挑战 第' + continueFloor + '层' +
             '</button>' +
-            '<button class="tower-action-btn" id="tower-restart-btn"' + continueDisabled + '>' +
+            '<button class="tower-action-btn" id="tower-restart-btn">' +
                 '从头开始' +
             '</button>' +
             (cooldownText ? '<p class="tower-daily-note" id="tower-cooldown-text">' + cooldownText + '</p>' : '') +
+            (!canContinue ? '<button class="tower-action-btn map-return" id="tower-map-btn">去地图找钥匙</button>' : '') +
         '</div>';
 
     var continueBtn = document.getElementById('tower-continue-btn');
@@ -145,6 +146,8 @@ BattleMode.renderTowerLobby = function() {
             BattleMode.startTowerRun(1);
         };
     }
+    var mapBtn = document.getElementById('tower-map-btn');
+    if (mapBtn) mapBtn.onclick = function() { AdventureSystem.openMap(); };
 };
 
 // ===== Cooldown Timer (updates lobby UI every second) =====
@@ -182,6 +185,10 @@ BattleMode._startTowerCooldownTimer = function() {
 // ===== Start Tower Run =====
 
 BattleMode.startTowerRun = function(startFloor) {
+    if (typeof AdventureSystem !== 'undefined' && !AdventureSystem.unlockTowerFloor(startFloor)) {
+        this.renderTowerLobby();
+        return;
+    }
     var tower = App.tower;
     tower.active = true;
     tower.currentFloor = startFloor;
@@ -223,6 +230,11 @@ BattleMode.getZoneStartFloor = function(zone) {
 // ===== Start a Tower Floor =====
 
 BattleMode.startTowerFloor = function(floorNum) {
+    if (typeof AdventureSystem !== 'undefined' && !AdventureSystem.unlockTowerFloor(floorNum)) {
+        App.tower.active = false;
+        this.showTowerLobby();
+        return;
+    }
     var tower = App.tower;
     var floorConfig = TowerData.floors[floorNum - 1];
     if (!floorConfig) {
@@ -481,6 +493,10 @@ BattleMode.onTowerFloorComplete = function() {
     }
 
     this.checkTowerFloorRewards(floorNum);
+    if (typeof AdventureSystem !== 'undefined') {
+        var coinReward = AdventureSystem.rewardTowerFloor(floorNum);
+        this.showBattleFeedback(true, '⭐ 第' + floorNum + '层奖励 +' + coinReward + '积分');
+    }
 
     // Boss floor: full heal + item
     if (floorConfig && floorConfig.isBoss) {
@@ -558,6 +574,7 @@ BattleMode.towerVictory = function() {
 
     var score = tower.monstersDefeatedThisRun * 100;
     App.stats.totalScore += score;
+    if (typeof AdventureSystem !== 'undefined') AdventureSystem.creditCoins(score);
     saveProgress();
 
     document.getElementById('battle-result-icon').textContent = '🗼';

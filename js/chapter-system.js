@@ -168,6 +168,7 @@ var ChapterSystem = {
             var fc = config.rewards.firstClear;
             if (fc.score) {
                 App.stats.totalScore += fc.score;
+                if (typeof AdventureSystem !== 'undefined') AdventureSystem.creditCoins(fc.score);
                 newRewards.push({ type: 'score', value: fc.score, label: '+' + fc.score + ' 积分' });
             }
             if (fc.crystals) {

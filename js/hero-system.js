@@ -24,13 +24,17 @@ BattleMode.initHeroLayers = function() {
     layers.className = 'hero-layers';
     var currentUser = UserManager.getCurrentUser();
     var currentAvatar = currentUser ? currentUser.avatar : '🧙';
+    var heroMarkup = typeof AdventureSystem !== 'undefined' ?
+        AdventureSystem.heroMarkup(AdventureSystem.getProfile(), 'battle-profile-hero') :
+        CharacterArt.avatarMarkup(currentAvatar, 'battle-hero-art');
     layers.innerHTML =
         '<div class="hero-effect-layer"></div>' +
-        '<div class="hero-char-layer">' + CharacterArt.avatarMarkup(currentAvatar, 'battle-hero-art') + '</div>' +
+        '<div class="hero-char-layer">' + heroMarkup + '</div>' +
         '<div class="hero-weapon-layer"></div>';
 
     heroSide.appendChild(layers);
-    WeaponArt.setHeld(layers.querySelector('.hero-weapon-layer'), 'normal', App.battle.module, currentAvatar);
+    if (typeof AdventureSystem !== 'undefined') AdventureSystem.updateBattleHero();
+    else WeaponArt.setHeld(layers.querySelector('.hero-weapon-layer'), 'normal', App.battle.module, currentAvatar);
 
     // Initialize combo stage tracking
     if (!App.battle.comboStage) {
@@ -137,7 +141,8 @@ BattleMode.updateHeroVisuals = function(stage) {
     effectLayer.innerHTML = '';
 
     // Keep the held prop aligned with the combo tier and current story theme.
-    WeaponArt.setHeld(weaponLayer, stage, App.battle.module);
+    if (typeof AdventureSystem !== 'undefined') AdventureSystem.updateBattleHero();
+    else WeaponArt.setHeld(weaponLayer, stage, App.battle.module);
 
     if (stage === 'normal') {
         // No glow, no effects

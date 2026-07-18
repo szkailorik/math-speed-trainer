@@ -38,7 +38,7 @@
     <link rel="apple-touch-startup-image" href="icons/splash.png">
 
     <title>数学魔法学院</title>
-    <link rel="stylesheet" href="css/style.css?v=25.1.0">
+    <link rel="stylesheet" href="css/style.css?v=26.0.0">
     <link rel="stylesheet" href="css/scenes.css?v=25.1.0">
     <link rel="stylesheet" href="css/scenes-svg.css?v=23.2.2">
     <link rel="stylesheet" href="css/knowledge.css?v=23.2.2">
@@ -147,7 +147,7 @@
                 <div class="stat-item">
                     <span class="stat-icon">⭐</span>
                     <span class="stat-value" id="total-score">0</span>
-                    <span class="stat-label">总分</span>
+                    <span class="stat-label">可用积分</span>
                 </div>
                 <div class="stat-item">
                     <span class="stat-icon">📚</span>
@@ -214,6 +214,30 @@
             <div class="menu-section">
                 <div class="menu-section-title">🛠️ 冒险工具</div>
                 <div class="tools-grid">
+                    <button class="menu-btn adventure-hub-btn" id="open-adventure-map">
+                        <span class="menu-icon">🗺️</span>
+                        <span class="menu-title">冒险地图</span>
+                        <span class="menu-desc">查看任务、钥匙和下一站</span>
+                    </button>
+
+                    <button class="menu-btn character-editor-btn" id="open-character-editor">
+                        <span class="menu-icon">🧑‍🎨</span>
+                        <span class="menu-title">角色与装备</span>
+                        <span class="menu-desc">名字、外貌与战斗装备</span>
+                    </button>
+
+                    <button class="menu-btn adventure-shop-btn" id="open-adventure-shop">
+                        <span class="menu-icon">🏪</span>
+                        <span class="menu-title">积分商店</span>
+                        <span class="menu-desc">用积分解锁新装备</span>
+                    </button>
+
+                    <button class="menu-btn story-book-btn" id="open-story-book">
+                        <span class="menu-icon">📖</span>
+                        <span class="menu-title">王国故事</span>
+                        <span class="menu-desc">重看冒险故事与任务原因</span>
+                    </button>
+
                     <button class="menu-btn learn-btn" data-module="learn">
                         <span class="menu-icon">📜</span>
                         <span class="menu-title">秘术卷轴</span>
@@ -448,7 +472,7 @@
 
             <div class="settings-footer">
                 <button class="reset-btn" id="reset-progress">重置所有进度</button>
-                <p class="version">版本 25.1 · 六境视觉焕新</p>
+                <p class="version">版本 26.0 · 能量宝石冒险</p>
             </div>
         </div>
 
@@ -1393,6 +1417,27 @@
         </div>
     </div>
 
+    <!-- v26.0 冒险资料、商店、地图与剧情 -->
+    <div id="character-page" class="page adventure-page">
+        <header class="page-header"><button class="back-btn" data-target="home">← 返回</button><h2>🧑‍🎨 角色与装备</h2><div class="header-spacer"></div></header>
+        <div id="character-editor-content" class="adventure-page-content"></div>
+    </div>
+
+    <div id="shop-page" class="page adventure-page">
+        <header class="page-header"><button class="back-btn" data-target="home">← 返回</button><h2>🏪 积分商店</h2><div class="shop-balance">⭐ <span id="shop-balance">0</span></div></header>
+        <div id="shop-content" class="adventure-page-content"></div>
+    </div>
+
+    <div id="map-page" class="page adventure-page">
+        <header class="page-header"><button class="back-btn" data-target="home">← 返回</button><h2>🗺️ 能量宝石冒险地图</h2><div class="header-spacer"></div></header>
+        <div id="map-content" class="adventure-page-content"></div>
+    </div>
+
+    <div id="story-page" class="page adventure-page story-page">
+        <header class="page-header"><button class="back-btn" data-target="home">← 返回</button><h2>📖 王国失光之夜</h2><button class="story-skip-btn" id="story-skip">跳过</button></header>
+        <div id="story-content" class="adventure-page-content"></div>
+    </div>
+
     <script src="js/data.js?v=23.2.2"></script>
     <script src="js/shanhai-monsters.js?v=23.2.2"></script>
     <script src="js/xiyouji-monsters.js?v=23.2.2"></script>
@@ -1402,31 +1447,32 @@
     <script src="js/monster-expansion.js?v=25.0.0"></script>
     <script src="js/character-art.js?v=25.0.0"></script>
     <script src="js/weapon-art.js?v=24.1.0"></script>
-    <script src="js/core.js?v=23.2.2"></script>
+    <script src="js/core.js?v=26.0.0"></script>
     <script src="js/question-engine.js?v=23.2.2"></script>
-    <script src="js/effects.js?v=25.0.0"></script>
-    <script src="js/practice.js?v=23.2.2.1"></script>
-    <script src="js/daily.js?v=23.2.2"></script>
+    <script src="js/effects.js?v=26.0.0"></script>
+    <script src="js/practice.js?v=26.0.0"></script>
+    <script src="js/daily.js?v=26.0.0"></script>
     <script src="js/knowledge-data.js?v=23.2.2"></script>
     <script src="js/knowledge-tracker.js?v=23.2.2"></script>
     <script src="js/knowledge-ui.js?v=23.2.2"></script>
-    <script src="js/ui-pages.js?v=25.1.0"></script>
+    <script src="js/ui-pages.js?v=26.0.0"></script>
     <script src="js/battle-data.js?v=25.0.0"></script>
     <script src="js/chapter-data.js?v=23.2.2"></script>
     <script src="js/card-data.js?v=23.2.2"></script>
-    <script src="js/battle-arena.js?v=25.0.0"></script>
+    <script src="js/battle-arena.js?v=26.0.0"></script>
     <script src="js/monster-behavior.js?v=23.2.2"></script>
     <script src="js/card-system.js?v=25.0.0"></script>
     <script src="js/battle-collection.js?v=25.0.0"></script>
     <script src="js/tower-data.js?v=23.2.2"></script>
-    <script src="js/hero-system.js?v=25.0.0"></script>
+    <script src="js/hero-system.js?v=26.0.0"></script>
     <script src="js/combo-engine.js?v=23.2.2"></script>
     <script src="js/behavior-v2.js?v=25.0.0"></script>
-    <script src="js/move-system.js?v=25.0.0"></script>
-    <script src="js/tower-mode.js?v=25.0.0"></script>
+    <script src="js/move-system.js?v=26.0.0"></script>
+    <script src="js/tower-mode.js?v=26.0.0"></script>
+    <script src="js/adventure-system.js?v=26.0.0"></script>
     <script src="js/momentum-system.js?v=23.2.2"></script>
-    <script src="js/chapter-system.js?v=23.2.2.1"></script>
-    <script src="js/battle-combat.js?v=25.0.0"></script>
-    <script src="js/app.js?v=23.2.2"></script>
+    <script src="js/chapter-system.js?v=26.0.0"></script>
+    <script src="js/battle-combat.js?v=26.0.0"></script>
+    <script src="js/app.js?v=26.0.0"></script>
 </body>
 </html>

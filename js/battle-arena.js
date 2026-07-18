@@ -255,6 +255,10 @@ BattleMode.initArena = function() {
     // Set theme
     const theme = ArenaThemes[App.battle.module] || ArenaThemes.xiaojiujiu;
     arena.style.background = theme.bg;
+    ['xiaojiujiu', 'times', 'multiply', 'fraction', 'decimal', 'unit', 'tower'].forEach(function(mod) {
+        arena.classList.remove('adventure-scene-' + mod);
+    });
+    arena.classList.add('adventure-scene-' + (App.battle.module || 'xiaojiujiu'));
 
     const ground = arena.querySelector('.arena-ground');
     if (ground) ground.style.background = theme.ground;
@@ -845,6 +849,12 @@ BattleMode.enemyAttackAnimation = function(monster, callback) {
     }
 
     this.setEnemyState('attack');
+    const enemySideForMotion = document.querySelector('.enemy-side');
+    if (enemySideForMotion) {
+        enemySideForMotion.classList.remove('enemy-lunge-attack');
+        void enemySideForMotion.offsetWidth;
+        enemySideForMotion.classList.add('enemy-lunge-attack');
+    }
     if (typeof playBattleSound === 'function') {
         playBattleSound('enemyReady', { type: monster && monster.type, module: App.battle.module });
     }
@@ -885,6 +895,7 @@ BattleMode.enemyAttackAnimation = function(monster, callback) {
 
     setTimeout(() => {
         this.setEnemyState('idle');
+        if (enemySideForMotion) enemySideForMotion.classList.remove('enemy-lunge-attack');
         if (callback) callback();
     }, 350);
 };

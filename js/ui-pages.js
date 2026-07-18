@@ -26,7 +26,7 @@ function renderUserList() {
         return `
             <div class="user-card" data-user-id="${user.id}">
                 <button class="delete-user" data-user-id="${user.id}" title="\u5220\u9664\u7528\u6237">\u00D7</button>
-                <span class="avatar">${CharacterArt.avatarMarkup(user.avatar, 'user-card-avatar-art')}</span>
+                <span class="avatar">${user.profile && typeof AdventureSystem !== 'undefined' ? AdventureSystem.heroMarkup(user.profile, 'user-card-profile-art') : CharacterArt.avatarMarkup(user.avatar, 'user-card-avatar-art')}</span>
                 <span class="name">${user.name}</span>
                 <span class="user-stats">${statsText}</span>
             </div>
@@ -59,15 +59,25 @@ function selectUser(userId) {
     UserManager.setCurrentUser(userId);
     loadProgress();
     updateCurrentUserBadge();
-    showPage('home');
+    if (typeof AdventureSystem !== 'undefined' && !AdventureSystem.ensureState().storySeen) {
+        AdventureSystem.openStory(true);
+    } else {
+        showPage('home');
+    }
 }
 
 function updateCurrentUserBadge() {
     const currentUser = UserManager.getCurrentUser();
     if (currentUser) {
-        CharacterArt.setAvatar(document.getElementById('current-avatar'), currentUser.avatar, 'badge-avatar-art');
-        CharacterArt.setAvatar(document.getElementById('home-feature-hero'), currentUser.avatar, 'home-feature-hero-art');
-        document.getElementById('current-name').textContent = currentUser.name;
+        if (typeof AdventureSystem !== 'undefined') {
+            AdventureSystem.renderCurrentHero(document.getElementById('current-avatar'), 'badge-profile-art');
+            AdventureSystem.renderCurrentHero(document.getElementById('home-feature-hero'), 'home-profile-art');
+            document.getElementById('current-name').textContent = AdventureSystem.getProfile().name;
+        } else {
+            CharacterArt.setAvatar(document.getElementById('current-avatar'), currentUser.avatar, 'badge-avatar-art');
+            CharacterArt.setAvatar(document.getElementById('home-feature-hero'), currentUser.avatar, 'home-feature-hero-art');
+            document.getElementById('current-name').textContent = currentUser.name;
+        }
     }
 }
 
@@ -127,7 +137,11 @@ function initUserPage() {
     if (currentUser) {
         loadProgress();
         updateCurrentUserBadge();
-        showPage('home');
+        if (typeof AdventureSystem !== 'undefined' && !AdventureSystem.ensureState().storySeen) {
+            AdventureSystem.openStory(true);
+        } else {
+            showPage('home');
+        }
     }
 }
 
@@ -143,7 +157,7 @@ function updateHomeStats() {
 
     document.getElementById('streak-count').textContent = App.stats.maxStreak;
     document.getElementById('today-count').textContent = App.stats.todayCount;
-    document.getElementById('total-score').textContent = App.stats.totalScore;
+    document.getElementById('total-score').textContent = (typeof AdventureSystem !== 'undefined' ? AdventureSystem.ensureState().coins : App.stats.totalScore);
     document.getElementById('wrong-count').textContent = App.wrongBook.length;
 }
 

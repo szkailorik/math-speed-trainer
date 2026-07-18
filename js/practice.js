@@ -300,6 +300,7 @@ function handleCorrectAnswer(btnElement) {
     App.practice.streak++;
     App.stats.totalCorrect++;
     App.stats.totalScore += 10;
+    if (typeof AdventureSystem !== 'undefined') AdventureSystem.creditCoins(10);
     App.stats.todayCount++;
 
     if (App.practice.streak > App.stats.maxStreak) {
