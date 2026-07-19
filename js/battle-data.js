@@ -619,6 +619,7 @@ const BattleMode = {
     // 获取当前模块的所有妖怪
     getAllMonsters(module) {
         const m = module || App.battle.module || 'xiaojiujiu';
+        const finalize = list => typeof MonsterRegistry !== 'undefined' ? MonsterRegistry.normalizeList(list, m) : list;
         if (m === 'fraction') {
             var frBase = [
                 ...shanhaiFractionEasyMonsters,
@@ -634,7 +635,7 @@ const BattleMode = {
             if (typeof chapterMonsters_sh_ch2 !== 'undefined') frBase = frBase.concat(chapterMonsters_sh_ch2);
             if (typeof chapterMonsters_sh_ch3 !== 'undefined') frBase = frBase.concat(chapterMonsters_sh_ch3);
             if (typeof MonsterExpansion !== 'undefined') frBase = frBase.concat(MonsterExpansion.get('fraction'));
-            return frBase;
+            return finalize(frBase);
         }
         if (m === 'decimal') {
             var dcBase = [
@@ -651,7 +652,7 @@ const BattleMode = {
             if (typeof chapterMonsters_xy_ch2 !== 'undefined') dcBase = dcBase.concat(chapterMonsters_xy_ch2);
             if (typeof chapterMonsters_xy_ch3 !== 'undefined') dcBase = dcBase.concat(chapterMonsters_xy_ch3);
             if (typeof MonsterExpansion !== 'undefined') dcBase = dcBase.concat(MonsterExpansion.get('decimal'));
-            return dcBase;
+            return finalize(dcBase);
         }
         if (m === 'unit') {
             var utBase = [
@@ -668,7 +669,7 @@ const BattleMode = {
             if (typeof chapterMonsters_fs_ch2 !== 'undefined') utBase = utBase.concat(chapterMonsters_fs_ch2);
             if (typeof chapterMonsters_fs_ch3 !== 'undefined') utBase = utBase.concat(chapterMonsters_fs_ch3);
             if (typeof MonsterExpansion !== 'undefined') utBase = utBase.concat(MonsterExpansion.get('unit'));
-            return utBase;
+            return finalize(utBase);
         }
         if (m === 'multiply') {
             var mpBase = [
@@ -685,7 +686,7 @@ const BattleMode = {
             if (typeof chapterMonsters_lz_ch2 !== 'undefined') mpBase = mpBase.concat(chapterMonsters_lz_ch2);
             if (typeof chapterMonsters_lz_ch3 !== 'undefined') mpBase = mpBase.concat(chapterMonsters_lz_ch3);
             if (typeof MonsterExpansion !== 'undefined') mpBase = mpBase.concat(MonsterExpansion.get('multiply'));
-            return mpBase;
+            return finalize(mpBase);
         }
         if (m === 'times') {
             var tmBase = [
@@ -702,7 +703,7 @@ const BattleMode = {
             if (typeof chapterMonsters_hp_ch2 !== 'undefined') tmBase = tmBase.concat(chapterMonsters_hp_ch2);
             if (typeof chapterMonsters_hp_ch3 !== 'undefined') tmBase = tmBase.concat(chapterMonsters_hp_ch3);
             if (typeof MonsterExpansion !== 'undefined') tmBase = tmBase.concat(MonsterExpansion.get('times'));
-            return tmBase;
+            return finalize(tmBase);
         }
         var base = [
             ...this.easyMonsters,
@@ -727,57 +728,58 @@ const BattleMode = {
         if (typeof MonsterExpansion !== 'undefined') {
             base = base.concat(MonsterExpansion.get('xiaojiujiu'));
         }
-        return base;
+        return finalize(base);
     },
 
     // 获取模块的怪兽数组
     getModuleMonsters(module) {
+        const finalize = pools => typeof MonsterRegistry !== 'undefined' ? MonsterRegistry.normalizePools(pools, module || 'xiaojiujiu') : pools;
         if (module === 'fraction') {
-            return {
+            return finalize({
                 easy: shanhaiFractionEasyMonsters.concat(MonsterExpansion.get('fraction', 'easy')),
                 normal: shanhaiFractionNormalMonsters.concat(MonsterExpansion.get('fraction', 'normal')),
                 hard: shanhaiFractionHardMonsters.concat(MonsterExpansion.get('fraction', 'hard')),
                 boss: shanhaiFractionBossMonsters.concat(MonsterExpansion.get('fraction', 'boss'))
-            };
+            });
         }
         if (module === 'decimal') {
-            return {
+            return finalize({
                 easy: xiyoujiEasyMonsters.concat(MonsterExpansion.get('decimal', 'easy')),
                 normal: xiyoujiNormalMonsters.concat(MonsterExpansion.get('decimal', 'normal')),
                 hard: xiyoujiHardMonsters.concat(MonsterExpansion.get('decimal', 'hard')),
                 boss: xiyoujiBossMonsters.concat(MonsterExpansion.get('decimal', 'boss'))
-            };
+            });
         }
         if (module === 'unit') {
-            return {
+            return finalize({
                 easy: fengshenEasyMonsters.concat(MonsterExpansion.get('unit', 'easy')),
                 normal: fengshenNormalMonsters.concat(MonsterExpansion.get('unit', 'normal')),
                 hard: fengshenHardMonsters.concat(MonsterExpansion.get('unit', 'hard')),
                 boss: fengshenBossMonsters.concat(MonsterExpansion.get('unit', 'boss'))
-            };
+            });
         }
         if (module === 'multiply') {
-            return {
+            return finalize({
                 easy: liaozhaiEasyMonsters.concat(MonsterExpansion.get('multiply', 'easy')),
                 normal: liaozhaiNormalMonsters.concat(MonsterExpansion.get('multiply', 'normal')),
                 hard: liaozhaiHardMonsters.concat(MonsterExpansion.get('multiply', 'hard')),
                 boss: liaozhaiBossMonsters.concat(MonsterExpansion.get('multiply', 'boss'))
-            };
+            });
         }
         if (module === 'times') {
-            return {
+            return finalize({
                 easy: hpEasyMonsters.concat(MonsterExpansion.get('times', 'easy')),
                 normal: hpNormalMonsters.concat(MonsterExpansion.get('times', 'normal')),
                 hard: hpHardMonsters.concat(MonsterExpansion.get('times', 'hard')),
                 boss: hpBossMonsters.concat(MonsterExpansion.get('times', 'boss'))
-            };
+            });
         }
-        return {
+        return finalize({
             easy: this.easyMonsters.concat(MonsterExpansion.get('xiaojiujiu', 'easy')),
             normal: this.normalMonsters.concat(MonsterExpansion.get('xiaojiujiu', 'normal')),
             hard: this.hardMonsters.concat(MonsterExpansion.get('xiaojiujiu', 'hard')),
             boss: this.bossMonsters.concat(MonsterExpansion.get('xiaojiujiu', 'boss'))
-        };
+        });
     },
 
     // 获取收集记录

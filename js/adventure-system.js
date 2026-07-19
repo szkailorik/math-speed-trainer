@@ -1,5 +1,5 @@
 /**
- * adventure-system.js - v26.2 player profile, tactical shop, story and map.
+ * adventure-system.js - v26.3 player profile, tactical equipment and adventure map.
  * All state lives inside the existing per-user save object (App.adventure).
  */
 (function () {
@@ -27,6 +27,15 @@
     var HATS = { none: '不戴帽子', cap: '探险帽', crown: '星辉冠', hood: '夜行兜帽' };
     var SHOES = { traveler: '轻便旅靴', iron: '精铁战靴', wind: '疾风鞋', snow: '雪原长靴' };
 
+    // Combat equipment has one source of truth. UI, persistence and battle
+    // calculations all read these values; switch timing is never duplicated.
+    var EQUIPMENT_CONFIG = {
+        weaponSwitchCooldown: 60 * 1000,
+        minimumOutgoingDamage: 1,
+        minimumIncomingDamage: 0
+    };
+    var quickbarTimer = null;
+
     var CATALOG = [
         { id: 'outfit_azure', type: 'outfit', value: 'azure', name: '苍蓝学徒服', price: 0, rarity: '普通', icon: '🧥', description: '冒险者的基础服装，轻便醒目。' },
         { id: 'outfit_forest', type: 'outfit', value: 'forest', name: '森林游侠服', price: 240, rarity: '普通', icon: '🥋', description: '低语森林系列的绿色轻装。' },
@@ -40,13 +49,17 @@
         { id: 'shoes_iron', type: 'shoes', value: 'iron', name: '精铁战靴', price: 220, rarity: '普通', icon: '👢', description: '城堡铁匠打造的结实战靴。' },
         { id: 'shoes_wind', type: 'shoes', value: 'wind', name: '疾风鞋', price: 480, rarity: '稀有', icon: '💨', description: '与疾风连击式组成游侠套装。' },
         { id: 'shoes_snow', type: 'shoes', value: 'snow', name: '雪原长靴', price: 620, rarity: '稀有', icon: '❄️', description: '来自星辉雪峰的冰晶长靴。' },
-        { id: 'weapon_sword', type: 'weapon', value: 'sword', name: '守护者长剑', price: 0, rarity: '普通', icon: '⚔️', sprite: 'knight-sword.webp', description: '挥剑、突进并在接触怪物时命中。' },
-        { id: 'weapon_bow', type: 'weapon', value: 'bow', name: '精准连弩', price: 360, rarity: '普通', icon: '🏹', sprite: 'precision-crossbow.webp', description: '拉弓后从武器位置射出箭矢。' },
-        { id: 'weapon_staff', type: 'weapon', value: 'staff', name: '星辉法杖', price: 560, rarity: '稀有', icon: '🪄', sprite: 'star-staff.webp', description: '蓄力后发射星光法术弹。' },
-        { id: 'weapon_hammer', type: 'weapon', value: 'hammer', name: '守护战锤', price: 820, rarity: '史诗', icon: '🔨', sprite: 'guardian-hammer.webp', description: '高举战锤，跃近怪物后重击。' },
-        { id: 'shield_blue', type: 'shield', value: 'blue', name: '学徒盾', price: 0, rarity: '普通', icon: '🛡️', description: '基础格挡动作与蓝色防御反馈。' },
-        { id: 'shield_sun', type: 'shield', value: 'sun', name: '日耀盾', price: 440, rarity: '稀有', icon: '🌞', description: '格挡时出现明亮的日耀光环。' },
-        { id: 'shield_dragon', type: 'shield', value: 'dragon', name: '龙纹盾', price: 760, rarity: '史诗', icon: '🐉', description: '龙焰套装中的厚重纹章盾。' },
+        { id: 'weapon_sword', type: 'weapon', value: 'sword', name: '守护者长剑', price: 0, rarity: '普通', icon: '⚔️', sprite: 'knight-sword.webp', attack: 1, speed: '均衡', action: '挥剑突进', description: '挥剑、突进并在接触怪物时命中。' },
+        { id: 'weapon_bow', type: 'weapon', value: 'bow', name: '精准连弩', price: 360, rarity: '普通', icon: '🏹', sprite: 'precision-crossbow.webp', attack: 2, speed: '快速', action: '拉弓射击', special: '远程命中', description: '拉弓后从武器位置射出箭矢。' },
+        { id: 'weapon_staff', type: 'weapon', value: 'staff', name: '星辉法杖', price: 560, rarity: '稀有', icon: '🪄', sprite: 'star-staff.webp', attack: 3, speed: '均衡', action: '蓄力施法', special: '强化魔法', description: '蓄力后发射星光法术弹。' },
+        { id: 'weapon_hammer', type: 'weapon', value: 'hammer', name: '守护战锤', price: 820, rarity: '史诗', icon: '🔨', sprite: 'guardian-hammer.webp', attack: 4, speed: '较慢', action: '跃进重击', special: '高基础伤害', description: '高举战锤，跃近怪物后重击。' },
+        { id: 'shield_blue', type: 'shield', value: 'blue', name: '学徒盾', price: 0, rarity: '普通', icon: '🛡️', defense: 0, reduction: 0, action: '举盾格挡', description: '基础格挡动作与蓝色防御反馈。' },
+        { id: 'shield_sun', type: 'shield', value: 'sun', name: '日耀盾', price: 440, rarity: '稀有', icon: '🌞', defense: 1, reduction: 1, action: '日耀格挡', description: '每次受到攻击最多减少1点伤害。' },
+        { id: 'shield_dragon', type: 'shield', value: 'dragon', name: '龙纹盾', price: 760, rarity: '史诗', icon: '🐉', defense: 2, reduction: 2, action: '龙纹重盾格挡', description: '每次受到攻击最多减少2点伤害。' },
+        { id: 'magic_spark', type: 'magic', value: 'spark', name: '星光弹', price: 0, rarity: '普通', icon: '✨', magicAttack: 1, cooldown: 8, effect: '星光伤害', description: '答对题目时自动附加1点星光伤害。' },
+        { id: 'magic_frost', type: 'magic', value: 'frost', name: '霜晶术', price: 380, rarity: '稀有', icon: '❄️', magicAttack: 2, cooldown: 12, effect: '霜晶伤害', description: '答对题目时自动附加2点霜晶伤害。' },
+        { id: 'magic_flame', type: 'magic', value: 'flame', name: '赤焰术', price: 620, rarity: '史诗', icon: '🔥', magicAttack: 3, cooldown: 15, effect: '火焰伤害', description: '答对题目时自动附加3点火焰伤害。' },
+        { id: 'magic_lightning', type: 'magic', value: 'lightning', name: '雷鸣术', price: 900, rarity: '传说', icon: '⚡', magicAttack: 4, cooldown: 20, effect: '雷电伤害', description: '答对题目时自动附加4点雷电伤害。' },
         { id: 'combo_guardian', type: 'combo', value: 'guardian', name: '守护基础式', price: 0, rarity: '普通', icon: '📘', description: '稳定的基础武器动作，无连击门槛。', activation: '随时发动' },
         { id: 'combo_gale', type: 'combo', value: 'gale', name: '疾风三连式', price: 420, rarity: '稀有', icon: '🌪️', description: '连击达到3时追加两道疾风残影。', activation: '3连击激活', comboRequired: 3 },
         { id: 'combo_starfall', type: 'combo', value: 'starfall', name: '星落五芒阵', price: 720, rarity: '史诗', icon: '🌠', description: '连击达到5时召出环绕怪物的星阵。', activation: '5连击激活', comboRequired: 5 },
@@ -63,6 +76,7 @@
         { id: 'appearance', label: '外观穿搭', icon: '👕', types: ['outfit', 'hat', 'shoes'] },
         { id: 'weapon', label: '战斗武器', icon: '⚔️', types: ['weapon'] },
         { id: 'defense', label: '守护防具', icon: '🛡️', types: ['shield'] },
+        { id: 'magic', label: '战斗魔法', icon: '🔮', types: ['magic'] },
         { id: 'combo', label: '连击战技', icon: '📚', types: ['combo'] },
         { id: 'effect', label: '命中特效', icon: '✨', types: ['effect'] }
     ];
@@ -72,7 +86,7 @@
         { name: '皇家星落套装', icon: '🌟', items: ['outfit_royal', 'hat_crown', 'weapon_staff', 'combo_starfall', 'effect_stars'], note: '集齐并装备后出现星辉套装光环。' },
         { name: '赤焰龙魂套装', icon: '🐉', items: ['outfit_crimson', 'weapon_hammer', 'shield_dragon', 'combo_dragon', 'effect_flame'], note: '集齐并装备后出现龙焰套装光环。' }
     ];
-    var STARTER_ITEMS = ['outfit_azure', 'hat_none', 'shoes_traveler', 'weapon_sword', 'shield_blue', 'combo_guardian', 'effect_none'];
+    var STARTER_ITEMS = ['outfit_azure', 'hat_none', 'shoes_traveler', 'weapon_sword', 'shield_blue', 'magic_spark', 'combo_guardian', 'effect_none'];
 
     var LOCATIONS = [
         { id: 'village', name: '晨光村', icon: '🏡', module: 'xiaojiujiu', mission: '帮助村民修复九九能量灯', reward: '铜钥匙', enemies: '数字史莱姆、符号蝙蝠', difficulty: '入门' },
@@ -93,7 +107,7 @@
             profile: Object.assign({
                 name: user ? user.name : '小勇士', gender: 'male', face: 0,
                 hair: 'short', outfit: 'azure', hat: 'none', shoes: 'traveler',
-                weapon: 'sword', shield: 'blue', combo: 'guardian', effect: 'none'
+                weapon: 'sword', shield: 'blue', magic: 'spark', combo: 'guardian', effect: 'none'
             }, initialProfile, { name: user ? user.name : (initialProfile.name || '小勇士') }),
             coins: Math.max(0, Number(App.stats.totalScore) || 0),
             owned: STARTER_ITEMS.slice(),
@@ -103,7 +117,8 @@
             // Preserve the old 500-point tower entitlement during migration by
             // converting it to one bronze key; new players earn it on the map.
             keys: { bronze: legacyTowerEligible ? 1 : 0, silver: 0, gold: 0 }, gems: 0,
-            towerGates: { floor1: false, floor11: false, floor21: false, floor30: false }
+            towerGates: { floor1: false, floor11: false, floor21: false, floor30: false },
+            cooldowns: { weaponSwitchUntil: 0, magicReadyAt: {} }
         };
     }
 
@@ -115,6 +130,7 @@
 
     var AdventureSystem = {
         catalog: CATALOG,
+        config: EQUIPMENT_CONFIG,
         locations: LOCATIONS,
 
         ensureState: function (reset) {
@@ -123,6 +139,7 @@
             var baseProfile = Object.assign({}, base.profile);
             var baseKeys = Object.assign({}, base.keys);
             var baseTowerGates = Object.assign({}, base.towerGates);
+            var baseCooldowns = Object.assign({}, base.cooldowns);
             App.adventure = Object.assign(base, App.adventure || {});
             App.adventure.profile = Object.assign(baseProfile, App.adventure.profile || {});
             App.adventure.profile.gender = App.adventure.profile.gender === 'female' ? 'female' : 'male';
@@ -131,6 +148,8 @@
             App.adventure.profile.face = Number.isInteger(savedRole) && savedRole >= 0 && savedRole < availableRoles.length ? savedRole : 0;
             App.adventure.keys = Object.assign(baseKeys, App.adventure.keys || {});
             App.adventure.towerGates = Object.assign(baseTowerGates, App.adventure.towerGates || {});
+            App.adventure.cooldowns = Object.assign(baseCooldowns, App.adventure.cooldowns || {});
+            App.adventure.cooldowns.magicReadyAt = Object.assign({}, (App.adventure.cooldowns && App.adventure.cooldowns.magicReadyAt) || {});
             App.adventure.owned = Array.isArray(App.adventure.owned) ? App.adventure.owned : base.owned;
             STARTER_ITEMS.forEach(function (id) { if (!App.adventure.owned.includes(id)) App.adventure.owned.push(id); });
             App.adventure.unlocked = Array.isArray(App.adventure.unlocked) ? App.adventure.unlocked : ['village'];
@@ -152,8 +171,75 @@
             return CATALOG.find(function (item) { return item.type === type && item.value === value; });
         },
 
+        getOwnedItems: function (type) {
+            var state = this.ensureState();
+            return CATALOG.filter(function (item) { return item.type === type && state.owned.includes(item.id); });
+        },
+
+        weaponSwitchRemaining: function () {
+            return Math.max(0, Number(this.ensureState().cooldowns.weaponSwitchUntil) - Date.now());
+        },
+
+        itemStats: function (item) {
+            if (!item) return [];
+            if (item.type === 'weapon') return ['基础攻击 +' + item.attack, '动作：' + item.action, '速度：' + item.speed].concat(item.special ? ['特性：' + item.special] : []);
+            if (item.type === 'shield') return ['防御力 ' + item.defense, '最多减伤 ' + item.reduction, '动作：' + item.action];
+            if (item.type === 'magic') return ['魔法攻击 +' + item.magicAttack, '冷却 ' + item.cooldown + '秒', '效果：' + item.effect];
+            return item.activation ? [item.activation] : [];
+        },
+
+        itemStatsMarkup: function (item) {
+            var stats = this.itemStats(item);
+            return stats.length ? '<ul class="equipment-stat-list">' + stats.map(function (stat) { return '<li>' + escapeHtml(stat) + '</li>'; }).join('') + '</ul>' : '';
+        },
+
+        getCombatWeapon: function () {
+            var item = this.getEquippedItem('weapon') || this.getItem('weapon_sword');
+            return { id: item.id, name: item.name, emoji: item.icon, icon: item.icon, attack: item.attack, sprite: item.sprite, action: item.action, weight: 1 };
+        },
+
+        calculateOutgoingDamage: function (learningDamage, monster, consumeMagic) {
+            var weapon = this.getEquippedItem('weapon') || this.getItem('weapon_sword');
+            var magic = this.getEquippedItem('magic') || this.getItem('magic_spark');
+            var state = this.ensureState();
+            var now = Date.now();
+            var magicReadyAt = Number(state.cooldowns.magicReadyAt[magic.id]) || 0;
+            var magicUsed = !!consumeMagic && now >= magicReadyAt;
+            var magicDamage = magicUsed ? Number(magic.magicAttack) || 0 : 0;
+            var weaponBonus = Math.max(0, (Number(weapon.attack) || 1) - 1);
+            var monsterDefense = Math.max(0, Number(monster && monster.defense) || 0);
+            var rawDamage = Math.max(1, Number(learningDamage) || 1) + weaponBonus + magicDamage;
+            var finalDamage = Math.max(EQUIPMENT_CONFIG.minimumOutgoingDamage, rawDamage - monsterDefense);
+            if (magicUsed) {
+                state.cooldowns.magicReadyAt[magic.id] = now + (Number(magic.cooldown) || 0) * 1000;
+                saveProgress();
+            }
+            var result = {
+                learningDamage: Number(learningDamage) || 1,
+                weapon: weapon,
+                weaponBonus: weaponBonus,
+                magic: magic,
+                magicUsed: magicUsed,
+                magicDamage: magicDamage,
+                magicRemaining: Math.max(0, magicReadyAt - now),
+                monsterDefense: monsterDefense,
+                rawDamage: rawDamage,
+                finalDamage: finalDamage
+            };
+            if (App.battle) App.battle.lastEquipmentAttack = result;
+            this.renderBattleQuickbar();
+            return result;
+        },
+
+        calculateIncomingDamage: function (rawDamage) {
+            var shield = this.getEquippedItem('shield') || this.getItem('shield_blue');
+            var raw = Math.max(0, Number(rawDamage) || 0);
+            var reduction = Math.min(raw, Math.max(0, Number(shield.reduction) || 0));
+            return { rawDamage: raw, shield: shield, reduction: reduction, finalDamage: Math.max(EQUIPMENT_CONFIG.minimumIncomingDamage, raw - reduction) };
+        },
+
         itemTypeName: function (type) {
-            return ({ outfit: '衣服', shoes: '鞋子', hat: '帽子', weapon: '武器', shield: '盾牌', combo: '连击战技', effect: '命中特效' })[type] || '装备';
+            return ({ outfit: '衣服', shoes: '鞋子', hat: '帽子', weapon: '武器', shield: '盾牌', magic: '魔法', combo: '连击战技', effect: '命中特效' })[type] || '装备';
         },
 
         activeSet: function (profile) {
@@ -233,6 +319,7 @@
                 this.ownedChoiceGroup('shoes', '鞋子', SHOES, p.shoes) +
                 this.ownedItemGroup('weapon', '武器', p.weapon) +
                 this.ownedItemGroup('shield', '盾牌', p.shield) +
+                this.ownedItemGroup('magic', '魔法', p.magic) +
                 this.ownedItemGroup('combo', '连击战技', p.combo) +
                 this.ownedItemGroup('effect', '命中特效', p.effect) +
                 '<div class="character-actions"><button type="submit" class="adventure-primary-btn">保存并装备</button><button type="button" id="character-go-shop" class="adventure-secondary-btn">去商店解锁更多</button></div>' +
@@ -287,9 +374,11 @@
         },
 
         ownedItemGroup: function (type, title, selected) {
-            var options = {};
-            CATALOG.forEach(function (item) { if (item.type === type && App.adventure.owned.includes(item.id)) options[item.value] = item.icon + ' ' + item.name; });
-            return this.choiceGroup(type, title, options, selected);
+            var self = this;
+            var items = CATALOG.filter(function (item) { return item.type === type && App.adventure.owned.includes(item.id); });
+            return '<fieldset class="character-field"><legend>' + title + '</legend><div class="appearance-options equipment-choice-options">' + items.map(function (item) {
+                return '<label><input type="radio" name="' + type + '" value="' + item.value + '" ' + (String(item.value) === String(selected) ? 'checked' : '') + '><span><b>' + item.icon + ' ' + escapeHtml(item.name) + '</b><small>' + escapeHtml(self.itemStats(item).join(' · ')) + '</small></span></label>';
+            }).join('') + '</div></fieldset>';
         },
 
         formProfile: function () {
@@ -299,7 +388,7 @@
                 name: ((document.getElementById('profile-name') || {}).value || old.name).trim().slice(0, 16),
                 gender: val('gender'), face: Number(val('face')), hair: val('hair'), outfit: val('outfit'),
                 hat: val('hat'), shoes: val('shoes'), weapon: val('weapon'), shield: val('shield'),
-                combo: val('combo'), effect: val('effect')
+                magic: val('magic'), combo: val('combo'), effect: val('effect')
             });
         },
 
@@ -313,13 +402,16 @@
         },
 
         saveCharacter: function () {
+            var previous = Object.assign({}, this.getProfile());
             var profile = this.formProfile();
             if (!profile.name) { alert('请先输入玩家名字'); return; }
+            var blockedWeaponSwitch = profile.weapon !== previous.weapon && this.weaponSwitchRemaining() > 0;
+            if (blockedWeaponSwitch) profile.weapon = previous.weapon;
             App.adventure.profile = profile;
             this.syncUser();
             this.updateBattleHero();
             this.renderCharacter();
-            this.toast('✅ ' + profile.name + ' 的角色和装备已经保存');
+            this.toast(blockedWeaponSwitch ? '武器切换冷却中；其他角色设置已经保存' : '✅ ' + profile.name + ' 的角色和装备已经保存');
         },
 
         openShop: function () { this.renderShop(this.shopFilter || 'all'); showPage('shop'); },
@@ -331,19 +423,19 @@
             this.shopFilter = filter;
             var category = SHOP_CATEGORIES.find(function (entry) { return entry.id === filter; });
             var visibleItems = CATALOG.filter(function (item) { return filter === 'all' || category.types.includes(item.type); });
-            var loadoutTypes = ['weapon', 'shield', 'combo', 'effect'];
+            var loadoutTypes = ['weapon', 'shield', 'magic', 'combo', 'effect'];
             var loadout = loadoutTypes.map(function (type) { var item = self.getEquippedItem(type); return item ? '<span><i>' + item.icon + '</i><small>' + self.itemTypeName(type) + '</small><strong>' + escapeHtml(item.name) + '</strong></span>' : ''; }).join('');
             var sets = EQUIPMENT_SETS.map(function (set) {
                 var ownedCount = set.items.filter(function (id) { return state.owned.includes(id); }).length;
                 var equipped = set.items.every(function (id) { var item = self.getItem(id); return item && p[item.type] === item.value; });
                 return '<article class="shop-set-card ' + (equipped ? 'complete' : '') + '"><b>' + set.icon + ' ' + set.name + '</b><span>' + (equipped ? '套装已装备' : '已收藏 ' + ownedCount + '/' + set.items.length) + '</span><div><i style="width:' + Math.round(ownedCount / set.items.length * 100) + '%"></i></div><small>' + set.note + '</small></article>';
             }).join('');
-            content.innerHTML = '<section class="shop-command-center"><div class="shop-hero-stage">' + this.heroMarkup(p, 'shop-preview-hero') + '</div><div class="shop-command-copy"><span class="shop-eyebrow">冒险者补给中心</span><h3>' + escapeHtml(p.name) + '的战斗配置</h3><p>外观负责个性，武器决定动作，战技跟随连击激活，特效负责命中反馈。所有商品只改变形象与演出，不改变答题伤害。</p><div class="shop-loadout">' + loadout + '</div></div><div class="shop-wallet"><small>可用积分</small><strong>⭐ ' + state.coins + '</strong><span>终身总分 ' + App.stats.totalScore + ' 不会减少</span></div></section>' +
+            content.innerHTML = '<section class="shop-command-center"><div class="shop-hero-stage">' + this.heroMarkup(p, 'shop-preview-hero') + '</div><div class="shop-command-copy"><span class="shop-eyebrow">冒险者补给中心</span><h3>' + escapeHtml(p.name) + '的战斗配置</h3><p>武器决定攻击与动作，盾牌参与实际减伤，魔法拥有独立伤害和冷却；这里显示的属性就是战斗读取的数据。</p><div class="shop-loadout">' + loadout + '</div></div><div class="shop-wallet"><small>可用积分</small><strong>⭐ ' + state.coins + '</strong><span>终身总分 ' + App.stats.totalScore + ' 不会减少</span></div></section>' +
                 '<nav class="shop-category-tabs" aria-label="商品分类">' + SHOP_CATEGORIES.map(function (entry) { var count = CATALOG.filter(function (item) { return entry.id === 'all' || entry.types.includes(item.type); }).length; return '<button class="shop-category-btn ' + (entry.id === filter ? 'active' : '') + '" data-shop-filter="' + entry.id + '"><span>' + entry.icon + '</span>' + entry.label + '<small>' + count + '</small></button>'; }).join('') + '</nav>' +
-                '<section class="shop-set-section"><div class="shop-section-heading"><div><span>组合收藏</span><h3>主题套装进度</h3></div><p>装备完整套装会出现专属光环，但不会改变题目或伤害。</p></div><div class="shop-set-grid">' + sets + '</div></section>' +
+                '<section class="shop-set-section"><div class="shop-section-heading"><div><span>组合收藏</span><h3>主题套装进度</h3></div><p>套装改变形象和战斗演出；单件武器、盾牌和魔法的属性会真实参与计算。</p></div><div class="shop-set-grid">' + sets + '</div></section>' +
                 '<div class="shop-section-heading shop-products-heading"><div><span>' + category.icon + '</span><h3>' + category.label + '</h3></div><p>购买后自动装备，也可在“角色与装备”页面随时切换。</p></div><div class="shop-grid">' + visibleItems.map(function (item) {
                 var owned = state.owned.includes(item.id), equipped = p[item.type] === item.value;
-                return '<article class="shop-item rarity-' + item.rarity + ' ' + (owned ? 'owned' : '') + '"><div class="shop-item-icon">' + (item.sprite ? '<img src="assets/weapons/sprites/' + item.sprite + '" alt="">' : item.icon) + '</div><div class="shop-item-copy"><div class="shop-item-meta"><span class="shop-rarity">' + item.rarity + '</span><span>' + self.itemTypeName(item.type) + '</span></div><h3>' + item.name + '</h3><p>' + item.description + '</p>' + (item.activation ? '<em>⚡ ' + item.activation + '</em>' : '') + '</div>' +
+                return '<article class="shop-item rarity-' + item.rarity + ' ' + (owned ? 'owned' : '') + '"><div class="shop-item-icon">' + (item.sprite ? '<img src="assets/weapons/sprites/' + item.sprite + '" alt="' + escapeHtml(item.name) + '">' : item.icon) + '</div><div class="shop-item-copy"><div class="shop-item-meta"><span class="shop-rarity">' + item.rarity + '</span><span>' + self.itemTypeName(item.type) + '</span></div><h3>' + item.name + '</h3><p>' + item.description + '</p>' + self.itemStatsMarkup(item) + (item.activation ? '<em>⚡ ' + item.activation + '</em>' : '') + '</div>' +
                     '<div class="shop-item-footer"><span>' + (owned ? '✓ 已拥有' : item.price === 0 ? '新手赠送' : '价格 ⭐ ' + item.price) + '</span><button class="shop-action-btn" data-item="' + item.id + '" ' + (equipped ? 'disabled' : '') + '>' + (equipped ? '正在使用' : owned ? '立即装备' : '购买并装备') + '</button></div></article>';
             }).join('') + '</div>';
             content.querySelectorAll('.shop-category-btn').forEach(function (button) { button.onclick = function () { self.renderShop(button.dataset.shopFilter); }; });
@@ -352,13 +444,20 @@
 
         buyOrEquip: function (id) {
             var item = this.getItem(id), state = this.ensureState(); if (!item) return;
+            var purchasedNow = false;
             if (!state.owned.includes(id)) {
                 if (state.coins < item.price) { this.toast('积分不足，还差 ' + (item.price - state.coins) + ' 分'); return; }
                 state.coins -= item.price; state.owned.push(id);
-                this.toast('🎉 已购买 ' + item.name);
+                purchasedNow = true;
+            }
+            if (item.type === 'weapon' && state.profile.weapon !== item.value && this.weaponSwitchRemaining() > 0) {
+                saveProgress(); this.renderShop(this.shopFilter || 'all'); this.updateBalances();
+                this.toast((purchasedNow ? '🎉 已购买；' : '') + '武器切换冷却结束后才能装备');
+                return;
             }
             state.profile[item.type] = item.value;
             this.syncUser(); this.updateBattleHero(); this.renderShop(this.shopFilter || 'all'); this.updateBalances();
+            this.toast((purchasedNow ? '🎉 购买成功，' : '✅ ') + '已装备' + item.name);
         },
 
         openStory: function (firstVisit) {
@@ -467,6 +566,82 @@
             badge.innerHTML = '<span>' + (combo ? combo.icon : '📘') + '</span><div><strong>' + escapeHtml(combo ? combo.name : '守护基础式') + '</strong><small>' + (required ? (count >= required ? '连击已激活' : count + '/' + required + ' 连击') : '基础战技') + '</small></div>';
         },
 
+        initBattleEquipment: function () {
+            var battlePage = document.getElementById('battle-page');
+            var arena = battlePage && battlePage.querySelector('.battle-arena');
+            if (!battlePage || !arena) return;
+            var quickbar = document.getElementById('battle-equipment-quickbar');
+            if (!quickbar) {
+                quickbar = document.createElement('section');
+                quickbar.id = 'battle-equipment-quickbar';
+                quickbar.className = 'battle-equipment-quickbar';
+                quickbar.setAttribute('aria-label', '战斗装备快捷切换');
+                arena.insertAdjacentElement('afterend', quickbar);
+            }
+            this.updateBattleHero();
+            this.renderBattleQuickbar();
+            if (quickbarTimer) clearInterval(quickbarTimer);
+            var self = this;
+            quickbarTimer = setInterval(function () {
+                if (!App.battle || !App.battle.active || App.currentPage !== 'battle') return;
+                self.renderBattleQuickbar();
+            }, 1000);
+        },
+
+        equipmentButtonIcon: function (item) {
+            return item.sprite ? '<img src="assets/weapons/sprites/' + item.sprite + '" alt="">' : '<span>' + item.icon + '</span>';
+        },
+
+        renderBattleQuickbar: function () {
+            var target = document.getElementById('battle-equipment-quickbar');
+            if (!target) return;
+            var self = this, state = this.ensureState(), profile = state.profile, now = Date.now();
+            var weaponRemaining = Math.max(0, Number(state.cooldowns.weaponSwitchUntil) - now);
+            var groups = [
+                { type: 'weapon', label: '武器', icon: '⚔️' },
+                { type: 'shield', label: '盾牌', icon: '🛡️' },
+                { type: 'magic', label: '魔法', icon: '🔮' }
+            ];
+            target.innerHTML = groups.map(function (group) {
+                var items = self.getOwnedItems(group.type);
+                return '<div class="battle-quick-group quick-' + group.type + '"><div class="battle-quick-label"><span>' + group.icon + ' ' + group.label + '</span>' +
+                    (group.type === 'weapon' && weaponRemaining > 0 ? '<small>切换冷却 ' + Math.ceil(weaponRemaining / 1000) + 's</small>' : '') + '</div><div class="battle-quick-items">' + items.map(function (item) {
+                    var current = profile[group.type] === item.value;
+                    var magicRemaining = group.type === 'magic' ? Math.max(0, Number(state.cooldowns.magicReadyAt[item.id]) - now) : 0;
+                    var disabled = group.type === 'weapon' && weaponRemaining > 0 && !current;
+                    var status = current ? '正在使用' : group.type === 'weapon' && disabled ? Math.ceil(weaponRemaining / 1000) + 's' : group.type === 'magic' && magicRemaining > 0 ? Math.ceil(magicRemaining / 1000) + 's' : '可切换';
+                    return '<button class="battle-quick-btn ' + (current ? 'active' : '') + '" data-equipment-type="' + group.type + '" data-equipment-value="' + item.value + '" title="' + escapeHtml(item.name + '｜' + self.itemStats(item).join('；')) + '" ' + (disabled ? 'disabled' : '') + '>' + self.equipmentButtonIcon(item) + '<b>' + escapeHtml(item.name) + '</b><small>' + status + '</small></button>';
+                }).join('') + '</div></div>';
+            }).join('') + '<div class="battle-current-stats">' + groups.map(function (group) {
+                var item = self.getEquippedItem(group.type);
+                return item ? '<span><b>' + item.icon + ' ' + escapeHtml(item.name) + '</b><small>' + escapeHtml(self.itemStats(item).join(' · ')) + '</small></span>' : '';
+            }).join('') + '</div>';
+            target.querySelectorAll('.battle-quick-btn').forEach(function (button) {
+                button.onclick = function () { self.switchBattleEquipment(button.dataset.equipmentType, button.dataset.equipmentValue); };
+            });
+        },
+
+        switchBattleEquipment: function (type, value) {
+            if (!['weapon', 'shield', 'magic'].includes(type)) return false;
+            var state = this.ensureState();
+            var item = CATALOG.find(function (entry) { return entry.type === type && entry.value === value && state.owned.includes(entry.id); });
+            if (!item) { this.toast('这件装备还没有购买'); return false; }
+            if (state.profile[type] === value) { this.toast(item.name + ' 已经在使用'); return true; }
+            var now = Date.now();
+            if (type === 'weapon' && Number(state.cooldowns.weaponSwitchUntil) > now) {
+                this.toast('武器切换还需 ' + Math.ceil((state.cooldowns.weaponSwitchUntil - now) / 1000) + ' 秒');
+                this.renderBattleQuickbar();
+                return false;
+            }
+            state.profile[type] = value;
+            if (type === 'weapon') state.cooldowns.weaponSwitchUntil = now + EQUIPMENT_CONFIG.weaponSwitchCooldown;
+            this.syncUser();
+            this.updateBattleHero();
+            this.renderBattleQuickbar();
+            this.toast('✅ 已装备' + item.name + (type === 'weapon' ? '，' + Math.ceil(EQUIPMENT_CONFIG.weaponSwitchCooldown / 1000) + '秒后可再次切换' : ''));
+            return true;
+        },
+
         init: function () {
             this.ensureState(); this.updateBalances();
             var self = this;
@@ -498,6 +673,8 @@
             var comboCount = Number(App.battle && App.battle.combo) || 0;
             var comboRequired = Number(comboItem && comboItem.comboRequired) || 0;
             var comboActive = comboCount >= comboRequired;
+            var attackData = App.battle && App.battle.lastEquipmentAttack;
+            var activeMagic = attackData && attackData.magicUsed ? attackData.magic : null;
             var strength = { C: 'light', B: 'normal', A: 'strong', S: 'critical' }[rank] || 'strong';
             AdventureSystem.updateBattleLoadout();
             if (typeof playBattleSound === 'function') playBattleSound('ready', { type: type, rank: rank, module: App.battle.module });
@@ -515,7 +692,7 @@
             if ((type === 'bow' || type === 'staff') && arena) {
                 projectile = document.createElement('div');
                 projectile.className = 'equipped-projectile projectile-' + type + ' projectile-' + strength;
-                projectile.innerHTML = type === 'bow' ? '<span>➶</span>' : '<span>✦</span>';
+                projectile.innerHTML = type === 'bow' ? '<span>➶</span>' : '<span>' + (activeMagic ? activeMagic.icon : '✦') + '</span>';
                 arena.appendChild(projectile);
                 setTimeout(function () { projectile.classList.add('fly'); }, 180);
             }
@@ -537,8 +714,8 @@
                     setTimeout(function () { targetEl.classList.remove('equipped-impact-target'); }, 260);
                 }
                 var hit = document.createElement('span');
-                hit.className = 'equipped-hit-effect hit-' + type + ' effect-' + profile.effect;
-                hit.textContent = ({ stars: '🌟', lightning: '⚡', frost: '❄', flame: '🔥' })[profile.effect] || (type === 'sword' ? '╳' : type === 'hammer' ? '💥' : type === 'bow' ? '✹' : '✦');
+                hit.className = 'equipped-hit-effect hit-' + type + ' effect-' + (activeMagic ? activeMagic.value : profile.effect);
+                hit.textContent = activeMagic ? activeMagic.icon : (({ stars: '🌟', lightning: '⚡', frost: '❄', flame: '🔥' })[profile.effect] || (type === 'sword' ? '╳' : type === 'hammer' ? '💥' : type === 'bow' ? '✹' : '✦'));
                 if (targetEl) targetEl.appendChild(hit);
                 setTimeout(function () { hit.remove(); }, 520);
                 if (comboActive && comboStyle !== 'guardian' && targetEl) {
@@ -558,8 +735,8 @@
                 }
                 if (projectile) projectile.remove();
                 if (typeof playBattleSound === 'function') playBattleSound('impact', { type: type, rank: rank, module: App.battle.module });
-                // A purchased battle style changes choreography only. Damage is
-                // resolved exactly once by the existing learning-game callback.
+                // Damage is resolved exactly once by the combat callback using
+                // this same equipped weapon and magic data.
                 if (callback) callback();
             }, impactAt);
 

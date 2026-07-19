@@ -493,6 +493,7 @@ BattleMode.startBattle = function(difficulty, module) {
     // v16.2: Initialize hero layers and combo engine
     this.initHeroLayers();
     this.resetComboState();
+    if (typeof AdventureSystem !== 'undefined') AdventureSystem.initBattleEquipment();
 
     // v18.0: Start performance monitor
     this.startPerfMonitor();
@@ -549,8 +550,9 @@ BattleMode.initStage = function() {
         monster = allMonsters[Math.floor(Math.random() * allMonsters.length)];
     }
 
-    battle.monsterHP = monster.hp;
-    battle.monsterMaxHP = monster.hp;
+    if (typeof MonsterRegistry !== 'undefined') monster = MonsterRegistry.normalize(monster, battle.module, battle.difficulty);
+    battle.monsterHP = monster.maxHealth || monster.hp;
+    battle.monsterMaxHP = monster.maxHealth || monster.hp;
     battle.currentMonster = monster;
 
     // v23.0: Track chapter boss fight
@@ -1157,21 +1159,15 @@ BattleMode.handleCorrectAnswer = function(btnElement) {
     const speedMultipliers = { S: 1.5, A: 1.2, B: 1.0, C: 0.8 };
     damage = Math.max(1, Math.round(damage * (speedMultipliers[speedRank] || 1.0)));
 
-    // v17.0: Weapon selection with speed-adjusted weights
-    const adjustedWeapons = this.getAdjustedWeaponWeights(speedRank);
-    let weapon;
-    if (adjustedWeapons && adjustedWeapons.length > 0) {
-        const totalWeight = adjustedWeapons.reduce((sum, w) => sum + w.weight, 0);
-        let rand = Math.random() * totalWeight;
-        for (const w of adjustedWeapons) {
-            rand -= w.weight;
-            if (rand <= 0) { weapon = w; break; }
+    // v26.3: Equipped shop data is the only combat equipment source.
+    const weapon = typeof AdventureSystem !== 'undefined' ? AdventureSystem.getCombatWeapon() : this.getRandomWeapon();
+    if (typeof AdventureSystem !== 'undefined') {
+        const equipmentDamage = AdventureSystem.calculateOutgoingDamage(damage, battle.currentMonster, true);
+        damage = equipmentDamage.finalDamage;
+        if (equipmentDamage.magicUsed) {
+            this.showBattleFeedback(true, equipmentDamage.magic.icon + ' ' + equipmentDamage.magic.name + '发动！最终伤害 ' + damage);
         }
-        if (!weapon) weapon = adjustedWeapons[0];
-    } else {
-        weapon = this.getRandomWeapon();
     }
-    if (weapon.emoji === '\uD83D\uDCA3') damage += 1;
 
     // v16.2: Check dodge behavior - partial damage on dodge (50%, rounded up)
     const dodgeCheck = this.checkBehaviorTrigger('afterCorrect', { damage });
@@ -1588,11 +1584,15 @@ BattleMode.dealDamage = function(damage) {
         this.showBattleFeedback(false, '🛡️ 防御! 伤害减半');
     }
 
-    battle.monsterHP -= damage;
-    battle.totalDamage += damage;
+    // Displayed damage must equal the monster's real HP loss, including the
+    // last hit when remaining HP is lower than the calculated attack.
+    const hpBefore = Math.max(0, Number(battle.monsterHP) || 0);
+    const actualDamage = Math.min(hpBefore, Math.max(0, Math.round(Number(damage) || 0)));
+    battle.monsterHP = Math.max(0, hpBefore - actualDamage);
+    battle.totalDamage += actualDamage;
     battle.turnCount++;
 
-    if (damage > 0) {
+    if (actualDamage > 0) {
         battle.noDamageOnCurrentMonster = false;
     }
 
@@ -1601,7 +1601,7 @@ BattleMode.dealDamage = function(damage) {
     // v15.0: Use enemy hit animation
     this.enemyHitAnimation(() => {});
 
-    this.showDamageNumber(damage);
+    this.showDamageNumber(actualDamage);
     this.showMonsterQuip();
 
     this.updateUI();
@@ -1723,6 +1723,21 @@ BattleMode.monsterAttack = function() {
             return;
         }
 
+        const rawDamage = Math.max(1, Number(monster && monster.heartDamage) || 1) + enrageDamage;
+        const defenseResult = typeof AdventureSystem !== 'undefined' ? AdventureSystem.calculateIncomingDamage(rawDamage) : { rawDamage: rawDamage, reduction: 0, finalDamage: rawDamage };
+        const hpLoss = defenseResult.finalDamage;
+        if (defenseResult.reduction > 0 && typeof this.performEquippedDefense === 'function') this.performEquippedDefense();
+        if (hpLoss <= 0) {
+            this.showBattleFeedback(true, '🛡️ ' + defenseResult.shield.name + '完全格挡，减免' + defenseResult.reduction + '点伤害');
+            playSound('correct');
+            battle.currentIndex++;
+            setTimeout(() => this.showBattleQuestion(), 700);
+            return;
+        }
+        if (defenseResult.reduction > 0) {
+            this.showBattleFeedback(true, '🛡️ 减免' + defenseResult.reduction + '点，实际受到' + hpLoss + '点伤害');
+        }
+
         this.heroHitAnimation(() => {});
         const screenFlash = document.getElementById('screen-flash');
         if (screenFlash) {
@@ -1730,7 +1745,6 @@ BattleMode.monsterAttack = function() {
             setTimeout(() => screenFlash.classList.remove('show'), 200);
         }
 
-        const hpLoss = 1 + enrageDamage;
         battle.playerHP = Math.max(0, battle.playerHP - hpLoss);
         this.updateUI();
         if (typeof ChapterSystem !== 'undefined') ChapterSystem.onPlayerDamaged();

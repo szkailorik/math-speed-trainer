@@ -3585,6 +3585,35 @@ body.keyboard-active #battle-page .battle-answer-area {
 }
 
 /* ===== 减少动画（辅助功能）===== */
+/* v26.3: shared equipment attributes + in-battle quick switching */
+.equipment-stat-list { display:flex; flex-wrap:wrap; gap:6px; margin:10px 0 0; padding:0; list-style:none; }
+.equipment-stat-list li { padding:4px 8px; border:1px solid rgba(129,187,255,.26); border-radius:999px; background:rgba(12,27,52,.54); color:#dbeeff; font-size:11px; line-height:1.25; }
+.equipment-choice-options label > span { display:grid; gap:3px; }
+.equipment-choice-options label small { color:var(--text-secondary); font-size:11px; line-height:1.35; }
+.battle-equipment-quickbar { position:relative; z-index:40; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:7px; width:min(960px,calc(100% - 18px)); margin:-4px auto 5px; padding:7px; border:1px solid rgba(128,190,255,.25); border-radius:13px; background:linear-gradient(135deg,rgba(9,21,43,.97),rgba(24,27,57,.97)); box-shadow:0 8px 20px rgba(0,0,0,.22); }
+.battle-quick-group { min-width:0; }
+.battle-quick-label { display:flex; align-items:center; justify-content:space-between; gap:6px; margin:0 2px 4px; color:#fff; font-size:11px; font-weight:800; }
+.battle-quick-label small { color:#ffd369; font-variant-numeric:tabular-nums; }
+.battle-quick-items { display:flex; gap:5px; overflow-x:auto; scrollbar-width:thin; padding-bottom:2px; }
+.battle-quick-btn { position:relative; display:grid; grid-template-columns:30px minmax(48px,auto); grid-template-rows:17px 14px; align-items:center; flex:0 0 auto; min-width:92px; padding:4px 6px; border:1px solid rgba(255,255,255,.15); border-radius:9px; color:#d9eaff; background:rgba(255,255,255,.06); cursor:pointer; text-align:left; }
+.battle-quick-btn > img,.battle-quick-btn > span { grid-row:1/3; width:27px; height:27px; object-fit:contain; font-size:22px; text-align:center; }
+.battle-quick-btn b { overflow:hidden; font-size:10px; line-height:1.1; white-space:nowrap; text-overflow:ellipsis; }
+.battle-quick-btn small { color:#96aaca; font-size:9px; font-variant-numeric:tabular-nums; }
+.battle-quick-btn.active { border-color:#65d7ff; background:rgba(64,157,227,.2); box-shadow:inset 0 0 0 1px rgba(116,219,255,.18); }
+.battle-quick-btn.active small { color:#78f0b0; }
+.battle-quick-btn:disabled { opacity:.48; cursor:not-allowed; filter:saturate(.5); }
+.battle-current-stats { grid-column:1/-1; display:flex; gap:7px; overflow-x:auto; padding-top:5px; border-top:1px solid rgba(255,255,255,.09); }
+.battle-current-stats > span { display:flex; align-items:center; gap:6px; flex:0 0 auto; color:#eef6ff; font-size:9px; }
+.battle-current-stats b { color:#fff; }.battle-current-stats small { color:#9fb2cf; }
+@media (max-width:720px) {
+    .battle-equipment-quickbar { grid-template-columns:1fr; width:calc(100% - 10px); gap:4px; padding:5px; margin-bottom:3px; }
+    .battle-quick-group { display:grid; grid-template-columns:58px minmax(0,1fr); align-items:center; }
+    .battle-quick-label { display:grid; justify-content:start; margin:0; }
+    .battle-quick-btn { min-width:82px; grid-template-columns:25px minmax(43px,auto); padding:3px 5px; }
+    .battle-quick-btn > img,.battle-quick-btn > span { width:23px; height:23px; font-size:19px; }
+    .battle-current-stats { display:none; }
+}
+
 @media (prefers-reduced-motion: reduce) {
     * {
         transition-duration: 0.01ms !important;
