@@ -30,7 +30,6 @@
 - 可消费积分商店：外观、武器、防具、连击战技与命中特效
 - 三套主题装备组合与 3/5/10 连击战斗演出
 - 本地保存学习进度
-- GitHub Gist 跨设备同步（使用个人 PAT，私有数据不经过项目服务器）
 
 ## 技术栈
 
@@ -38,7 +37,6 @@
 - CSS3 (Flexbox, Grid, CSS Variables)
 - Vanilla JavaScript (ES6+)
 - localStorage 数据持久化
-- GitHub Gist 私有云同步（localStorage 保底）
 - Web Audio API 音效
 - 响应式设计，优先适配 iPad
 
@@ -78,16 +76,6 @@ npx http-server
    - **构建命令**: 留空（纯静态网站）
    - **输出目录**: `/`（根目录）
 6. 点击部署
-
-当前生产站点：`https://math-speed-trainer.pages.dev/`，自定义域名：`https://wp2.kailorik.com/`。
-
-## 跨设备同步
-
-1. 点击页面右下角的“仅本机”按钮。
-2. 按引导创建只含 `gist` 权限的 GitHub Token（classic）。
-3. 粘贴 Token 并连接；其他设备粘贴同一个 Token 即可双向同步。
-
-Token 只保存在当前浏览器的 localStorage。学习进度、错题、角色、装备、卡牌、章节和题目权重存放在用户自己的私有 Gist 中；离线或 GitHub 暂时不可用时仍可继续使用本机数据，恢复网络后自动合并。
 
 ## 项目结构
 

@@ -7,9 +7,7 @@
  *   battle-combat.js -> app.js
  */
 
-document.addEventListener('DOMContentLoaded', async () => {
-    // Pull and merge cloud progress before the main user UI is rendered.
-    if (window.GistSync) await GistSync.startup();
+document.addEventListener('DOMContentLoaded', () => {
     // Initialize user page and event listeners
     initUserPage();
     initEventListeners();
